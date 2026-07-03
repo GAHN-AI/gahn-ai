@@ -14,7 +14,7 @@ const instructors = [
   ["Lena", "Medical Instructor", "Healthcare basics, medical terminology, patient-care concepts, and clinical learning support.", "/instructors/lena.jpg"],
   ["Alex", "Software Engineer", "Coding, full-stack development, databases, debugging, and software project guidance.", "/instructors/alex.jpg"],
   ["Arin", "Finance Instructor", "Money management, business finance, investing basics, budgeting, and financial decision-making.", "/instructors/arin.jpg"],
-  ["Hannah", "Nurse Instructor", "Nursing fundamentals, patient support, care routines, safety, and healthcare readiness.", "/instructors/hannah.jpg"],
+  ["Jada", "Nurse Instructor", "Nursing fundamentals, patient support, care routines, safety, and healthcare readiness.", "/instructors/jada.jpg"],
 ];
 
 const steps = [
@@ -83,6 +83,40 @@ function ProgramCard({
       >
         Start {title}
       </Link>
+    </div>
+  );
+}
+
+function InstructorCard({
+  name,
+  role,
+  desc,
+  image,
+}: {
+  name: string;
+  role: string;
+  desc: string;
+  image: string;
+}) {
+  return (
+    <div className="flex overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
+      <div className="flex w-full flex-col">
+        <div className="grid h-[360px] place-items-center bg-slate-50 p-5">
+          <img
+            src={image}
+            alt={name}
+            className="max-h-full max-w-full rounded-xl object-contain object-center"
+          />
+        </div>
+
+        <div className="flex flex-1 flex-col p-6">
+          <h3 className="text-2xl font-black">{name}</h3>
+          <p className="mt-1 text-sm font-black text-blue-700">{role}</p>
+          <p className="mt-4 text-sm leading-7 text-slate-600 sm:text-base">
+            {desc}
+          </p>
+        </div>
+      </div>
     </div>
   );
 }
@@ -255,21 +289,18 @@ export default function Home() {
         <SectionIntro
           eyebrow="AI instructors"
           title="Specialized instructors for different learning needs."
-          text="Meet role-based AI instructors designed to guide learners through structured lessons, practice, feedback, and next-step support."
+          text="Choose from focused AI instructors built for healthcare, software, finance, and nursing support. Each instructor is designed to guide lessons, explain concepts, and help learners practice."
         />
 
         <div className="mx-auto grid max-w-7xl gap-6 sm:grid-cols-2 lg:grid-cols-4">
           {instructors.map(([name, role, desc, image]) => (
-            <div key={name} className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
-              <div className="h-72 bg-white p-4">
-                <img src={image} alt={name} className="h-full w-full object-contain object-center" />
-              </div>
-              <div className="p-5 sm:p-6">
-                <h3 className="text-2xl font-black">{name}</h3>
-                <p className="mt-1 text-sm font-black text-blue-700">{role}</p>
-                <p className="mt-4 text-sm leading-7 text-slate-600 sm:text-base">{desc}</p>
-              </div>
-            </div>
+            <InstructorCard
+              key={name}
+              name={name}
+              role={role}
+              desc={desc}
+              image={image}
+            />
           ))}
         </div>
       </section>
@@ -284,7 +315,7 @@ export default function Home() {
               Watch a short preview of the learning experience.
             </h2>
             <p className="mt-5 text-base leading-8 text-slate-600 sm:text-lg">
-              This video gives visitors a quick look at how an AI instructor can explain ideas, guide students, and make learning feel more personal. It fits here because users have already seen the instructors before watching the preview.
+              This video gives visitors a quick look at how an AI instructor can explain ideas, guide students, and make learning feel more personal.
             </p>
 
             <div className="mt-8 grid gap-3 sm:flex">
