@@ -144,7 +144,6 @@ export default function Home() {
             <a href="#programs">Programs</a>
             <a href="#platform">Platform</a>
             <a href="#instructors">Instructors</a>
-            <a href="#video-preview">Video</a>
             <a href="#schools">Schools</a>
             <Link href="/pricing">Pricing</Link>
           </div>
@@ -305,43 +304,7 @@ export default function Home() {
         </div>
       </section>
 
-      <section id="video-preview" className="bg-[#f5f7fb] px-4 py-16 sm:px-6 sm:py-24">
-        <div className="mx-auto grid max-w-7xl items-center gap-10 lg:grid-cols-[0.9fr_1.1fr]">
-          <div>
-            <p className="text-xs font-black uppercase tracking-[0.22em] text-blue-700">
-              AI instructor preview
-            </p>
-            <h2 className="mt-3 text-3xl font-black tracking-tight sm:text-4xl lg:text-5xl">
-              Watch a short preview of the learning experience.
-            </h2>
-            <p className="mt-5 text-base leading-8 text-slate-600 sm:text-lg">
-              This video gives visitors a quick look at how an AI instructor can explain ideas, guide students, and make learning feel more personal.
-            </p>
-
-            <div className="mt-8 grid gap-3 sm:flex">
-              <Link href="/signup" className="rounded-xl bg-[#071f4d] px-8 py-4 text-center text-sm font-black uppercase tracking-[0.12em] text-white">
-                Start Learning
-              </Link>
-              <a href="#schools" className="rounded-xl border border-slate-300 bg-white px-8 py-4 text-center text-sm font-black uppercase tracking-[0.12em]">
-                See Classroom Vision
-              </a>
-            </div>
-          </div>
-
-          <div className="rounded-2xl border border-slate-200 bg-white p-4 shadow-2xl sm:p-5">
-            <video
-              controls
-              preload="metadata"
-              className="aspect-video w-full rounded-xl bg-black object-cover"
-            >
-              <source src="/videos/alessandra.mp4" type="video/mp4" />
-              Your browser does not support the video tag.
-            </video>
-          </div>
-        </div>
-      </section>
-
-      <section id="schools" className="px-4 py-16 sm:px-6 sm:py-24">
+      <section id="schools" className="bg-[#f5f7fb] px-4 py-16 sm:px-6 sm:py-24">
         <SectionIntro
           eyebrow="Schools and classrooms"
           title="Built to expand from individual learners to classrooms."
@@ -362,7 +325,7 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="bg-[#f5f7fb] px-4 py-16 sm:px-6 sm:py-24">
+      <section className="px-4 py-16 sm:px-6 sm:py-24">
         <SectionIntro
           eyebrow="How it works"
           title="From signup to skill growth."
@@ -380,7 +343,7 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="px-4 py-16 sm:px-6 sm:py-24">
+      <section className="bg-[#f5f7fb] px-4 py-16 sm:px-6 sm:py-24">
         <SectionIntro
           eyebrow="Expansion roadmap"
           title="A serious platform built in stages."
@@ -397,7 +360,7 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="bg-[#f5f7fb] px-4 py-16 sm:px-6 sm:py-24">
+      <section className="px-4 py-16 sm:px-6 sm:py-24">
         <div className="mx-auto grid max-w-7xl items-center gap-8 rounded-2xl border border-slate-200 bg-white p-6 shadow-sm sm:p-10 lg:grid-cols-[1fr_360px]">
           <div>
             <p className="text-xs font-black uppercase tracking-[0.22em] text-blue-700">
