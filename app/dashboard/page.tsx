@@ -32,7 +32,7 @@ const instructors = [
   ["/instructors/lena.jpg", "Lena", "Medical Instructor"],
   ["/instructors/alex.jpg", "Alex", "Software Engineer"],
   ["/instructors/arin.jpg", "Arin", "Finance Instructor"],
-  ["/instructors/hannah.jpg", "Hannah", "Nurse Instructor"],
+  ["/instructors/jada.jpg", "jada", "Nurse Instructor"],
 ];
 
 function getInitials(name: string) {

@@ -14,127 +14,34 @@ const individualPlans = [
     name: "Free",
     price: "$0",
     tag: "Explore",
-    desc: "For learners who want to test the platform before upgrading.",
+    desc: "For learners who want to experience structured AI learning before upgrading.",
     features: [
-      "Selected learning worlds",
-      "Limited AI instructor help",
-      "Basic lessons and quizzes",
+      "Access to all 5 learning worlds",
+      "5 AI learning sessions per month",
+      "Active learning tasks",
+      "AI feedback and corrections",
+      "Lesson recaps",
       "Basic notes",
       "Basic progress tracking",
-      "Limited recall practice",
-      "No certificates",
-      "No portfolio builder",
-    ],
-  },
-  {
-    name: "Learner Plus",
-    price: "$29",
-    tag: "Build consistency",
-    desc: "For students and self-learners who want stronger daily learning support.",
-    stripePlan: "learner_plus",
-    features: [
-      "More AI instructor sessions",
-      "Personalized learning paths",
-      "Study planner",
-      "Homework and concept support",
-      "Unlimited notes",
-      "Progress dashboard",
-      "Active recall system",
-      "Weak-area detection",
+      "Recent learning sessions",
     ],
   },
   {
     name: "Mastery",
-    price: "$79",
+    price: "$19",
     tag: "Most Popular",
-    desc: "For serious learners who want mastery, proof of skill, and long-term progress.",
+    desc: "For learners who want consistent AI instruction, deeper feedback, and stronger progress tracking.",
     popular: true,
     stripePlan: "mastery",
     features: [
-      "Unlimited AI learning sessions",
-      "Advanced AI instructor memory",
-      "Adaptive difficulty engine",
-      "Certificates unlocked",
-      "Portfolio builder",
-      "Project-based learning",
-      "Skill verification",
-      "Advanced assessments",
-      "Personalized recommendations",
-    ],
-  },
-  {
-    name: "Career Pro",
-    price: "$149",
-    tag: "Career outcomes",
-    desc: "For learners focused on job readiness, interviews, projects, and professional growth.",
-    stripePlan: "career_pro",
-    features: [
-      "Career roadmap builder",
-      "Resume and profile builder",
-      "Interview simulations",
-      "Career skills assessments",
-      "Employer-ready portfolio",
-      "Project verification",
-      "AI career mentor",
-      "Advanced analytics",
-      "Priority support",
-    ],
-  },
-];
-
-const schoolPlans = [
-  {
-    name: "Classroom AI",
-    price: "$499",
-    tag: "For teachers",
-    desc: "For teachers or small classrooms that need AI lesson support and student progress tools.",
-    stripePlan: "classroom_ai",
-    features: [
-      "AI classroom assistant",
-      "Up to 1 classroom",
-      "Student tutoring support",
-      "Lesson plan generation",
-      "Homework and quiz generation",
-      "Student progress insights",
-      "Teacher dashboard",
-      "Classroom reports",
-    ],
-  },
-  {
-    name: "School OS",
-    price: "$2,000",
-    tag: "School subscription",
-    desc: "For schools that want AI instructors supporting classrooms, teachers, and administrators.",
-    featured: true,
-    stripePlan: "school_os",
-    features: [
-      "Multiple classroom support",
-      "Teacher command center",
-      "School-wide analytics",
-      "Student weakness detection",
-      "Intervention plans",
-      "Certificates and portfolios",
-      "Parent-ready reports",
-      "Curriculum support tools",
-      "Admin dashboard",
-      "Priority implementation support",
-    ],
-  },
-  {
-    name: "District / Government",
-    price: "Custom",
-    tag: "Large scale",
-    desc: "For districts, private school networks, government programs, and enterprise learning systems.",
-    features: [
-      "Multi-school deployment",
-      "District-wide analytics",
-      "Standards-aligned reporting",
-      "Custom curriculum mapping",
-      "Bulk student accounts",
-      "Teacher training workflows",
-      "Security support",
-      "Dedicated success support",
-      "Custom integrations",
+      "Access to all 5 learning worlds",
+      "30 AI learning sessions per month",
+      "Adaptive AI instruction",
+      "Mistake detection and retries",
+      "Personalized lesson recommendations",
+      "Full learning history",
+      "Progress and streak tracking",
+      "Saved notes and detailed recaps",
     ],
   },
 ];
@@ -147,13 +54,13 @@ const outcomePillars = [
   ["Scale Learning", "Teacher and school tools support classrooms."],
 ];
 
-function PlanCard({ plan, school = false }: { plan: any; school?: boolean }) {
+function PlanCard({ plan }: { plan: any }) {
   const [loading, setLoading] = useState(false);
   const highlighted = plan.popular || plan.featured;
 
   async function handleCheckout() {
     if (!plan.stripePlan) {
-      window.location.href = plan.price === "Custom" ? "/in-progress" : "/signup";
+      window.location.href = "/signup";
       return;
     }
 
@@ -191,7 +98,7 @@ function PlanCard({ plan, school = false }: { plan: any; school?: boolean }) {
     >
       {highlighted && (
         <div className="absolute -top-4 left-6 rounded bg-[#071f4d] px-4 py-2 text-xs font-black uppercase tracking-[0.14em] text-white">
-          {plan.popular ? "Most Popular" : "School Subscription"}
+          Most Popular
         </div>
       )}
 
@@ -205,7 +112,7 @@ function PlanCard({ plan, school = false }: { plan: any; school?: boolean }) {
         <span className="text-5xl font-black tracking-tight text-[#061633]">
           {plan.price}
         </span>
-        {plan.price !== "Custom" && <span className="mb-2 text-slate-500">/mo</span>}
+        <span className="mb-2 text-slate-500">/mo</span>
       </div>
 
       <p className="mt-5 min-h-[96px] text-sm leading-6 text-slate-600">
@@ -232,13 +139,7 @@ function PlanCard({ plan, school = false }: { plan: any; school?: boolean }) {
             : "border border-slate-300 bg-slate-50 text-[#061633] hover:bg-white"
         }`}
       >
-        {loading
-          ? "Loading..."
-          : plan.price === "Custom"
-          ? "Request Access"
-          : school
-          ? `Choose ${plan.name}`
-          : `Start ${plan.name}`}
+        {loading ? "Loading..." : `Start ${plan.name}`}
       </button>
     </motion.div>
   );
@@ -246,23 +147,23 @@ function PlanCard({ plan, school = false }: { plan: any; school?: boolean }) {
 
 export default function PricingPage() {
   return (
-    <main className="min-h-screen bg-white text-[#061633]">
+    <main className="min-h-screen bg-white text-[#061633] xl:[zoom:0.63]">
       <header className="sticky top-0 z-50 border-b border-slate-200 bg-white/95 backdrop-blur-xl">
         <nav className="mx-auto flex max-w-7xl items-center justify-between px-6 py-5">
           <Link href="/" className="flex items-center gap-3">
-  <img
-    src="/logo/favicon.png"
-    alt="GAHN AI"
-    className="h-11 w-11 rounded-full object-cover"
-  />
+            <img
+              src="/logo/favicon.png"
+              alt="GAHN AI"
+              className="h-11 w-11 rounded-full object-cover"
+            />
 
-  <div>
-    <p className="text-xl font-black tracking-tight">GAHN AI</p>
-    <p className="text-[9px] font-bold uppercase tracking-[0.16em] text-slate-500">
-      Global AI Human Helper Network
-    </p>
-  </div>
-</Link>
+            <div>
+              <p className="text-xl font-black tracking-tight">GAHN AI</p>
+              <p className="text-[9px] font-bold uppercase tracking-[0.16em] text-slate-500">
+                Global AI Human Helper Network
+              </p>
+            </div>
+          </Link>
 
           <div className="hidden items-center gap-8 text-sm font-black uppercase tracking-[0.12em] md:flex">
             <Link href="/">Home</Link>
@@ -302,12 +203,12 @@ export default function PricingPage() {
           </p>
 
           <h1 className="mt-5 text-5xl font-black tracking-tight md:text-7xl">
-            Plans for learners, teachers, and schools.
+            Plans for learners.
           </h1>
 
           <p className="mx-auto mt-6 max-w-3xl text-xl leading-9 text-slate-700">
-            Start as an individual learner, grow into mastery, or bring structured
-            AI learning support into a classroom or school system.
+            Start free and upgrade when you are ready for more structured AI
+            learning support.
           </p>
         </motion.div>
       </section>
@@ -339,11 +240,11 @@ export default function PricingPage() {
               Individual learners
             </p>
             <h2 className="mt-3 text-4xl font-black tracking-tight">
-              Plans for students, self-learners, and career builders.
+              Choose the plan that matches how often you want to learn.
             </h2>
             <p className="mt-4 max-w-3xl text-lg leading-8 text-slate-600">
-              These plans help learners move from basic exploration into daily
-              consistency, mastery, certificates, portfolios, and career readiness.
+              Both plans include access to all five learning worlds. Mastery
+              gives you more AI learning sessions and deeper progress support.
             </p>
           </div>
 
@@ -351,7 +252,7 @@ export default function PricingPage() {
             initial="hidden"
             animate="show"
             transition={{ staggerChildren: 0.08 }}
-            className="grid items-stretch gap-6 xl:grid-cols-4"
+            className="mx-auto grid max-w-4xl items-stretch gap-6 md:grid-cols-2"
           >
             {individualPlans.map((plan) => (
               <PlanCard key={plan.name} plan={plan} />
@@ -360,33 +261,20 @@ export default function PricingPage() {
         </div>
       </section>
 
-      <section className="border-y border-slate-200 bg-[#f5f7fb] px-6 py-24">
-        <div className="mx-auto max-w-7xl">
-          <div className="mb-10">
-            <p className="text-xs font-black uppercase tracking-[0.24em] text-[#071f4d]">
-              Schools, teachers, districts
-            </p>
-            <h2 className="mt-3 text-4xl font-black tracking-tight">
-              Classroom support built to scale.
-            </h2>
-            <p className="mt-4 max-w-3xl text-lg leading-8 text-slate-600">
-              These plans are for education organizations that need AI tutoring,
-              teacher support, student analytics, intervention tools, and
-              measurable academic progress.
-            </p>
-          </div>
-
-          <motion.div
-            initial="hidden"
-            whileInView="show"
-            viewport={{ once: true, amount: 0.15 }}
-            transition={{ staggerChildren: 0.08 }}
-            className="grid items-stretch gap-6 lg:grid-cols-3"
-          >
-            {schoolPlans.map((plan) => (
-              <PlanCard key={plan.name} plan={plan} school />
-            ))}
-          </motion.div>
+      <section className="border-y border-slate-200 bg-[#f5f7fb] px-6 py-20">
+        <div className="mx-auto max-w-5xl text-center">
+          <p className="text-xs font-black uppercase tracking-[0.24em] text-[#071f4d]">
+            Growing with the platform
+          </p>
+          <h2 className="mt-3 text-4xl font-black tracking-tight">
+            More plans may be introduced as GAHN AI expands.
+          </h2>
+          <p className="mx-auto mt-5 max-w-3xl text-lg leading-8 text-slate-600">
+            Future subscriptions may support advanced career tools, certificates,
+            portfolios, teachers, classrooms, schools, and larger learning
+            organizations. New plans will be introduced only as those features
+            are built and the platform grows.
+          </p>
         </div>
       </section>
 
@@ -405,19 +293,19 @@ export default function PricingPage() {
             {[
               [
                 "For individual learners",
-                "Paid plans unlock deeper guidance, stronger practice, memory, certificates, portfolios, and career readiness.",
+                "Free lets users experience structured AI learning, while Mastery supports more consistent learning and deeper progress tracking.",
               ],
               [
-                "For schools",
-                "School plans are built around teacher time savings, classroom visibility, student support, and scalable learning analytics.",
+                "For all five learning worlds",
+                "Both plans give learners access to Career Skills, School Help, Brain Development, General Knowledge, and Book Intelligence.",
               ],
               [
-                "For growth",
-                "The platform can start simple and expand into advanced student dashboards, teacher tools, and district-level reporting.",
+                "For consistent learning",
+                "Mastery gives learners more AI learning sessions, adaptive instruction, retries, and personalized recommendations.",
               ],
               [
-                "For real proof",
-                "Certificates, projects, skill verification, and portfolios help turn learning into visible progress.",
+                "For real progress",
+                "Saved sessions, notes, lesson recaps, streaks, and progress tracking help learners continue over time.",
               ],
             ].map(([title, text]) => (
               <div
