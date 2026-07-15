@@ -320,38 +320,6 @@ export default function PricingPage() {
         </div>
       </section>
 
-      <section className="border-t border-slate-200 bg-[#f5f7fb] px-6 py-20">
-        <div className="mx-auto grid max-w-7xl items-center gap-8 lg:grid-cols-[1fr_360px]">
-          <div>
-            <p className="text-xs font-black uppercase tracking-[0.24em] text-[#071f4d]">
-              Get started
-            </p>
-            <h2 className="mt-3 text-4xl font-black">
-              Create your account and choose your first learning path.
-            </h2>
-            <p className="mt-4 text-lg leading-8 text-slate-600">
-              New users sign up first. Returning users log in and continue from
-              the dashboard.
-            </p>
-          </div>
-
-          <div className="flex flex-col gap-3">
-            <Link
-              href="/signup"
-              className="rounded bg-[#071f4d] px-8 py-4 text-center text-sm font-black uppercase tracking-[0.14em] text-white"
-            >
-              Sign Up
-            </Link>
-            <Link
-              href="/login"
-              className="rounded border border-slate-300 bg-white px-8 py-4 text-center text-sm font-black uppercase tracking-[0.14em]"
-            >
-              Log In
-            </Link>
-          </div>
-        </div>
-      </section>
-
       <footer className="border-t border-slate-200 bg-white px-6 py-10">
         <div className="mx-auto flex max-w-7xl flex-col justify-between gap-6 md:flex-row">
           <div>

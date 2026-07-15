@@ -7,18 +7,38 @@ import {
   ArrowRight,
   Award,
   BarChart3,
+  Bot,
   BookOpen,
   Brain,
   Briefcase,
   CheckCircle2,
+  ChevronDown,
+  Compass,
+  EyeOff,
   Flame,
   Globe2,
   GraduationCap,
+  History,
+  LayoutDashboard,
+  ListChecks,
+  Lock,
+  Mail,
   Menu,
   MessageSquare,
+  Minus,
+  RefreshCw,
+  Repeat2,
+  ShieldCheck,
+  Sliders,
+  StickyNote,
+  Target,
   TrendingUp,
+  UserCircle2,
+  UserPlus,
   Users,
   X,
+  XCircle,
+  Zap,
 } from "lucide-react";
 
 const navLinks = [
@@ -115,6 +135,14 @@ const platformFeatures = [
   "Future upgrades add certificates, portfolios, and classroom tools.",
 ];
 
+const previewPages = [
+  { Icon: Bot, title: "AI Lesson", text: "The live teaching session with your instructor." },
+  { Icon: StickyNote, title: "Notes", text: "Everything saved automatically as you learn." },
+  { Icon: TrendingUp, title: "Progress", text: "Completion, streaks, and skill growth over time." },
+  { Icon: History, title: "Learning History", text: "Every past session, searchable and reviewable." },
+  { Icon: UserCircle2, title: "Instructor Page", text: "Meet your instructor and their teaching style." },
+];
+
 const schoolFeatures = [
   {
     Icon: Users,
@@ -145,6 +173,117 @@ const roadmap = [
   {
     stage: "Stage 3",
     text: "Teacher dashboards, classroom tools, school accounts, and advanced analytics.",
+  },
+  {
+    stage: "Stage 4",
+    text: "Mobile apps, community features, employer partnerships, and interview preparation tools.",
+  },
+  {
+    stage: "Stage 5",
+    text: "Global expansion, university partnerships, enterprise plans, and a full certification network.",
+  },
+];
+
+const comparisonRows: { feature: string; values: [boolean, boolean, boolean, boolean] }[] = [
+  { feature: "Structured, sequential lessons", values: [true, false, false, true] },
+  { feature: "Checks your understanding", values: [true, false, false, false] },
+  { feature: "Corrects mistakes and asks you to retry", values: [true, false, false, false] },
+  { feature: "Tracks progress across sessions", values: [true, false, false, true] },
+  { feature: "Adapts pacing to how you're doing", values: [true, false, false, false] },
+  { feature: "Built around active recall, not passive reading", values: [true, false, false, false] },
+];
+
+const comparisonColumns = ["GAHN AI", "ChatGPT", "Google Search", "Online Courses"];
+
+const journey = [
+  { Icon: UserPlus, title: "Sign Up", text: "Create your account in under a minute." },
+  { Icon: LayoutDashboard, title: "Dashboard", text: "Land in your personal learning hub." },
+  { Icon: Compass, title: "Choose a World", text: "Pick the subject area you want to start with." },
+  { Icon: Bot, title: "Meet Your Instructor", text: "Get matched with a specialized AI instructor." },
+  { Icon: ListChecks, title: "Complete Lessons", text: "Learn, practice, and get corrected in real time." },
+  { Icon: TrendingUp, title: "Track Progress", text: "Watch streaks, skills, and completion grow." },
+  { Icon: Award, title: "Earn Certificates", text: "Coming soon — proof of the skills you've built.", future: true },
+];
+
+const whyFaster = [
+  { Icon: Zap, title: "Active Learning", text: "You respond and think, instead of passively reading or watching." },
+  { Icon: RefreshCw, title: "Adaptive Feedback", text: "Wrong answers change the next step instead of being ignored." },
+  { Icon: Target, title: "Practice & Retries", text: "You try again until a concept actually sticks, not just once." },
+  { Icon: Sliders, title: "Personalized Instruction", text: "Pace and explanations adjust to how you're actually doing." },
+  { Icon: Repeat2, title: "Long-Term Retention", text: "Built around recall methods designed to stick, not cram." },
+];
+
+const faqs = [
+  {
+    q: "What is GAHN AI?",
+    a: "GAHN AI is a structured learning platform where AI instructors teach a concept, ask you to apply it, check your answer, and correct you until you actually understand it — instead of just answering questions.",
+  },
+  {
+    q: "How is this different from just using ChatGPT?",
+    a: "ChatGPT answers whatever you ask, in whatever order you ask it. GAHN AI runs a structured lesson: it teaches a concept, requires you to respond, checks that response, and won't move on until you've shown understanding.",
+  },
+  {
+    q: "Do I need any experience to start?",
+    a: "No. Every learning world starts with beginner-friendly lessons, and the AI instructor adjusts difficulty based on how you're doing.",
+  },
+  {
+    q: "What ages is GAHN AI built for?",
+    a: "GAHN AI is designed to work for students, self-learners, and adults alike — the explanations stay clear and structured regardless of age or experience level.",
+  },
+  {
+    q: "How does the AI check if I actually understood a lesson?",
+    a: "Through recall questions, applied scenarios, and short practice exercises. If your answer shows a gap, the instructor re-explains and asks you to try again before continuing.",
+  },
+  {
+    q: "What happens if I get an answer wrong?",
+    a: "The instructor doesn't just mark it wrong and move on — it explains what was missed, walks through the correct approach, and asks you to retry so the concept actually sticks.",
+  },
+  {
+    q: "Is my data and progress private?",
+    a: "Yes. Your notes, lesson history, and progress are tied to your account and are not visible to other users. See the Security & Privacy section below for more detail.",
+  },
+  {
+    q: "Can I use GAHN AI on my phone?",
+    a: "Yes, the platform is fully responsive and works on phones, tablets, and desktop browsers.",
+  },
+  {
+    q: "Will certificates be available?",
+    a: "Certificates and portfolios are planned for a future stage of the platform, tied to Career Skills and School Help completions.",
+  },
+];
+
+const footerColumns: { title: string; links: { label: string; href: string }[] }[] = [
+  {
+    title: "Product",
+    links: [
+      { label: "Programs", href: "#programs" },
+      { label: "Platform", href: "#platform" },
+      { label: "Instructors", href: "#instructors" },
+      { label: "Pricing", href: "/pricing" },
+    ],
+  },
+  {
+    title: "Company",
+    links: [
+      { label: "About", href: "/about" },
+      { label: "Schools", href: "#schools" },
+      { label: "Roadmap", href: "#roadmap" },
+    ],
+  },
+  {
+    title: "Resources",
+    links: [
+      { label: "How It Works", href: "#how-it-works" },
+      { label: "FAQ", href: "#faq" },
+      { label: "Security & Privacy", href: "#security" },
+    ],
+  },
+  {
+    title: "Legal",
+    links: [
+      { label: "Privacy Policy", href: "/privacy" },
+      { label: "Terms of Service", href: "/terms" },
+    ],
   },
 ];
 
@@ -206,7 +345,7 @@ function HeroSignupCard() {
       </h2>
 
       <p className="mt-3 text-sm leading-6 text-[#5B6472] sm:text-[15px] sm:leading-7">
-        Create your account and choose your first learning world.
+        Create your account, choose what you want to learn, and begin a guided AI lesson.
       </p>
 
       <div className="mt-5 space-y-3.5 sm:mt-6">
@@ -465,13 +604,377 @@ function RoadmapCard({ stage, text }: { stage: string; text: string }) {
   );
 }
 
+/**
+ * LessonDemo — a premium tutoring-workspace preview.
+ * Deliberately NOT a chat/message UI: instructor panel, lesson header with
+ * progress bar, a concept block, a separate practice task, an answer input,
+ * a correction panel, a retry action, a confirmation state, and notes/recap
+ * controls — the shape of a real one-on-one online tutoring lesson.
+ */
+function LessonDemo() {
+  const [stage, setStage] = useState<"task" | "incorrect" | "correct">("task");
+  const [attempt, setAttempt] = useState(0);
+  const [answer, setAnswer] = useState("");
+  const [noteSaved, setNoteSaved] = useState(false);
+  const [recapOpen, setRecapOpen] = useState(false);
+
+  function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+    if (attempt === 0) {
+      setStage("incorrect");
+    } else {
+      setStage("correct");
+    }
+  }
+
+  function handleRetry() {
+    setAttempt(1);
+    setAnswer("");
+    setStage("task");
+  }
+
+  return (
+    <div className="mx-auto max-w-5xl rounded-2xl border border-[#E3E6EC] bg-white shadow-[0_18px_50px_rgba(15,34,71,0.07)]">
+      {/* Lesson header + progress */}
+      <div className="border-b border-[#E3E6EC] p-6 sm:p-8">
+        <div className="flex flex-wrap items-start justify-between gap-4">
+          <div>
+            <p className="text-xs font-bold uppercase tracking-[0.2em] text-[#2952A3]">
+              Career Skills · Lesson 3 of 12
+            </p>
+            <h3 className="mt-2 text-xl font-bold text-[#0A1628] sm:text-2xl">
+              Negotiation Basics
+            </h3>
+          </div>
+          <span className="rounded-full bg-[#F7F8FA] px-3 py-1.5 text-[11px] font-bold uppercase tracking-[0.1em] text-[#5B6472]">
+            Preview
+          </span>
+        </div>
+
+        <div className="mt-5 h-2 w-full overflow-hidden rounded-full bg-[#F7F8FA]">
+          <div className="h-full w-[28%] rounded-full bg-[#0F2247]" />
+        </div>
+      </div>
+
+      <div className="grid gap-8 p-6 sm:p-8 lg:grid-cols-[220px_minmax(0,1fr)]">
+        {/* Instructor panel */}
+        <div className="flex flex-col items-center text-center lg:items-start lg:text-left">
+          <div className="relative h-32 w-32 overflow-hidden rounded-2xl bg-[#F7F8FA] lg:h-40 lg:w-40">
+            <img
+              src="/instructors/arin.jpg"
+              alt="Arin, Career and Finance Instructor"
+              className="h-full w-full object-cover grayscale-[15%] contrast-[1.05] saturate-[0.85]"
+            />
+            <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-[#0A1628]/25 via-transparent to-[#2952A3]/10" />
+          </div>
+
+          <p className="mt-4 text-xs font-bold uppercase tracking-[0.2em] text-[#2952A3]">
+            Your Instructor
+          </p>
+          <h4 className="mt-1 text-lg font-bold text-[#0A1628]">Arin</h4>
+          <p className="text-sm font-semibold text-[#2952A3]">Career &amp; Finance Instructor</p>
+          <p className="mt-3 text-sm leading-6 text-[#5B6472]">
+            Teaching negotiation, budgeting, and real-world financial decision-making.
+          </p>
+        </div>
+
+        {/* Main workspace */}
+        <div className="min-w-0 space-y-6">
+          {/* Concept */}
+          <div className="rounded-xl border border-[#E3E6EC] bg-[#F7F8FA] p-5 sm:p-6">
+            <p className="text-xs font-bold uppercase tracking-[0.2em] text-[#2952A3]">
+              Concept
+            </p>
+            <h4 className="mt-2 text-lg font-bold text-[#0A1628]">
+              Before You Respond to an Offer
+            </h4>
+            <p className="mt-3 text-sm leading-7 text-[#5B6472]">
+              Never accept or reject a job offer immediately. The strongest
+              negotiators research the market rate for the role first, then
+              respond with a counter that&apos;s grounded in that data instead
+              of emotion.
+            </p>
+          </div>
+
+          {/* Practice task */}
+          <div className="rounded-xl border border-[#E3E6EC] bg-white p-5 sm:p-6">
+            <div className="flex items-center justify-between">
+              <p className="text-xs font-bold uppercase tracking-[0.2em] text-[#2952A3]">
+                Practice Task
+              </p>
+              {attempt === 1 && stage !== "correct" && (
+                <span className="rounded-full bg-[#F7F8FA] px-3 py-1 text-[11px] font-bold uppercase tracking-[0.1em] text-[#5B6472]">
+                  Retry
+                </span>
+              )}
+            </div>
+
+            <p className="mt-2 text-base font-semibold leading-7 text-[#0A1628]">
+              You receive a job offer of $52,000. What should you do before responding?
+            </p>
+
+            {stage !== "correct" && (
+              <form onSubmit={handleSubmit} className="mt-4 space-y-3">
+                <textarea
+                  value={answer}
+                  onChange={(e) => setAnswer(e.target.value)}
+                  placeholder="Type your answer..."
+                  rows={3}
+                  className="w-full rounded-lg border border-[#E3E6EC] px-4 py-3 text-sm leading-6 text-[#0A1628] outline-none focus:border-[#2952A3]"
+                />
+                <button
+                  type="submit"
+                  className="rounded-lg bg-[#0F2247] px-6 py-3 text-sm font-semibold text-white transition hover:bg-[#16305F]"
+                >
+                  Submit Answer
+                </button>
+              </form>
+            )}
+          </div>
+
+          {/* Correction panel */}
+          {stage === "incorrect" && (
+            <div className="rounded-xl border border-[#E3E6EC] bg-white p-5 sm:p-6">
+              <div className="flex items-start gap-3 border-l-2 border-[#0F2247]/15 pl-4">
+                <XCircle className="mt-0.5 h-5 w-5 flex-none text-[#5B6472]" strokeWidth={1.75} />
+                <div>
+                  <p className="text-sm font-bold text-[#0A1628]">
+                    Not quite — here&apos;s what was missed
+                  </p>
+                  <p className="mt-2 text-sm leading-6 text-[#5B6472]">
+                    Accepting immediately skips research and gives up room to
+                    negotiate. Look up the market rate for this role first,
+                    then respond with a specific counter number.
+                  </p>
+                </div>
+              </div>
+
+              <button
+                type="button"
+                onClick={handleRetry}
+                className="mt-5 rounded-lg border border-[#E3E6EC] px-6 py-3 text-sm font-semibold text-[#0A1628] transition hover:border-[#0F2247]/30"
+              >
+                Retry Task
+              </button>
+            </div>
+          )}
+
+          {/* Understanding confirmation */}
+          {stage === "correct" && (
+            <div className="rounded-xl border border-[#E3E6EC] bg-white p-5 sm:p-6">
+              <div className="flex items-start gap-3 border-l-2 border-[#0F2247]/15 pl-4">
+                <CheckCircle2 className="mt-0.5 h-5 w-5 flex-none text-[#2952A3]" strokeWidth={1.75} />
+                <div>
+                  <p className="text-sm font-bold text-[#0A1628]">
+                    Correct — understanding confirmed
+                  </p>
+                  <p className="mt-2 text-sm leading-6 text-[#5B6472]">
+                    You grounded the ask in market data instead of emotion.
+                    That&apos;s the core negotiation skill for this lesson.
+                  </p>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* Notes & lesson recap controls */}
+          <div className="flex flex-col gap-3 border-t border-[#E3E6EC] pt-6 sm:flex-row sm:items-center sm:justify-between">
+            <button
+              type="button"
+              onClick={() => setNoteSaved(true)}
+              className="flex items-center justify-center gap-2 rounded-lg border border-[#E3E6EC] px-5 py-3 text-sm font-semibold text-[#0A1628] transition hover:border-[#0F2247]/30"
+            >
+              <StickyNote className="h-4 w-4" strokeWidth={1.75} />
+              {noteSaved ? "Saved to Notes" : "Save to Notes"}
+            </button>
+
+            <button
+              type="button"
+              onClick={() => setRecapOpen((open) => !open)}
+              className="flex items-center justify-center gap-2 rounded-lg border border-[#E3E6EC] px-5 py-3 text-sm font-semibold text-[#0A1628] transition hover:border-[#0F2247]/30"
+            >
+              <ListChecks className="h-4 w-4" strokeWidth={1.75} />
+              {recapOpen ? "Hide Lesson Recap" : "View Lesson Recap"}
+            </button>
+          </div>
+
+          {recapOpen && (
+            <div className="rounded-xl border border-[#E3E6EC] bg-[#F7F8FA] p-5 text-sm leading-6 text-[#5B6472]">
+              Research the market rate before responding to any offer, then
+              counter with a specific number backed by that data.
+            </div>
+          )}
+        </div>
+      </div>
+
+      <p className="border-t border-[#E3E6EC] p-6 text-sm leading-6 text-[#5B6472] sm:p-8">
+        This is a preview of how AI instructors teach. Real lessons adapt to
+        your answers in real time.
+      </p>
+    </div>
+  );
+}
+
+function ComparisonTable() {
+  return (
+    <div className="overflow-x-auto rounded-2xl border border-[#E3E6EC]">
+      <table className="w-full min-w-[640px] border-collapse text-left">
+        <thead>
+          <tr className="border-b border-[#E3E6EC] bg-[#F7F8FA]">
+            <th className="p-5 text-sm font-bold text-[#0A1628]">
+              What matters when learning
+            </th>
+            {comparisonColumns.map((col, index) => (
+              <th
+                key={col}
+                className={`p-5 text-sm ${
+                  index === 0 ? "font-bold text-[#0F2247]" : "font-semibold text-[#5B6472]"
+                }`}
+              >
+                {col}
+              </th>
+            ))}
+          </tr>
+        </thead>
+        <tbody>
+          {comparisonRows.map((row) => (
+            <tr key={row.feature} className="border-b border-[#E3E6EC] last:border-0">
+              <td className="p-5 text-sm font-semibold text-[#0A1628]">{row.feature}</td>
+              {row.values.map((value, index) => (
+                <td key={index} className="p-5">
+                  {value ? (
+                    <CheckCircle2 className="h-5 w-5 text-[#2952A3]" strokeWidth={1.75} />
+                  ) : (
+                    <Minus className="h-5 w-5 text-[#5B6472]/40" strokeWidth={1.75} />
+                  )}
+                </td>
+              ))}
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  );
+}
+
+function JourneyTimeline() {
+  return (
+    <div className="relative">
+      <div className="pointer-events-none absolute left-0 right-0 top-6 hidden h-px bg-[#0F2247]/15 lg:block" />
+      <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-4 xl:grid-cols-7">
+        {journey.map((item, index) => (
+          <div key={item.title} className="relative flex flex-col items-start text-left">
+            <div className="relative z-10 grid h-12 w-12 flex-none place-items-center rounded-full border border-[#0F2247]/20 bg-white text-[#0F2247]">
+              <item.Icon className="h-5 w-5" strokeWidth={1.75} />
+            </div>
+            <p className="mt-4 text-xs font-bold text-[#2952A3]">
+              Step {index + 1}
+              {item.future ? " · Future" : ""}
+            </p>
+            <h3 className="mt-1 text-base font-bold text-[#0A1628]">{item.title}</h3>
+            <p className="mt-2 text-sm leading-6 text-[#5B6472]">{item.text}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+function WhyFasterCard({ Icon, title, text }: { Icon: LucideIcon; title: string; text: string }) {
+  return (
+    <div className="rounded-2xl border border-[#E3E6EC] bg-white p-6 sm:p-7">
+      <div className="grid h-12 w-12 place-items-center rounded-xl border border-[#0F2247]/20 text-[#0F2247]">
+        <Icon className="h-5 w-5" strokeWidth={1.75} />
+      </div>
+      <h3 className="mt-5 text-lg font-bold text-[#0A1628]">{title}</h3>
+      <p className="mt-3 text-sm leading-6 text-[#5B6472]">{text}</p>
+    </div>
+  );
+}
+
+function PreviewMiniCard({ Icon, title, text }: { Icon: LucideIcon; title: string; text: string }) {
+  return (
+    <div className="rounded-2xl border border-[#E3E6EC] bg-white p-5">
+      <div className="grid h-10 w-10 place-items-center rounded-lg border border-[#0F2247]/20 text-[#0F2247]">
+        <Icon className="h-4.5 w-4.5" strokeWidth={1.75} />
+      </div>
+      <h3 className="mt-4 text-sm font-bold text-[#0A1628]">{title}</h3>
+      <p className="mt-2 text-xs leading-5 text-[#5B6472]">{text}</p>
+    </div>
+  );
+}
+
+function FaqItem({
+  question,
+  answer,
+  isOpen,
+  onToggle,
+}: {
+  question: string;
+  answer: string;
+  isOpen: boolean;
+  onToggle: () => void;
+}) {
+  return (
+    <div className="rounded-2xl border border-[#E3E6EC] bg-white">
+      <button
+        type="button"
+        onClick={onToggle}
+        aria-expanded={isOpen}
+        className="flex w-full items-center justify-between gap-4 p-5 text-left sm:p-6"
+      >
+        <span className="text-base font-bold text-[#0A1628]">{question}</span>
+        <ChevronDown
+          className={`h-5 w-5 flex-none text-[#2952A3] transition-transform ${
+            isOpen ? "rotate-180" : ""
+          }`}
+          strokeWidth={1.75}
+        />
+      </button>
+
+      {isOpen && (
+        <div className="px-5 pb-5 sm:px-6 sm:pb-6">
+          <p className="text-sm leading-7 text-[#5B6472]">{answer}</p>
+        </div>
+      )}
+    </div>
+  );
+}
+
+function FooterColumn({
+  title,
+  links,
+}: {
+  title: string;
+  links: { label: string; href: string }[];
+}) {
+  return (
+    <div>
+      <p className="text-xs font-bold uppercase tracking-[0.18em] text-[#0A1628]">{title}</p>
+      <ul className="mt-4 space-y-3">
+        {links.map((link) => (
+          <li key={link.label}>
+            <Link
+              href={link.href}
+              className="text-sm text-[#5B6472] transition hover:text-[#2952A3]"
+            >
+              {link.label}
+            </Link>
+          </li>
+        ))}
+      </ul>
+    </div>
+  );
+}
+
 export default function Home() {
   const [menuOpen, setMenuOpen] = useState(false);
+  const [openFaqIndex, setOpenFaqIndex] = useState<number | null>(0);
 
   return (
     <main
       id="top"
-      className="min-h-screen scroll-smooth bg-white font-sans text-[#0A1628] xl:[zoom:0.63]"
+      className="min-h-screen scroll-smooth bg-white font-sans text-[#0A1628] xl:[zoom:0.75]"
     >
       <header className="sticky top-0 z-50 border-b border-[#E3E6EC] bg-white/95 backdrop-blur">
         <nav
@@ -587,20 +1090,21 @@ export default function Home() {
         >
           <div className="min-w-0">
             <p className="text-xs font-bold uppercase tracking-[0.24em] text-[#2952A3] sm:text-sm">
-              AI Learning Platform
+              AI-Powered Learning for Students and Self-Learners
             </p>
 
-            <h1 className="mt-5 max-w-[900px] text-5xl font-extrabold leading-[1.03] tracking-[-0.045em] text-[#0A1628] sm:mt-6 sm:text-7xl">
-              Learn faster with{" "}
+            <h1 className="mt-5 max-w-[920px] text-5xl font-extrabold leading-[1.03] tracking-[-0.045em] text-[#0A1628] sm:mt-6 sm:text-7xl">
+              AI instructors that{" "}
               <span className="lg:block">
-                structured <span className="text-[#2952A3]">AI instruction.</span>
+                teach, check, and <span className="text-[#2952A3]">adapt to you.</span>
               </span>
             </h1>
 
-            <p className="mt-6 max-w-[680px] text-base leading-7 text-[#5B6472] sm:mt-7 sm:text-lg sm:leading-8 lg:text-lg lg:leading-8">
-              A serious learning platform for students, self-learners, and
-              future classrooms. Choose a learning world, work with AI
-              instructors, and build real skills with guided practice.
+            <p className="mt-6 max-w-[760px] text-base leading-7 text-[#5B6472] sm:mt-7 sm:text-lg sm:leading-8 lg:text-lg lg:leading-8">
+              GAHN AI helps students and self-learners build real skills through
+              structured lessons. Instead of only giving answers, the AI teaches
+              concepts, gives practice, checks understanding, corrects mistakes,
+              and guides learners until the lesson makes sense.
             </p>
 
             <div className="mt-7 flex flex-col gap-3 sm:mt-8 sm:flex-row sm:flex-wrap sm:gap-4">
@@ -621,10 +1125,10 @@ export default function Home() {
 
             <div className="mt-9 grid grid-cols-2 gap-x-5 gap-y-6 border-t border-[#E3E6EC] pt-7 sm:mt-10 sm:pt-8 lg:grid-cols-4">
               {[
-                ["AI Instructors", "Always available"],
-                ["Personalized", "For your goals"],
-                ["Track Progress", "See your growth"],
-                ["Learn Anywhere", "On any device"],
+                ["Structured Lessons", "Not random chats"],
+                ["Active Practice", "You must think and respond"],
+                ["Adaptive Feedback", "Mistakes change the lesson"],
+                ["Saved Progress", "Continue where you left off"],
               ].map(([item, sub]) => (
                 <div key={item}>
                   <p className="flex items-start gap-1.5 text-sm font-bold text-[#0A1628]">
@@ -641,6 +1145,58 @@ export default function Home() {
           </div>
 
           <HeroSignupCard />
+        </div>
+      </section>
+
+      {/* WHO IT IS FOR */}
+      <section className="border-y border-[#E3E6EC] bg-white py-16 sm:py-20">
+        <div className={shellClass}>
+          <SectionIntro
+            eyebrow="Who GAHN AI Is For"
+            title="One platform for different learning goals."
+            text="GAHN AI is built for people who want guided learning, active practice, and feedback instead of simply receiving an answer."
+          />
+
+          <div className="grid gap-5 md:grid-cols-3">
+            {[
+              {
+                title: "Students",
+                text: "Get help understanding school subjects, practice difficult concepts, and receive corrections before moving forward.",
+              },
+              {
+                title: "Self-Learners",
+                text: "Learn business, finance, technology, communication, books, and other real-world skills through structured learning paths.",
+              },
+              {
+                title: "Skill Builders",
+                text: "Use short guided lessons to improve focus, memory, decision-making, career knowledge, and practical ability over time.",
+              },
+            ].map((item) => (
+              <div
+                key={item.title}
+                className="rounded-2xl border border-[#E3E6EC] bg-[#F7F8FA] p-6 sm:p-7"
+              >
+                <h3 className="text-xl font-bold text-[#0A1628]">
+                  {item.title}
+                </h3>
+                <p className="mt-4 text-base leading-7 text-[#5B6472]">
+                  {item.text}
+                </p>
+              </div>
+            ))}
+          </div>
+
+          <div className="mt-8 rounded-2xl bg-[#0A1628] px-6 py-7 text-white sm:px-8 sm:py-8">
+            <p className="text-xs font-bold uppercase tracking-[0.22em] text-[#6F9BFF]">
+              Why It Is Different
+            </p>
+            <p className="mt-3 max-w-5xl text-lg leading-8 text-white/85 sm:text-xl">
+              Traditional chatbots answer questions. GAHN AI manages the learning
+              process by teaching a concept, asking the learner to do something,
+              checking the response, correcting misunderstandings, and requiring
+              a retry when needed.
+            </p>
+          </div>
         </div>
       </section>
 
@@ -664,7 +1220,7 @@ export default function Home() {
       {/* INSTRUCTORS */}
       <section
         id="instructors"
-        className="scroll-mt-24 bg-[#F7F8FA] py-20 sm:py-24"
+        className="scroll-mt-24 bg-white py-20 sm:py-24"
       >
         <div className={shellClass}>
           <SectionIntro
@@ -676,6 +1232,23 @@ export default function Home() {
           <div className="grid gap-6 xl:grid-cols-2">
             {instructors.map((instructor) => (
               <InstructorCard key={instructor.name} {...instructor} />
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* WHY STUDENTS LEARN FASTER */}
+      <section className="scroll-mt-24 bg-[#F7F8FA] py-20 sm:py-24">
+        <div className={shellClass}>
+          <SectionIntro
+            eyebrow="The Learning Science"
+            title="Why students learn faster with GAHN AI."
+            text="Every lesson is built around methods proven to build real, lasting understanding — not just short-term answers."
+          />
+
+          <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 xl:gap-6">
+            {whyFaster.map((item) => (
+              <WhyFasterCard key={item.title} {...item} />
             ))}
           </div>
         </div>
@@ -698,6 +1271,32 @@ export default function Home() {
               <StepCard key={step.number} {...step} />
             ))}
           </div>
+        </div>
+      </section>
+
+      {/* LEARNING JOURNEY TIMELINE */}
+      <section className="scroll-mt-24 bg-[#F7F8FA] py-20 sm:py-24">
+        <div className={shellClass}>
+          <SectionIntro
+            eyebrow="The Full Journey"
+            title="From first signup to a finished skill."
+            text="A closer look at the complete path a learner takes through GAHN AI, start to finish."
+          />
+
+          <JourneyTimeline />
+        </div>
+      </section>
+
+      {/* COMPARISON */}
+      <section className="scroll-mt-24 bg-white py-20 sm:py-24">
+        <div className={shellClass}>
+          <SectionIntro
+            eyebrow="GAHN AI vs. Everything Else"
+            title="Answers are easy to find. Understanding isn't."
+            text="Here's how a structured AI instructor compares to the tools people usually reach for instead."
+          />
+
+          <ComparisonTable />
         </div>
       </section>
 
@@ -739,6 +1338,15 @@ export default function Home() {
 
           <DashboardPreview />
         </div>
+
+        <div className={`${shellClass} mt-10 sm:mt-14`}>
+          <p className="text-sm font-bold text-[#0A1628]">Every page you'll actually use:</p>
+          <div className="mt-5 grid gap-4 sm:grid-cols-2 lg:grid-cols-5">
+            {previewPages.map((page) => (
+              <PreviewMiniCard key={page.title} {...page} />
+            ))}
+          </div>
+        </div>
       </section>
 
       {/* SCHOOLS */}
@@ -765,8 +1373,41 @@ export default function Home() {
         </div>
       </section>
 
+      {/* SECURITY & PRIVACY */}
+      <section id="security" className="scroll-mt-24 bg-[#F7F8FA] py-20 sm:py-24">
+        <div className={shellClass}>
+          <SectionIntro
+            eyebrow="Security & Privacy"
+            title="Your learning data stays yours."
+            text="Notes, lesson history, and progress are tied to your account only — not shared, sold, or made visible to other users."
+          />
+
+          <div className="grid gap-5 md:grid-cols-3">
+            {[
+              {
+                Icon: EyeOff,
+                title: "Private by default",
+                text: "Your notes, progress, and lesson history are visible only to you, never to other learners.",
+              },
+              {
+                Icon: Lock,
+                title: "Secure storage",
+                text: "Account data is stored using encrypted, access-controlled infrastructure.",
+              },
+              {
+                Icon: ShieldCheck,
+                title: "You're in control",
+                text: "You can review, export, or request deletion of your account and data at any time.",
+              },
+            ].map((item) => (
+              <WhyFasterCard key={item.title} {...item} />
+            ))}
+          </div>
+        </div>
+      </section>
+
       {/* ROADMAP */}
-      <section className="bg-[#F7F8FA] py-20 sm:py-24">
+      <section id="roadmap" className="scroll-mt-24 bg-white py-20 sm:py-24">
         <div className={shellClass}>
           <div className="max-w-2xl">
             <p className="text-xs font-bold uppercase tracking-[0.24em] text-[#2952A3]">
@@ -777,9 +1418,34 @@ export default function Home() {
             </h2>
           </div>
 
-          <div className="mt-12 grid gap-6 md:grid-cols-3 sm:mt-14">
+          <div className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-3 sm:mt-14">
             {roadmap.map((item) => (
               <RoadmapCard key={item.stage} {...item} />
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* FAQ */}
+      <section id="faq" className="scroll-mt-24 bg-[#F7F8FA] py-20 sm:py-24">
+        <div className={shellClass}>
+          <SectionIntro
+            eyebrow="Frequently Asked Questions"
+            title="Everything you're probably wondering."
+            text="Can't find what you're looking for? Reach out any time — see the Contact link in the footer."
+          />
+
+          <div className="mx-auto max-w-3xl space-y-4">
+            {faqs.map((faq, index) => (
+              <FaqItem
+                key={faq.q}
+                question={faq.q}
+                answer={faq.a}
+                isOpen={openFaqIndex === index}
+                onToggle={() =>
+                  setOpenFaqIndex((current) => (current === index ? null : index))
+                }
+              />
             ))}
           </div>
         </div>
@@ -794,12 +1460,23 @@ export default function Home() {
                 Get started today
               </p>
               <h2 className="mt-3 max-w-3xl text-2xl font-extrabold leading-tight tracking-[-0.03em] text-white sm:text-3xl lg:text-4xl">
-                Start with signup, then continue into your dashboard.
+                Your first AI-guided lesson is one click away.
               </h2>
               <p className="mt-3 max-w-xl text-base leading-7 text-white/70">
                 New users create an account first. Returning users log in with
                 their email.
               </p>
+
+              <div className="mt-6 flex flex-wrap gap-x-6 gap-y-2">
+                {["No credit card required to start", "Cancel anytime", "Built for every learner"].map(
+                  (point) => (
+                    <p key={point} className="flex items-center gap-2 text-sm font-semibold text-white/80">
+                      <CheckCircle2 className="h-4 w-4 flex-none text-[#6F9BFF]" strokeWidth={1.75} />
+                      {point}
+                    </p>
+                  )
+                )}
+              </div>
             </div>
 
             <div className="flex w-full flex-col gap-3 sm:w-auto sm:flex-row sm:gap-4 lg:flex-none">
@@ -821,38 +1498,49 @@ export default function Home() {
       </section>
 
       {/* FOOTER */}
-      <footer className="border-t border-[#E3E6EC] py-10">
-        <div
-          className={`${shellClass} flex flex-col items-center justify-between gap-7 lg:flex-row`}
-        >
-          <Link href="/" className="flex items-center gap-3">
-            <img
-              src="/logo/favicon.png"
-              alt="GAHN AI"
-              className="h-9 w-9 rounded-full object-cover"
-            />
-            <div>
-              <p className="text-base font-extrabold tracking-[-0.02em]">
-                GAHN AI
-              </p>
-              <p className="text-[8px] font-bold uppercase tracking-[0.16em] text-[#5B6472]">
-                Global AI Human Helper Network
+      <footer className="border-t border-[#E3E6EC] py-14">
+        <div className={shellClass}>
+          <div className="grid gap-10 sm:grid-cols-2 lg:grid-cols-6">
+            <div className="sm:col-span-2 lg:col-span-2">
+              <Link href="/" className="flex items-center gap-3">
+                <img
+                  src="/logo/favicon.png"
+                  alt="GAHN AI"
+                  className="h-9 w-9 rounded-full object-cover"
+                />
+                <div>
+                  <p className="text-base font-extrabold tracking-[-0.02em]">
+                    GAHN AI
+                  </p>
+                  <p className="text-[8px] font-bold uppercase tracking-[0.16em] text-[#5B6472]">
+                    Global AI Human Helper Network
+                  </p>
+                </div>
+              </Link>
+              <p className="mt-5 max-w-xs text-sm leading-6 text-[#5B6472]">
+                A structured AI learning platform for students, self-learners,
+                and future classrooms.
               </p>
             </div>
-          </Link>
 
-          <div className="flex flex-wrap items-center justify-center gap-x-5 gap-y-3 text-xs font-semibold text-[#5B6472] sm:gap-x-6">
-            <a href="#programs">Programs</a>
-            <a href="#platform">Platform</a>
-            <a href="#instructors">Instructors</a>
-            <a href="#how-it-works">How It Works</a>
-            <a href="#schools">Schools</a>
-            <Link href="/pricing">Pricing</Link>
+            {footerColumns.map((column) => (
+              <FooterColumn key={column.title} {...column} />
+            ))}
           </div>
 
-          <p className="text-center text-xs text-[#5B6472]">
-            © 2026 GAHN AI. All rights reserved.
-          </p>
+          <div className="mt-12 flex flex-col items-center justify-between gap-4 border-t border-[#E3E6EC] pt-8 sm:flex-row">
+            <p className="text-xs text-[#5B6472]">
+              © 2026 GAHN AI. All rights reserved.
+            </p>
+
+            <a
+              href="mailto:hello@gahnai.com"
+              className="flex items-center gap-2 text-xs font-semibold text-[#2952A3]"
+            >
+              <Mail className="h-4 w-4" strokeWidth={1.75} />
+              hello@gahnai.com
+            </a>
+          </div>
         </div>
       </footer>
     </main>
