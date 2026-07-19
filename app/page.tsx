@@ -487,7 +487,7 @@ function InstructorCard({
         <img
           src={image}
           alt={`${name}, ${role}`}
-          className="h-full w-full object-cover grayscale-[15%] contrast-[1.05] saturate-[0.85]"
+          className="h-full w-full object-contain grayscale-[15%] contrast-[1.05] saturate-[0.85]"
         />
         <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-[#0A1628]/25 via-transparent to-[#2952A3]/10" />
       </div>

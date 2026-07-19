@@ -46,14 +46,6 @@ const individualPlans = [
   },
 ];
 
-const outcomePillars = [
-  ["Learn", "AI instructors explain concepts clearly."],
-  ["Practice", "Recall, quizzes, and exercises build retention."],
-  ["Prove Mastery", "Certificates and assessments show progress."],
-  ["Build Portfolio", "Projects and achievements create proof of skill."],
-  ["Scale Learning", "Teacher and school tools support classrooms."],
-];
-
 function PlanCard({ plan }: { plan: any }) {
   const [loading, setLoading] = useState(false);
   const highlighted = plan.popular || plan.featured;
@@ -147,7 +139,7 @@ function PlanCard({ plan }: { plan: any }) {
 
 export default function PricingPage() {
   return (
-    <main className="min-h-screen bg-white text-[#061633] xl:[zoom:0.63]">
+    <main className="min-h-screen bg-white text-[#061633]">
       <header className="sticky top-0 z-50 border-b border-slate-200 bg-white/95 backdrop-blur-xl">
         <nav className="mx-auto flex max-w-7xl items-center justify-between px-6 py-5">
           <Link href="/" className="flex items-center gap-3">
@@ -198,56 +190,14 @@ export default function PricingPage() {
           transition={{ duration: 0.6 }}
           className="mx-auto max-w-5xl text-center"
         >
-          <p className="text-xs font-black uppercase tracking-[0.24em] text-[#071f4d]">
-            Pricing built around outcomes
-          </p>
-
-          <h1 className="mt-5 text-5xl font-black tracking-tight md:text-7xl">
+          <h1 className="text-5xl font-black tracking-tight md:text-7xl">
             Plans for learners.
           </h1>
-
-          <p className="mx-auto mt-6 max-w-3xl text-xl leading-9 text-slate-700">
-            Start free and upgrade when you are ready for more structured AI
-            learning support.
-          </p>
-        </motion.div>
-      </section>
-
-      <section className="px-6 py-20">
-        <motion.div
-          variants={fadeUp}
-          initial="hidden"
-          animate="show"
-          transition={{ duration: 0.6 }}
-          className="mx-auto grid max-w-7xl gap-4 md:grid-cols-5"
-        >
-          {outcomePillars.map(([title, text]) => (
-            <div
-              key={title}
-              className="rounded border border-slate-200 bg-white p-6 shadow-sm"
-            >
-              <h3 className="text-xl font-black">{title}</h3>
-              <p className="mt-3 text-sm leading-6 text-slate-600">{text}</p>
-            </div>
-          ))}
         </motion.div>
       </section>
 
       <section className="border-t border-slate-200 px-6 py-24">
         <div className="mx-auto max-w-7xl">
-          <div className="mb-10">
-            <p className="text-xs font-black uppercase tracking-[0.24em] text-[#071f4d]">
-              Individual learners
-            </p>
-            <h2 className="mt-3 text-4xl font-black tracking-tight">
-              Choose the plan that matches how often you want to learn.
-            </h2>
-            <p className="mt-4 max-w-3xl text-lg leading-8 text-slate-600">
-              Both plans include access to all five learning worlds. Mastery
-              gives you more AI learning sessions and deeper progress support.
-            </p>
-          </div>
-
           <motion.div
             initial="hidden"
             animate="show"
@@ -260,80 +210,6 @@ export default function PricingPage() {
           </motion.div>
         </div>
       </section>
-
-      <section className="border-y border-slate-200 bg-[#f5f7fb] px-6 py-20">
-        <div className="mx-auto max-w-5xl text-center">
-          <p className="text-xs font-black uppercase tracking-[0.24em] text-[#071f4d]">
-            Growing with the platform
-          </p>
-          <h2 className="mt-3 text-4xl font-black tracking-tight">
-            More plans may be introduced as GAHN AI expands.
-          </h2>
-          <p className="mx-auto mt-5 max-w-3xl text-lg leading-8 text-slate-600">
-            Future subscriptions may support advanced career tools, certificates,
-            portfolios, teachers, classrooms, schools, and larger learning
-            organizations. New plans will be introduced only as those features
-            are built and the platform grows.
-          </p>
-        </div>
-      </section>
-
-      <section className="px-6 py-24">
-        <div className="mx-auto grid max-w-7xl gap-10 lg:grid-cols-[420px_1fr]">
-          <div>
-            <p className="text-xs font-black uppercase tracking-[0.24em] text-[#071f4d]">
-              Why pricing matters
-            </p>
-            <h2 className="mt-3 text-4xl font-black tracking-tight">
-              The platform is priced around learning outcomes.
-            </h2>
-          </div>
-
-          <div className="grid gap-5 md:grid-cols-2">
-            {[
-              [
-                "For individual learners",
-                "Free lets users experience structured AI learning, while Mastery supports more consistent learning and deeper progress tracking.",
-              ],
-              [
-                "For all five learning worlds",
-                "Both plans give learners access to Career Skills, School Help, Brain Development, General Knowledge, and Book Intelligence.",
-              ],
-              [
-                "For consistent learning",
-                "Mastery gives learners more AI learning sessions, adaptive instruction, retries, and personalized recommendations.",
-              ],
-              [
-                "For real progress",
-                "Saved sessions, notes, lesson recaps, streaks, and progress tracking help learners continue over time.",
-              ],
-            ].map(([title, text]) => (
-              <div
-                key={title}
-                className="rounded border border-slate-200 bg-white p-7 shadow-sm"
-              >
-                <h3 className="text-2xl font-black">{title}</h3>
-                <p className="mt-4 leading-7 text-slate-600">{text}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      <footer className="border-t border-slate-200 bg-white px-6 py-10">
-        <div className="mx-auto flex max-w-7xl flex-col justify-between gap-6 md:flex-row">
-          <div>
-            <p className="text-2xl font-black">GAHN AI</p>
-            <p className="mt-1 text-xs font-bold uppercase tracking-[0.16em] text-slate-500">
-              Global AI Human Helper Network
-            </p>
-          </div>
-
-          <p className="text-sm text-slate-500">
-            © 2026 GAHN AI. Built for AI-powered learning.
-          </p>
-        </div>
-      </footer>
     </main>
   );
 }
