@@ -483,13 +483,12 @@ function InstructorCard({
 }) {
   return (
     <div className="grid gap-6 rounded-2xl border border-[#E3E6EC] bg-white p-5 sm:p-7 md:grid-cols-[220px_minmax(0,1fr)] md:gap-8">
-      <div className="relative mx-auto h-[360px] w-[260px] overflow-hidden rounded-xl bg-[#F7F8FA] sm:h-[400px] sm:w-[300px] md:mx-0 md:h-full md:w-full md:min-h-[260px]">
+      <div className="relative mx-auto h-[360px] w-[260px] overflow-hidden rounded-xl bg-white sm:h-[400px] sm:w-[300px] md:mx-0 md:h-full md:w-full md:min-h-[260px]">
         <img
           src={image}
           alt={`${name}, ${role}`}
           className="h-full w-full object-contain grayscale-[15%] contrast-[1.05] saturate-[0.85]"
         />
-        <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-[#0A1628]/25 via-transparent to-[#2952A3]/10" />
       </div>
 
       <div className="flex min-w-0 flex-col justify-center">
@@ -608,7 +607,7 @@ function LessonDemo() {
               Negotiation Basics
             </h3>
           </div>
-          <span className="rounded-full bg-[#F7F8FA] px-3 py-1.5 text-[11px] font-bold uppercase tracking-[0.1em] text-[#5B6472]">
+          <span className="rounded-full bg-white px-3 py-1.5 text-[11px] font-bold uppercase tracking-[0.1em] text-[#5B6472]">
             Preview
           </span>
         </div>
