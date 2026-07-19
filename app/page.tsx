@@ -189,18 +189,6 @@ const comparisonColumns = ["GAHN AI", "ChatGPT", "Google Search", "Online Course
 
 const faqs = [
   {
-    q: "What is GAHN AI?",
-    a: "GAHN AI is a structured learning platform where AI instructors teach a concept, ask you to apply it, check your answer, and correct you until you actually understand it — instead of just answering questions.",
-  },
-  {
-    q: "How is this different from just using ChatGPT?",
-    a: "ChatGPT answers whatever you ask, in whatever order you ask it. GAHN AI runs a structured lesson: it teaches a concept, requires you to respond, checks that response, and won't move on until you've shown understanding.",
-  },
-  {
-    q: "Do I need any experience to start?",
-    a: "No. Every learning world starts with beginner-friendly lessons, and the AI instructor adjusts difficulty based on how you're doing.",
-  },
-  {
     q: "What ages is GAHN AI built for?",
     a: "GAHN AI is designed to work for students, self-learners, and adults alike — the explanations stay clear and structured regardless of age or experience level.",
   },
@@ -1229,19 +1217,6 @@ export default function Home() {
         </div>
       </section>
 
-      {/* COMPARISON */}
-      <section className="scroll-mt-24 bg-white py-20 sm:py-24">
-        <div className={shellClass}>
-          <SectionIntro
-            eyebrow="GAHN AI vs. Everything Else"
-            title="Answers are easy to find. Understanding isn't."
-            text="Here's how a structured AI instructor compares to the tools people usually reach for instead."
-          />
-
-          <ComparisonTable />
-        </div>
-      </section>
-
       {/* PLATFORM PREVIEW */}
       <section
         id="platform"
@@ -1286,108 +1261,6 @@ export default function Home() {
           <div className="mt-5 grid gap-4 sm:grid-cols-2 lg:grid-cols-5">
             {previewPages.map((page) => (
               <PreviewMiniCard key={page.title} {...page} />
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* SCHOOLS */}
-      <section id="schools" className="scroll-mt-24 bg-white py-20 sm:py-24">
-        <div className={shellClass}>
-          <div className="max-w-2xl">
-            <p className="text-xs font-bold uppercase tracking-[0.24em] text-[#2952A3]">
-              Schools &amp; Classrooms
-            </p>
-            <h2 className="mt-4 text-3xl font-extrabold leading-tight tracking-[-0.035em] sm:text-4xl lg:text-5xl">
-              Built to expand from learners to classrooms.
-            </h2>
-            <p className="mt-5 text-base leading-7 text-[#5B6472] sm:text-lg sm:leading-8">
-              The long-term platform vision includes teacher dashboards,
-              classroom analytics, and school accounts.
-            </p>
-          </div>
-
-          <div className="mt-12 grid gap-6 md:grid-cols-3 sm:mt-14">
-            {schoolFeatures.map((feature) => (
-              <SchoolCard key={feature.title} {...feature} />
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* SECURITY & PRIVACY */}
-      <section id="security" className="scroll-mt-24 bg-[#F7F8FA] py-20 sm:py-24">
-        <div className={shellClass}>
-          <SectionIntro
-            eyebrow="Security & Privacy"
-            title="Your learning data stays yours."
-            text="Notes, lesson history, and progress are tied to your account only — not shared, sold, or made visible to other users."
-          />
-
-          <div className="grid gap-5 md:grid-cols-3">
-            {[
-              {
-                Icon: EyeOff,
-                title: "Private by default",
-                text: "Your notes, progress, and lesson history are visible only to you, never to other learners.",
-              },
-              {
-                Icon: Lock,
-                title: "Secure storage",
-                text: "Account data is stored using encrypted, access-controlled infrastructure.",
-              },
-              {
-                Icon: ShieldCheck,
-                title: "You're in control",
-                text: "You can review, export, or request deletion of your account and data at any time.",
-              },
-            ].map((item) => (
-              <WhyFasterCard key={item.title} {...item} />
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* ROADMAP */}
-      <section id="roadmap" className="scroll-mt-24 bg-white py-20 sm:py-24">
-        <div className={shellClass}>
-          <div className="max-w-2xl">
-            <p className="text-xs font-bold uppercase tracking-[0.24em] text-[#2952A3]">
-              Expansion Roadmap
-            </p>
-            <h2 className="mt-4 text-3xl font-extrabold leading-tight tracking-[-0.035em] sm:text-4xl lg:text-5xl">
-              A serious platform built in stages.
-            </h2>
-          </div>
-
-          <div className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-3 sm:mt-14">
-            {roadmap.map((item) => (
-              <RoadmapCard key={item.stage} {...item} />
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* FAQ */}
-      <section id="faq" className="scroll-mt-24 bg-[#F7F8FA] py-20 sm:py-24">
-        <div className={shellClass}>
-          <SectionIntro
-            eyebrow="Frequently Asked Questions"
-            title="Everything you're probably wondering."
-            text="Can't find what you're looking for? Reach out any time — see the Contact link in the footer."
-          />
-
-          <div className="mx-auto max-w-3xl space-y-4">
-            {faqs.map((faq, index) => (
-              <FaqItem
-                key={faq.q}
-                question={faq.q}
-                answer={faq.a}
-                isOpen={openFaqIndex === index}
-                onToggle={() =>
-                  setOpenFaqIndex((current) => (current === index ? null : index))
-                }
-              />
             ))}
           </div>
         </div>
@@ -1442,32 +1315,34 @@ export default function Home() {
       {/* FOOTER */}
       <footer className="border-t border-[#E3E6EC] py-14">
         <div className={shellClass}>
-          <div className="grid gap-10 sm:grid-cols-2 lg:grid-cols-6">
-            <div className="sm:col-span-2 lg:col-span-2">
-              <Link href="/" className="flex items-center gap-3">
-                <img
-                  src="/logo/favicon.png"
-                  alt="GAHN AI"
-                  className="h-9 w-9 rounded-full object-cover"
-                />
-                <div>
-                  <p className="text-base font-extrabold tracking-[-0.02em]">
-                    GAHN AI
-                  </p>
-                  <p className="text-[8px] font-bold uppercase tracking-[0.16em] text-[#5B6472]">
-                    Global AI Human Helper Network
-                  </p>
-                </div>
-              </Link>
-              <p className="mt-5 max-w-xs text-sm leading-6 text-[#5B6472]">
-                A structured AI learning platform for students, self-learners,
-                and future classrooms.
-              </p>
-            </div>
+          <div className="flex flex-col items-start justify-between gap-6 sm:flex-row sm:items-center">
+            <Link href="/" className="flex items-center gap-3">
+              <img
+                src="/logo/favicon.png"
+                alt="GAHN AI"
+                className="h-9 w-9 rounded-full object-cover"
+              />
+              <div>
+                <p className="text-base font-extrabold tracking-[-0.02em]">
+                  GAHN AI
+                </p>
+                <p className="text-[8px] font-bold uppercase tracking-[0.16em] text-[#5B6472]">
+                  Global AI Human Helper Network
+                </p>
+              </div>
+            </Link>
 
-            {footerColumns.map((column) => (
-              <FooterColumn key={column.title} {...column} />
-            ))}
+            <div className="flex flex-wrap items-center gap-6 text-sm font-semibold text-[#5B6472]">
+              <Link href="/about" className="transition hover:text-[#2952A3]">
+                About
+              </Link>
+              <Link href="/privacy" className="transition hover:text-[#2952A3]">
+                Privacy Policy
+              </Link>
+              <Link href="/terms" className="transition hover:text-[#2952A3]">
+                Terms of Service
+              </Link>
+            </div>
           </div>
 
           <div className="mt-12 flex flex-col items-center justify-between gap-4 border-t border-[#E3E6EC] pt-8 sm:flex-row">
