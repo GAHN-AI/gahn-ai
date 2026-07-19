@@ -13,32 +13,24 @@ import {
   Briefcase,
   CheckCircle2,
   ChevronDown,
-  Compass,
   EyeOff,
   Flame,
   Globe2,
   GraduationCap,
   History,
-  LayoutDashboard,
   ListChecks,
   Lock,
   Mail,
   Menu,
   MessageSquare,
   Minus,
-  RefreshCw,
-  Repeat2,
   ShieldCheck,
-  Sliders,
   StickyNote,
-  Target,
   TrendingUp,
   UserCircle2,
-  UserPlus,
   Users,
   X,
   XCircle,
-  Zap,
 } from "lucide-react";
 
 const navLinks = [
@@ -194,24 +186,6 @@ const comparisonRows: { feature: string; values: [boolean, boolean, boolean, boo
 ];
 
 const comparisonColumns = ["GAHN AI", "ChatGPT", "Google Search", "Online Courses"];
-
-const journey = [
-  { Icon: UserPlus, title: "Sign Up", text: "Create your account in under a minute." },
-  { Icon: LayoutDashboard, title: "Dashboard", text: "Land in your personal learning hub." },
-  { Icon: Compass, title: "Choose a World", text: "Pick the subject area you want to start with." },
-  { Icon: Bot, title: "Meet Your Instructor", text: "Get matched with a specialized AI instructor." },
-  { Icon: ListChecks, title: "Complete Lessons", text: "Learn, practice, and get corrected in real time." },
-  { Icon: TrendingUp, title: "Track Progress", text: "Watch streaks, skills, and completion grow." },
-  { Icon: Award, title: "Earn Certificates", text: "Coming soon — proof of the skills you've built.", future: true },
-];
-
-const whyFaster = [
-  { Icon: Zap, title: "Active Learning", text: "You respond and think, instead of passively reading or watching." },
-  { Icon: RefreshCw, title: "Adaptive Feedback", text: "Wrong answers change the next step instead of being ignored." },
-  { Icon: Target, title: "Practice & Retries", text: "You try again until a concept actually sticks, not just once." },
-  { Icon: Sliders, title: "Personalized Instruction", text: "Pace and explanations adjust to how you're actually doing." },
-  { Icon: Repeat2, title: "Long-Term Retention", text: "Built around recall methods designed to stick, not cram." },
-];
 
 const faqs = [
   {
@@ -857,29 +831,6 @@ function ComparisonTable() {
   );
 }
 
-function JourneyTimeline() {
-  return (
-    <div className="relative">
-      <div className="pointer-events-none absolute left-0 right-0 top-6 hidden h-px bg-[#0F2247]/15 lg:block" />
-      <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-4 xl:grid-cols-7">
-        {journey.map((item, index) => (
-          <div key={item.title} className="relative flex flex-col items-start text-left">
-            <div className="relative z-10 grid h-12 w-12 flex-none place-items-center rounded-full border border-[#0F2247]/20 bg-white text-[#0F2247]">
-              <item.Icon className="h-5 w-5" strokeWidth={1.75} />
-            </div>
-            <p className="mt-4 text-xs font-bold text-[#2952A3]">
-              Step {index + 1}
-              {item.future ? " · Future" : ""}
-            </p>
-            <h3 className="mt-1 text-base font-bold text-[#0A1628]">{item.title}</h3>
-            <p className="mt-2 text-sm leading-6 text-[#5B6472]">{item.text}</p>
-          </div>
-        ))}
-      </div>
-    </div>
-  );
-}
-
 function WhyFasterCard({ Icon, title, text }: { Icon: LucideIcon; title: string; text: string }) {
   return (
     <div className="rounded-2xl border border-[#E3E6EC] bg-white p-6 sm:p-7">
@@ -974,7 +925,7 @@ export default function Home() {
   return (
     <main
       id="top"
-      className="min-h-screen scroll-smooth bg-white font-sans text-[#0A1628] xl:[zoom:0.75]"
+      className="min-h-screen scroll-smooth bg-white font-sans text-[#0A1628] xl:[zoom:0.85]"
     >
       <header className="sticky top-0 z-50 border-b border-[#E3E6EC] bg-white/95 backdrop-blur">
         <nav
@@ -1084,9 +1035,30 @@ export default function Home() {
       </header>
 
       {/* HERO */}
-      <section className="bg-[#F7F8FA]">
+      <section className="relative overflow-hidden bg-[#F7F8FA]">
         <div
-          className={`${shellClass} grid items-center gap-10 py-12 sm:py-14 lg:grid-cols-[minmax(0,1fr)_minmax(340px,390px)] lg:gap-14 lg:py-16 xl:gap-16 xl:py-20`}
+          aria-hidden="true"
+          className="pointer-events-none absolute inset-0"
+          style={{
+            backgroundImage:
+              "radial-gradient(55% 45% at 85% 15%, rgba(15,34,71,0.09), transparent 70%), radial-gradient(35% 35% at 5% 95%, rgba(41,82,163,0.06), transparent 70%)",
+          }}
+        />
+        <div
+          aria-hidden="true"
+          className="pointer-events-none absolute inset-0"
+          style={{
+            backgroundImage:
+              "radial-gradient(rgba(15,34,71,0.16) 1px, transparent 1px)",
+            backgroundSize: "28px 28px",
+            WebkitMaskImage:
+              "radial-gradient(ellipse 70% 55% at 50% 0%, black 35%, transparent 85%)",
+            maskImage:
+              "radial-gradient(ellipse 70% 55% at 50% 0%, black 35%, transparent 85%)",
+          }}
+        />
+        <div
+          className={`${shellClass} relative grid items-center gap-10 py-12 sm:py-14 lg:grid-cols-[minmax(0,1fr)_minmax(340px,390px)] lg:gap-14 lg:py-16 xl:gap-16 xl:py-20`}
         >
           <div className="min-w-0">
             <p className="text-xs font-bold uppercase tracking-[0.24em] text-[#2952A3] sm:text-sm">
@@ -1237,23 +1209,6 @@ export default function Home() {
         </div>
       </section>
 
-      {/* WHY STUDENTS LEARN FASTER */}
-      <section className="scroll-mt-24 bg-[#F7F8FA] py-20 sm:py-24">
-        <div className={shellClass}>
-          <SectionIntro
-            eyebrow="The Learning Science"
-            title="Why students learn faster with GAHN AI."
-            text="Every lesson is built around methods proven to build real, lasting understanding — not just short-term answers."
-          />
-
-          <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 xl:gap-6">
-            {whyFaster.map((item) => (
-              <WhyFasterCard key={item.title} {...item} />
-            ))}
-          </div>
-        </div>
-      </section>
-
       {/* HOW IT WORKS */}
       <section
         id="how-it-works"
@@ -1271,19 +1226,6 @@ export default function Home() {
               <StepCard key={step.number} {...step} />
             ))}
           </div>
-        </div>
-      </section>
-
-      {/* LEARNING JOURNEY TIMELINE */}
-      <section className="scroll-mt-24 bg-[#F7F8FA] py-20 sm:py-24">
-        <div className={shellClass}>
-          <SectionIntro
-            eyebrow="The Full Journey"
-            title="From first signup to a finished skill."
-            text="A closer look at the complete path a learner takes through GAHN AI, start to finish."
-          />
-
-          <JourneyTimeline />
         </div>
       </section>
 

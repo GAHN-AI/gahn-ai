@@ -4,62 +4,104 @@ import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import { supabase } from "@/lib/supabaseClient";
+import type { LucideIcon } from "lucide-react";
+import {
+  Award,
+  Bell,
+  Bot,
+  BookOpen,
+  Brain,
+  Briefcase,
+  ChevronDown,
+  Crown,
+  Flame,
+  FolderKanban,
+  Globe2,
+  GraduationCap,
+  LayoutDashboard,
+  LogOut,
+  MessageSquare,
+  Search,
+  StickyNote,
+  TrendingUp,
+  Users,
+} from "lucide-react";
 
-const navItems = [
-  ["🏠", "Dashboard"],
-  ["💼", "Career Skills"],
-  ["🎓", "School Help"],
-  ["🧠", "Brain Development"],
-  ["🌍", "General Knowledge"],
-  ["📚", "Book Intelligence"],
-  ["🤖", "AI Instructors"],
-  ["📝", "My Notes"],
-  ["🏆", "Certificates"],
-  ["🗂️", "Portfolio"],
-  ["📊", "Progress"],
-  ["👥", "Community"],
+const navItems: { label: string; Icon: LucideIcon }[] = [
+  { label: "Dashboard", Icon: LayoutDashboard },
+  { label: "Career Skills", Icon: Briefcase },
+  { label: "School Help", Icon: GraduationCap },
+  { label: "Brain Development", Icon: Brain },
+  { label: "General Knowledge", Icon: Globe2 },
+  { label: "Book Intelligence", Icon: BookOpen },
+  { label: "AI Instructors", Icon: Bot },
+  { label: "My Notes", Icon: StickyNote },
+  { label: "Certificates", Icon: Award },
+  { label: "Portfolio", Icon: FolderKanban },
+  { label: "Progress", Icon: TrendingUp },
+  { label: "Community", Icon: Users },
 ];
 
-const worlds = [
-  ["💼", "Career Skills", "Build real skills. Get job ready."],
-  ["🎓", "School Help", "Master your subjects. Excel in school."],
-  ["🧠", "Brain Development", "Train your brain. Upgrade your mind."],
-  ["🌍", "General Knowledge", "Learn life skills. Grow every day."],
-  ["📚", "Book Intelligence", "Learn from books. Remember more."],
+const worlds: { Icon: LucideIcon; title: string; text: string }[] = [
+  { Icon: Briefcase, title: "Career Skills", text: "Build real skills. Get job ready." },
+  { Icon: GraduationCap, title: "School Help", text: "Master your subjects. Excel in school." },
+  { Icon: Brain, title: "Brain Development", text: "Train your brain. Upgrade your mind." },
+  { Icon: Globe2, title: "General Knowledge", text: "Learn life skills. Grow every day." },
+  { Icon: BookOpen, title: "Book Intelligence", text: "Learn from books. Remember more." },
 ];
 
 const instructors = [
-  ["/instructors/lena.jpg", "Lena", "Medical Instructor"],
-  ["/instructors/alex.jpg", "Alex", "Software Engineer"],
-  ["/instructors/arin.jpg", "Arin", "Finance Instructor"],
-  ["/instructors/jada.jpg", "jada", "Nurse Instructor"],
+  { image: "/instructors/lena.jpg", name: "Lena", role: "Medical Instructor" },
+  { image: "/instructors/alex.jpg", name: "Alex", role: "Software Engineer" },
+  { image: "/instructors/arin.jpg", name: "Arin", role: "Finance Instructor" },
+  { image: "/instructors/jada.jpg", name: "Jada", role: "Nurse Instructor" },
 ];
 
 function getInitials(name: string) {
-  return String(name)
-    .split(" ")
-    .filter(Boolean)
-    .map((word) => word[0])
-    .join("")
-    .slice(0, 2)
-    .toUpperCase() || "AI";
+  return (
+    String(name)
+      .split(" ")
+      .filter(Boolean)
+      .map((word) => word[0])
+      .join("")
+      .slice(0, 2)
+      .toUpperCase() || "AI"
+  );
 }
 
 function getInitialColor(name: string) {
-  const colors = [
-    "bg-[#071f4d]",
-    "bg-blue-700",
-    "bg-violet-700",
-    "bg-indigo-700",
-    "bg-sky-700",
-    "bg-cyan-700",
-  ];
+  const colors = ["bg-[#0A1628]", "bg-[#0F2247]", "bg-[#16305F]", "bg-[#2952A3]"];
 
   const total = String(name)
     .split("")
     .reduce((sum, char) => sum + char.charCodeAt(0), 0);
 
   return colors[total % colors.length];
+}
+
+function InstructorAvatar({ image, name }: { image: string; name: string }) {
+  const [failed, setFailed] = useState(false);
+
+  if (failed) {
+    return (
+      <div
+        className={`grid h-12 w-12 flex-none place-items-center rounded-xl text-sm font-bold text-white ${getInitialColor(
+          name
+        )}`}
+      >
+        {getInitials(name)}
+      </div>
+    );
+  }
+
+  return (
+    <img
+      src={image}
+      alt={name}
+      onError={() => setFailed(true)}
+      className="h-12 w-12 flex-none rounded-xl object-cover object-top"
+    />
+  );
 }
 
 export default function DashboardPage() {
@@ -126,9 +168,9 @@ export default function DashboardPage() {
   }
 
   return (
-    <main className="min-h-screen bg-[#f4f7fb] text-[#061633]">
+    <main className="min-h-screen bg-[#F7F8FA] font-sans text-[#0A1628]">
       <div className="mx-auto grid min-h-screen w-full max-w-[1800px] grid-cols-1 lg:grid-cols-[260px_minmax(0,1fr)] 2xl:grid-cols-[280px_minmax(0,1fr)_340px]">
-        <aside className="bg-[#02122b] p-4 text-white sm:p-5 lg:sticky lg:top-0 lg:h-screen lg:overflow-y-auto">
+        <aside className="bg-[#0A1628] p-4 text-white sm:p-5 lg:sticky lg:top-0 lg:h-screen lg:overflow-y-auto">
           <Link href="/" className="flex items-center gap-3">
             <img
               src="/logo/favicon.png"
@@ -136,39 +178,43 @@ export default function DashboardPage() {
               className="h-12 w-12 rounded-full object-cover sm:h-14 sm:w-14"
             />
             <div>
-              <h1 className="text-xl font-black sm:text-2xl">GAHN AI</h1>
-              <p className="text-[8px] font-bold uppercase tracking-[0.16em] text-blue-200/70">
+              <h1 className="text-xl font-extrabold tracking-[-0.02em] sm:text-2xl">
+                GAHN AI
+              </h1>
+              <p className="text-[8px] font-bold uppercase tracking-[0.16em] text-white/50">
                 Global AI Human Helper Network
               </p>
             </div>
           </Link>
 
-          <nav className="mt-6 grid grid-cols-2 gap-2 sm:grid-cols-3 lg:block lg:space-y-2">
-            {navItems.map(([icon, item], index) => (
+          <nav className="mt-6 grid grid-cols-2 gap-2 sm:grid-cols-3 lg:block lg:space-y-1.5">
+            {navItems.map(({ label, Icon }, index) => (
               <Link
-                key={item}
+                key={label}
                 href={index === 0 ? "/dashboard" : "/in-progress"}
-                className={`flex items-center gap-2 rounded-xl px-3 py-3 text-xs font-bold transition sm:text-sm lg:gap-3 lg:px-4 ${
+                className={`flex items-center gap-2 rounded-lg px-3 py-3 text-xs font-semibold transition sm:text-sm lg:gap-3 lg:px-4 ${
                   index === 0
-                    ? "bg-white text-[#061633]"
-                    : "text-blue-100 hover:bg-white/10"
+                    ? "bg-white text-[#0A1628]"
+                    : "text-white/70 hover:bg-white/10"
                 }`}
               >
-                <span>{icon}</span>
-                <span className="truncate">{item}</span>
+                <Icon className="h-4 w-4 flex-none" strokeWidth={1.75} />
+                <span className="truncate">{label}</span>
               </Link>
             ))}
           </nav>
 
-          <div className="mt-6 rounded-2xl border border-blue-300/20 bg-[#061633] p-5 text-center shadow-xl">
-            <div className="text-4xl">👑</div>
-            <h3 className="mt-3 text-xl font-black">Mastery Plan</h3>
-            <p className="mt-2 text-sm leading-6 text-blue-100/70">
+          <div className="mt-6 rounded-2xl border border-white/10 bg-white/5 p-5 text-center">
+            <div className="mx-auto grid h-12 w-12 place-items-center rounded-full border border-white/15">
+              <Crown className="h-5 w-5 text-[#7FA3E0]" strokeWidth={1.75} />
+            </div>
+            <h3 className="mt-4 text-lg font-bold">Mastery Plan</h3>
+            <p className="mt-2 text-sm leading-6 text-white/60">
               Unlock certificates, portfolio tools, instructor support, and career features.
             </p>
             <Link
               href="/pricing"
-              className="mt-5 block rounded-xl bg-white px-4 py-3 text-sm font-black text-[#061633]"
+              className="mt-5 block rounded-lg bg-white px-4 py-3 text-sm font-semibold text-[#0A1628] transition hover:bg-[#F7F8FA]"
             >
               Upgrade Now
             </Link>
@@ -181,28 +227,29 @@ export default function DashboardPage() {
               <div className="relative w-full xl:max-w-xl">
                 <input
                   placeholder="Search for skills, topics, careers..."
-                  className="h-12 w-full rounded-xl border border-slate-200 bg-white px-5 pr-12 text-sm shadow-sm outline-none"
+                  className="h-12 w-full rounded-lg border border-[#E3E6EC] bg-white px-5 pr-12 text-sm outline-none focus:border-[#2952A3]"
                 />
-                <span className="absolute right-4 top-3 text-slate-400">⌕</span>
+                <Search className="pointer-events-none absolute right-4 top-3.5 h-5 w-5 text-[#5B6472]" strokeWidth={1.75} />
               </div>
 
               <div className="flex flex-wrap items-center gap-3">
-                <span className="rounded-full bg-white px-4 py-3 text-xs font-bold shadow-sm sm:text-sm">
-                  🔥 0 Day Streak
+                <span className="flex items-center gap-2 rounded-full bg-white px-4 py-3 text-xs font-bold shadow-sm sm:text-sm">
+                  <Flame className="h-4 w-4 text-[#2952A3]" strokeWidth={1.75} />
+                  0 Day Streak
                 </span>
 
                 <Link
                   href="/in-progress"
-                  className="grid h-11 w-11 place-items-center rounded-full bg-white text-lg shadow-sm"
+                  className="grid h-11 w-11 place-items-center rounded-full bg-white text-[#0A1628] shadow-sm"
                 >
-                  🔔
+                  <Bell className="h-4.5 w-4.5" strokeWidth={1.75} />
                 </Link>
 
                 <Link
                   href="/in-progress"
-                  className="grid h-11 w-11 place-items-center rounded-full bg-white text-lg shadow-sm"
+                  className="grid h-11 w-11 place-items-center rounded-full bg-white text-[#0A1628] shadow-sm"
                 >
-                  💬
+                  <MessageSquare className="h-4.5 w-4.5" strokeWidth={1.75} />
                 </Link>
 
                 <Link
@@ -217,52 +264,53 @@ export default function DashboardPage() {
                       onError={() => setAvatarUrl("")}
                     />
                   ) : (
-                    <div className={`grid h-10 w-10 place-items-center rounded-full ${avatarColor} text-sm font-black text-white`}>
+                    <div className={`grid h-10 w-10 place-items-center rounded-full ${avatarColor} text-sm font-bold text-white`}>
                       {initials}
                     </div>
                   )}
 
                   <div className="max-w-[130px]">
-                    <p className="truncate text-sm font-black">{fullName}</p>
-                    <p className="text-xs text-slate-500">Free Plan</p>
+                    <p className="truncate text-sm font-bold">{fullName}</p>
+                    <p className="text-xs text-[#5B6472]">Free Plan</p>
                   </div>
 
-                  <span className="text-sm font-black">⌄</span>
+                  <ChevronDown className="h-4 w-4 text-[#5B6472]" strokeWidth={1.75} />
                 </Link>
 
                 <button
                   onClick={handleLogout}
-                  className="rounded-xl bg-red-500 px-5 py-3 text-sm font-bold text-white hover:bg-red-600"
+                  className="flex items-center gap-2 rounded-lg border border-[#E3E6EC] bg-white px-5 py-3 text-sm font-semibold text-[#0A1628] transition hover:border-[#0F2247]/30"
                 >
+                  <LogOut className="h-4 w-4" strokeWidth={1.75} />
                   Logout
                 </button>
               </div>
             </header>
 
             <section className="mt-8">
-              <h2 className="text-2xl font-black sm:text-3xl">
-                Welcome back, {fullName} 👋
+              <h2 className="text-2xl font-extrabold tracking-[-0.02em] sm:text-3xl">
+                Welcome back, {fullName}
               </h2>
-              <p className="mt-1 text-sm text-slate-600">
+              <p className="mt-1 text-sm text-[#5B6472]">
                 Continue your learning journey. Your progress starts after your first lesson.
               </p>
             </section>
 
             <section className="mt-6 grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
               {[
-                ["🔥", "0", "Day Streak"],
-                ["📘", "0", "Active Lessons"],
-                ["🏆", "0", "Certificates"],
-                ["⭕", "0%", "Overall Progress"],
-              ].map(([icon, number, label]) => (
+                { Icon: Flame, number: "0", label: "Day Streak" },
+                { Icon: BookOpen, number: "0", label: "Active Lessons" },
+                { Icon: Award, number: "0", label: "Certificates" },
+                { Icon: TrendingUp, number: "0%", label: "Overall Progress" },
+              ].map(({ Icon, number, label }) => (
                 <div key={label} className="rounded-2xl bg-white p-5 shadow-sm">
                   <div className="flex items-center gap-4">
-                    <div className="grid h-12 w-12 place-items-center rounded-xl bg-blue-50 text-2xl">
-                      {icon}
+                    <div className="grid h-12 w-12 place-items-center rounded-xl border border-[#0F2247]/20 text-[#0F2247]">
+                      <Icon className="h-5 w-5" strokeWidth={1.75} />
                     </div>
                     <div>
-                      <p className="text-2xl font-black">{number}</p>
-                      <p className="text-xs font-bold text-slate-500">{label}</p>
+                      <p className="text-2xl font-bold">{number}</p>
+                      <p className="text-xs font-semibold text-[#5B6472]">{label}</p>
                     </div>
                   </div>
                 </div>
@@ -270,23 +318,23 @@ export default function DashboardPage() {
             </section>
 
             <section className="mt-6">
-              <h3 className="text-xl font-black">Choose Your Learning World</h3>
+              <h3 className="text-xl font-bold">Choose Your Learning World</h3>
 
               <div className="mt-4 grid gap-4 sm:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-5">
-                {worlds.map(([icon, title, text]) => (
+                {worlds.map(({ Icon, title, text }) => (
                   <Link
                     href="/in-progress"
                     key={title}
-                    className="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm transition hover:shadow-lg"
+                    className="rounded-2xl border border-[#E3E6EC] bg-white p-4 shadow-sm transition hover:shadow-[0_16px_40px_rgba(15,34,71,0.08)]"
                   >
-                    <div className="grid h-12 w-12 place-items-center rounded-xl bg-[#071f4d] text-2xl text-white">
-                      {icon}
+                    <div className="grid h-12 w-12 place-items-center rounded-xl bg-[#0F2247] text-white">
+                      <Icon className="h-5 w-5" strokeWidth={1.75} />
                     </div>
-                    <h4 className="mt-4 text-sm font-black uppercase leading-tight">
+                    <h4 className="mt-4 text-sm font-bold uppercase leading-tight">
                       {title}
                     </h4>
-                    <p className="mt-3 text-xs leading-5 text-slate-600">{text}</p>
-                    <div className="mt-5 inline-block rounded-lg bg-[#071f4d] px-4 py-2 text-xs font-bold text-white">
+                    <p className="mt-3 text-xs leading-5 text-[#5B6472]">{text}</p>
+                    <div className="mt-5 inline-block rounded-lg bg-[#0F2247] px-4 py-2 text-xs font-semibold text-white">
                       Explore →
                     </div>
                   </Link>
@@ -296,17 +344,17 @@ export default function DashboardPage() {
 
             <section className="mt-6">
               <div className="flex items-center justify-between">
-                <h3 className="text-xl font-black">Continue Learning</h3>
-                <Link href="/in-progress" className="text-sm font-bold text-blue-600">
+                <h3 className="text-xl font-bold">Continue Learning</h3>
+                <Link href="/in-progress" className="text-sm font-semibold text-[#2952A3]">
                   View All
                 </Link>
               </div>
 
-              <div className="mt-4 rounded-2xl border border-dashed border-slate-300 bg-white p-6 text-center shadow-sm sm:p-8">
-                <p className="text-lg font-black sm:text-xl">
+              <div className="mt-4 rounded-2xl border border-dashed border-[#E3E6EC] bg-white p-6 text-center shadow-sm sm:p-8">
+                <p className="text-lg font-bold sm:text-xl">
                   Your saved work will be displayed here.
                 </p>
-                <p className="mx-auto mt-3 max-w-2xl text-sm leading-7 text-slate-600">
+                <p className="mx-auto mt-3 max-w-2xl text-sm leading-7 text-[#5B6472]">
                   After you start lessons, this section will show your active lessons,
                   saved notes, practice, projects, and recent progress.
                 </p>
@@ -315,21 +363,21 @@ export default function DashboardPage() {
 
             <section className="mt-6 grid gap-4 xl:grid-cols-3">
               <DashboardMiniCard title="Learning Overview" sideText="This Week">
-                <p className="font-black">No learning data yet</p>
-                <p className="mt-1 text-sm text-slate-500">
+                <p className="font-bold">No learning data yet</p>
+                <p className="mt-1 text-sm text-[#5B6472]">
                   Activity appears after your first lesson.
                 </p>
               </DashboardMiniCard>
 
               <DashboardMiniCard title="Instructor Recommendations" linkText="View All">
-                <p className="text-sm font-black">No recommendations yet</p>
-                <p className="mt-1 text-xs leading-5 text-slate-500">
+                <p className="text-sm font-bold">No recommendations yet</p>
+                <p className="mt-1 text-xs leading-5 text-[#5B6472]">
                   Your instructors will recommend practice after you start a lesson.
                 </p>
               </DashboardMiniCard>
 
               <DashboardMiniCard title="Recent Achievements" linkText="View All">
-                <p className="text-sm text-slate-500">
+                <p className="text-sm text-[#5B6472]">
                   Achievements appear after completed lessons.
                 </p>
               </DashboardMiniCard>
@@ -363,16 +411,16 @@ function DashboardMiniCard({
   return (
     <div className="rounded-2xl bg-white p-5 shadow-sm">
       <div className="flex items-center justify-between">
-        <h3 className="font-black">{title}</h3>
-        {sideText && <span className="text-xs font-bold text-slate-400">{sideText}</span>}
+        <h3 className="font-bold">{title}</h3>
+        {sideText && <span className="text-xs font-semibold text-[#5B6472]">{sideText}</span>}
         {linkText && (
-          <Link href="/in-progress" className="text-sm text-blue-600">
+          <Link href="/in-progress" className="text-sm font-semibold text-[#2952A3]">
             {linkText}
           </Link>
         )}
       </div>
 
-      <div className="mt-5 grid min-h-36 place-items-center rounded-xl border border-dashed border-slate-300 bg-slate-50 p-5 text-center">
+      <div className="mt-5 grid min-h-36 place-items-center rounded-xl border border-dashed border-[#E3E6EC] bg-[#F7F8FA] p-5 text-center">
         <div>{children}</div>
       </div>
     </div>
@@ -384,26 +432,22 @@ function DashboardRightColumn() {
     <>
       <div className="rounded-2xl bg-white p-5 shadow-sm">
         <div className="flex items-center justify-between">
-          <h3 className="font-black">AI Instructor</h3>
-          <Link href="/in-progress" className="text-sm text-blue-600">
+          <h3 className="font-bold">AI Instructor</h3>
+          <Link href="/in-progress" className="text-sm font-semibold text-[#2952A3]">
             View All
           </Link>
         </div>
 
         <div className="mt-4 space-y-3">
-          {instructors.map(([image, name, role]) => (
+          {instructors.map(({ image, name, role }) => (
             <div
               key={name}
-              className="flex items-center gap-3 rounded-xl border border-slate-200 p-3"
+              className="flex items-center gap-3 rounded-xl border border-[#E3E6EC] p-3"
             >
-              <img
-                src={image}
-                alt={name}
-                className="h-12 w-12 rounded-xl object-cover object-top"
-              />
+              <InstructorAvatar image={image} name={name} />
               <div>
-                <p className="text-sm font-black">{name}</p>
-                <p className="text-xs text-slate-500">{role}</p>
+                <p className="text-sm font-bold">{name}</p>
+                <p className="text-xs text-[#5B6472]">{role}</p>
               </div>
             </div>
           ))}
@@ -411,29 +455,29 @@ function DashboardRightColumn() {
 
         <Link
           href="/in-progress"
-          className="mt-4 block rounded-xl bg-blue-600 px-5 py-3 text-center text-sm font-bold text-white"
+          className="mt-4 block rounded-lg bg-[#0F2247] px-5 py-3 text-center text-sm font-semibold text-white transition hover:bg-[#16305F]"
         >
           Choose Instructor
         </Link>
       </div>
 
       <div className="rounded-2xl bg-white p-5 shadow-sm">
-        <h3 className="font-black">Today&apos;s Schedule</h3>
-        <div className="mt-4 rounded-xl border border-dashed border-slate-300 bg-slate-50 p-5 text-center text-sm text-slate-500">
+        <h3 className="font-bold">Today&apos;s Schedule</h3>
+        <div className="mt-4 rounded-xl border border-dashed border-[#E3E6EC] bg-[#F7F8FA] p-5 text-center text-sm text-[#5B6472]">
           No lessons scheduled yet.
         </div>
       </div>
 
       <div className="rounded-2xl bg-white p-5 shadow-sm">
-        <h3 className="font-black">Your Progress</h3>
-        <div className="mx-auto mt-5 grid h-28 w-28 place-items-center rounded-full border-[12px] border-slate-200 text-2xl font-black">
+        <h3 className="font-bold">Your Progress</h3>
+        <div className="mx-auto mt-5 grid h-28 w-28 place-items-center rounded-full border-[12px] border-[#E3E6EC] text-2xl font-bold">
           0%
         </div>
       </div>
 
       <div className="rounded-2xl bg-white p-5 shadow-sm">
-        <h3 className="font-black">Community Feed</h3>
-        <div className="mt-4 rounded-xl border border-dashed border-slate-300 bg-slate-50 p-5 text-center text-sm text-slate-500">
+        <h3 className="font-bold">Community Feed</h3>
+        <div className="mt-4 rounded-xl border border-dashed border-[#E3E6EC] bg-[#F7F8FA] p-5 text-center text-sm text-[#5B6472]">
           Community activity appears after launch.
         </div>
       </div>
