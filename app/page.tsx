@@ -483,7 +483,7 @@ function InstructorCard({
 }) {
   return (
     <div className="grid gap-6 rounded-2xl border border-[#E3E6EC] bg-white p-5 sm:p-7 md:grid-cols-[220px_minmax(0,1fr)] md:gap-8">
-      <div className="relative h-[260px] overflow-hidden rounded-xl bg-[#F7F8FA] sm:h-[300px] md:h-full md:min-h-[260px]">
+      <div className="relative mx-auto h-[360px] w-[260px] overflow-hidden rounded-xl bg-[#F7F8FA] sm:h-[400px] sm:w-[300px] md:mx-0 md:h-full md:w-full md:min-h-[260px]">
         <img
           src={image}
           alt={`${name}, ${role}`}
