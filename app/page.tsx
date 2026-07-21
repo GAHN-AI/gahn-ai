@@ -1335,6 +1335,9 @@ export default function Home() {
               <Link href="/about" className="transition hover:text-[#2952A3]">
                 About
               </Link>
+              <Link href="/contact" className="transition hover:text-[#2952A3]">
+  Contact
+</Link>
               <Link href="/privacy" className="transition hover:text-[#2952A3]">
                 Privacy Policy
               </Link>
@@ -1349,13 +1352,7 @@ export default function Home() {
               © 2026 GAHN AI. All rights reserved.
             </p>
 
-            <a
-              href="mailto:hello@gahnai.com"
-              className="flex items-center gap-2 text-xs font-semibold text-[#2952A3]"
-            >
-              <Mail className="h-4 w-4" strokeWidth={1.75} />
-              hello@gahnai.com
-            </a>
+           
           </div>
         </div>
       </footer>

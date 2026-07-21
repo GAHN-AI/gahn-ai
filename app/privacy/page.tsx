@@ -214,7 +214,7 @@ export default function PrivacyPage() {
 
             <p>
               A parent or guardian who believes a child under 13 has provided
-              information to us may contact hello@gahnai.com.
+              information to us may contact support@gahnai.com.
             </p>
           </Section>
 
@@ -343,7 +343,7 @@ export default function PrivacyPage() {
             </p>
 
             <p>
-              To submit a privacy request, email hello@gahnai.com with the
+              To submit a privacy request, email support@gahnai.com with the
               subject line &quot;Privacy Request.&quot;
             </p>
           </Section>
@@ -389,10 +389,10 @@ export default function PrivacyPage() {
               For questions, account-deletion requests, or privacy requests,
               email{" "}
               <a
-                href="mailto:hello@gahnai.com"
+                href="mailto:support@gahnai.com"
                 className="font-semibold text-[#2952A3]"
               >
-                hello@gahnai.com
+                support@gahnai.com
               </a>
               .
             </p>

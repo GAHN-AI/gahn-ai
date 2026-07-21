@@ -101,10 +101,10 @@ export default function AboutPage() {
             Questions, feedback, or partnership interest — reach out any time.
           </p>
           <a
-            href="mailto:hello@gahnai.com"
+            href="mailto:support@gahnai.com"
             className="mt-5 inline-flex items-center gap-2 rounded-lg bg-white px-6 py-3 text-sm font-semibold text-[#0A1628] transition hover:bg-[#F7F8FA]"
           >
-            hello@gahnai.com
+            support@gahnai.com
             <ArrowRight className="h-4 w-4" />
           </a>
         </div>

@@ -281,7 +281,7 @@ export default function TermsPage() {
             </p>
 
             <p>
-              Refund requests must be submitted to hello@gahnai.com and include
+              Refund requests must be submitted to support@gahnai.com and include
               the account email address, payment date, and reason for the
               request.
             </p>
@@ -461,7 +461,7 @@ export default function TermsPage() {
 
             <p>
               Before filing a formal legal claim, you agree to contact
-              hello@gahnai.com and attempt to resolve the dispute informally
+              support@gahnai.com and attempt to resolve the dispute informally
               for at least 30 days.
             </p>
 
@@ -509,10 +509,10 @@ export default function TermsPage() {
               Questions about these terms, subscriptions, cancellations, or
               refunds may be sent to{" "}
               <a
-                href="mailto:hello@gahnai.com"
+                href="mailto:support@gahnai.com"
                 className="font-semibold text-[#2952A3]"
               >
-                hello@gahnai.com
+                support@gahnai.com
               </a>
               .
             </p>
