@@ -91,8 +91,8 @@ const instructors = [
   },
   {
     name: "Jada",
-    role: "Nurse Instructor",
-    desc: "Nursing fundamentals, patient support, care routines, safety, and healthcare readiness.",
+    role: "Cybersecurity Specialist",
+    desc: "Learn cybersecurity fundamentals, ethical hacking concepts, network security, digital privacy, cyber defense, and real-world security best practices through hands-on guidance and practical scenarios.",
     image: "/instructors/jada.jpg",
   },
 ];
@@ -263,15 +263,15 @@ function SectionIntro({
 }) {
   return (
     <div className="mx-auto mb-12 max-w-4xl text-center sm:mb-14">
-      <p className="text-xs font-bold uppercase tracking-[0.24em] text-[#2952A3]">
+      <p className="text-xs font-bold uppercase tracking-[0.24em] text-[#0056d2]">
         {eyebrow}
       </p>
 
-      <h2 className="mt-4 text-3xl font-extrabold leading-tight tracking-[-0.035em] text-[#0A1628] sm:text-4xl lg:text-5xl">
+      <h2 className="mt-4 text-3xl font-extrabold leading-tight tracking-[-0.02em] text-[#111827] sm:text-4xl lg:text-5xl">
         {title}
       </h2>
 
-      <p className="mx-auto mt-5 max-w-3xl text-base leading-7 text-[#5B6472] sm:text-lg sm:leading-8">
+      <p className="mx-auto mt-5 max-w-3xl text-base leading-7 text-[#4b5563] sm:text-lg sm:leading-8">
         {text}
       </p>
     </div>
@@ -280,33 +280,33 @@ function SectionIntro({
 
 function HeroSignupCard() {
   return (
-    <div className="relative w-full overflow-hidden rounded-2xl border border-[#E3E6EC] bg-white p-5 shadow-[0_18px_50px_rgba(15,34,71,0.07)] sm:p-6 lg:p-7">
+    <div className="relative w-full overflow-hidden rounded-2xl border border-[#dbe3ee] bg-white p-5 shadow-sm sm:p-6 lg:p-7">
       <svg
-        className="pointer-events-none absolute -right-6 -top-6 h-28 w-28 opacity-[0.06]"
+        className="pointer-events-none absolute -right-6 -top-6 h-28 w-28 opacity-[0.08]"
         viewBox="0 0 100 100"
         fill="none"
         aria-hidden="true"
       >
-        <circle cx="15" cy="15" r="3" fill="#0F2247" />
-        <circle cx="50" cy="35" r="3" fill="#0F2247" />
-        <circle cx="85" cy="15" r="3" fill="#0F2247" />
-        <circle cx="50" cy="80" r="3" fill="#0F2247" />
+        <circle cx="15" cy="15" r="3" fill="#0056d2" />
+        <circle cx="50" cy="35" r="3" fill="#0056d2" />
+        <circle cx="85" cy="15" r="3" fill="#0056d2" />
+        <circle cx="50" cy="80" r="3" fill="#0056d2" />
         <path
           d="M15 15 L50 35 L85 15 M50 35 L50 80"
-          stroke="#0F2247"
+          stroke="#0056d2"
           strokeWidth="1"
         />
       </svg>
 
-      <p className="text-xs font-bold uppercase tracking-[0.2em] text-[#2952A3]">
+      <p className="text-xs font-bold uppercase tracking-[0.2em] text-[#0056d2]">
         Start here
       </p>
 
-      <h2 className="mt-4 text-2xl font-extrabold leading-[1.15] tracking-[-0.03em] text-[#0A1628] sm:text-[1.75rem]">
+      <h2 className="mt-4 text-2xl font-extrabold leading-[1.15] tracking-[-0.02em] text-[#111827] sm:text-[1.75rem]">
         Ready to take your next step?
       </h2>
 
-      <p className="mt-3 text-sm leading-6 text-[#5B6472] sm:text-[15px] sm:leading-7">
+      <p className="mt-3 text-sm leading-6 text-[#4b5563] sm:text-[15px] sm:leading-7">
         Create your account, choose what you want to learn, and begin a guided AI lesson.
       </p>
 
@@ -314,7 +314,7 @@ function HeroSignupCard() {
         <select
           aria-label="Select your learning world"
           defaultValue=""
-          className="w-full rounded-lg border border-[#E3E6EC] bg-white px-4 py-3.5 text-sm font-semibold text-[#5B6472] outline-none transition focus:border-[#2952A3] focus:ring-2 focus:ring-[#2952A3]/10 sm:px-5 sm:text-[15px]"
+          className="w-full rounded-lg border border-[#dbe3ee] bg-white px-4 py-3.5 text-sm font-semibold text-[#4b5563] outline-none transition focus:border-[#0056d2] focus:ring-2 focus:ring-[#0056d2]/15 sm:px-5 sm:text-[15px]"
         >
           <option value="" disabled>
             Select your learning world...
@@ -328,17 +328,17 @@ function HeroSignupCard() {
 
         <Link
           href="/signup"
-          className="flex items-center justify-center gap-2 rounded-lg bg-[#0F2247] px-5 py-3.5 text-center text-sm font-semibold text-white transition hover:bg-[#16305F] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#2952A3] focus-visible:ring-offset-2"
+          className="flex items-center justify-center gap-2 rounded-lg bg-[#0056d2] px-5 py-3.5 text-center text-sm font-semibold text-white transition hover:bg-[#00419e] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0056d2] focus-visible:ring-offset-2"
         >
           Create Account
           <ArrowRight className="h-4 w-4" />
         </Link>
       </div>
 
-      <div className="mt-6 border-t border-[#E3E6EC] pt-5 sm:mt-7">
-        <p className="font-bold text-[#0A1628]">Platform starts with:</p>
+      <div className="mt-6 border-t border-[#dbe3ee] pt-5 sm:mt-7">
+        <p className="font-bold text-[#111827]">Platform starts with:</p>
 
-        <ul className="mt-3 space-y-2 text-sm leading-6 text-[#5B6472]">
+        <ul className="mt-3 space-y-2 text-sm leading-6 text-[#4b5563]">
           {[
             "Learning dashboard",
             "AI instructor previews",
@@ -347,7 +347,7 @@ function HeroSignupCard() {
           ].map((item) => (
             <li key={item} className="flex items-start gap-2">
               <CheckCircle2
-                className="mt-1 h-4 w-4 flex-none text-[#2952A3]"
+                className="mt-1 h-4 w-4 flex-none text-[#0056d2]"
                 strokeWidth={1.75}
               />
               <span>{item}</span>
@@ -361,19 +361,19 @@ function HeroSignupCard() {
 
 function DashboardPreview() {
   return (
-    <div className="w-full rounded-2xl border border-[#E3E6EC] bg-white p-3 shadow-[0_20px_60px_rgba(15,34,71,0.08)] sm:p-5">
-      <div className="rounded-xl border border-[#E3E6EC] bg-[#F7F8FA] p-4 sm:p-6">
+    <div className="w-full rounded-2xl border border-[#dbe3ee] bg-white p-3 shadow-sm sm:p-5">
+      <div className="rounded-xl border border-[#dbe3ee] bg-[#f5f7fb] p-4 sm:p-6">
         <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
           <div>
-            <p className="text-base font-bold leading-tight text-[#5B6472] sm:text-xl">
+            <p className="text-base font-bold leading-tight text-[#4b5563] sm:text-xl">
               Welcome back,
             </p>
-            <p className="text-xl font-extrabold leading-tight tracking-[-0.02em] text-[#0A1628] sm:text-2xl">
+            <p className="text-xl font-extrabold leading-tight tracking-[-0.02em] text-[#111827] sm:text-2xl">
               Learner
             </p>
           </div>
 
-          <span className="w-fit rounded-full bg-white px-4 py-2 text-xs font-bold text-[#5B6472] shadow-sm">
+          <span className="w-fit rounded-full bg-white px-4 py-2 text-xs font-bold text-[#4b5563] shadow-sm">
             New account
           </span>
         </div>
@@ -391,7 +391,7 @@ function DashboardPreview() {
               <div
                 key={item}
                 className={`rounded-lg px-3 py-3 text-center text-xs font-bold sm:text-sm xl:px-4 xl:text-left ${
-                  index === 0 ? "bg-[#F7F8FA] text-[#0F2247]" : "text-[#5B6472]"
+                  index === 0 ? "bg-[#dbeafe] text-[#0056d2]" : "text-[#4b5563]"
                 }`}
               >
                 {item}
@@ -408,11 +408,11 @@ function DashboardPreview() {
                 { num: "0%", label: "Progress", Icon: TrendingUp },
               ].map(({ num, label, Icon }) => (
                 <div key={label} className="rounded-xl bg-white p-4 shadow-sm">
-                  <Icon className="h-5 w-5 text-[#2952A3]" strokeWidth={1.75} />
-                  <p className="mt-3 text-xl font-bold text-[#0A1628] sm:text-2xl">
+                  <Icon className="h-5 w-5 text-[#0056d2]" strokeWidth={1.75} />
+                  <p className="mt-3 text-xl font-bold text-[#111827] sm:text-2xl">
                     {num}
                   </p>
-                  <p className="mt-1 text-[11px] font-bold text-[#5B6472] sm:text-xs">
+                  <p className="mt-1 text-[11px] font-bold text-[#4b5563] sm:text-xs">
                     {label}
                   </p>
                 </div>
@@ -420,16 +420,16 @@ function DashboardPreview() {
             </div>
 
             <div className="mt-5 rounded-xl bg-white p-5 shadow-sm sm:p-6">
-              <p className="text-lg font-bold text-[#0A1628]">
+              <p className="text-lg font-bold text-[#111827]">
                 Continue Learning
               </p>
-              <p className="mt-3 text-sm leading-6 text-[#5B6472]">
+              <p className="mt-3 text-sm leading-6 text-[#4b5563]">
                 No courses started yet. Choose a learning world to begin your
                 journey.
               </p>
               <Link
                 href="/signup"
-                className="mt-6 inline-flex rounded-lg bg-[#0F2247] px-6 py-3 text-sm font-semibold text-white transition hover:bg-[#16305F]"
+                className="mt-6 inline-flex rounded-lg bg-[#0056d2] px-6 py-3 text-sm font-semibold text-white transition hover:bg-[#00419e]"
               >
                 Choose a World
               </Link>
@@ -451,18 +451,18 @@ function ProgramCard({
   text: string;
 }) {
   return (
-    <div className="flex h-full flex-col rounded-2xl border border-[#E3E6EC] bg-white p-6 transition hover:border-[#0F2247]/30 hover:shadow-[0_16px_40px_rgba(15,34,71,0.08)] lg:p-7">
-      <div className="grid h-14 w-14 place-items-center rounded-xl border border-[#0F2247]/20 text-[#0F2247] lg:h-16 lg:w-16">
+    <div className="flex h-full flex-col rounded-2xl border border-[#dbe3ee] bg-white p-6 transition hover:border-[#0056d2]/40 hover:shadow-md lg:p-7">
+      <div className="grid h-14 w-14 place-items-center rounded-xl bg-[#dbeafe] text-[#0056d2] lg:h-16 lg:w-16">
         <Icon className="h-7 w-7" strokeWidth={1.5} />
       </div>
 
-      <h3 className="mt-6 text-xl font-bold text-[#0A1628]">{title}</h3>
+      <h3 className="mt-6 text-xl font-bold text-[#111827]">{title}</h3>
 
-      <p className="mt-4 flex-1 text-base leading-7 text-[#5B6472]">{text}</p>
+      <p className="mt-4 flex-1 text-base leading-7 text-[#4b5563]">{text}</p>
 
       <Link
         href="/signup"
-        className="mt-6 inline-flex items-center gap-1 text-sm font-semibold text-[#2952A3]"
+        className="mt-6 inline-flex items-center gap-1 text-sm font-semibold text-[#0056d2]"
       >
         Start Learning <ArrowRight className="h-3.5 w-3.5" />
       </Link>
@@ -482,27 +482,27 @@ function InstructorCard({
   image: string;
 }) {
   return (
-    <div className="grid gap-6 rounded-2xl border border-[#E3E6EC] bg-white p-5 sm:p-7 md:grid-cols-[220px_minmax(0,1fr)] md:gap-8">
-      <div className="relative mx-auto h-[360px] w-[260px] overflow-hidden rounded-xl bg-white sm:h-[400px] sm:w-[300px] md:mx-0 md:h-full md:w-full md:min-h-[260px]">
+    <div className="grid gap-6 rounded-2xl border border-[#dbe3ee] bg-white p-5 sm:p-7 md:grid-cols-[240px_minmax(0,1fr)] md:gap-8">
+      <div className="relative mx-auto aspect-[4/3] w-full max-w-[280px] overflow-hidden rounded-xl bg-[#f5f7fb] md:mx-0 md:h-[200px] md:max-w-none">
         <img
           src={image}
           alt={`${name}, ${role}`}
-          className="h-full w-full object-contain grayscale-[15%] contrast-[1.05] saturate-[0.85]"
+          className="h-full w-full object-cover object-center grayscale-[15%] contrast-[1.05] saturate-[0.85]"
         />
       </div>
 
       <div className="flex min-w-0 flex-col justify-center">
-        <p className="text-xs font-bold uppercase tracking-[0.2em] text-[#2952A3]">
+        <p className="text-xs font-bold uppercase tracking-[0.2em] text-[#0056d2]">
           Specialty
         </p>
-        <h3 className="mt-3 text-3xl font-extrabold tracking-[-0.03em] text-[#0A1628]">
+        <h3 className="mt-3 text-3xl font-extrabold tracking-[-0.02em] text-[#111827]">
           {name}
         </h3>
-        <p className="mt-1 text-base font-semibold text-[#2952A3]">{role}</p>
-        <p className="mt-5 text-base leading-7 text-[#5B6472]">{desc}</p>
+        <p className="mt-1 text-base font-semibold text-[#0056d2]">{role}</p>
+        <p className="mt-5 text-base leading-7 text-[#4b5563]">{desc}</p>
         <Link
           href="/signup"
-          className="mt-5 inline-flex items-center gap-1 text-sm font-semibold text-[#2952A3]"
+          className="mt-5 inline-flex items-center gap-1 text-sm font-semibold text-[#0056d2]"
         >
           View Instructor <ArrowRight className="h-3.5 w-3.5" />
         </Link>
@@ -521,14 +521,14 @@ function StepCard({
   text: string;
 }) {
   return (
-    <div className="relative rounded-2xl border border-[#E3E6EC] bg-white p-6 lg:p-7">
+    <div className="relative rounded-2xl border border-[#dbe3ee] bg-white p-6 lg:p-7">
       <div className="flex items-center justify-between">
-        <span className="h-3 w-3 rounded-full bg-[#0F2247]" />
-        <p className="text-xs font-bold text-[#2952A3]">{number}</p>
+        <span className="h-3 w-3 rounded-full bg-[#0056d2]" />
+        <p className="text-xs font-bold text-[#0056d2]">{number}</p>
       </div>
 
-      <h3 className="mt-7 text-lg font-bold text-[#0A1628]">{title}</h3>
-      <p className="mt-3 text-sm leading-6 text-[#5B6472]">{text}</p>
+      <h3 className="mt-7 text-lg font-bold text-[#111827]">{title}</h3>
+      <p className="mt-3 text-sm leading-6 text-[#4b5563]">{text}</p>
     </div>
   );
 }
@@ -543,24 +543,24 @@ function SchoolCard({
   text: string;
 }) {
   return (
-    <div className="rounded-2xl border border-[#E3E6EC] bg-white p-6 sm:p-7">
-      <div className="grid h-12 w-12 place-items-center rounded-xl border border-[#0F2247]/20 text-[#0F2247]">
+    <div className="rounded-2xl border border-[#dbe3ee] bg-white p-6 sm:p-7">
+      <div className="grid h-12 w-12 place-items-center rounded-xl bg-[#dbeafe] text-[#0056d2]">
         <Icon className="h-5 w-5" strokeWidth={1.75} />
       </div>
-      <h3 className="mt-5 text-lg font-bold text-[#0A1628]">{title}</h3>
-      <p className="mt-3 text-base leading-7 text-[#5B6472]">{text}</p>
+      <h3 className="mt-5 text-lg font-bold text-[#111827]">{title}</h3>
+      <p className="mt-3 text-base leading-7 text-[#4b5563]">{text}</p>
     </div>
   );
 }
 
 function RoadmapCard({ stage, text }: { stage: string; text: string }) {
   return (
-    <div className="rounded-2xl border border-[#E3E6EC] bg-white p-6 sm:p-7">
-      <div className="grid h-12 w-12 place-items-center rounded-xl border border-[#0F2247]/20">
-        <span className="h-3 w-3 rotate-45 bg-[#0F2247]" />
+    <div className="rounded-2xl border border-[#dbe3ee] bg-white p-6 sm:p-7">
+      <div className="grid h-12 w-12 place-items-center rounded-xl bg-[#dbeafe]">
+        <span className="h-3 w-3 rotate-45 bg-[#0056d2]" />
       </div>
-      <h3 className="mt-5 text-lg font-bold text-[#0A1628]">{stage}</h3>
-      <p className="mt-3 text-base leading-7 text-[#5B6472]">{text}</p>
+      <h3 className="mt-5 text-lg font-bold text-[#111827]">{stage}</h3>
+      <p className="mt-3 text-base leading-7 text-[#4b5563]">{text}</p>
     </div>
   );
 }
@@ -595,46 +595,45 @@ function LessonDemo() {
   }
 
   return (
-    <div className="mx-auto max-w-5xl rounded-2xl border border-[#E3E6EC] bg-white shadow-[0_18px_50px_rgba(15,34,71,0.07)]">
+    <div className="mx-auto max-w-5xl rounded-2xl border border-[#dbe3ee] bg-white shadow-sm">
       {/* Lesson header + progress */}
-      <div className="border-b border-[#E3E6EC] p-6 sm:p-8">
+      <div className="border-b border-[#dbe3ee] p-6 sm:p-8">
         <div className="flex flex-wrap items-start justify-between gap-4">
           <div>
-            <p className="text-xs font-bold uppercase tracking-[0.2em] text-[#2952A3]">
+            <p className="text-xs font-bold uppercase tracking-[0.2em] text-[#0056d2]">
               Career Skills · Lesson 3 of 12
             </p>
-            <h3 className="mt-2 text-xl font-bold text-[#0A1628] sm:text-2xl">
+            <h3 className="mt-2 text-xl font-bold text-[#111827] sm:text-2xl">
               Negotiation Basics
             </h3>
           </div>
-          <span className="rounded-full bg-white px-3 py-1.5 text-[11px] font-bold uppercase tracking-[0.1em] text-[#5B6472]">
+          <span className="rounded-full bg-[#f5f7fb] px-3 py-1.5 text-[11px] font-bold uppercase tracking-[0.1em] text-[#4b5563]">
             Preview
           </span>
         </div>
 
-        <div className="mt-5 h-2 w-full overflow-hidden rounded-full bg-[#F7F8FA]">
-          <div className="h-full w-[28%] rounded-full bg-[#0F2247]" />
+        <div className="mt-5 h-2 w-full overflow-hidden rounded-full bg-[#f5f7fb]">
+          <div className="h-full w-[28%] rounded-full bg-[#0056d2]" />
         </div>
       </div>
 
       <div className="grid gap-8 p-6 sm:p-8 lg:grid-cols-[220px_minmax(0,1fr)]">
         {/* Instructor panel */}
         <div className="flex flex-col items-center text-center lg:items-start lg:text-left">
-          <div className="relative h-32 w-32 overflow-hidden rounded-2xl bg-[#F7F8FA] lg:h-40 lg:w-40">
+          <div className="relative h-32 w-32 overflow-hidden rounded-2xl bg-[#f5f7fb] lg:h-40 lg:w-40">
             <img
               src="/instructors/arin.jpg"
               alt="Arin, Career and Finance Instructor"
-              className="h-full w-full object-cover grayscale-[15%] contrast-[1.05] saturate-[0.85]"
+              className="h-full w-full object-cover object-top grayscale-[15%] contrast-[1.05] saturate-[0.85]"
             />
-            <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-[#0A1628]/25 via-transparent to-[#2952A3]/10" />
           </div>
 
-          <p className="mt-4 text-xs font-bold uppercase tracking-[0.2em] text-[#2952A3]">
+          <p className="mt-4 text-xs font-bold uppercase tracking-[0.2em] text-[#0056d2]">
             Your Instructor
           </p>
-          <h4 className="mt-1 text-lg font-bold text-[#0A1628]">Arin</h4>
-          <p className="text-sm font-semibold text-[#2952A3]">Career &amp; Finance Instructor</p>
-          <p className="mt-3 text-sm leading-6 text-[#5B6472]">
+          <h4 className="mt-1 text-lg font-bold text-[#111827]">Arin</h4>
+          <p className="text-sm font-semibold text-[#0056d2]">Career &amp; Finance Instructor</p>
+          <p className="mt-3 text-sm leading-6 text-[#4b5563]">
             Teaching negotiation, budgeting, and real-world financial decision-making.
           </p>
         </div>
@@ -642,14 +641,14 @@ function LessonDemo() {
         {/* Main workspace */}
         <div className="min-w-0 space-y-6">
           {/* Concept */}
-          <div className="rounded-xl border border-[#E3E6EC] bg-[#F7F8FA] p-5 sm:p-6">
-            <p className="text-xs font-bold uppercase tracking-[0.2em] text-[#2952A3]">
+          <div className="rounded-xl border border-[#dbe3ee] bg-[#f5f7fb] p-5 sm:p-6">
+            <p className="text-xs font-bold uppercase tracking-[0.2em] text-[#0056d2]">
               Concept
             </p>
-            <h4 className="mt-2 text-lg font-bold text-[#0A1628]">
+            <h4 className="mt-2 text-lg font-bold text-[#111827]">
               Before You Respond to an Offer
             </h4>
-            <p className="mt-3 text-sm leading-7 text-[#5B6472]">
+            <p className="mt-3 text-sm leading-7 text-[#4b5563]">
               Never accept or reject a job offer immediately. The strongest
               negotiators research the market rate for the role first, then
               respond with a counter that&apos;s grounded in that data instead
@@ -658,19 +657,19 @@ function LessonDemo() {
           </div>
 
           {/* Practice task */}
-          <div className="rounded-xl border border-[#E3E6EC] bg-white p-5 sm:p-6">
+          <div className="rounded-xl border border-[#dbe3ee] bg-white p-5 sm:p-6">
             <div className="flex items-center justify-between">
-              <p className="text-xs font-bold uppercase tracking-[0.2em] text-[#2952A3]">
+              <p className="text-xs font-bold uppercase tracking-[0.2em] text-[#0056d2]">
                 Practice Task
               </p>
               {attempt === 1 && stage !== "correct" && (
-                <span className="rounded-full bg-[#F7F8FA] px-3 py-1 text-[11px] font-bold uppercase tracking-[0.1em] text-[#5B6472]">
+                <span className="rounded-full bg-[#f5f7fb] px-3 py-1 text-[11px] font-bold uppercase tracking-[0.1em] text-[#4b5563]">
                   Retry
                 </span>
               )}
             </div>
 
-            <p className="mt-2 text-base font-semibold leading-7 text-[#0A1628]">
+            <p className="mt-2 text-base font-semibold leading-7 text-[#111827]">
               You receive a job offer of $52,000. What should you do before responding?
             </p>
 
@@ -681,11 +680,11 @@ function LessonDemo() {
                   onChange={(e) => setAnswer(e.target.value)}
                   placeholder="Type your answer..."
                   rows={3}
-                  className="w-full rounded-lg border border-[#E3E6EC] px-4 py-3 text-sm leading-6 text-[#0A1628] outline-none focus:border-[#2952A3]"
+                  className="w-full rounded-lg border border-[#dbe3ee] px-4 py-3 text-sm leading-6 text-[#111827] outline-none focus:border-[#0056d2]"
                 />
                 <button
                   type="submit"
-                  className="rounded-lg bg-[#0F2247] px-6 py-3 text-sm font-semibold text-white transition hover:bg-[#16305F]"
+                  className="rounded-lg bg-[#0056d2] px-6 py-3 text-sm font-semibold text-white transition hover:bg-[#00419e]"
                 >
                   Submit Answer
                 </button>
@@ -695,14 +694,14 @@ function LessonDemo() {
 
           {/* Correction panel */}
           {stage === "incorrect" && (
-            <div className="rounded-xl border border-[#E3E6EC] bg-white p-5 sm:p-6">
-              <div className="flex items-start gap-3 border-l-2 border-[#0F2247]/15 pl-4">
-                <XCircle className="mt-0.5 h-5 w-5 flex-none text-[#5B6472]" strokeWidth={1.75} />
+            <div className="rounded-xl border border-[#dbe3ee] bg-white p-5 sm:p-6">
+              <div className="flex items-start gap-3 border-l-2 border-[#0056d2]/20 pl-4">
+                <XCircle className="mt-0.5 h-5 w-5 flex-none text-[#4b5563]" strokeWidth={1.75} />
                 <div>
-                  <p className="text-sm font-bold text-[#0A1628]">
+                  <p className="text-sm font-bold text-[#111827]">
                     Not quite — here&apos;s what was missed
                   </p>
-                  <p className="mt-2 text-sm leading-6 text-[#5B6472]">
+                  <p className="mt-2 text-sm leading-6 text-[#4b5563]">
                     Accepting immediately skips research and gives up room to
                     negotiate. Look up the market rate for this role first,
                     then respond with a specific counter number.
@@ -713,7 +712,7 @@ function LessonDemo() {
               <button
                 type="button"
                 onClick={handleRetry}
-                className="mt-5 rounded-lg border border-[#E3E6EC] px-6 py-3 text-sm font-semibold text-[#0A1628] transition hover:border-[#0F2247]/30"
+                className="mt-5 rounded-lg border border-[#dbe3ee] px-6 py-3 text-sm font-semibold text-[#111827] transition hover:border-[#0056d2]/40"
               >
                 Retry Task
               </button>
@@ -722,14 +721,14 @@ function LessonDemo() {
 
           {/* Understanding confirmation */}
           {stage === "correct" && (
-            <div className="rounded-xl border border-[#E3E6EC] bg-white p-5 sm:p-6">
-              <div className="flex items-start gap-3 border-l-2 border-[#0F2247]/15 pl-4">
-                <CheckCircle2 className="mt-0.5 h-5 w-5 flex-none text-[#2952A3]" strokeWidth={1.75} />
+            <div className="rounded-xl border border-[#dbe3ee] bg-white p-5 sm:p-6">
+              <div className="flex items-start gap-3 border-l-2 border-[#0056d2]/20 pl-4">
+                <CheckCircle2 className="mt-0.5 h-5 w-5 flex-none text-[#0056d2]" strokeWidth={1.75} />
                 <div>
-                  <p className="text-sm font-bold text-[#0A1628]">
+                  <p className="text-sm font-bold text-[#111827]">
                     Correct — understanding confirmed
                   </p>
-                  <p className="mt-2 text-sm leading-6 text-[#5B6472]">
+                  <p className="mt-2 text-sm leading-6 text-[#4b5563]">
                     You grounded the ask in market data instead of emotion.
                     That&apos;s the core negotiation skill for this lesson.
                   </p>
@@ -739,11 +738,11 @@ function LessonDemo() {
           )}
 
           {/* Notes & lesson recap controls */}
-          <div className="flex flex-col gap-3 border-t border-[#E3E6EC] pt-6 sm:flex-row sm:items-center sm:justify-between">
+          <div className="flex flex-col gap-3 border-t border-[#dbe3ee] pt-6 sm:flex-row sm:items-center sm:justify-between">
             <button
               type="button"
               onClick={() => setNoteSaved(true)}
-              className="flex items-center justify-center gap-2 rounded-lg border border-[#E3E6EC] px-5 py-3 text-sm font-semibold text-[#0A1628] transition hover:border-[#0F2247]/30"
+              className="flex items-center justify-center gap-2 rounded-lg border border-[#dbe3ee] px-5 py-3 text-sm font-semibold text-[#111827] transition hover:border-[#0056d2]/40"
             >
               <StickyNote className="h-4 w-4" strokeWidth={1.75} />
               {noteSaved ? "Saved to Notes" : "Save to Notes"}
@@ -752,7 +751,7 @@ function LessonDemo() {
             <button
               type="button"
               onClick={() => setRecapOpen((open) => !open)}
-              className="flex items-center justify-center gap-2 rounded-lg border border-[#E3E6EC] px-5 py-3 text-sm font-semibold text-[#0A1628] transition hover:border-[#0F2247]/30"
+              className="flex items-center justify-center gap-2 rounded-lg border border-[#dbe3ee] px-5 py-3 text-sm font-semibold text-[#111827] transition hover:border-[#0056d2]/40"
             >
               <ListChecks className="h-4 w-4" strokeWidth={1.75} />
               {recapOpen ? "Hide Lesson Recap" : "View Lesson Recap"}
@@ -760,7 +759,7 @@ function LessonDemo() {
           </div>
 
           {recapOpen && (
-            <div className="rounded-xl border border-[#E3E6EC] bg-[#F7F8FA] p-5 text-sm leading-6 text-[#5B6472]">
+            <div className="rounded-xl border border-[#dbe3ee] bg-[#f5f7fb] p-5 text-sm leading-6 text-[#4b5563]">
               Research the market rate before responding to any offer, then
               counter with a specific number backed by that data.
             </div>
@@ -768,7 +767,7 @@ function LessonDemo() {
         </div>
       </div>
 
-      <p className="border-t border-[#E3E6EC] p-6 text-sm leading-6 text-[#5B6472] sm:p-8">
+      <p className="border-t border-[#dbe3ee] p-6 text-sm leading-6 text-[#4b5563] sm:p-8">
         This is a preview of how AI instructors teach. Real lessons adapt to
         your answers in real time.
       </p>
@@ -778,18 +777,18 @@ function LessonDemo() {
 
 function ComparisonTable() {
   return (
-    <div className="overflow-x-auto rounded-2xl border border-[#E3E6EC]">
+    <div className="overflow-x-auto rounded-2xl border border-[#dbe3ee]">
       <table className="w-full min-w-[640px] border-collapse text-left">
         <thead>
-          <tr className="border-b border-[#E3E6EC] bg-[#F7F8FA]">
-            <th className="p-5 text-sm font-bold text-[#0A1628]">
+          <tr className="border-b border-[#dbe3ee] bg-[#f5f7fb]">
+            <th className="p-5 text-sm font-bold text-[#111827]">
               What matters when learning
             </th>
             {comparisonColumns.map((col, index) => (
               <th
                 key={col}
                 className={`p-5 text-sm ${
-                  index === 0 ? "font-bold text-[#0F2247]" : "font-semibold text-[#5B6472]"
+                  index === 0 ? "font-bold text-[#0056d2]" : "font-semibold text-[#4b5563]"
                 }`}
               >
                 {col}
@@ -799,14 +798,14 @@ function ComparisonTable() {
         </thead>
         <tbody>
           {comparisonRows.map((row) => (
-            <tr key={row.feature} className="border-b border-[#E3E6EC] last:border-0">
-              <td className="p-5 text-sm font-semibold text-[#0A1628]">{row.feature}</td>
+            <tr key={row.feature} className="border-b border-[#dbe3ee] last:border-0">
+              <td className="p-5 text-sm font-semibold text-[#111827]">{row.feature}</td>
               {row.values.map((value, index) => (
                 <td key={index} className="p-5">
                   {value ? (
-                    <CheckCircle2 className="h-5 w-5 text-[#2952A3]" strokeWidth={1.75} />
+                    <CheckCircle2 className="h-5 w-5 text-[#0056d2]" strokeWidth={1.75} />
                   ) : (
-                    <Minus className="h-5 w-5 text-[#5B6472]/40" strokeWidth={1.75} />
+                    <Minus className="h-5 w-5 text-[#4b5563]/40" strokeWidth={1.75} />
                   )}
                 </td>
               ))}
@@ -820,24 +819,24 @@ function ComparisonTable() {
 
 function WhyFasterCard({ Icon, title, text }: { Icon: LucideIcon; title: string; text: string }) {
   return (
-    <div className="rounded-2xl border border-[#E3E6EC] bg-white p-6 sm:p-7">
-      <div className="grid h-12 w-12 place-items-center rounded-xl border border-[#0F2247]/20 text-[#0F2247]">
+    <div className="rounded-2xl border border-[#dbe3ee] bg-white p-6 sm:p-7">
+      <div className="grid h-12 w-12 place-items-center rounded-xl bg-[#dbeafe] text-[#0056d2]">
         <Icon className="h-5 w-5" strokeWidth={1.75} />
       </div>
-      <h3 className="mt-5 text-lg font-bold text-[#0A1628]">{title}</h3>
-      <p className="mt-3 text-sm leading-6 text-[#5B6472]">{text}</p>
+      <h3 className="mt-5 text-lg font-bold text-[#111827]">{title}</h3>
+      <p className="mt-3 text-sm leading-6 text-[#4b5563]">{text}</p>
     </div>
   );
 }
 
 function PreviewMiniCard({ Icon, title, text }: { Icon: LucideIcon; title: string; text: string }) {
   return (
-    <div className="rounded-2xl border border-[#E3E6EC] bg-white p-5">
-      <div className="grid h-10 w-10 place-items-center rounded-lg border border-[#0F2247]/20 text-[#0F2247]">
+    <div className="rounded-2xl border border-[#dbe3ee] bg-white p-5">
+      <div className="grid h-10 w-10 place-items-center rounded-lg bg-[#dbeafe] text-[#0056d2]">
         <Icon className="h-4.5 w-4.5" strokeWidth={1.75} />
       </div>
-      <h3 className="mt-4 text-sm font-bold text-[#0A1628]">{title}</h3>
-      <p className="mt-2 text-xs leading-5 text-[#5B6472]">{text}</p>
+      <h3 className="mt-4 text-sm font-bold text-[#111827]">{title}</h3>
+      <p className="mt-2 text-xs leading-5 text-[#4b5563]">{text}</p>
     </div>
   );
 }
@@ -854,16 +853,16 @@ function FaqItem({
   onToggle: () => void;
 }) {
   return (
-    <div className="rounded-2xl border border-[#E3E6EC] bg-white">
+    <div className="rounded-2xl border border-[#dbe3ee] bg-white">
       <button
         type="button"
         onClick={onToggle}
         aria-expanded={isOpen}
         className="flex w-full items-center justify-between gap-4 p-5 text-left sm:p-6"
       >
-        <span className="text-base font-bold text-[#0A1628]">{question}</span>
+        <span className="text-base font-bold text-[#111827]">{question}</span>
         <ChevronDown
-          className={`h-5 w-5 flex-none text-[#2952A3] transition-transform ${
+          className={`h-5 w-5 flex-none text-[#0056d2] transition-transform ${
             isOpen ? "rotate-180" : ""
           }`}
           strokeWidth={1.75}
@@ -872,7 +871,7 @@ function FaqItem({
 
       {isOpen && (
         <div className="px-5 pb-5 sm:px-6 sm:pb-6">
-          <p className="text-sm leading-7 text-[#5B6472]">{answer}</p>
+          <p className="text-sm leading-7 text-[#4b5563]">{answer}</p>
         </div>
       )}
     </div>
@@ -888,13 +887,13 @@ function FooterColumn({
 }) {
   return (
     <div>
-      <p className="text-xs font-bold uppercase tracking-[0.18em] text-[#0A1628]">{title}</p>
+      <p className="text-xs font-bold uppercase tracking-[0.18em] text-[#111827]">{title}</p>
       <ul className="mt-4 space-y-3">
         {links.map((link) => (
           <li key={link.label}>
             <Link
               href={link.href}
-              className="text-sm text-[#5B6472] transition hover:text-[#2952A3]"
+              className="text-sm text-[#4b5563] transition hover:text-[#0056d2]"
             >
               {link.label}
             </Link>
@@ -912,9 +911,9 @@ export default function Home() {
   return (
     <main
       id="top"
-      className="min-h-screen scroll-smooth bg-white font-sans text-[#0A1628] xl:[zoom:0.85]"
+      className="min-h-screen scroll-smooth bg-[#f5f7fb] font-sans text-[#111827] xl:[zoom:0.85]"
     >
-      <header className="sticky top-0 z-50 border-b border-[#E3E6EC] bg-white/95 backdrop-blur">
+      <header className="sticky top-0 z-50 border-b border-[#dbe3ee] bg-white/90 backdrop-blur">
         <nav
           className={`${shellClass} flex min-h-[74px] items-center justify-between py-3 sm:min-h-[82px] sm:py-4`}
         >
@@ -925,10 +924,10 @@ export default function Home() {
               className="h-10 w-10 flex-none rounded-full object-cover sm:h-11 sm:w-11"
             />
             <div className="min-w-0">
-              <p className="truncate text-xl font-extrabold tracking-[-0.025em] sm:text-2xl">
+              <p className="truncate text-xl font-extrabold tracking-[-0.02em] sm:text-2xl">
                 GAHN AI
               </p>
-              <p className="hidden text-[8px] font-bold uppercase tracking-[0.16em] text-[#5B6472] sm:block lg:text-[9px]">
+              <p className="hidden text-[8px] font-bold uppercase tracking-[0.16em] text-[#4b5563] sm:block lg:text-[9px]">
                 Global AI Human Helper Network
               </p>
             </div>
@@ -939,12 +938,12 @@ export default function Home() {
               <a
                 key={link.label}
                 href={link.href}
-                className="transition hover:text-[#2952A3]"
+                className="transition hover:text-[#0056d2]"
               >
                 {link.label}
               </a>
             ))}
-            <Link href="/pricing" className="transition hover:text-[#2952A3]">
+            <Link href="/pricing" className="transition hover:text-[#0056d2]">
               Pricing
             </Link>
           </div>
@@ -952,13 +951,13 @@ export default function Home() {
           <div className="hidden items-center gap-3 xl:flex">
             <Link
               href="/login"
-              className="rounded-lg border border-[#E3E6EC] px-5 py-2.5 text-sm font-semibold transition hover:border-[#0F2247]/30"
+              className="rounded-lg border border-[#dbe3ee] px-5 py-2.5 text-sm font-semibold transition hover:border-[#0056d2]/40 hover:bg-[#eef5ff]"
             >
               Log In
             </Link>
             <Link
               href="/signup"
-              className="rounded-lg bg-[#0F2247] px-6 py-2.5 text-sm font-semibold text-white transition hover:bg-[#16305F]"
+              className="rounded-lg bg-[#0056d2] px-6 py-2.5 text-sm font-semibold text-white transition hover:bg-[#00419e]"
             >
               Sign Up
             </Link>
@@ -969,7 +968,7 @@ export default function Home() {
             onClick={() => setMenuOpen((open) => !open)}
             aria-label={menuOpen ? "Close menu" : "Open menu"}
             aria-expanded={menuOpen}
-            className="grid h-11 w-11 place-items-center rounded-lg border border-[#E3E6EC] text-[#0A1628] xl:hidden"
+            className="grid h-11 w-11 place-items-center rounded-lg border border-[#dbe3ee] text-[#111827] xl:hidden"
           >
             {menuOpen ? (
               <X className="h-5 w-5" />
@@ -980,7 +979,7 @@ export default function Home() {
         </nav>
 
         {menuOpen && (
-          <div className="border-t border-[#E3E6EC] bg-white xl:hidden">
+          <div className="border-t border-[#dbe3ee] bg-white xl:hidden">
             <div className={`${shellClass} py-5`}>
               <div className="flex flex-col gap-1 text-sm font-semibold">
                 {navLinks.map((link) => (
@@ -988,7 +987,7 @@ export default function Home() {
                     key={link.label}
                     href={link.href}
                     onClick={() => setMenuOpen(false)}
-                    className="rounded-lg px-3 py-3 transition hover:bg-[#F7F8FA] hover:text-[#2952A3]"
+                    className="rounded-lg px-3 py-3 transition hover:bg-[#eef5ff] hover:text-[#0056d2]"
                   >
                     {link.label}
                   </a>
@@ -996,22 +995,22 @@ export default function Home() {
                 <Link
                   href="/pricing"
                   onClick={() => setMenuOpen(false)}
-                  className="rounded-lg px-3 py-3 transition hover:bg-[#F7F8FA] hover:text-[#2952A3]"
+                  className="rounded-lg px-3 py-3 transition hover:bg-[#eef5ff] hover:text-[#0056d2]"
                 >
                   Pricing
                 </Link>
               </div>
 
-              <div className="mt-4 flex flex-col gap-3 border-t border-[#E3E6EC] pt-4 sm:flex-row">
+              <div className="mt-4 flex flex-col gap-3 border-t border-[#dbe3ee] pt-4 sm:flex-row">
                 <Link
                   href="/login"
-                  className="w-full rounded-lg border border-[#E3E6EC] px-6 py-3 text-center text-sm font-semibold transition hover:border-[#0F2247]/30"
+                  className="w-full rounded-lg border border-[#dbe3ee] px-6 py-3 text-center text-sm font-semibold transition hover:border-[#0056d2]/40"
                 >
                   Log In
                 </Link>
                 <Link
                   href="/signup"
-                  className="w-full rounded-lg bg-[#0F2247] px-7 py-3 text-center text-sm font-semibold text-white transition hover:bg-[#16305F]"
+                  className="w-full rounded-lg bg-[#0056d2] px-7 py-3 text-center text-sm font-semibold text-white transition hover:bg-[#00419e]"
                 >
                   Sign Up
                 </Link>
@@ -1022,44 +1021,23 @@ export default function Home() {
       </header>
 
       {/* HERO */}
-      <section className="relative overflow-hidden bg-[#F7F8FA]">
-        <div
-          aria-hidden="true"
-          className="pointer-events-none absolute inset-0"
-          style={{
-            backgroundImage:
-              "radial-gradient(55% 45% at 85% 15%, rgba(15,34,71,0.09), transparent 70%), radial-gradient(35% 35% at 5% 95%, rgba(41,82,163,0.06), transparent 70%)",
-          }}
-        />
-        <div
-          aria-hidden="true"
-          className="pointer-events-none absolute inset-0"
-          style={{
-            backgroundImage:
-              "radial-gradient(rgba(15,34,71,0.16) 1px, transparent 1px)",
-            backgroundSize: "28px 28px",
-            WebkitMaskImage:
-              "radial-gradient(ellipse 70% 55% at 50% 0%, black 35%, transparent 85%)",
-            maskImage:
-              "radial-gradient(ellipse 70% 55% at 50% 0%, black 35%, transparent 85%)",
-          }}
-        />
+      <section className="relative overflow-hidden bg-[#eef5ff]">
         <div
           className={`${shellClass} relative grid items-center gap-10 py-12 sm:py-14 lg:grid-cols-[minmax(0,1fr)_minmax(340px,390px)] lg:gap-14 lg:py-16 xl:gap-16 xl:py-20`}
         >
           <div className="min-w-0">
-            <p className="text-xs font-bold uppercase tracking-[0.24em] text-[#2952A3] sm:text-sm">
+            <p className="text-xs font-bold uppercase tracking-[0.24em] text-[#0056d2] sm:text-sm">
               AI-Powered Learning for Students and Self-Learners
             </p>
 
-            <h1 className="mt-5 max-w-[920px] text-5xl font-extrabold leading-[1.03] tracking-[-0.045em] text-[#0A1628] sm:mt-6 sm:text-7xl">
+            <h1 className="mt-5 max-w-[920px] text-5xl font-extrabold leading-[1.03] tracking-[-0.03em] text-[#111827] sm:mt-6 sm:text-7xl">
               AI instructors that{" "}
               <span className="lg:block">
-                teach, check, and <span className="text-[#2952A3]">adapt to you.</span>
+                teach, check, and <span className="text-[#0056d2]">adapt to you.</span>
               </span>
             </h1>
 
-            <p className="mt-6 max-w-[760px] text-base leading-7 text-[#5B6472] sm:mt-7 sm:text-lg sm:leading-8 lg:text-lg lg:leading-8">
+            <p className="mt-6 max-w-[760px] text-base leading-7 text-[#4b5563] sm:mt-7 sm:text-lg sm:leading-8 lg:text-lg lg:leading-8">
               GAHN AI helps students and self-learners build real skills through
               structured lessons. Instead of only giving answers, the AI teaches
               concepts, gives practice, checks understanding, corrects mistakes,
@@ -1069,20 +1047,20 @@ export default function Home() {
             <div className="mt-7 flex flex-col gap-3 sm:mt-8 sm:flex-row sm:flex-wrap sm:gap-4">
               <Link
                 href="/signup"
-                className="inline-flex w-full items-center justify-center rounded-lg bg-[#0F2247] px-7 py-3.5 text-sm font-semibold text-white transition hover:bg-[#16305F] sm:w-auto sm:px-8 sm:text-base"
+                className="inline-flex w-full items-center justify-center rounded-lg bg-[#0056d2] px-7 py-3.5 text-sm font-semibold text-white transition hover:bg-[#00419e] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0056d2] focus-visible:ring-offset-2 sm:w-auto sm:px-8 sm:text-base"
               >
                 Start Learning
               </Link>
 
               <a
                 href="#how-it-works"
-                className="inline-flex w-full items-center justify-center gap-2 rounded-lg border border-[#E3E6EC] bg-white px-8 py-4 text-base font-semibold transition hover:border-[#0F2247]/30 sm:w-auto sm:px-9"
+                className="inline-flex w-full items-center justify-center gap-2 rounded-lg border border-[#dbe3ee] bg-white px-8 py-4 text-base font-semibold text-[#111827] transition hover:border-[#0056d2]/40 sm:w-auto sm:px-9"
               >
                 See How It Works <ArrowRight className="h-4 w-4" />
               </a>
             </div>
 
-            <div className="mt-9 grid grid-cols-2 gap-x-5 gap-y-6 border-t border-[#E3E6EC] pt-7 sm:mt-10 sm:pt-8 lg:grid-cols-4">
+            <div className="mt-9 grid grid-cols-2 gap-x-5 gap-y-6 border-t border-[#dbe3ee] pt-7 sm:mt-10 sm:pt-8 lg:grid-cols-4">
               {[
                 ["Structured Lessons", "Not random chats"],
                 ["Active Practice", "You must think and respond"],
@@ -1090,14 +1068,14 @@ export default function Home() {
                 ["Saved Progress", "Continue where you left off"],
               ].map(([item, sub]) => (
                 <div key={item}>
-                  <p className="flex items-start gap-1.5 text-sm font-bold text-[#0A1628]">
+                  <p className="flex items-start gap-1.5 text-sm font-bold text-[#111827]">
                     <CheckCircle2
-                      className="mt-0.5 h-4 w-4 flex-none text-[#2952A3]"
+                      className="mt-0.5 h-4 w-4 flex-none text-[#0056d2]"
                       strokeWidth={1.75}
                     />
                     <span>{item}</span>
                   </p>
-                  <p className="mt-1 text-sm text-[#5B6472]">{sub}</p>
+                  <p className="mt-1 text-sm text-[#4b5563]">{sub}</p>
                 </div>
               ))}
             </div>
@@ -1108,7 +1086,7 @@ export default function Home() {
       </section>
 
       {/* WHO IT IS FOR */}
-      <section className="border-y border-[#E3E6EC] bg-white py-16 sm:py-20">
+      <section className="border-y border-[#dbe3ee] bg-white py-16 sm:py-20">
         <div className={shellClass}>
           <SectionIntro
             eyebrow="Who GAHN AI Is For"
@@ -1133,23 +1111,23 @@ export default function Home() {
             ].map((item) => (
               <div
                 key={item.title}
-                className="rounded-2xl border border-[#E3E6EC] bg-[#F7F8FA] p-6 sm:p-7"
+                className="rounded-2xl border border-[#dbe3ee] bg-[#f5f7fb] p-6 sm:p-7"
               >
-                <h3 className="text-xl font-bold text-[#0A1628]">
+                <h3 className="text-xl font-bold text-[#111827]">
                   {item.title}
                 </h3>
-                <p className="mt-4 text-base leading-7 text-[#5B6472]">
+                <p className="mt-4 text-base leading-7 text-[#4b5563]">
                   {item.text}
                 </p>
               </div>
             ))}
           </div>
 
-          <div className="mt-8 rounded-2xl bg-[#0A1628] px-6 py-7 text-white sm:px-8 sm:py-8">
-            <p className="text-xs font-bold uppercase tracking-[0.22em] text-[#6F9BFF]">
+          <div className="mt-8 rounded-2xl border border-[#dbe3ee] bg-[#eef5ff] px-6 py-7 sm:px-8 sm:py-8">
+            <p className="text-xs font-bold uppercase tracking-[0.22em] text-[#0056d2]">
               Why It Is Different
             </p>
-            <p className="mt-3 max-w-5xl text-lg leading-8 text-white/85 sm:text-xl">
+            <p className="mt-3 max-w-5xl text-lg leading-8 text-[#111827] sm:text-xl">
               Traditional chatbots answer questions. GAHN AI manages the learning
               process by teaching a concept, asking the learner to do something,
               checking the response, correcting misunderstandings, and requiring
@@ -1193,6 +1171,24 @@ export default function Home() {
               <InstructorCard key={instructor.name} {...instructor} />
             ))}
           </div>
+
+          <div className="mx-auto mt-10 max-w-4xl rounded-2xl border border-[#dbe3ee] bg-[#eef5ff] p-6 sm:p-8">
+            <h3 className="text-lg font-bold text-[#111827] sm:text-xl">
+              Designed to feel approachable. Built for serious learning.
+            </h3>
+            <p className="mt-3 text-sm leading-7 text-[#4b5563] sm:text-base sm:leading-8">
+              While GAHN AI features friendly 3D instructors, the platform is
+              designed primarily for teens and adults seeking meaningful skill
+              development. Every lesson is built around evidence-based learning
+              principles—including active recall, spaced repetition, retrieval
+              practice, the Feynman Technique, blurting, interleaving, deliberate
+              practice, mastery learning, adaptive feedback, and guided
+              practice—to improve long-term understanding rather than short-term
+              memorization. Instructors communicate in a clear, professional, and
+              age-appropriate manner while adapting to each learner&apos;s pace
+              and progress.
+            </p>
+          </div>
         </div>
       </section>
 
@@ -1219,19 +1215,19 @@ export default function Home() {
       {/* PLATFORM PREVIEW */}
       <section
         id="platform"
-        className="scroll-mt-24 bg-[#F7F8FA] py-20 sm:py-24"
+        className="scroll-mt-24 bg-[#eef5ff] py-20 sm:py-24"
       >
         <div
           className={`${shellClass} grid items-center gap-12 lg:grid-cols-[360px_minmax(0,1fr)] lg:gap-14 xl:grid-cols-[410px_minmax(0,1fr)]`}
         >
           <div>
-            <p className="text-xs font-bold uppercase tracking-[0.24em] text-[#2952A3]">
+            <p className="text-xs font-bold uppercase tracking-[0.24em] text-[#0056d2]">
               Platform Preview
             </p>
-            <h2 className="mt-4 text-3xl font-extrabold leading-tight tracking-[-0.035em] sm:text-4xl lg:text-5xl">
+            <h2 className="mt-4 text-3xl font-extrabold leading-tight tracking-[-0.02em] sm:text-4xl lg:text-5xl">
               A dashboard built for learning action.
             </h2>
-            <p className="mt-5 text-base leading-7 text-[#5B6472] sm:text-lg sm:leading-8">
+            <p className="mt-5 text-base leading-7 text-[#4b5563] sm:text-lg sm:leading-8">
               The dashboard is where users choose learning worlds, meet AI
               instructors, continue lessons, track progress, save notes, and
               build a skill portfolio over time.
@@ -1241,10 +1237,10 @@ export default function Home() {
               {platformFeatures.map((feature) => (
                 <li key={feature} className="flex items-start gap-3">
                   <CheckCircle2
-                    className="mt-1 h-5 w-5 flex-none text-[#2952A3]"
+                    className="mt-1 h-5 w-5 flex-none text-[#0056d2]"
                     strokeWidth={1.75}
                   />
-                  <span className="text-base leading-7 text-[#5B6472]">
+                  <span className="text-base leading-7 text-[#4b5563]">
                     {feature}
                   </span>
                 </li>
@@ -1256,7 +1252,7 @@ export default function Home() {
         </div>
 
         <div className={`${shellClass} mt-10 sm:mt-14`}>
-          <p className="text-sm font-bold text-[#0A1628]">Every page you'll actually use:</p>
+          <p className="text-sm font-bold text-[#111827]">Every page you'll actually use:</p>
           <div className="mt-5 grid gap-4 sm:grid-cols-2 lg:grid-cols-5">
             {previewPages.map((page) => (
               <PreviewMiniCard key={page.title} {...page} />
@@ -1268,15 +1264,15 @@ export default function Home() {
       {/* CTA BANNER */}
       <section className="bg-white py-20 sm:py-24">
         <div className={shellClass}>
-          <div className="flex flex-col items-start justify-between gap-8 rounded-2xl bg-[#0A1628] px-6 py-9 sm:px-8 sm:py-10 lg:flex-row lg:items-center lg:px-10 lg:py-12">
+          <div className="flex flex-col items-start justify-between gap-8 rounded-2xl border border-[#dbe3ee] bg-[#eef5ff] px-6 py-9 sm:px-8 sm:py-10 lg:flex-row lg:items-center lg:px-10 lg:py-12">
             <div>
-              <p className="text-xs font-bold uppercase tracking-[0.24em] text-[#6F9BFF]">
+              <p className="text-xs font-bold uppercase tracking-[0.24em] text-[#0056d2]">
                 Get started today
               </p>
-              <h2 className="mt-3 max-w-3xl text-2xl font-extrabold leading-tight tracking-[-0.03em] text-white sm:text-3xl lg:text-4xl">
+              <h2 className="mt-3 max-w-3xl text-2xl font-extrabold leading-tight tracking-[-0.02em] text-[#111827] sm:text-3xl lg:text-4xl">
                 Your first AI-guided lesson is one click away.
               </h2>
-              <p className="mt-3 max-w-xl text-base leading-7 text-white/70">
+              <p className="mt-3 max-w-xl text-base leading-7 text-[#4b5563]">
                 New users create an account first. Returning users log in with
                 their email.
               </p>
@@ -1284,8 +1280,8 @@ export default function Home() {
               <div className="mt-6 flex flex-wrap gap-x-6 gap-y-2">
                 {["No credit card required to start", "Cancel anytime", "Built for every learner"].map(
                   (point) => (
-                    <p key={point} className="flex items-center gap-2 text-sm font-semibold text-white/80">
-                      <CheckCircle2 className="h-4 w-4 flex-none text-[#6F9BFF]" strokeWidth={1.75} />
+                    <p key={point} className="flex items-center gap-2 text-sm font-semibold text-[#4b5563]">
+                      <CheckCircle2 className="h-4 w-4 flex-none text-[#0056d2]" strokeWidth={1.75} />
                       {point}
                     </p>
                   )
@@ -1296,13 +1292,13 @@ export default function Home() {
             <div className="flex w-full flex-col gap-3 sm:w-auto sm:flex-row sm:gap-4 lg:flex-none">
               <Link
                 href="/signup"
-                className="w-full rounded-lg bg-white px-8 py-4 text-center text-sm font-semibold text-[#0A1628] transition hover:bg-[#F7F8FA] sm:w-auto"
+                className="w-full rounded-lg bg-[#0056d2] px-8 py-4 text-center text-sm font-semibold text-white transition hover:bg-[#00419e] sm:w-auto"
               >
                 Sign Up
               </Link>
               <Link
                 href="/login"
-                className="w-full rounded-lg border border-white/25 px-8 py-4 text-center text-sm font-semibold text-white transition hover:bg-white/10 sm:w-auto"
+                className="w-full rounded-lg border border-[#dbe3ee] bg-white px-8 py-4 text-center text-sm font-semibold text-[#111827] transition hover:border-[#0056d2]/40 sm:w-auto"
               >
                 Log In
               </Link>
@@ -1312,7 +1308,7 @@ export default function Home() {
       </section>
 
       {/* FOOTER */}
-      <footer className="border-t border-[#E3E6EC] py-14">
+      <footer className="border-t border-[#dbe3ee] bg-white py-14">
         <div className={shellClass}>
           <div className="flex flex-col items-start justify-between gap-6 sm:flex-row sm:items-center">
             <Link href="/" className="flex items-center gap-3">
@@ -1325,30 +1321,30 @@ export default function Home() {
                 <p className="text-base font-extrabold tracking-[-0.02em]">
                   GAHN AI
                 </p>
-                <p className="text-[8px] font-bold uppercase tracking-[0.16em] text-[#5B6472]">
+                <p className="text-[8px] font-bold uppercase tracking-[0.16em] text-[#4b5563]">
                   Global AI Human Helper Network
                 </p>
               </div>
             </Link>
 
-            <div className="flex flex-wrap items-center gap-6 text-sm font-semibold text-[#5B6472]">
-              <Link href="/about" className="transition hover:text-[#2952A3]">
+            <div className="flex flex-wrap items-center gap-6 text-sm font-semibold text-[#4b5563]">
+              <Link href="/about" className="transition hover:text-[#0056d2]">
                 About
               </Link>
-              <Link href="/contact" className="transition hover:text-[#2952A3]">
-  Contact
-</Link>
-              <Link href="/privacy" className="transition hover:text-[#2952A3]">
+              <Link href="/contact" className="transition hover:text-[#0056d2]">
+                Contact
+              </Link>
+              <Link href="/privacy" className="transition hover:text-[#0056d2]">
                 Privacy Policy
               </Link>
-              <Link href="/terms" className="transition hover:text-[#2952A3]">
+              <Link href="/terms" className="transition hover:text-[#0056d2]">
                 Terms of Service
               </Link>
             </div>
           </div>
 
-          <div className="mt-12 flex flex-col items-center justify-between gap-4 border-t border-[#E3E6EC] pt-8 sm:flex-row">
-            <p className="text-xs text-[#5B6472]">
+          <div className="mt-12 flex flex-col items-center justify-between gap-4 border-t border-[#dbe3ee] pt-8 sm:flex-row">
+            <p className="text-xs text-[#4b5563]">
               © 2026 GAHN AI. All rights reserved.
             </p>
 
