@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { supabase } from "@/lib/supabaseClient";
 
 export default function LoginPage() {
@@ -11,11 +11,31 @@ export default function LoginPage() {
   const [loading, setLoading] = useState(false);
   const [googleLoading, setGoogleLoading] = useState(false);
   const [resetLoading, setResetLoading] = useState(false);
+
   const [error, setError] = useState("");
   const [message, setMessage] = useState("");
 
+  useEffect(() => {
+    setEmail("");
+    setPassword("");
+
+    const params = new URLSearchParams(window.location.search);
+    const errorType = params.get("error");
+
+    if (errorType === "authentication_failed") {
+      setError("Authentication failed. Please try again.");
+    }
+
+    if (errorType === "profile_setup_failed") {
+      setError(
+        "Your account was authenticated, but your profile could not be prepared. Please try again."
+      );
+    }
+  }, []);
+
   async function handleLogin(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
+
     setError("");
     setMessage("");
 
@@ -33,19 +53,27 @@ export default function LoginPage() {
 
     setLoading(true);
 
-    const { error: loginError } = await supabase.auth.signInWithPassword({
-      email: cleanEmail,
-      password,
-    });
+    try {
+      const { error: loginError } =
+        await supabase.auth.signInWithPassword({
+          email: cleanEmail,
+          password,
+        });
 
-    setLoading(false);
+      if (loginError) {
+        setError(
+          "Invalid email or password. If you use Google, click Continue with Google. Otherwise, reset your password or create an account."
+        );
+        return;
+      }
 
-    if (loginError) {
-      setError("Invalid email or password.");
-      return;
+      window.location.replace("/dashboard");
+    } catch (loginRequestError) {
+      console.error("Login failed:", loginRequestError);
+      setError("Something went wrong. Please try again.");
+    } finally {
+      setLoading(false);
     }
-
-    window.location.href = "/dashboard";
   }
 
   async function handleGoogleLogin() {
@@ -53,20 +81,26 @@ export default function LoginPage() {
     setMessage("");
     setGoogleLoading(true);
 
-    const { error: googleError } = await supabase.auth.signInWithOAuth({
-      provider: "google",
-      options: {
-        redirectTo: `${window.location.origin}/auth/callback?intent=login`,
-        queryParams: {
-          prompt: "select_account",
-        },
-      },
-    });
+    try {
+      const { error: googleError } =
+        await supabase.auth.signInWithOAuth({
+          provider: "google",
+          options: {
+            redirectTo: `${window.location.origin}/auth/callback`,
+            queryParams: {
+              prompt: "select_account",
+            },
+          },
+        });
 
-    setGoogleLoading(false);
-
-    if (googleError) {
-      setError(googleError.message);
+      if (googleError) {
+        setError("Google authentication failed. Please try again.");
+      }
+    } catch (googleRequestError) {
+      console.error("Google authentication failed:", googleRequestError);
+      setError("Google authentication failed. Please try again.");
+    } finally {
+      setGoogleLoading(false);
     }
   }
 
@@ -77,27 +111,34 @@ export default function LoginPage() {
     const cleanEmail = email.trim().toLowerCase();
 
     if (!cleanEmail) {
-      setError("Enter your email address first, then click Forgot Password.");
+      setError(
+        "Enter your email address first, then click Forgot Password."
+      );
       return;
     }
 
     setResetLoading(true);
 
-    const { error: resetError } = await supabase.auth.resetPasswordForEmail(
-      cleanEmail,
-      {
-        redirectTo: `${window.location.origin}/auth/callback?next=/update-password`,
+    try {
+      const { error: resetError } =
+        await supabase.auth.resetPasswordForEmail(cleanEmail, {
+          redirectTo: `${window.location.origin}/auth/callback?next=/update-password`,
+        });
+
+      if (resetError) {
+        setError("The password reset request failed. Please try again.");
+        return;
       }
-    );
 
-    setResetLoading(false);
-
-    if (resetError) {
-      setError(resetError.message);
-      return;
+      setMessage(
+        "If an account is connected to that email, a password reset email will be sent."
+      );
+    } catch (resetRequestError) {
+      console.error("Password reset failed:", resetRequestError);
+      setError("Something went wrong. Please try again.");
+    } finally {
+      setResetLoading(false);
     }
-
-    setMessage("Password reset email sent. Check your inbox.");
   }
 
   return (
@@ -109,7 +150,9 @@ export default function LoginPage() {
           className="mx-auto mb-4 h-20 w-20 object-contain"
         />
 
-        <h1 className="text-5xl font-black text-[#061633]">GAHN AI</h1>
+        <h1 className="text-5xl font-black text-[#061633]">
+          GAHN AI
+        </h1>
 
         <p className="mt-1 text-sm font-bold uppercase tracking-[0.2em] text-slate-500">
           Global AI Human Helper Network
@@ -121,13 +164,17 @@ export default function LoginPage() {
           <div className="absolute inset-0 bg-[#02122b]" />
 
           <div className="relative z-10">
-            <h2 className="text-4xl font-black">Welcome Back</h2>
+            <h2 className="text-4xl font-black">
+              Welcome Back
+            </h2>
 
             <div className="mt-6 h-1 w-20 bg-blue-400" />
 
             <p className="mt-10 text-2xl leading-10">
               Continue your learning journey with{" "}
-              <span className="text-blue-300">GAHN AI</span>
+              <span className="text-blue-300">
+                GAHN AI
+              </span>
             </p>
 
             <div className="mt-12 space-y-8">
@@ -154,8 +201,13 @@ export default function LoginPage() {
                   </div>
 
                   <div>
-                    <h3 className="text-xl font-black">{title}</h3>
-                    <p className="mt-2 text-blue-100/75">{text}</p>
+                    <h3 className="text-xl font-black">
+                      {title}
+                    </h3>
+
+                    <p className="mt-2 text-blue-100/75">
+                      {text}
+                    </p>
                   </div>
                 </div>
               ))}
@@ -164,10 +216,12 @@ export default function LoginPage() {
         </section>
 
         <section className="p-12">
-          <h2 className="text-center text-4xl font-black">Login</h2>
+          <h2 className="text-center text-4xl font-black">
+            Login
+          </h2>
 
           <p className="mt-3 text-center text-slate-500">
-            Welcome back! Please login to continue.
+            Welcome back. Log in to continue.
           </p>
 
           <button
@@ -181,8 +235,18 @@ export default function LoginPage() {
               alt="Google"
               className="h-8 w-8 object-contain"
             />
-            <span>{googleLoading ? "Connecting..." : "Continue with Google"}</span>
+
+            <span>
+              {googleLoading
+                ? "Connecting..."
+                : "Continue with Google"}
+            </span>
           </button>
+
+          <p className="mt-3 text-center text-sm text-slate-500">
+            New Google users will create an account. Existing Google users
+            will be logged in.
+          </p>
 
           <div className="my-8 flex items-center gap-4 text-slate-400">
             <div className="h-px flex-1 bg-slate-200" />
@@ -190,36 +254,37 @@ export default function LoginPage() {
             <div className="h-px flex-1 bg-slate-200" />
           </div>
 
-          <form onSubmit={handleLogin}>
+          <form onSubmit={handleLogin} autoComplete="on">
             <input
+              name="email"
               placeholder="Email Address"
               type="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
+              autoComplete="email"
               className="w-full rounded-2xl border border-slate-200 px-5 py-4 text-lg outline-none focus:border-blue-400"
             />
 
             <input
+              name="password"
               placeholder="Password"
               type="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
+              autoComplete="current-password"
               className="mt-5 w-full rounded-2xl border border-slate-200 px-5 py-4 text-lg outline-none focus:border-blue-400"
             />
 
-            <div className="mt-5 flex items-center justify-between text-sm">
-              <label className="flex cursor-pointer items-center gap-2">
-                <input type="checkbox" className="h-4 w-4" />
-                Remember me
-              </label>
-
+            <div className="mt-5 flex justify-end text-sm">
               <button
                 type="button"
                 onClick={handleForgotPassword}
                 disabled={resetLoading}
                 className="cursor-pointer text-blue-600 disabled:cursor-not-allowed disabled:opacity-60"
               >
-                {resetLoading ? "Sending..." : "Forgot Password?"}
+                {resetLoading
+                  ? "Sending..."
+                  : "Forgot Password?"}
               </button>
             </div>
 
@@ -246,7 +311,10 @@ export default function LoginPage() {
 
           <p className="mt-8 text-center text-slate-500">
             Don&apos;t have an account?{" "}
-            <Link href="/signup" className="font-bold text-blue-600">
+            <Link
+              href="/signup"
+              className="font-bold text-blue-600"
+            >
               Signup
             </Link>
           </p>

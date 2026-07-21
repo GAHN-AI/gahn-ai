@@ -162,10 +162,18 @@ export default function DashboardPage() {
   }, [router]);
 
   async function handleLogout() {
-    await supabase.auth.signOut();
-    router.push("/login");
-    router.refresh();
+  const { error } = await supabase.auth.signOut({
+    scope: "local",
+  });
+
+  if (error) {
+    console.error("Logout failed:", error);
+    alert("Logout failed. Please try again.");
+    return;
   }
+
+  window.location.replace("/login");
+}
 
   return (
     <main className="min-h-screen bg-[#F7F8FA] font-sans text-[#0A1628]">

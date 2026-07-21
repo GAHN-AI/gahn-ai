@@ -18,10 +18,10 @@ export default function UpdatePasswordPage() {
     setMessage("");
     setError("");
 
-    if (password.length < 6) {
-      setError("Password must be at least 6 characters.");
-      return;
-    }
+    if (password.length < 8) {
+  setError("Password must be at least 8 characters.");
+  return;
+}
 
     if (password !== confirmPassword) {
       setError("Passwords do not match.");
@@ -42,21 +42,27 @@ export default function UpdatePasswordPage() {
       return;
     }
 
-    await supabase.auth.signOut();
+    const { error: logoutError } = await supabase.auth.signOut({
+  scope: "local",
+});
 
-    setLoading(false);
-    setMessage("Password updated successfully. Redirecting to login...");
+if (logoutError) {
+  console.error("Logout after password update failed:", logoutError);
+}
 
-    setTimeout(() => {
-      router.push("/login");
-    }, 1500);
+setLoading(false);
+setMessage("Password updated successfully. Redirecting to login...");
+
+setTimeout(() => {
+  window.location.replace("/login");
+}, 1500);
   }
 
   return (
     <main className="min-h-screen bg-[#f6f9ff] px-6 py-10 text-[#061633] lg:[zoom:0.55]">
       <div className="mx-auto mb-8 text-center">
         <img
-          src="/logo/favicon.logo"
+          src="/logo/favicon.png"
           alt="GAHN AI"
           className="mx-auto mb-4 h-20 w-20 object-contain"
         />
