@@ -39,7 +39,6 @@ const navLinks = [
   { href: "#platform", label: "Platform" },
   { href: "#instructors", label: "Instructors" },
   { href: "#how-it-works", label: "How It Works" },
-  { href: "#schools", label: "Schools" },
 ];
 
 const worlds = [
@@ -522,12 +521,11 @@ function StepCard({
 }) {
   return (
     <div className="relative rounded-2xl border border-[#dbe3ee] bg-white p-6 lg:p-7">
-      <div className="flex items-center justify-between">
-        <span className="h-3 w-3 rounded-full bg-[#0056d2]" />
-        <p className="text-xs font-bold text-[#0056d2]">{number}</p>
+      <div className="flex items-center gap-3">
+        <span className="h-3 w-3 flex-none rounded-full bg-[#0056d2]" />
+        <h3 className="text-lg font-bold text-[#111827]">{title}</h3>
       </div>
 
-      <h3 className="mt-7 text-lg font-bold text-[#111827]">{title}</h3>
       <p className="mt-3 text-sm leading-6 text-[#4b5563]">{text}</p>
     </div>
   );

@@ -178,7 +178,7 @@ export default function DashboardPage() {
               className="h-12 w-12 rounded-full object-cover sm:h-14 sm:w-14"
             />
             <div>
-              <h1 className="text-xl font-extrabold tracking-[-0.02em] text-[#111827] sm:text-2xl">
+              <h1 className="text-xl font-extrabold tracking-[-0.02em] text-[#111827] sm:text-lg">
                 GAHN AI
               </h1>
               <p className="text-[8px] font-bold uppercase tracking-[0.16em] text-[#4b5563]">
@@ -365,7 +365,7 @@ export default function DashboardPage() {
               </div>
             </section>
 
-            <section className="mt-6 grid gap-4 xl:grid-cols-3">
+            <section className="mt-6 grid gap-4 md:grid-cols-2 2xl:grid-cols-3">
               <DashboardMiniCard title="Learning Overview" sideText="This Week">
                 <p className="font-bold text-[#111827]">No learning data yet</p>
                 <p className="mt-1 text-sm text-[#111827]">
@@ -374,15 +374,15 @@ export default function DashboardPage() {
               </DashboardMiniCard>
 
               <DashboardMiniCard title="Instructor Recommendations" linkText="View All">
-                <p className="text-sm font-bold text-[#111827]">No recommendations yet</p>
-                <p className="mt-1 text-xs leading-5 text-[#111827]">
+                <p className="text-base font-bold leading-6 text-[#111827]">No recommendations yet</p>
+                <p className="mt-2 text-sm leading-6 text-[#4b5563]">
                   Your instructors will recommend practice after you start a lesson.
                 </p>
               </DashboardMiniCard>
 
               <DashboardMiniCard title="Recent Achievements" linkText="View All">
-                <p className="text-sm font-bold text-[#111827]">No achievements yet</p>
-                <p className="mt-1 text-xs leading-5 text-[#111827]">
+                <p className="text-base font-bold leading-6 text-[#111827]">No achievements yet</p>
+                <p className="mt-2 text-sm leading-6 text-[#4b5563]">
                   Achievements appear after completed lessons.
                 </p>
               </DashboardMiniCard>
@@ -415,18 +415,29 @@ function DashboardMiniCard({
 }) {
   return (
     <div className="rounded-2xl border border-[#dbe3ee] bg-white p-5 shadow-sm">
-      <div className="flex flex-wrap items-start justify-between gap-x-3 gap-y-1">
-        <h3 className="font-bold text-[#111827]">{title}</h3>
-        {sideText && <span className="shrink-0 text-xs font-semibold text-[#4b5563]">{sideText}</span>}
+      <div className="flex min-w-0 items-start justify-between gap-3">
+        <h3 className="min-w-0 text-base font-bold leading-6 text-[#111827]">
+          {title}
+        </h3>
+
+        {sideText && (
+          <span className="shrink-0 pt-0.5 text-xs font-semibold text-[#4b5563]">
+            {sideText}
+          </span>
+        )}
+
         {linkText && (
-          <Link href="/in-progress" className="shrink-0 text-sm font-semibold text-[#0056d2]">
+          <Link
+            href="/in-progress"
+            className="shrink-0 pt-0.5 text-sm font-semibold text-[#0056d2]"
+          >
             {linkText}
           </Link>
         )}
       </div>
 
-      <div className="mt-5 grid w-full min-h-36 place-items-center rounded-xl border border-dashed border-[#dbe3ee] bg-[#f5f7fb] px-8 py-7 text-center">
-        <div className="mx-auto max-w-[220px] text-center">{children}</div>
+      <div className="mt-5 grid min-h-36 w-full place-items-center rounded-xl border border-dashed border-[#dbe3ee] bg-[#f5f7fb] px-5 py-7 text-center sm:px-6">
+        <div className="mx-auto w-full max-w-[260px] text-center">{children}</div>
       </div>
     </div>
   );

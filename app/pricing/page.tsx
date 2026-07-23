@@ -162,7 +162,6 @@ export default function PricingPage() {
             <Link href="/#programs" className="transition hover:text-[#0056d2]">Programs</Link>
             <Link href="/#platform" className="transition hover:text-[#0056d2]">Platform</Link>
             <Link href="/#instructors" className="transition hover:text-[#0056d2]">Instructors</Link>
-            <Link href="/#schools" className="transition hover:text-[#0056d2]">Schools</Link>
           </div>
 
           <div className="flex items-center gap-3">
