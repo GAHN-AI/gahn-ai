@@ -71,31 +71,36 @@ const worlds = [
 
 const instructors = [
   {
-    name: "Lena",
-    role: "Medical Instructor",
-    desc: "Healthcare basics, medical terminology, patient-care concepts, and clinical learning support.",
-    image: "/instructors/lena.jpg",
-  },
-  {
-    name: "Alex",
-    role: "Software Engineer",
-    desc: "Coding, full-stack development, databases, debugging, and software project guidance.",
+    name: "Career Fields",
+    role: "Career Skills Instructor",
+    desc: "Explore a wide range of career skills, including communication, leadership, business, workplace habits, interviews, resumes, entrepreneurship, teamwork, and professional growth.",
     image: "/instructors/alex.jpg",
   },
   {
-    name: "Arin",
-    role: "Finance Instructor",
-    desc: "Money management, business finance, investing basics, budgeting, and financial decision-making.",
+    name: "School Help",
+    role: "School Help Instructor",
+    desc: "Get guided support with math, science, reading, writing, history, homework, studying, assignments, and test preparation.",
     image: "/instructors/arin.jpg",
   },
   {
-    name: "Jada",
-    role: "Cybersecurity Specialist",
-    desc: "Learn cybersecurity fundamentals, ethical hacking concepts, network security, digital privacy, cyber defense, and real-world security best practices through hands-on guidance and practical scenarios.",
+    name: "Brain Development",
+    role: "Brain Development Instructor",
+    desc: "Strengthen focus, memory, discipline, reasoning, productive habits, emotional control, and learning performance.",
+    image: "/instructors/lena.jpg",
+  },
+  {
+    name: "General Knowledge",
+    role: "General Knowledge Instructor",
+    desc: "Learn history, technology, culture, communication, life skills, current events, and practical real-world knowledge.",
     image: "/instructors/jada.jpg",
   },
+  {
+    name: "Book Intelligence",
+    role: "Book Intelligence Instructor",
+    desc: "Understand books through summaries, key lessons, notes, quizzes, study paths, reading improvement, and practical applications.",
+    image: "/instructors/john.jpg",
+  },
 ];
-
 const steps = [
   {
     number: "01",
@@ -482,13 +487,13 @@ function InstructorCard({
 }) {
   return (
     <div className="grid gap-6 rounded-2xl border border-[#dbe3ee] bg-white p-5 sm:p-7 md:grid-cols-[240px_minmax(0,1fr)] md:gap-8">
-      <div className="relative mx-auto aspect-[4/3] w-full max-w-[280px] overflow-hidden rounded-xl bg-[#f5f7fb] md:mx-0 md:h-[200px] md:max-w-none">
-        <img
-          src={image}
-          alt={`${name}, ${role}`}
-          className="h-full w-full object-cover object-center grayscale-[15%] contrast-[1.05] saturate-[0.85]"
-        />
-      </div>
+      <div className="relative mx-auto aspect-[16/9] w-full max-w-[280px] overflow-hidden rounded-xl bg-white md:mx-0 md:h-[200px] md:max-w-none">
+  <img
+    src={image}
+    alt={`${name}, ${role}`}
+    className="h-full w-full object-contain object-center grayscale-[15%] contrast-[1.05] saturate-[0.85]"
+  />
+</div>
 
       <div className="flex min-w-0 flex-col justify-center">
         <p className="text-xs font-bold uppercase tracking-[0.2em] text-[#0056d2]">
@@ -503,7 +508,7 @@ function InstructorCard({
           href="/signup"
           className="mt-5 inline-flex items-center gap-1 text-sm font-semibold text-[#0056d2]"
         >
-          View Instructor <ArrowRight className="h-3.5 w-3.5" />
+          Enter World <ArrowRight className="h-3.5 w-3.5" />
         </Link>
       </div>
     </div>
@@ -933,14 +938,14 @@ export default function Home() {
 
           <div className="hidden items-center gap-5 text-sm font-semibold xl:flex 2xl:gap-7">
             {navLinks.map((link) => (
-              <a
-                key={link.label}
-                href={link.href}
-                className="transition hover:text-[#0056d2]"
-              >
-                {link.label}
-              </a>
-            ))}
+  <a
+    key={link.label}
+    href={link.href}
+    className="transition hover:text-[#0056d2]"
+  >
+    {link.label}
+  </a>
+))}
             <Link href="/pricing" className="transition hover:text-[#0056d2]">
               Pricing
             </Link>
@@ -981,15 +986,15 @@ export default function Home() {
             <div className={`${shellClass} py-5`}>
               <div className="flex flex-col gap-1 text-sm font-semibold">
                 {navLinks.map((link) => (
-                  <a
-                    key={link.label}
-                    href={link.href}
-                    onClick={() => setMenuOpen(false)}
-                    className="rounded-lg px-3 py-3 transition hover:bg-[#eef5ff] hover:text-[#0056d2]"
-                  >
-                    {link.label}
-                  </a>
-                ))}
+  <a
+    key={link.label}
+    href={link.href}
+    onClick={() => setMenuOpen(false)}
+    className="rounded-lg px-3 py-3 transition hover:bg-[#eef5ff] hover:text-[#0056d2]"
+  >
+    {link.label}
+  </a>
+))}
                 <Link
                   href="/pricing"
                   onClick={() => setMenuOpen(false)}
@@ -1051,6 +1056,7 @@ export default function Home() {
               </Link>
 
               <a
+                              
                 href="#how-it-works"
                 className="inline-flex w-full items-center justify-center gap-2 rounded-lg border border-[#dbe3ee] bg-white px-8 py-4 text-base font-semibold text-[#111827] transition hover:border-[#0056d2]/40 sm:w-auto sm:px-9"
               >
@@ -1165,10 +1171,19 @@ export default function Home() {
           />
 
           <div className="grid gap-6 xl:grid-cols-2">
-            {instructors.map((instructor) => (
-              <InstructorCard key={instructor.name} {...instructor} />
-            ))}
-          </div>
+  {instructors.map((instructor, index) => (
+    <div
+      key={instructor.name}
+      className={
+        index === instructors.length - 1
+          ? "xl:col-span-2 xl:mx-auto xl:w-[calc(50%-12px)]"
+          : ""
+      }
+    >
+      <InstructorCard {...instructor} />
+    </div>
+  ))}
+</div>
 
           <div className="mx-auto mt-10 max-w-4xl rounded-2xl border border-[#dbe3ee] bg-[#eef5ff] p-6 sm:p-8">
             <h3 className="text-lg font-bold text-[#111827] sm:text-xl">
