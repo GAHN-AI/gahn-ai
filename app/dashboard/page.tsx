@@ -51,10 +51,11 @@ const worlds: { Icon: LucideIcon; title: string; text: string }[] = [
 ];
 
 const instructors = [
-  { image: "/instructors/lena.jpg", name: "Lena", role: "Medical Instructor" },
-  { image: "/instructors/alex.jpg", name: "Alex", role: "Software Engineer" },
-  { image: "/instructors/arin.jpg", name: "Arin", role: "Finance Instructor" },
-  { image: "/instructors/jada.jpg", name: "Jada", role: "Nurse Instructor" },
+  { image: "/instructors/alex.jpg", world: "Career Skills" },
+  { image: "/instructors/arin.jpg", world: "School Help" },
+  { image: "/instructors/jada.jpg", world: "General Knowledge" },
+  { image: "/instructors/lena.jpg", world: "Brain Development" },
+  { image: "/instructors/john.jpg", world: "Book Intelligence" },
 ];
 
 function getInitials(name: string) {
@@ -169,7 +170,7 @@ export default function DashboardPage() {
 
   return (
     <main className="min-h-screen bg-[#f5f7fb] font-sans text-[#111827]">
-      <div className="mx-auto grid min-h-screen w-full max-w-[1800px] grid-cols-1 lg:grid-cols-[260px_minmax(0,1fr)] xl:grid-cols-[280px_minmax(0,1fr)_340px]">
+      <div className="grid min-h-screen w-full grid-cols-1 lg:grid-cols-[240px_minmax(0,1fr)] xl:grid-cols-[250px_minmax(0,1fr)_300px]">
         <aside className="border-r border-[#dbe3ee] bg-white p-4 sm:p-5 lg:sticky lg:top-0 lg:h-screen lg:overflow-y-auto">
           <Link href="/" className="flex items-center gap-3">
             <img
@@ -307,17 +308,23 @@ export default function DashboardPage() {
                 { Icon: Award, number: "0", label: "Certificates" },
                 { Icon: TrendingUp, number: "0%", label: "Overall Progress" },
               ].map(({ Icon, number, label }) => (
-                <div key={label} className="rounded-2xl border border-[#dbe3ee] bg-white p-5 shadow-sm">
-                  <div className="flex items-center gap-4">
-                    <div className="grid h-12 w-12 place-items-center rounded-xl bg-[#dbeafe] text-[#0056d2]">
-                      <Icon className="h-5 w-5" strokeWidth={1.75} />
-                    </div>
-                    <div>
-                      <p className="text-2xl font-bold text-[#111827]">{number}</p>
-                      <p className="text-xs font-semibold text-[#4b5563]">{label}</p>
-                    </div>
-                  </div>
-                </div>
+                <div
+  key={label}
+  className="min-w-0 rounded-2xl border border-[#dbe3ee] bg-white p-4 shadow-sm"
+>
+  <div className="grid grid-cols-[64px_minmax(0,1fr)] items-center gap-3">
+    <div className="grid h-14 w-16 place-items-center rounded-xl bg-[#dbeafe] text-[#0056d2]">
+      <Icon className="h-6 w-6" strokeWidth={1.75} />
+    </div>
+
+    <div className="min-w-0">
+      <p className="text-2xl font-bold text-[#111827]">{number}</p>
+      <p className="break-words text-[11px] font-semibold leading-4 text-[#4b5563] sm:text-xs">
+        {label}
+      </p>
+    </div>
+  </div>
+</div>
               ))}
             </section>
 
@@ -448,33 +455,30 @@ function DashboardRightColumn() {
     <>
       <div className="rounded-2xl border border-[#dbe3ee] bg-white p-5 shadow-sm">
         <div className="flex items-center justify-between">
-          <h3 className="font-bold text-[#111827]">AI Instructor</h3>
+          <h3 className="max-w-[185px] text-base font-bold leading-5 text-[#111827]">
+  Your AI Instructors for Each Learning World
+</h3>
           <Link href="/in-progress" className="text-sm font-semibold text-[#0056d2]">
             View All
           </Link>
         </div>
 
         <div className="mt-4 space-y-3">
-          {instructors.map(({ image, name, role }) => (
-            <div
-              key={name}
-              className="flex items-center gap-3 rounded-xl border border-[#dbe3ee] p-3"
-            >
-              <InstructorAvatar image={image} name={name} />
-              <div>
-                <p className="text-sm font-bold text-[#111827]">{name}</p>
-                <p className="text-xs text-[#4b5563]">{role}</p>
-              </div>
-            </div>
-          ))}
-        </div>
+  {instructors.map(({ image, world }) => (
+    <div
+      key={world}
+      className="overflow-hidden rounded-xl border border-[#dbe3ee] bg-white"
+    >
+      <img
+        src={image}
+        alt={`${world} AI instructor`}
+        className="h-[135px] w-full object-cover object-center"
+      />
+    </div>
+  ))}
+</div>
 
-        <Link
-          href="/in-progress"
-          className="mt-4 block rounded-lg bg-[#0056d2] px-5 py-3 text-center text-sm font-semibold text-white transition hover:bg-[#00419e]"
-        >
-          Choose Instructor
-        </Link>
+        
       </div>
 
       <div className="rounded-2xl border border-[#dbe3ee] bg-white p-5 shadow-sm">

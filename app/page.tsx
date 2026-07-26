@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { Source_Sans_3 } from "next/font/google";
 import { useState } from "react";
 import type { LucideIcon } from "lucide-react";
 import {
@@ -32,7 +33,9 @@ import {
   X,
   XCircle,
 } from "lucide-react";
-
+const sourceSans = Source_Sans_3({
+  subsets: ["latin"],
+});
 const navLinks = [
   { href: "#top", label: "Home" },
   { href: "#programs", label: "Programs" },
@@ -254,7 +257,7 @@ const footerColumns: { title: string; links: { label: string; href: string }[] }
 ];
 
 const shellClass =
-  "mx-auto w-full max-w-[1280px] px-5 sm:px-8 lg:px-10 xl:px-12";
+  "mx-auto w-full max-w-[1480px] px-5 sm:px-8 lg:px-12 2xl:px-16";
 
 function SectionIntro({
   eyebrow,
@@ -1026,19 +1029,18 @@ export default function Home() {
       {/* HERO */}
       <section className="relative overflow-hidden bg-[#eef5ff]">
         <div
-          className={`${shellClass} relative grid items-center gap-10 py-12 sm:py-14 lg:grid-cols-[minmax(0,1fr)_minmax(340px,390px)] lg:gap-14 lg:py-16 xl:gap-16 xl:py-20`}
+          className={`${shellClass} relative grid items-center gap-10 py-12 sm:py-14 lg:grid-cols-[minmax(0,1.2fr)_minmax(360px,430px)] lg:gap-16 lg:py-16 xl:gap-20 xl:py-20`}
         >
           <div className="min-w-0">
             <p className="text-xs font-bold uppercase tracking-[0.24em] text-[#0056d2] sm:text-sm">
               AI-Powered Learning for Students and Self-Learners
             </p>
 
-            <h1 className="mt-5 max-w-[920px] text-5xl font-extrabold leading-[1.03] tracking-[-0.03em] text-[#111827] sm:mt-6 sm:text-7xl">
-              AI instructors that{" "}
-              <span className="lg:block">
-                teach, check, and <span className="text-[#0056d2]">adapt to you.</span>
-              </span>
-            </h1>
+            <h1 className="mt-5 max-w-[860px] text-[3.1rem] font-semibold leading-[1.12] tracking-[-0.035em] text-[#111827] sm:mt-6 sm:text-[3.9rem] xl:text-[4.55rem]">
+  <span className="block">AI instructors that</span>
+  <span className="block">teach, check, and</span>
+  <span className="block text-[#0056d2]">adapt to you.</span>
+</h1>
 
             <p className="mt-6 max-w-[760px] text-base leading-7 text-[#4b5563] sm:mt-7 sm:text-lg sm:leading-8 lg:text-lg lg:leading-8">
               GAHN AI helps students and self-learners build real skills through
