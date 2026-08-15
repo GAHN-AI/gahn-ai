@@ -71,7 +71,7 @@ function getInitials(name: string) {
 }
 
 function getInitialColor(name: string) {
-  const colors = ["bg-[#0056d2]", "bg-[#00419e]", "bg-[#1e6fe0]", "bg-[#0b4fbf]"];
+  const colors = ["bg-[#22C55E]", "bg-[#16A34A]", "bg-[#4ADE80]", "bg-[#15803D]"];
 
   const total = String(name)
     .split("")
@@ -169,7 +169,7 @@ export default function DashboardPage() {
   }
 
   return (
-    <main className="min-h-screen bg-[#f5f7fb] font-sans text-[#111827]">
+    <main className="min-h-screen bg-[#FFFFFF] font-sans text-[#111827]">
       <div className="grid min-h-screen w-full grid-cols-1 lg:grid-cols-[240px_minmax(0,1fr)] xl:grid-cols-[250px_minmax(0,1fr)_300px]">
         <aside className="border-r border-[#dbe3ee] bg-white p-4 sm:p-5 lg:sticky lg:top-0 lg:h-screen lg:overflow-y-auto">
           <Link href="/" className="flex items-center gap-3">
@@ -195,8 +195,8 @@ export default function DashboardPage() {
                 href={index === 0 ? "/dashboard" : "/in-progress"}
                 className={`flex items-center gap-2 rounded-lg px-3 py-3 text-xs font-semibold transition sm:text-sm lg:gap-3 lg:px-4 ${
                   index === 0
-                    ? "bg-[#dbeafe] text-[#0056d2]"
-                    : "text-[#4b5563] hover:bg-[#eef5ff] hover:text-[#0056d2]"
+                    ? "bg-[#DCFCE7] text-[#22C55E]"
+                    : "text-[#4b5563] hover:bg-[#F0FDF4] hover:text-[#22C55E]"
                 }`}
               >
                 <Icon className="h-4 w-4 flex-none" strokeWidth={1.75} />
@@ -205,9 +205,9 @@ export default function DashboardPage() {
             ))}
           </nav>
 
-          <div className="mt-6 rounded-2xl border border-[#dbe3ee] bg-[#eef5ff] p-5 text-center">
-            <div className="mx-auto grid h-12 w-12 place-items-center rounded-full bg-[#dbeafe]">
-              <Crown className="h-5 w-5 text-[#0056d2]" strokeWidth={1.75} />
+          <div className="mt-6 rounded-2xl border border-[#dbe3ee] bg-[#F0FDF4] p-5 text-center">
+            <div className="mx-auto grid h-12 w-12 place-items-center rounded-full bg-[#DCFCE7]">
+              <Crown className="h-5 w-5 text-[#22C55E]" strokeWidth={1.75} />
             </div>
             <h3 className="mt-4 text-lg font-bold text-[#111827]">Mastery Plan</h3>
             <p className="mt-2 text-sm leading-6 text-[#4b5563]">
@@ -215,7 +215,7 @@ export default function DashboardPage() {
             </p>
             <Link
               href="/pricing"
-              className="mt-5 block rounded-lg bg-[#0056d2] px-4 py-3 text-sm font-semibold text-white transition hover:bg-[#00419e]"
+              className="mt-5 block rounded-lg bg-[#22C55E] px-4 py-3 text-sm font-semibold text-white transition hover:bg-[#16A34A]"
             >
               Upgrade Now
             </Link>
@@ -228,7 +228,7 @@ export default function DashboardPage() {
               <div className="relative w-full xl:max-w-xl">
                 <input
                   placeholder="Search for skills, topics, careers..."
-                  className="h-12 w-full rounded-lg border border-[#dbe3ee] bg-white px-5 pr-12 text-sm outline-none focus:border-[#0056d2] focus:ring-2 focus:ring-[#0056d2]/15"
+                  className="h-12 w-full rounded-lg border border-[#dbe3ee] bg-white px-5 pr-12 text-sm outline-none focus:border-[#22C55E] focus:ring-2 focus:ring-[#22C55E]/15"
                 />
                 <Search className="pointer-events-none absolute right-4 top-3.5 h-5 w-5 text-[#4b5563]" strokeWidth={1.75} />
               </div>
@@ -236,20 +236,20 @@ export default function DashboardPage() {
               <div className="flex flex-wrap items-center justify-end gap-3">
                 <div className="flex flex-wrap items-center gap-3">
                   <span className="flex items-center gap-2 rounded-full border border-[#dbe3ee] bg-white px-4 py-3 text-xs font-bold shadow-sm sm:text-sm">
-                    <Flame className="h-4 w-4 text-[#0056d2]" strokeWidth={1.75} />
+                    <Flame className="h-4 w-4 text-[#22C55E]" strokeWidth={1.75} />
                     0 Day Streak
                   </span>
 
                   <Link
                     href="/in-progress"
-                    className="grid h-11 w-11 place-items-center rounded-full border border-[#dbe3ee] bg-white text-[#111827] shadow-sm transition hover:bg-[#eef5ff]"
+                    className="grid h-11 w-11 place-items-center rounded-full border border-[#dbe3ee] bg-white text-[#111827] shadow-sm transition hover:bg-[#F0FDF4]"
                   >
                     <Bell className="h-4.5 w-4.5" strokeWidth={1.75} />
                   </Link>
 
                   <Link
                     href="/in-progress"
-                    className="grid h-11 w-11 place-items-center rounded-full border border-[#dbe3ee] bg-white text-[#111827] shadow-sm transition hover:bg-[#eef5ff]"
+                    className="grid h-11 w-11 place-items-center rounded-full border border-[#dbe3ee] bg-white text-[#111827] shadow-sm transition hover:bg-[#F0FDF4]"
                   >
                     <MessageSquare className="h-4.5 w-4.5" strokeWidth={1.75} />
                   </Link>
@@ -283,7 +283,7 @@ export default function DashboardPage() {
 
                   <button
                     onClick={handleLogout}
-                    className="flex items-center gap-2 rounded-lg border border-[#dbe3ee] bg-white px-5 py-3 text-sm font-semibold text-[#111827] transition hover:border-[#0056d2]/40 hover:bg-[#eef5ff]"
+                    className="flex items-center gap-2 rounded-lg border border-[#dbe3ee] bg-white px-5 py-3 text-sm font-semibold text-[#111827] transition hover:border-[#22C55E]/40 hover:bg-[#F0FDF4]"
                   >
                     <LogOut className="h-4 w-4" strokeWidth={1.75} />
                     Logout
@@ -313,7 +313,7 @@ export default function DashboardPage() {
   className="min-w-0 rounded-2xl border border-[#dbe3ee] bg-white p-4 shadow-sm"
 >
   <div className="grid grid-cols-[64px_minmax(0,1fr)] items-center gap-3">
-    <div className="grid h-14 w-16 place-items-center rounded-xl bg-[#dbeafe] text-[#0056d2]">
+    <div className="grid h-14 w-16 place-items-center rounded-xl bg-[#DCFCE7] text-[#22C55E]">
       <Icon className="h-6 w-6" strokeWidth={1.75} />
     </div>
 
@@ -336,16 +336,16 @@ export default function DashboardPage() {
                   <Link
                     href="/in-progress"
                     key={title}
-                    className="rounded-2xl border border-[#dbe3ee] bg-white p-4 shadow-sm transition hover:border-[#0056d2]/40 hover:shadow-md"
+                    className="rounded-2xl border border-[#dbe3ee] bg-white p-4 shadow-sm transition hover:border-[#22C55E]/40 hover:shadow-md"
                   >
-                    <div className="grid h-12 w-12 place-items-center rounded-xl bg-[#dbeafe] text-[#0056d2]">
+                    <div className="grid h-12 w-12 place-items-center rounded-xl bg-[#DCFCE7] text-[#22C55E]">
                       <Icon className="h-5 w-5" strokeWidth={1.75} />
                     </div>
                     <h4 className="mt-4 text-sm font-bold uppercase leading-tight text-[#111827]">
                       {title}
                     </h4>
                     <p className="mt-3 text-xs leading-5 text-[#4b5563]">{text}</p>
-                    <div className="mt-5 inline-block rounded-lg bg-[#0056d2] px-4 py-2 text-xs font-semibold text-white">
+                    <div className="mt-5 inline-block rounded-lg bg-[#22C55E] px-4 py-2 text-xs font-semibold text-white">
                       Explore →
                     </div>
                   </Link>
@@ -356,7 +356,7 @@ export default function DashboardPage() {
             <section className="mt-6">
               <div className="flex items-center justify-between">
                 <h3 className="text-xl font-bold text-[#111827]">Continue Learning</h3>
-                <Link href="/in-progress" className="text-sm font-semibold text-[#0056d2]">
+                <Link href="/in-progress" className="text-sm font-semibold text-[#22C55E]">
                   View All
                 </Link>
               </div>
@@ -436,14 +436,14 @@ function DashboardMiniCard({
         {linkText && (
           <Link
             href="/in-progress"
-            className="shrink-0 pt-0.5 text-sm font-semibold text-[#0056d2]"
+            className="shrink-0 pt-0.5 text-sm font-semibold text-[#22C55E]"
           >
             {linkText}
           </Link>
         )}
       </div>
 
-      <div className="mt-5 grid min-h-36 w-full place-items-center rounded-xl border border-dashed border-[#dbe3ee] bg-[#f5f7fb] px-5 py-7 text-center sm:px-6">
+      <div className="mt-5 grid min-h-36 w-full place-items-center rounded-xl border border-dashed border-[#dbe3ee] bg-[#FFFFFF] px-5 py-7 text-center sm:px-6">
         <div className="mx-auto w-full max-w-[260px] text-center">{children}</div>
       </div>
     </div>
@@ -458,7 +458,7 @@ function DashboardRightColumn() {
           <h3 className="max-w-[185px] text-base font-bold leading-5 text-[#111827]">
   Your AI Instructors for Each Learning World
 </h3>
-          <Link href="/in-progress" className="text-sm font-semibold text-[#0056d2]">
+          <Link href="/in-progress" className="text-sm font-semibold text-[#22C55E]">
             View All
           </Link>
         </div>
@@ -483,21 +483,21 @@ function DashboardRightColumn() {
 
       <div className="rounded-2xl border border-[#dbe3ee] bg-white p-5 shadow-sm">
         <h3 className="font-bold text-[#111827]">Today&apos;s Schedule</h3>
-        <div className="mt-4 rounded-xl border border-dashed border-[#dbe3ee] bg-[#f5f7fb] p-5 text-center text-sm text-[#4b5563]">
+        <div className="mt-4 rounded-xl border border-dashed border-[#dbe3ee] bg-[#FFFFFF] p-5 text-center text-sm text-[#4b5563]">
           No lessons scheduled yet.
         </div>
       </div>
 
       <div className="rounded-2xl border border-[#dbe3ee] bg-white p-5 shadow-sm">
         <h3 className="font-bold text-[#111827]">Your Progress</h3>
-        <div className="mx-auto mt-5 grid h-28 w-28 place-items-center rounded-full border-[12px] border-[#dbeafe] text-2xl font-bold text-[#111827]">
+        <div className="mx-auto mt-5 grid h-28 w-28 place-items-center rounded-full border-[12px] border-[#DCFCE7] text-2xl font-bold text-[#111827]">
           0%
         </div>
       </div>
 
       <div className="rounded-2xl border border-[#dbe3ee] bg-white p-5 shadow-sm">
         <h3 className="font-bold text-[#111827]">Community Feed</h3>
-        <div className="mt-4 rounded-xl border border-dashed border-[#dbe3ee] bg-[#f5f7fb] p-5 text-center text-sm text-[#4b5563]">
+        <div className="mt-4 rounded-xl border border-dashed border-[#dbe3ee] bg-[#FFFFFF] p-5 text-center text-sm text-[#4b5563]">
           Community activity appears after launch.
         </div>
       </div>
