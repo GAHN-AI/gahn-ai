@@ -270,7 +270,7 @@ function SectionIntro({
 }) {
   return (
     <div className="mx-auto mb-12 max-w-4xl text-center sm:mb-14">
-      <p className="text-xs font-bold uppercase tracking-[0.24em] text-[#0056d2]">
+      <p className="text-xs font-bold uppercase tracking-[0.24em] text-[#22c55e]">
         {eyebrow}
       </p>
 
@@ -294,18 +294,18 @@ function HeroSignupCard() {
         fill="none"
         aria-hidden="true"
       >
-        <circle cx="15" cy="15" r="3" fill="#0056d2" />
-        <circle cx="50" cy="35" r="3" fill="#0056d2" />
-        <circle cx="85" cy="15" r="3" fill="#0056d2" />
-        <circle cx="50" cy="80" r="3" fill="#0056d2" />
+        <circle cx="15" cy="15" r="3" fill="#22c55e" />
+        <circle cx="50" cy="35" r="3" fill="#22c55e" />
+        <circle cx="85" cy="15" r="3" fill="#22c55e" />
+        <circle cx="50" cy="80" r="3" fill="#22c55e" />
         <path
           d="M15 15 L50 35 L85 15 M50 35 L50 80"
-          stroke="#0056d2"
+          stroke="#22c55e"
           strokeWidth="1"
         />
       </svg>
 
-      <p className="text-xs font-bold uppercase tracking-[0.2em] text-[#0056d2]">
+      <p className="text-xs font-bold uppercase tracking-[0.2em] text-[#22c55e]">
         Start here
       </p>
 
@@ -321,7 +321,7 @@ function HeroSignupCard() {
         <select
           aria-label="Select your learning world"
           defaultValue=""
-          className="w-full rounded-lg border border-[#dbe3ee] bg-white px-4 py-3.5 text-sm font-semibold text-[#4b5563] outline-none transition focus:border-[#0056d2] focus:ring-2 focus:ring-[#0056d2]/15 sm:px-5 sm:text-[15px]"
+          className="w-full rounded-lg border border-[#dbe3ee] bg-white px-4 py-3.5 text-sm font-semibold text-[#4b5563] outline-none transition focus:border-[#22c55e] focus:ring-2 focus:ring-[#22c55e]/15 sm:px-5 sm:text-[15px]"
         >
           <option value="" disabled>
             Select your learning world...
@@ -335,7 +335,7 @@ function HeroSignupCard() {
 
         <Link
           href="/signup"
-          className="flex items-center justify-center gap-2 rounded-lg bg-[#0056d2] px-5 py-3.5 text-center text-sm font-semibold text-white transition hover:bg-[#00419e] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0056d2] focus-visible:ring-offset-2"
+          className="flex items-center justify-center gap-2 rounded-lg bg-[#22c55e] px-5 py-3.5 text-center text-sm font-semibold text-white transition hover:bg-[#16a34a] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#22c55e] focus-visible:ring-offset-2"
         >
           Create Account
           <ArrowRight className="h-4 w-4" />
@@ -354,7 +354,7 @@ function HeroSignupCard() {
           ].map((item) => (
             <li key={item} className="flex items-start gap-2">
               <CheckCircle2
-                className="mt-1 h-4 w-4 flex-none text-[#0056d2]"
+                className="mt-1 h-4 w-4 flex-none text-[#22c55e]"
                 strokeWidth={1.75}
               />
               <span>{item}</span>
@@ -369,7 +369,7 @@ function HeroSignupCard() {
 function DashboardPreview() {
   return (
     <div className="w-full rounded-2xl border border-[#dbe3ee] bg-white p-3 shadow-sm sm:p-5">
-      <div className="rounded-xl border border-[#dbe3ee] bg-[#f5f7fb] p-4 sm:p-6">
+      <div className="rounded-xl border border-[#dbe3ee] bg-[#ffffff] p-4 sm:p-6">
         <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
           <div>
             <p className="text-base font-bold leading-tight text-[#4b5563] sm:text-xl">
@@ -398,7 +398,7 @@ function DashboardPreview() {
               <div
                 key={item}
                 className={`rounded-lg px-3 py-3 text-center text-xs font-bold sm:text-sm xl:px-4 xl:text-left ${
-                  index === 0 ? "bg-[#dbeafe] text-[#0056d2]" : "text-[#4b5563]"
+                  index === 0 ? "bg-[#dcfce7] text-[#22c55e]" : "text-[#4b5563]"
                 }`}
               >
                 {item}
@@ -415,7 +415,7 @@ function DashboardPreview() {
                 { num: "0%", label: "Progress", Icon: TrendingUp },
               ].map(({ num, label, Icon }) => (
                 <div key={label} className="rounded-xl bg-white p-4 shadow-sm">
-                  <Icon className="h-5 w-5 text-[#0056d2]" strokeWidth={1.75} />
+                  <Icon className="h-5 w-5 text-[#22c55e]" strokeWidth={1.75} />
                   <p className="mt-3 text-xl font-bold text-[#111827] sm:text-2xl">
                     {num}
                   </p>
@@ -436,7 +436,7 @@ function DashboardPreview() {
               </p>
               <Link
                 href="/signup"
-                className="mt-6 inline-flex rounded-lg bg-[#0056d2] px-6 py-3 text-sm font-semibold text-white transition hover:bg-[#00419e]"
+                className="mt-6 inline-flex rounded-lg bg-[#22c55e] px-6 py-3 text-sm font-semibold text-white transition hover:bg-[#16a34a]"
               >
                 Choose a World
               </Link>
@@ -458,8 +458,8 @@ function ProgramCard({
   text: string;
 }) {
   return (
-    <div className="flex h-full flex-col rounded-2xl border border-[#dbe3ee] bg-white p-6 transition hover:border-[#0056d2]/40 hover:shadow-md lg:p-7">
-      <div className="grid h-14 w-14 place-items-center rounded-xl bg-[#dbeafe] text-[#0056d2] lg:h-16 lg:w-16">
+    <div className="flex h-full flex-col rounded-2xl border border-[#dbe3ee] bg-white p-6 transition hover:border-[#22c55e]/40 hover:shadow-md lg:p-7">
+      <div className="grid h-14 w-14 place-items-center rounded-xl bg-[#dcfce7] text-[#22c55e] lg:h-16 lg:w-16">
         <Icon className="h-7 w-7" strokeWidth={1.5} />
       </div>
 
@@ -469,7 +469,7 @@ function ProgramCard({
 
       <Link
         href="/signup"
-        className="mt-6 inline-flex items-center gap-1 text-sm font-semibold text-[#0056d2]"
+        className="mt-6 inline-flex items-center gap-1 text-sm font-semibold text-[#22c55e]"
       >
         Start Learning <ArrowRight className="h-3.5 w-3.5" />
       </Link>
@@ -499,17 +499,17 @@ function InstructorCard({
 </div>
 
       <div className="flex min-w-0 flex-col justify-center">
-        <p className="text-xs font-bold uppercase tracking-[0.2em] text-[#0056d2]">
+        <p className="text-xs font-bold uppercase tracking-[0.2em] text-[#22c55e]">
           Specialty
         </p>
         <h3 className="mt-3 text-3xl font-extrabold tracking-[-0.02em] text-[#111827]">
           {name}
         </h3>
-        <p className="mt-1 text-base font-semibold text-[#0056d2]">{role}</p>
+        <p className="mt-1 text-base font-semibold text-[#22c55e]">{role}</p>
         <p className="mt-5 text-base leading-7 text-[#4b5563]">{desc}</p>
         <Link
           href="/signup"
-          className="mt-5 inline-flex items-center gap-1 text-sm font-semibold text-[#0056d2]"
+          className="mt-5 inline-flex items-center gap-1 text-sm font-semibold text-[#22c55e]"
         >
           Enter World <ArrowRight className="h-3.5 w-3.5" />
         </Link>
@@ -530,7 +530,7 @@ function StepCard({
   return (
     <div className="relative rounded-2xl border border-[#dbe3ee] bg-white p-6 lg:p-7">
       <div className="flex items-center gap-3">
-        <span className="h-3 w-3 flex-none rounded-full bg-[#0056d2]" />
+        <span className="h-3 w-3 flex-none rounded-full bg-[#22c55e]" />
         <h3 className="text-lg font-bold text-[#111827]">{title}</h3>
       </div>
 
@@ -550,7 +550,7 @@ function SchoolCard({
 }) {
   return (
     <div className="rounded-2xl border border-[#dbe3ee] bg-white p-6 sm:p-7">
-      <div className="grid h-12 w-12 place-items-center rounded-xl bg-[#dbeafe] text-[#0056d2]">
+      <div className="grid h-12 w-12 place-items-center rounded-xl bg-[#dcfce7] text-[#22c55e]">
         <Icon className="h-5 w-5" strokeWidth={1.75} />
       </div>
       <h3 className="mt-5 text-lg font-bold text-[#111827]">{title}</h3>
@@ -562,8 +562,8 @@ function SchoolCard({
 function RoadmapCard({ stage, text }: { stage: string; text: string }) {
   return (
     <div className="rounded-2xl border border-[#dbe3ee] bg-white p-6 sm:p-7">
-      <div className="grid h-12 w-12 place-items-center rounded-xl bg-[#dbeafe]">
-        <span className="h-3 w-3 rotate-45 bg-[#0056d2]" />
+      <div className="grid h-12 w-12 place-items-center rounded-xl bg-[#dcfce7]">
+        <span className="h-3 w-3 rotate-45 bg-[#22c55e]" />
       </div>
       <h3 className="mt-5 text-lg font-bold text-[#111827]">{stage}</h3>
       <p className="mt-3 text-base leading-7 text-[#4b5563]">{text}</p>
@@ -606,27 +606,27 @@ function LessonDemo() {
       <div className="border-b border-[#dbe3ee] p-6 sm:p-8">
         <div className="flex flex-wrap items-start justify-between gap-4">
           <div>
-            <p className="text-xs font-bold uppercase tracking-[0.2em] text-[#0056d2]">
+            <p className="text-xs font-bold uppercase tracking-[0.2em] text-[#22c55e]">
               Career Skills · Lesson 3 of 12
             </p>
             <h3 className="mt-2 text-xl font-bold text-[#111827] sm:text-2xl">
               Negotiation Basics
             </h3>
           </div>
-          <span className="rounded-full bg-[#f5f7fb] px-3 py-1.5 text-[11px] font-bold uppercase tracking-[0.1em] text-[#4b5563]">
+          <span className="rounded-full bg-[#ffffff] px-3 py-1.5 text-[11px] font-bold uppercase tracking-[0.1em] text-[#4b5563]">
             Preview
           </span>
         </div>
 
-        <div className="mt-5 h-2 w-full overflow-hidden rounded-full bg-[#f5f7fb]">
-          <div className="h-full w-[28%] rounded-full bg-[#0056d2]" />
+        <div className="mt-5 h-2 w-full overflow-hidden rounded-full bg-[#ffffff]">
+          <div className="h-full w-[28%] rounded-full bg-[#22c55e]" />
         </div>
       </div>
 
       <div className="grid gap-8 p-6 sm:p-8 lg:grid-cols-[220px_minmax(0,1fr)]">
         {/* Instructor panel */}
         <div className="flex flex-col items-center text-center lg:items-start lg:text-left">
-          <div className="relative h-32 w-32 overflow-hidden rounded-2xl bg-[#f5f7fb] lg:h-40 lg:w-40">
+          <div className="relative h-32 w-32 overflow-hidden rounded-2xl bg-[#ffffff] lg:h-40 lg:w-40">
             <img
               src="/instructors/arin.jpg"
               alt="Arin, Career and Finance Instructor"
@@ -634,11 +634,11 @@ function LessonDemo() {
             />
           </div>
 
-          <p className="mt-4 text-xs font-bold uppercase tracking-[0.2em] text-[#0056d2]">
+          <p className="mt-4 text-xs font-bold uppercase tracking-[0.2em] text-[#22c55e]">
             Your Instructor
           </p>
           <h4 className="mt-1 text-lg font-bold text-[#111827]">Arin</h4>
-          <p className="text-sm font-semibold text-[#0056d2]">Career &amp; Finance Instructor</p>
+          <p className="text-sm font-semibold text-[#22c55e]">Career &amp; Finance Instructor</p>
           <p className="mt-3 text-sm leading-6 text-[#4b5563]">
             Teaching negotiation, budgeting, and real-world financial decision-making.
           </p>
@@ -647,8 +647,8 @@ function LessonDemo() {
         {/* Main workspace */}
         <div className="min-w-0 space-y-6">
           {/* Concept */}
-          <div className="rounded-xl border border-[#dbe3ee] bg-[#f5f7fb] p-5 sm:p-6">
-            <p className="text-xs font-bold uppercase tracking-[0.2em] text-[#0056d2]">
+          <div className="rounded-xl border border-[#dbe3ee] bg-[#ffffff] p-5 sm:p-6">
+            <p className="text-xs font-bold uppercase tracking-[0.2em] text-[#22c55e]">
               Concept
             </p>
             <h4 className="mt-2 text-lg font-bold text-[#111827]">
@@ -665,11 +665,11 @@ function LessonDemo() {
           {/* Practice task */}
           <div className="rounded-xl border border-[#dbe3ee] bg-white p-5 sm:p-6">
             <div className="flex items-center justify-between">
-              <p className="text-xs font-bold uppercase tracking-[0.2em] text-[#0056d2]">
+              <p className="text-xs font-bold uppercase tracking-[0.2em] text-[#22c55e]">
                 Practice Task
               </p>
               {attempt === 1 && stage !== "correct" && (
-                <span className="rounded-full bg-[#f5f7fb] px-3 py-1 text-[11px] font-bold uppercase tracking-[0.1em] text-[#4b5563]">
+                <span className="rounded-full bg-[#ffffff] px-3 py-1 text-[11px] font-bold uppercase tracking-[0.1em] text-[#4b5563]">
                   Retry
                 </span>
               )}
@@ -686,11 +686,11 @@ function LessonDemo() {
                   onChange={(e) => setAnswer(e.target.value)}
                   placeholder="Type your answer..."
                   rows={3}
-                  className="w-full rounded-lg border border-[#dbe3ee] px-4 py-3 text-sm leading-6 text-[#111827] outline-none focus:border-[#0056d2]"
+                  className="w-full rounded-lg border border-[#dbe3ee] px-4 py-3 text-sm leading-6 text-[#111827] outline-none focus:border-[#22c55e]"
                 />
                 <button
                   type="submit"
-                  className="rounded-lg bg-[#0056d2] px-6 py-3 text-sm font-semibold text-white transition hover:bg-[#00419e]"
+                  className="rounded-lg bg-[#22c55e] px-6 py-3 text-sm font-semibold text-white transition hover:bg-[#16a34a]"
                 >
                   Submit Answer
                 </button>
@@ -701,7 +701,7 @@ function LessonDemo() {
           {/* Correction panel */}
           {stage === "incorrect" && (
             <div className="rounded-xl border border-[#dbe3ee] bg-white p-5 sm:p-6">
-              <div className="flex items-start gap-3 border-l-2 border-[#0056d2]/20 pl-4">
+              <div className="flex items-start gap-3 border-l-2 border-[#22c55e]/20 pl-4">
                 <XCircle className="mt-0.5 h-5 w-5 flex-none text-[#4b5563]" strokeWidth={1.75} />
                 <div>
                   <p className="text-sm font-bold text-[#111827]">
@@ -718,7 +718,7 @@ function LessonDemo() {
               <button
                 type="button"
                 onClick={handleRetry}
-                className="mt-5 rounded-lg border border-[#dbe3ee] px-6 py-3 text-sm font-semibold text-[#111827] transition hover:border-[#0056d2]/40"
+                className="mt-5 rounded-lg border border-[#dbe3ee] px-6 py-3 text-sm font-semibold text-[#111827] transition hover:border-[#22c55e]/40"
               >
                 Retry Task
               </button>
@@ -728,8 +728,8 @@ function LessonDemo() {
           {/* Understanding confirmation */}
           {stage === "correct" && (
             <div className="rounded-xl border border-[#dbe3ee] bg-white p-5 sm:p-6">
-              <div className="flex items-start gap-3 border-l-2 border-[#0056d2]/20 pl-4">
-                <CheckCircle2 className="mt-0.5 h-5 w-5 flex-none text-[#0056d2]" strokeWidth={1.75} />
+              <div className="flex items-start gap-3 border-l-2 border-[#22c55e]/20 pl-4">
+                <CheckCircle2 className="mt-0.5 h-5 w-5 flex-none text-[#22c55e]" strokeWidth={1.75} />
                 <div>
                   <p className="text-sm font-bold text-[#111827]">
                     Correct — understanding confirmed
@@ -748,7 +748,7 @@ function LessonDemo() {
             <button
               type="button"
               onClick={() => setNoteSaved(true)}
-              className="flex items-center justify-center gap-2 rounded-lg border border-[#dbe3ee] px-5 py-3 text-sm font-semibold text-[#111827] transition hover:border-[#0056d2]/40"
+              className="flex items-center justify-center gap-2 rounded-lg border border-[#dbe3ee] px-5 py-3 text-sm font-semibold text-[#111827] transition hover:border-[#22c55e]/40"
             >
               <StickyNote className="h-4 w-4" strokeWidth={1.75} />
               {noteSaved ? "Saved to Notes" : "Save to Notes"}
@@ -757,7 +757,7 @@ function LessonDemo() {
             <button
               type="button"
               onClick={() => setRecapOpen((open) => !open)}
-              className="flex items-center justify-center gap-2 rounded-lg border border-[#dbe3ee] px-5 py-3 text-sm font-semibold text-[#111827] transition hover:border-[#0056d2]/40"
+              className="flex items-center justify-center gap-2 rounded-lg border border-[#dbe3ee] px-5 py-3 text-sm font-semibold text-[#111827] transition hover:border-[#22c55e]/40"
             >
               <ListChecks className="h-4 w-4" strokeWidth={1.75} />
               {recapOpen ? "Hide Lesson Recap" : "View Lesson Recap"}
@@ -765,7 +765,7 @@ function LessonDemo() {
           </div>
 
           {recapOpen && (
-            <div className="rounded-xl border border-[#dbe3ee] bg-[#f5f7fb] p-5 text-sm leading-6 text-[#4b5563]">
+            <div className="rounded-xl border border-[#dbe3ee] bg-[#ffffff] p-5 text-sm leading-6 text-[#4b5563]">
               Research the market rate before responding to any offer, then
               counter with a specific number backed by that data.
             </div>
@@ -786,7 +786,7 @@ function ComparisonTable() {
     <div className="overflow-x-auto rounded-2xl border border-[#dbe3ee]">
       <table className="w-full min-w-[640px] border-collapse text-left">
         <thead>
-          <tr className="border-b border-[#dbe3ee] bg-[#f5f7fb]">
+          <tr className="border-b border-[#dbe3ee] bg-[#ffffff]">
             <th className="p-5 text-sm font-bold text-[#111827]">
               What matters when learning
             </th>
@@ -794,7 +794,7 @@ function ComparisonTable() {
               <th
                 key={col}
                 className={`p-5 text-sm ${
-                  index === 0 ? "font-bold text-[#0056d2]" : "font-semibold text-[#4b5563]"
+                  index === 0 ? "font-bold text-[#22c55e]" : "font-semibold text-[#4b5563]"
                 }`}
               >
                 {col}
@@ -809,7 +809,7 @@ function ComparisonTable() {
               {row.values.map((value, index) => (
                 <td key={index} className="p-5">
                   {value ? (
-                    <CheckCircle2 className="h-5 w-5 text-[#0056d2]" strokeWidth={1.75} />
+                    <CheckCircle2 className="h-5 w-5 text-[#22c55e]" strokeWidth={1.75} />
                   ) : (
                     <Minus className="h-5 w-5 text-[#4b5563]/40" strokeWidth={1.75} />
                   )}
@@ -826,7 +826,7 @@ function ComparisonTable() {
 function WhyFasterCard({ Icon, title, text }: { Icon: LucideIcon; title: string; text: string }) {
   return (
     <div className="rounded-2xl border border-[#dbe3ee] bg-white p-6 sm:p-7">
-      <div className="grid h-12 w-12 place-items-center rounded-xl bg-[#dbeafe] text-[#0056d2]">
+      <div className="grid h-12 w-12 place-items-center rounded-xl bg-[#dcfce7] text-[#22c55e]">
         <Icon className="h-5 w-5" strokeWidth={1.75} />
       </div>
       <h3 className="mt-5 text-lg font-bold text-[#111827]">{title}</h3>
@@ -838,7 +838,7 @@ function WhyFasterCard({ Icon, title, text }: { Icon: LucideIcon; title: string;
 function PreviewMiniCard({ Icon, title, text }: { Icon: LucideIcon; title: string; text: string }) {
   return (
     <div className="rounded-2xl border border-[#dbe3ee] bg-white p-5">
-      <div className="grid h-10 w-10 place-items-center rounded-lg bg-[#dbeafe] text-[#0056d2]">
+      <div className="grid h-10 w-10 place-items-center rounded-lg bg-[#dcfce7] text-[#22c55e]">
         <Icon className="h-4.5 w-4.5" strokeWidth={1.75} />
       </div>
       <h3 className="mt-4 text-sm font-bold text-[#111827]">{title}</h3>
@@ -868,7 +868,7 @@ function FaqItem({
       >
         <span className="text-base font-bold text-[#111827]">{question}</span>
         <ChevronDown
-          className={`h-5 w-5 flex-none text-[#0056d2] transition-transform ${
+          className={`h-5 w-5 flex-none text-[#22c55e] transition-transform ${
             isOpen ? "rotate-180" : ""
           }`}
           strokeWidth={1.75}
@@ -899,7 +899,7 @@ function FooterColumn({
           <li key={link.label}>
             <Link
               href={link.href}
-              className="text-sm text-[#4b5563] transition hover:text-[#0056d2]"
+              className="text-sm text-[#4b5563] transition hover:text-[#22c55e]"
             >
               {link.label}
             </Link>
@@ -917,7 +917,7 @@ export default function Home() {
   return (
     <main
       id="top"
-      className="min-h-screen scroll-smooth bg-[#f5f7fb] font-sans text-[#111827] xl:[zoom:0.85]"
+      className="min-h-screen scroll-smooth bg-white font-sans text-[#111827] xl:[zoom:0.85]"
     >
       <header className="sticky top-0 z-50 border-b border-[#dbe3ee] bg-white/90 backdrop-blur">
         <nav
@@ -944,12 +944,12 @@ export default function Home() {
   <a
     key={link.label}
     href={link.href}
-    className="transition hover:text-[#0056d2]"
+    className="transition hover:text-[#22c55e]"
   >
     {link.label}
   </a>
 ))}
-            <Link href="/pricing" className="transition hover:text-[#0056d2]">
+            <Link href="/pricing" className="transition hover:text-[#22c55e]">
               Pricing
             </Link>
           </div>
@@ -957,13 +957,13 @@ export default function Home() {
           <div className="hidden items-center gap-3 xl:flex">
             <Link
               href="/login"
-              className="rounded-lg border border-[#dbe3ee] px-5 py-2.5 text-sm font-semibold transition hover:border-[#0056d2]/40 hover:bg-[#eef5ff]"
+              className="rounded-lg border border-[#dbe3ee] px-5 py-2.5 text-sm font-semibold transition hover:border-[#22c55e]/40 hover:bg-[#ffffff]"
             >
               Log In
             </Link>
             <Link
               href="/signup"
-              className="rounded-lg bg-[#0056d2] px-6 py-2.5 text-sm font-semibold text-white transition hover:bg-[#00419e]"
+              className="rounded-lg bg-[#22c55e] px-6 py-2.5 text-sm font-semibold text-white transition hover:bg-[#16a34a]"
             >
               Sign Up
             </Link>
@@ -993,7 +993,7 @@ export default function Home() {
     key={link.label}
     href={link.href}
     onClick={() => setMenuOpen(false)}
-    className="rounded-lg px-3 py-3 transition hover:bg-[#eef5ff] hover:text-[#0056d2]"
+    className="rounded-lg px-3 py-3 transition hover:bg-[#ffffff] hover:text-[#22c55e]"
   >
     {link.label}
   </a>
@@ -1001,7 +1001,7 @@ export default function Home() {
                 <Link
                   href="/pricing"
                   onClick={() => setMenuOpen(false)}
-                  className="rounded-lg px-3 py-3 transition hover:bg-[#eef5ff] hover:text-[#0056d2]"
+                  className="rounded-lg px-3 py-3 transition hover:bg-[#ffffff] hover:text-[#22c55e]"
                 >
                   Pricing
                 </Link>
@@ -1010,13 +1010,13 @@ export default function Home() {
               <div className="mt-4 flex flex-col gap-3 border-t border-[#dbe3ee] pt-4 sm:flex-row">
                 <Link
                   href="/login"
-                  className="w-full rounded-lg border border-[#dbe3ee] px-6 py-3 text-center text-sm font-semibold transition hover:border-[#0056d2]/40"
+                  className="w-full rounded-lg border border-[#dbe3ee] px-6 py-3 text-center text-sm font-semibold transition hover:border-[#22c55e]/40"
                 >
                   Log In
                 </Link>
                 <Link
                   href="/signup"
-                  className="w-full rounded-lg bg-[#0056d2] px-7 py-3 text-center text-sm font-semibold text-white transition hover:bg-[#00419e]"
+                  className="w-full rounded-lg bg-[#22c55e] px-7 py-3 text-center text-sm font-semibold text-white transition hover:bg-[#16a34a]"
                 >
                   Sign Up
                 </Link>
@@ -1027,19 +1027,19 @@ export default function Home() {
       </header>
 
       {/* HERO */}
-      <section className="relative overflow-hidden bg-[#eef5ff]">
+      <section className="relative overflow-hidden bg-[#ffffff]">
         <div
           className={`${shellClass} relative grid items-center gap-10 py-12 sm:py-14 lg:grid-cols-[minmax(0,1.2fr)_minmax(360px,430px)] lg:gap-16 lg:py-16 xl:gap-20 xl:py-20`}
         >
           <div className="min-w-0">
-            <p className="text-xs font-bold uppercase tracking-[0.24em] text-[#0056d2] sm:text-sm">
+            <p className="text-xs font-bold uppercase tracking-[0.24em] text-[#22c55e] sm:text-sm">
               AI-Powered Learning for Students and Self-Learners
             </p>
 
             <h1 className="mt-5 max-w-[860px] text-[3.1rem] font-semibold leading-[1.12] tracking-[-0.035em] text-[#111827] sm:mt-6 sm:text-[3.9rem] xl:text-[4.55rem]">
   <span className="block">AI instructors that</span>
   <span className="block">teach, check, and</span>
-  <span className="block text-[#0056d2]">adapt to you.</span>
+  <span className="block text-[#22c55e]">adapt to you.</span>
 </h1>
 
             <p className="mt-6 max-w-[760px] text-base leading-7 text-[#4b5563] sm:mt-7 sm:text-lg sm:leading-8 lg:text-lg lg:leading-8">
@@ -1052,7 +1052,7 @@ export default function Home() {
             <div className="mt-7 flex flex-col gap-3 sm:mt-8 sm:flex-row sm:flex-wrap sm:gap-4">
               <Link
                 href="/signup"
-                className="inline-flex w-full items-center justify-center rounded-lg bg-[#0056d2] px-7 py-3.5 text-sm font-semibold text-white transition hover:bg-[#00419e] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0056d2] focus-visible:ring-offset-2 sm:w-auto sm:px-8 sm:text-base"
+                className="inline-flex w-full items-center justify-center rounded-lg bg-[#22c55e] px-7 py-3.5 text-sm font-semibold text-white transition hover:bg-[#16a34a] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#22c55e] focus-visible:ring-offset-2 sm:w-auto sm:px-8 sm:text-base"
               >
                 Start Learning
               </Link>
@@ -1060,7 +1060,7 @@ export default function Home() {
               <a
                               
                 href="#how-it-works"
-                className="inline-flex w-full items-center justify-center gap-2 rounded-lg border border-[#dbe3ee] bg-white px-8 py-4 text-base font-semibold text-[#111827] transition hover:border-[#0056d2]/40 sm:w-auto sm:px-9"
+                className="inline-flex w-full items-center justify-center gap-2 rounded-lg border border-[#dbe3ee] bg-white px-8 py-4 text-base font-semibold text-[#111827] transition hover:border-[#22c55e]/40 sm:w-auto sm:px-9"
               >
                 See How It Works <ArrowRight className="h-4 w-4" />
               </a>
@@ -1076,7 +1076,7 @@ export default function Home() {
                 <div key={item}>
                   <p className="flex items-start gap-1.5 text-sm font-bold text-[#111827]">
                     <CheckCircle2
-                      className="mt-0.5 h-4 w-4 flex-none text-[#0056d2]"
+                      className="mt-0.5 h-4 w-4 flex-none text-[#22c55e]"
                       strokeWidth={1.75}
                     />
                     <span>{item}</span>
@@ -1117,7 +1117,7 @@ export default function Home() {
             ].map((item) => (
               <div
                 key={item.title}
-                className="rounded-2xl border border-[#dbe3ee] bg-[#f5f7fb] p-6 sm:p-7"
+                className="rounded-2xl border border-[#dbe3ee] bg-[#ffffff] p-6 sm:p-7"
               >
                 <h3 className="text-xl font-bold text-[#111827]">
                   {item.title}
@@ -1129,8 +1129,8 @@ export default function Home() {
             ))}
           </div>
 
-          <div className="mt-8 rounded-2xl border border-[#dbe3ee] bg-[#eef5ff] px-6 py-7 sm:px-8 sm:py-8">
-            <p className="text-xs font-bold uppercase tracking-[0.22em] text-[#0056d2]">
+          <div className="mt-8 rounded-2xl border border-[#dbe3ee] bg-[#ffffff] px-6 py-7 sm:px-8 sm:py-8">
+            <p className="text-xs font-bold uppercase tracking-[0.22em] text-[#22c55e]">
               Why It Is Different
             </p>
             <p className="mt-3 max-w-5xl text-lg leading-8 text-[#111827] sm:text-xl">
@@ -1187,7 +1187,7 @@ export default function Home() {
   ))}
 </div>
 
-          <div className="mx-auto mt-10 max-w-4xl rounded-2xl border border-[#dbe3ee] bg-[#eef5ff] p-6 sm:p-8">
+          <div className="mx-auto mt-10 max-w-4xl rounded-2xl border border-[#dbe3ee] bg-[#ffffff] p-6 sm:p-8">
             <h3 className="text-lg font-bold text-[#111827] sm:text-xl">
               Designed to feel approachable. Built for serious learning.
             </h3>
@@ -1230,13 +1230,13 @@ export default function Home() {
       {/* PLATFORM PREVIEW */}
       <section
         id="platform"
-        className="scroll-mt-24 bg-[#eef5ff] py-20 sm:py-24"
+        className="scroll-mt-24 bg-[#ffffff] py-20 sm:py-24"
       >
         <div
           className={`${shellClass} grid items-center gap-12 lg:grid-cols-[360px_minmax(0,1fr)] lg:gap-14 xl:grid-cols-[410px_minmax(0,1fr)]`}
         >
           <div>
-            <p className="text-xs font-bold uppercase tracking-[0.24em] text-[#0056d2]">
+            <p className="text-xs font-bold uppercase tracking-[0.24em] text-[#22c55e]">
               Platform Preview
             </p>
             <h2 className="mt-4 text-3xl font-extrabold leading-tight tracking-[-0.02em] sm:text-4xl lg:text-5xl">
@@ -1252,7 +1252,7 @@ export default function Home() {
               {platformFeatures.map((feature) => (
                 <li key={feature} className="flex items-start gap-3">
                   <CheckCircle2
-                    className="mt-1 h-5 w-5 flex-none text-[#0056d2]"
+                    className="mt-1 h-5 w-5 flex-none text-[#22c55e]"
                     strokeWidth={1.75}
                   />
                   <span className="text-base leading-7 text-[#4b5563]">
@@ -1279,9 +1279,9 @@ export default function Home() {
       {/* CTA BANNER */}
       <section className="bg-white py-20 sm:py-24">
         <div className={shellClass}>
-          <div className="flex flex-col items-start justify-between gap-8 rounded-2xl border border-[#dbe3ee] bg-[#eef5ff] px-6 py-9 sm:px-8 sm:py-10 lg:flex-row lg:items-center lg:px-10 lg:py-12">
+          <div className="flex flex-col items-start justify-between gap-8 rounded-2xl border border-[#dbe3ee] bg-[#ffffff] px-6 py-9 sm:px-8 sm:py-10 lg:flex-row lg:items-center lg:px-10 lg:py-12">
             <div>
-              <p className="text-xs font-bold uppercase tracking-[0.24em] text-[#0056d2]">
+              <p className="text-xs font-bold uppercase tracking-[0.24em] text-[#22c55e]">
                 Get started today
               </p>
               <h2 className="mt-3 max-w-3xl text-2xl font-extrabold leading-tight tracking-[-0.02em] text-[#111827] sm:text-3xl lg:text-4xl">
@@ -1296,7 +1296,7 @@ export default function Home() {
                 {["No credit card required to start", "Cancel anytime", "Built for every learner"].map(
                   (point) => (
                     <p key={point} className="flex items-center gap-2 text-sm font-semibold text-[#4b5563]">
-                      <CheckCircle2 className="h-4 w-4 flex-none text-[#0056d2]" strokeWidth={1.75} />
+                      <CheckCircle2 className="h-4 w-4 flex-none text-[#22c55e]" strokeWidth={1.75} />
                       {point}
                     </p>
                   )
@@ -1307,13 +1307,13 @@ export default function Home() {
             <div className="flex w-full flex-col gap-3 sm:w-auto sm:flex-row sm:gap-4 lg:flex-none">
               <Link
                 href="/signup"
-                className="w-full rounded-lg bg-[#0056d2] px-8 py-4 text-center text-sm font-semibold text-white transition hover:bg-[#00419e] sm:w-auto"
+                className="w-full rounded-lg bg-[#22c55e] px-8 py-4 text-center text-sm font-semibold text-white transition hover:bg-[#16a34a] sm:w-auto"
               >
                 Sign Up
               </Link>
               <Link
                 href="/login"
-                className="w-full rounded-lg border border-[#dbe3ee] bg-white px-8 py-4 text-center text-sm font-semibold text-[#111827] transition hover:border-[#0056d2]/40 sm:w-auto"
+                className="w-full rounded-lg border border-[#dbe3ee] bg-white px-8 py-4 text-center text-sm font-semibold text-[#111827] transition hover:border-[#22c55e]/40 sm:w-auto"
               >
                 Log In
               </Link>
@@ -1343,16 +1343,16 @@ export default function Home() {
             </Link>
 
             <div className="flex flex-wrap items-center gap-6 text-sm font-semibold text-[#4b5563]">
-              <Link href="/about" className="transition hover:text-[#0056d2]">
+              <Link href="/about" className="transition hover:text-[#22c55e]">
                 About
               </Link>
-              <Link href="/contact" className="transition hover:text-[#0056d2]">
+              <Link href="/contact" className="transition hover:text-[#22c55e]">
                 Contact
               </Link>
-              <Link href="/privacy" className="transition hover:text-[#0056d2]">
+              <Link href="/privacy" className="transition hover:text-[#22c55e]">
                 Privacy Policy
               </Link>
-              <Link href="/terms" className="transition hover:text-[#0056d2]">
+              <Link href="/terms" className="transition hover:text-[#22c55e]">
                 Terms of Service
               </Link>
             </div>

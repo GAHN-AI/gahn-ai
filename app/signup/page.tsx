@@ -99,7 +99,7 @@ export default function SignupPage() {
   }
 
   return (
-    <main className="min-h-screen bg-[#f5f7fb] px-6 py-10 font-sans text-[#111827]">
+    <main className="min-h-screen bg-white px-6 py-10 font-sans text-[#111827]">
       <div className="mx-auto mb-8 text-center">
         <img src="/logo/favicon.png" alt="GAHN AI" className="mx-auto mb-4 h-16 w-16 object-contain" />
         <h1 className="text-4xl font-extrabold tracking-[-0.02em] text-[#111827]">GAHN AI</h1>
@@ -109,19 +109,19 @@ export default function SignupPage() {
       </div>
 
       <div className="mx-auto grid max-w-5xl overflow-hidden rounded-2xl border border-[#dbe3ee] bg-white shadow-sm lg:grid-cols-2">
-        <section className="relative bg-[#eef5ff] p-10 text-[#111827] lg:p-12">
+        <section className="relative bg-white p-10 text-[#111827] lg:p-12">
           <h2 className="text-3xl font-extrabold tracking-[-0.02em]">Start Your Journey</h2>
-          <div className="mt-5 h-1 w-16 bg-[#0056d2]" />
+          <div className="mt-5 h-1 w-16 bg-[#22c55e]" />
           <p className="mt-8 text-lg leading-8 text-[#4b5563]">
             Build skills, master subjects, and grow with{" "}
-            <span className="font-semibold text-[#0056d2]">GAHN AI</span>
+            <span className="font-semibold text-[#22c55e]">GAHN AI</span>
           </p>
 
           <div className="mt-10 space-y-7">
             {features.map(({ Icon, title, text }) => (
               <div key={title} className="flex gap-4">
-                <div className="grid h-11 w-11 shrink-0 place-items-center rounded-full bg-[#dbeafe]">
-                  <Icon className="h-5 w-5 text-[#0056d2]" strokeWidth={1.75} />
+                <div className="grid h-11 w-11 shrink-0 place-items-center rounded-full bg-[#dcfce7]">
+                  <Icon className="h-5 w-5 text-[#22c55e]" strokeWidth={1.75} />
                 </div>
                 <div>
                   <h3 className="text-base font-bold text-[#111827]">{title}</h3>
@@ -142,7 +142,7 @@ export default function SignupPage() {
             type="button"
             onClick={handleGoogleSignup}
             disabled={googleLoading}
-            className="mt-8 flex w-full items-center justify-center gap-4 rounded-lg border border-[#dbe3ee] bg-white px-5 py-3.5 text-sm font-semibold shadow-sm transition hover:border-[#0056d2]/40 hover:bg-[#eef5ff] disabled:cursor-not-allowed disabled:opacity-60"
+            className="mt-8 flex w-full items-center justify-center gap-4 rounded-lg border border-[#dbe3ee] bg-white px-5 py-3.5 text-sm font-semibold shadow-sm transition hover:border-[#22c55e]/40 hover:bg-white disabled:cursor-not-allowed disabled:opacity-60"
           >
             <img src="/google-logo/google.svg" alt="Google" className="h-5 w-5 object-contain" />
             <span>{googleLoading ? "Connecting..." : "Continue with Google"}</span>
@@ -155,22 +155,22 @@ export default function SignupPage() {
           </div>
 
           <form onSubmit={handleSignup}>
-            <input placeholder="Full Name" value={fullName} onChange={(e) => setFullName(e.target.value)} className="w-full rounded-lg border border-[#dbe3ee] px-4 py-3.5 text-sm outline-none focus:border-[#0056d2] focus:ring-2 focus:ring-[#0056d2]/15" />
-            <input placeholder="Email Address" type="email" value={email} onChange={(e) => setEmail(e.target.value)} className="mt-4 w-full rounded-lg border border-[#dbe3ee] px-4 py-3.5 text-sm outline-none focus:border-[#0056d2] focus:ring-2 focus:ring-[#0056d2]/15" />
-            <input placeholder="Password" type="password" value={password} onChange={(e) => setPassword(e.target.value)} className="mt-4 w-full rounded-lg border border-[#dbe3ee] px-4 py-3.5 text-sm outline-none focus:border-[#0056d2] focus:ring-2 focus:ring-[#0056d2]/15" />
-            <input placeholder="Confirm Password" type="password" value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} className="mt-4 w-full rounded-lg border border-[#dbe3ee] px-4 py-3.5 text-sm outline-none focus:border-[#0056d2] focus:ring-2 focus:ring-[#0056d2]/15" />
+            <input placeholder="Full Name" value={fullName} onChange={(e) => setFullName(e.target.value)} className="w-full rounded-lg border border-[#dbe3ee] px-4 py-3.5 text-sm outline-none focus:border-[#22c55e] focus:ring-2 focus:ring-[#22c55e]/15" />
+            <input placeholder="Email Address" type="email" value={email} onChange={(e) => setEmail(e.target.value)} className="mt-4 w-full rounded-lg border border-[#dbe3ee] px-4 py-3.5 text-sm outline-none focus:border-[#22c55e] focus:ring-2 focus:ring-[#22c55e]/15" />
+            <input placeholder="Password" type="password" value={password} onChange={(e) => setPassword(e.target.value)} className="mt-4 w-full rounded-lg border border-[#dbe3ee] px-4 py-3.5 text-sm outline-none focus:border-[#22c55e] focus:ring-2 focus:ring-[#22c55e]/15" />
+            <input placeholder="Confirm Password" type="password" value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} className="mt-4 w-full rounded-lg border border-[#dbe3ee] px-4 py-3.5 text-sm outline-none focus:border-[#22c55e] focus:ring-2 focus:ring-[#22c55e]/15" />
 
             {error && <p className="mt-4 rounded-lg border border-red-200 bg-red-50 p-3.5 text-sm text-red-600">{error}</p>}
             {message && <p className="mt-4 rounded-lg border border-emerald-200 bg-emerald-50 p-3.5 text-sm text-emerald-700">{message}</p>}
 
-            <button type="submit" disabled={loading} className="mt-6 flex w-full justify-center rounded-lg bg-[#0056d2] px-5 py-3.5 text-sm font-semibold text-white transition hover:bg-[#00419e] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0056d2] focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-60">
+            <button type="submit" disabled={loading} className="mt-6 flex w-full justify-center rounded-lg bg-[#22c55e] px-5 py-3.5 text-sm font-semibold text-white transition hover:bg-[#16a34a] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#22c55e] focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-60">
               {loading ? "Creating Account..." : "Create Account"}
             </button>
           </form>
 
           <p className="mt-6 text-center text-sm text-[#4b5563]">
             Already have an account?{" "}
-            <Link href="/login" className="font-semibold text-[#0056d2]">
+            <Link href="/login" className="font-semibold text-[#22c55e]">
               Login
             </Link>
           </p>

@@ -13,35 +13,19 @@ const individualPlans = [
   {
     name: "Free",
     price: "$0",
-    tag: "Explore",
-    desc: "For learners who want to experience structured AI learning before upgrading.",
+    tag: "Full MVP Access",
+    desc: "Experience the complete GAHN AI learning platform free during our early access period.",
     features: [
       "Access to all 5 learning worlds",
-      "5 AI learning sessions per month",
+      "AI instructor learning sessions",
+      "Adaptive AI instruction",
       "Active learning tasks",
       "AI feedback and corrections",
-      "Lesson recaps",
-      "Basic notes",
-      "Basic progress tracking",
-      "Recent learning sessions",
-    ],
-  },
-  {
-    name: "Mastery",
-    price: "$19",
-    tag: "Most Popular",
-    desc: "For learners who want consistent AI instruction, deeper feedback, and stronger progress tracking.",
-    popular: true,
-    stripePlan: "mastery",
-    features: [
-      "Access to all 5 learning worlds",
-      "30 AI learning sessions per month",
-      "Adaptive AI instruction",
       "Mistake detection and retries",
       "Personalized lesson recommendations",
       "Full learning history",
       "Progress and streak tracking",
-      "Saved notes and detailed recaps",
+      "Saved notes and detailed lesson recaps",
     ],
   },
 ];
@@ -84,17 +68,17 @@ function PlanCard({ plan }: { plan: any }) {
       transition={{ duration: 0.3 }}
       className={`relative flex min-h-[640px] flex-col rounded-2xl p-7 sm:p-8 ${
         highlighted
-          ? "border-2 border-[#0056d2] bg-white shadow-md"
+          ? "border-2 border-[#22c55e] bg-white shadow-md"
           : "border border-[#dbe3ee] bg-white shadow-sm"
       }`}
     >
       {highlighted && (
-        <div className="absolute -top-4 left-6 rounded-full bg-[#0056d2] px-4 py-2 text-xs font-bold uppercase tracking-[0.14em] text-white">
+        <div className="absolute -top-4 left-6 rounded-full bg-[#22c55e] px-4 py-2 text-xs font-bold uppercase tracking-[0.14em] text-white">
           Most Popular
         </div>
       )}
 
-      <p className="text-xs font-bold uppercase tracking-[0.2em] text-[#0056d2]">
+      <p className="text-xs font-bold uppercase tracking-[0.2em] text-[#22c55e]">
         {plan.tag}
       </p>
 
@@ -116,7 +100,7 @@ function PlanCard({ plan }: { plan: any }) {
       <ul className="space-y-4 text-sm text-[#111827]">
         {plan.features.map((feature: string) => (
           <li key={feature} className="flex gap-3">
-            <span className="font-bold text-[#0056d2]">✓</span>
+            <span className="font-bold text-[#22c55e]">✓</span>
             <span>{feature}</span>
           </li>
         ))}
@@ -125,10 +109,10 @@ function PlanCard({ plan }: { plan: any }) {
       <button
         onClick={handleCheckout}
         disabled={loading}
-        className={`mt-auto block rounded-lg px-5 py-4 text-center text-sm font-bold uppercase tracking-[0.14em] transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0056d2] focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-60 ${
+        className={`mt-auto block rounded-lg px-5 py-4 text-center text-sm font-bold uppercase tracking-[0.14em] transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#22c55e] focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-60 ${
           highlighted
-            ? "bg-[#0056d2] text-white hover:bg-[#00419e]"
-            : "border border-[#dbe3ee] bg-white text-[#111827] hover:border-[#0056d2]/40 hover:bg-[#eef5ff]"
+            ? "bg-[#22c55e] text-white hover:bg-[#16a34a]"
+            : "border border-[#dbe3ee] bg-white text-[#111827] hover:border-[#22c55e]/40 hover:bg-[#ffffff]"
         }`}
       >
         {loading ? "Loading..." : `Start ${plan.name}`}
@@ -158,22 +142,22 @@ export default function PricingPage() {
           </Link>
 
           <div className="hidden items-center gap-8 text-sm font-bold uppercase tracking-[0.12em] md:flex">
-            <Link href="/" className="transition hover:text-[#0056d2]">Home</Link>
-            <Link href="/#programs" className="transition hover:text-[#0056d2]">Programs</Link>
-            <Link href="/#platform" className="transition hover:text-[#0056d2]">Platform</Link>
-            <Link href="/#instructors" className="transition hover:text-[#0056d2]">Instructors</Link>
+            <Link href="/" className="transition hover:text-[#22c55e]">Home</Link>
+            <Link href="/#programs" className="transition hover:text-[#22c55e]">Programs</Link>
+            <Link href="/#platform" className="transition hover:text-[#22c55e]">Platform</Link>
+            <Link href="/#instructors" className="transition hover:text-[#22c55e]">Instructors</Link>
           </div>
 
           <div className="flex items-center gap-3">
             <Link
               href="/login"
-              className="rounded-lg border border-[#dbe3ee] px-5 py-3 text-sm font-bold uppercase tracking-[0.12em] transition hover:border-[#0056d2]/40 hover:bg-[#eef5ff]"
+              className="rounded-lg border border-[#dbe3ee] px-5 py-3 text-sm font-bold uppercase tracking-[0.12em] transition hover:border-[#22c55e]/40 hover:bg-[#ffffff]"
             >
               Log In
             </Link>
             <Link
               href="/signup"
-              className="rounded-lg bg-[#0056d2] px-6 py-3 text-sm font-bold uppercase tracking-[0.12em] text-white transition hover:bg-[#00419e]"
+              className="rounded-lg bg-[#22c55e] px-6 py-3 text-sm font-bold uppercase tracking-[0.12em] text-white transition hover:bg-[#16a34a]"
             >
               Sign Up
             </Link>
@@ -181,7 +165,7 @@ export default function PricingPage() {
         </nav>
       </header>
 
-      <section className="border-b border-[#dbe3ee] bg-[#eef5ff] px-6 py-24">
+      <section className="border-b border-[#dbe3ee] bg-[#ffffff] px-6 py-24">
         <motion.div
           variants={fadeUp}
           initial="hidden"
@@ -201,7 +185,7 @@ export default function PricingPage() {
             initial="hidden"
             animate="show"
             transition={{ staggerChildren: 0.08 }}
-            className="mx-auto grid max-w-4xl items-stretch gap-6 md:grid-cols-2"
+            className="mx-auto grid max-w-xl items-stretch gap-6"
           >
             {individualPlans.map((plan) => (
               <PlanCard key={plan.name} plan={plan} />
