@@ -335,10 +335,15 @@ export default function DashboardPage() {
               <h3 className="text-xl font-bold text-[#111827]">Choose Your Learning World</h3>
 
               <div className="mt-4 grid gap-4 sm:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-5">
-                {worlds.map(({ Icon, title, text }) => (
-                  <Link
-                    href="/in-progress"
-                    key={title}
+                {worlds.map(({ Icon, title, text }) => {
+  const worldSlug = title
+    .toLowerCase()
+    .replace(/\s+/g, "-");
+
+  return (
+    <Link
+      href={`/learn/${worldSlug}`}
+      key={title}
                     className="rounded-2xl border border-[#dbe3ee] bg-white p-4 shadow-sm transition hover:border-[#22c55e]/40 hover:shadow-md"
                   >
                     <div className="grid h-12 w-12 place-items-center rounded-xl bg-[#dcfce7] text-[#16a34a]">
@@ -351,8 +356,9 @@ export default function DashboardPage() {
                     <div className="mt-5 inline-block rounded-lg bg-[#22c55e] px-4 py-2 text-xs font-semibold text-white">
                       Explore →
                     </div>
-                  </Link>
-                ))}
+                     </Link>
+  );
+})}
               </div>
             </section>
 
