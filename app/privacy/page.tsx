@@ -15,6 +15,7 @@ function Section({
   return (
     <div className="border-b border-[#E3E6EC] py-8 last:border-0">
       <h2 className="text-xl font-bold text-[#0A1628]">{title}</h2>
+
       <div className="mt-3 space-y-3 text-base leading-7 text-[#5B6472]">
         {children}
       </div>
@@ -26,13 +27,16 @@ export default function PrivacyPage() {
   return (
     <main className="min-h-screen bg-white font-sans text-[#0A1628]">
       <header className="border-b border-[#E3E6EC]">
-        <div className={`${shellClass} flex items-center justify-between py-5`}>
+        <div
+          className={`${shellClass} flex items-center justify-between py-5`}
+        >
           <Link href="/" className="flex items-center gap-3">
             <img
               src="/logo/favicon.png"
               alt="GAHN AI"
               className="h-10 w-10 rounded-full object-cover"
             />
+
             <p className="text-xl font-extrabold tracking-[-0.025em]">
               GAHN AI
             </p>
@@ -214,14 +218,21 @@ export default function PrivacyPage() {
 
             <p>
               A parent or guardian who believes a child under 13 has provided
-              information to us may contact support@gahnai.com.
+              information to us may contact{" "}
+              <Link
+                href="/contact"
+                className="font-semibold text-[#2952A3] hover:underline"
+              >
+                support@gahnai.com
+              </Link>
+              .
             </p>
           </Section>
 
           <Section title="6. How we share information">
             <p>
-              We do not sell your personal information. We may share
-              information in the following circumstances:
+              We do not sell your personal information. We may share information
+              in the following circumstances:
             </p>
 
             <ul className="list-disc space-y-2 pl-5">
@@ -234,8 +245,8 @@ export default function PrivacyPage() {
               <li>
                 <strong>Legal and safety reasons:</strong> when disclosure is
                 reasonably necessary to comply with law, respond to lawful
-                requests, investigate fraud, enforce our terms, or protect
-                users and the platform.
+                requests, investigate fraud, enforce our terms, or protect users
+                and the platform.
               </li>
 
               <li>
@@ -282,10 +293,10 @@ export default function PrivacyPage() {
 
           <Section title="9. Data retention">
             <p>
-              We retain personal information for as long as reasonably
-              necessary to provide the platform, maintain your account, comply
-              with legal and financial obligations, resolve disputes, enforce
-              agreements, and protect the platform.
+              We retain personal information for as long as reasonably necessary
+              to provide the platform, maintain your account, comply with legal
+              and financial obligations, resolve disputes, enforce agreements,
+              and protect the platform.
             </p>
 
             <p>
@@ -304,9 +315,9 @@ export default function PrivacyPage() {
             </p>
 
             <p>
-              These measures may include encrypted connections, access
-              controls, authentication protections, monitoring, backups, and
-              restricted administrative access.
+              These measures may include encrypted connections, access controls,
+              authentication protections, monitoring, backups, and restricted
+              administrative access.
             </p>
 
             <p>
@@ -343,16 +354,21 @@ export default function PrivacyPage() {
             </p>
 
             <p>
-              To submit a privacy request, email support@gahnai.com with the
-              subject line &quot;Privacy Request.&quot;
+              To submit a privacy request, email{" "}
+              <Link
+                href="/contact"
+                className="font-semibold text-[#2952A3] hover:underline"
+              >
+                support@gahnai.com
+              </Link>{" "}
+              with the subject line &quot;Privacy Request.&quot;
             </p>
           </Section>
 
           <Section title="12. International data processing">
             <p>
               Your information may be processed and stored in the United States
-              or other countries where GAHN AI or its service providers
-              operate.
+              or other countries where GAHN AI or its service providers operate.
             </p>
 
             <p>
@@ -364,9 +380,9 @@ export default function PrivacyPage() {
 
           <Section title="13. Third-party links">
             <p>
-              The platform may contain links to websites or services operated
-              by other companies. Their privacy practices are governed by their
-              own policies, and GAHN AI is not responsible for their content or
+              The platform may contain links to websites or services operated by
+              other companies. Their privacy practices are governed by their own
+              policies, and GAHN AI is not responsible for their content or
               privacy practices.
             </p>
           </Section>
@@ -388,12 +404,12 @@ export default function PrivacyPage() {
             <p>
               For questions, account-deletion requests, or privacy requests,
               email{" "}
-              <a
-                href="mailto:support@gahnai.com"
-                className="font-semibold text-[#2952A3]"
+              <Link
+                href="/contact"
+                className="font-semibold text-[#2952A3] hover:underline"
               >
                 support@gahnai.com
-              </a>
+              </Link>
               .
             </p>
           </Section>

@@ -15,6 +15,7 @@ function Section({
   return (
     <div className="border-b border-[#E3E6EC] py-8 last:border-0">
       <h2 className="text-xl font-bold text-[#0A1628]">{title}</h2>
+
       <div className="mt-3 space-y-3 text-base leading-7 text-[#5B6472]">
         {children}
       </div>
@@ -26,13 +27,16 @@ export default function TermsPage() {
   return (
     <main className="min-h-screen bg-white font-sans text-[#0A1628]">
       <header className="border-b border-[#E3E6EC]">
-        <div className={`${shellClass} flex items-center justify-between py-5`}>
+        <div
+          className={`${shellClass} flex items-center justify-between py-5`}
+        >
           <Link href="/" className="flex items-center gap-3">
             <img
               src="/logo/favicon.png"
               alt="GAHN AI"
               className="h-10 w-10 rounded-full object-cover"
             />
+
             <p className="text-xl font-extrabold tracking-[-0.025em]">
               GAHN AI
             </p>
@@ -97,9 +101,7 @@ export default function TermsPage() {
 
           <Section title="3. Your account">
             <ul className="list-disc space-y-2 pl-5">
-              <li>
-                You must provide accurate and current account information.
-              </li>
+              <li>You must provide accurate and current account information.</li>
 
               <li>
                 You are responsible for protecting your login credentials and
@@ -231,9 +233,7 @@ export default function TermsPage() {
                 subscription fees, applicable taxes, and authorized charges.
               </li>
 
-              <li>
-                Your subscription automatically renews until you cancel it.
-              </li>
+              <li>Your subscription automatically renews until you cancel it.</li>
 
               <li>
                 You must maintain a valid payment method and accurate billing
@@ -281,9 +281,15 @@ export default function TermsPage() {
             </p>
 
             <p>
-              Refund requests must be submitted to support@gahnai.com and include
-              the account email address, payment date, and reason for the
-              request.
+              Refund requests must be submitted to{" "}
+              <Link
+                href="/contact"
+                className="font-semibold text-[#2952A3] hover:underline"
+              >
+                support@gahnai.com
+              </Link>{" "}
+              and include the account email address, payment date, and reason
+              for the request.
             </p>
 
             <p>
@@ -358,9 +364,9 @@ export default function TermsPage() {
             </p>
 
             <p>
-              Third-party services are governed by their own terms and
-              policies. We are not responsible for third-party services outside
-              our reasonable control.
+              Third-party services are governed by their own terms and policies.
+              We are not responsible for third-party services outside our
+              reasonable control.
             </p>
           </Section>
 
@@ -380,8 +386,7 @@ export default function TermsPage() {
             <p>
               Provisions concerning intellectual property, payments already
               owed, disclaimers, liability, disputes, and other provisions that
-              logically should survive will remain effective after
-              termination.
+              logically should survive will remain effective after termination.
             </p>
           </Section>
 
@@ -421,8 +426,8 @@ export default function TermsPage() {
           <Section title="18. Limitation of liability">
             <p>
               To the fullest extent permitted by law, GAHN AI and its owners,
-              employees, contractors, service providers, and affiliates will
-              not be liable for indirect, incidental, special, consequential,
+              employees, contractors, service providers, and affiliates will not
+              be liable for indirect, incidental, special, consequential,
               exemplary, or punitive damages, or for lost profits, data,
               opportunities, reputation, or business interruption arising from
               or related to the platform.
@@ -454,15 +459,21 @@ export default function TermsPage() {
 
           <Section title="20. Governing law and disputes">
             <p>
-              These terms are governed by the laws applicable in the state
-              where GAHN AI is principally operated, without regard to
+              These terms are governed by the laws applicable in the state where
+              GAHN AI is principally operated, without regard to
               conflict-of-law rules.
             </p>
 
             <p>
-              Before filing a formal legal claim, you agree to contact
-              support@gahnai.com and attempt to resolve the dispute informally
-              for at least 30 days.
+              Before filing a formal legal claim, you agree to contact{" "}
+              <Link
+                href="/contact"
+                className="font-semibold text-[#2952A3] hover:underline"
+              >
+                support@gahnai.com
+              </Link>{" "}
+              and attempt to resolve the dispute informally for at least 30
+              days.
             </p>
 
             <p>
@@ -479,16 +490,16 @@ export default function TermsPage() {
 
             <p>
               We will update the &quot;Last updated&quot; date and provide
-              additional notice when required. Continued use after updated
-              terms become effective means you accept the revised terms.
+              additional notice when required. Continued use after updated terms
+              become effective means you accept the revised terms.
             </p>
           </Section>
 
           <Section title="22. General terms">
             <p>
               If any provision is found unenforceable, the remaining provisions
-              will remain in effect. Our failure to enforce a provision is not
-              a waiver of that provision.
+              will remain in effect. Our failure to enforce a provision is not a
+              waiver of that provision.
             </p>
 
             <p>
@@ -508,12 +519,12 @@ export default function TermsPage() {
             <p>
               Questions about these terms, subscriptions, cancellations, or
               refunds may be sent to{" "}
-              <a
-                href="mailto:support@gahnai.com"
-                className="font-semibold text-[#2952A3]"
+              <Link
+                href="/contact"
+                className="font-semibold text-[#2952A3] hover:underline"
               >
                 support@gahnai.com
-              </a>
+              </Link>
               .
             </p>
           </Section>

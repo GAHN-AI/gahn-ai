@@ -75,35 +75,43 @@ const worlds = [
 const instructors = [
   {
     name: "Career Fields",
+    instructorName: "Alex",
     role: "Career Skills Instructor",
     desc: "Explore a wide range of career skills, including communication, leadership, business, workplace habits, interviews, resumes, entrepreneurship, teamwork, and professional growth.",
-    image: "/instructors/alex.jpg",
+    image: "/instructors/alexCareerSkills.png",
   },
   {
     name: "School Help",
+    instructorName: "Henry",
     role: "School Help Instructor",
     desc: "Get guided support with math, science, reading, writing, history, homework, studying, assignments, and test preparation.",
-    image: "/instructors/arin.jpg",
+    image: "/instructors/HenrySchoolHelp.jpg",
   },
   {
     name: "Brain Development",
+    instructorName: "Aanya",
     role: "Brain Development Instructor",
     desc: "Strengthen focus, memory, discipline, reasoning, productive habits, emotional control, and learning performance.",
-    image: "/instructors/lena.jpg",
+    image: "/instructors/AanyaBrainDevelopment.png",
   },
   {
     name: "General Knowledge",
+    instructorName: "Sarah",
     role: "General Knowledge Instructor",
     desc: "Learn history, technology, culture, communication, life skills, current events, and practical real-world knowledge.",
-    image: "/instructors/jada.jpg",
+    image: "/instructors/sarahGeneralKnowledge.png",
   },
   {
     name: "Book Intelligence",
+    instructorName: "Hannah",
     role: "Book Intelligence Instructor",
     desc: "Understand books through summaries, key lessons, notes, quizzes, study paths, reading improvement, and practical applications.",
-    image: "/instructors/john.jpg",
+    image: "/instructors/HannahBookIntelligence.jpg",
   },
 ];
+
+
+
 const steps = [
   {
     number: "01",
@@ -479,23 +487,31 @@ function ProgramCard({
 
 function InstructorCard({
   name,
+  instructorName,
   role,
   desc,
   image,
 }: {
   name: string;
+  instructorName: string;
   role: string;
   desc: string;
   image: string;
 }) {
   return (
     <div className="grid gap-6 rounded-2xl border border-[#dbe3ee] bg-white p-5 sm:p-7 md:grid-cols-[240px_minmax(0,1fr)] md:gap-8">
-      <div className="relative mx-auto aspect-[16/9] w-full max-w-[280px] overflow-hidden rounded-xl bg-white md:mx-0 md:h-[200px] md:max-w-none">
-  <img
-    src={image}
-    alt={`${name}, ${role}`}
-    className="h-full w-full object-contain object-center grayscale-[15%] contrast-[1.05] saturate-[0.85]"
-  />
+      <div className="mx-auto w-full max-w-[280px] md:mx-0 md:max-w-none">
+  <div className="relative aspect-[16/9] w-full overflow-hidden rounded-xl bg-white md:h-[200px]">
+    <img
+      src={image}
+      alt={`${instructorName}, ${role}`}
+      className="h-full w-full object-contain object-center"
+    />
+  </div>
+
+  <p className="mt-3 text-center text-base font-bold text-[#111827]">
+    {instructorName}
+  </p>
 </div>
 
       <div className="flex min-w-0 flex-col justify-center">
