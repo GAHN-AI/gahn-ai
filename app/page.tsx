@@ -14,18 +14,14 @@ import {
   Briefcase,
   CheckCircle2,
   ChevronDown,
-  EyeOff,
   Flame,
   Globe2,
   GraduationCap,
   History,
   ListChecks,
-  Lock,
-  Mail,
   Menu,
   MessageSquare,
   Minus,
-  ShieldCheck,
   StickyNote,
   TrendingUp,
   UserCircle2,
@@ -278,97 +274,65 @@ function SectionIntro({
 }) {
   return (
     <div className="mx-auto mb-12 max-w-4xl text-center sm:mb-14">
-      <p className="text-xs font-bold uppercase tracking-[0.24em] text-[#22c55e]">
+      <p className="text-xs font-bold uppercase tracking-[0.24em] text-[#1677FF]">
         {eyebrow}
       </p>
 
-      <h2 className="mt-4 text-3xl font-extrabold leading-tight tracking-[-0.02em] text-[#111827] sm:text-4xl lg:text-5xl">
+      <h2 className="mt-4 text-3xl font-extrabold leading-tight tracking-[-0.02em] text-[#0B1739] sm:text-4xl lg:text-5xl">
         {title}
       </h2>
 
-      <p className="mx-auto mt-5 max-w-3xl text-base leading-7 text-[#4b5563] sm:text-lg sm:leading-8">
+      <p className="mx-auto mt-5 max-w-3xl text-base leading-7 text-[#53657D] sm:text-lg sm:leading-8">
         {text}
       </p>
     </div>
   );
 }
 
-function HeroSignupCard() {
+function HeroInstructorShowcase() {
   return (
-    <div className="relative w-full overflow-hidden rounded-2xl border border-[#dbe3ee] bg-white p-5 shadow-sm sm:p-6 lg:p-7">
-      <svg
-        className="pointer-events-none absolute -right-6 -top-6 h-28 w-28 opacity-[0.08]"
-        viewBox="0 0 100 100"
-        fill="none"
+    <div className="relative w-full min-w-0">
+      <div
         aria-hidden="true"
-      >
-        <circle cx="15" cy="15" r="3" fill="#22c55e" />
-        <circle cx="50" cy="35" r="3" fill="#22c55e" />
-        <circle cx="85" cy="15" r="3" fill="#22c55e" />
-        <circle cx="50" cy="80" r="3" fill="#22c55e" />
-        <path
-          d="M15 15 L50 35 L85 15 M50 35 L50 80"
-          stroke="#22c55e"
-          strokeWidth="1"
-        />
-      </svg>
+        className="pointer-events-none absolute -inset-x-5 -inset-y-8 rounded-[3rem] bg-[#EAF3FF]/45 blur-3xl"
+      />
 
-      <p className="text-xs font-bold uppercase tracking-[0.2em] text-[#22c55e]">
-        Start here
-      </p>
+      <div className="relative min-w-0">
+        <div className="mb-5 flex items-center justify-end">
+          <div className="inline-flex items-center gap-2 rounded-xl border border-[#D7E3F2] bg-white/90 px-3.5 py-2.5 text-[11px] font-bold text-[#0B1739] shadow-[0_10px_30px_rgba(11,23,57,0.08)] backdrop-blur-sm xl:text-xs">
+            <BarChart3 className="h-4 w-4 text-[#1677FF]" strokeWidth={1.8} />
+            Realistic AI Instructors. Real Progress.
+          </div>
+        </div>
 
-      <h2 className="mt-4 text-2xl font-extrabold leading-[1.15] tracking-[-0.02em] text-[#111827] sm:text-[1.75rem]">
-        Ready to take your next step?
-      </h2>
+        <div className="grid min-w-0 grid-cols-2 items-end gap-3 sm:grid-cols-3 xl:grid-cols-5 xl:gap-3">
+          {instructors.map((instructor, index) => (
+            <div
+              key={instructor.instructorName}
+              className={`min-w-0 ${
+                index === instructors.length - 1
+                  ? "col-span-2 mx-auto w-1/2 sm:col-span-1 sm:w-auto"
+                  : ""
+              }`}
+            >
+              <div className="aspect-[4/5] w-full overflow-hidden rounded-[1.25rem] border border-[#D7E3F2] bg-white shadow-[0_16px_38px_rgba(11,23,57,0.09)]">
+                <img
+                  src={instructor.image}
+                  alt={`${instructor.instructorName}, ${instructor.role}`}
+                  className="block h-full w-full object-cover object-top"
+                />
+              </div>
 
-      <p className="mt-3 text-sm leading-6 text-[#4b5563] sm:text-[15px] sm:leading-7">
-        Create your account, choose what you want to learn, and begin a guided AI lesson.
-      </p>
+              <p className="mt-3 truncate text-center text-sm font-extrabold text-[#0B1739]">
+                {instructor.instructorName}
+              </p>
 
-      <div className="mt-5 space-y-3.5 sm:mt-6">
-        <select
-          aria-label="Select your learning world"
-          defaultValue=""
-          className="w-full rounded-lg border border-[#dbe3ee] bg-white px-4 py-3.5 text-sm font-semibold text-[#4b5563] outline-none transition focus:border-[#22c55e] focus:ring-2 focus:ring-[#22c55e]/15 sm:px-5 sm:text-[15px]"
-        >
-          <option value="" disabled>
-            Select your learning world...
-          </option>
-          <option>Career Skills</option>
-          <option>School Help</option>
-          <option>Brain Development</option>
-          <option>General Knowledge</option>
-          <option>Book Intelligence</option>
-        </select>
-
-        <Link
-          href="/signup"
-          className="flex items-center justify-center gap-2 rounded-lg bg-[#22c55e] px-5 py-3.5 text-center text-sm font-semibold text-white transition hover:bg-[#16a34a] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#22c55e] focus-visible:ring-offset-2"
-        >
-          Create Account
-          <ArrowRight className="h-4 w-4" />
-        </Link>
-      </div>
-
-      <div className="mt-6 border-t border-[#dbe3ee] pt-5 sm:mt-7">
-        <p className="font-bold text-[#111827]">Platform starts with:</p>
-
-        <ul className="mt-3 space-y-2 text-sm leading-6 text-[#4b5563]">
-          {[
-            "Learning dashboard",
-            "AI instructor previews",
-            "Lessons, notes, and progress",
-            "Certificates and portfolios planned",
-          ].map((item) => (
-            <li key={item} className="flex items-start gap-2">
-              <CheckCircle2
-                className="mt-1 h-4 w-4 flex-none text-[#22c55e]"
-                strokeWidth={1.75}
-              />
-              <span>{item}</span>
-            </li>
+              <p className="mt-0.5 truncate text-center text-[10px] font-semibold text-[#53657D] 2xl:text-[11px]">
+                {instructor.role.replace(" Instructor", "")}
+              </p>
+            </div>
           ))}
-        </ul>
+        </div>
       </div>
     </div>
   );
@@ -376,19 +340,19 @@ function HeroSignupCard() {
 
 function DashboardPreview() {
   return (
-    <div className="w-full rounded-2xl border border-[#dbe3ee] bg-white p-3 shadow-sm sm:p-5">
-      <div className="rounded-xl border border-[#dbe3ee] bg-[#ffffff] p-4 sm:p-6">
+    <div className="w-full rounded-2xl border border-[#D7E3F2] bg-white p-3 shadow-sm sm:p-5">
+      <div className="rounded-xl border border-[#D7E3F2] bg-[#ffffff] p-4 sm:p-6">
         <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
           <div>
-            <p className="text-base font-bold leading-tight text-[#4b5563] sm:text-xl">
+            <p className="text-base font-bold leading-tight text-[#53657D] sm:text-xl">
               Welcome back,
             </p>
-            <p className="text-xl font-extrabold leading-tight tracking-[-0.02em] text-[#111827] sm:text-2xl">
+            <p className="text-xl font-extrabold leading-tight tracking-[-0.02em] text-[#0B1739] sm:text-2xl">
               Learner
             </p>
           </div>
 
-          <span className="w-fit rounded-full bg-white px-4 py-2 text-xs font-bold text-[#4b5563] shadow-sm">
+          <span className="w-fit rounded-full bg-white px-4 py-2 text-xs font-bold text-[#53657D] shadow-sm">
             New account
           </span>
         </div>
@@ -406,7 +370,7 @@ function DashboardPreview() {
               <div
                 key={item}
                 className={`rounded-lg px-3 py-3 text-center text-xs font-bold sm:text-sm xl:px-4 xl:text-left ${
-                  index === 0 ? "bg-[#dcfce7] text-[#22c55e]" : "text-[#4b5563]"
+                  index === 0 ? "bg-[#EAF3FF] text-[#1677FF]" : "text-[#53657D]"
                 }`}
               >
                 {item}
@@ -423,11 +387,11 @@ function DashboardPreview() {
                 { num: "0%", label: "Progress", Icon: TrendingUp },
               ].map(({ num, label, Icon }) => (
                 <div key={label} className="rounded-xl bg-white p-4 shadow-sm">
-                  <Icon className="h-5 w-5 text-[#22c55e]" strokeWidth={1.75} />
-                  <p className="mt-3 text-xl font-bold text-[#111827] sm:text-2xl">
+                  <Icon className="h-5 w-5 text-[#1677FF]" strokeWidth={1.75} />
+                  <p className="mt-3 text-xl font-bold text-[#0B1739] sm:text-2xl">
                     {num}
                   </p>
-                  <p className="mt-1 text-[11px] font-bold text-[#4b5563] sm:text-xs">
+                  <p className="mt-1 text-[11px] font-bold text-[#53657D] sm:text-xs">
                     {label}
                   </p>
                 </div>
@@ -435,16 +399,16 @@ function DashboardPreview() {
             </div>
 
             <div className="mt-5 rounded-xl bg-white p-5 shadow-sm sm:p-6">
-              <p className="text-lg font-bold text-[#111827]">
+              <p className="text-lg font-bold text-[#0B1739]">
                 Continue Learning
               </p>
-              <p className="mt-3 text-sm leading-6 text-[#4b5563]">
+              <p className="mt-3 text-sm leading-6 text-[#53657D]">
                 No courses started yet. Choose a learning world to begin your
                 journey.
               </p>
               <Link
                 href="/signup"
-                className="mt-6 inline-flex rounded-lg bg-[#22c55e] px-6 py-3 text-sm font-semibold text-white transition hover:bg-[#16a34a]"
+                className="mt-6 inline-flex rounded-lg bg-[#1677FF] px-6 py-3 text-sm font-semibold text-white hover:bg-[#0F65E8]"
               >
                 Choose a World
               </Link>
@@ -466,70 +430,21 @@ function ProgramCard({
   text: string;
 }) {
   return (
-    <div className="flex h-full flex-col rounded-2xl border border-[#dbe3ee] bg-white p-6 transition hover:border-[#22c55e]/40 hover:shadow-md lg:p-7">
-      <div className="grid h-14 w-14 place-items-center rounded-xl bg-[#dcfce7] text-[#22c55e] lg:h-16 lg:w-16">
+    <div className="flex h-full flex-col rounded-2xl border border-[#D7E3F2] bg-white p-6 shadow-[0_10px_30px_rgba(11,23,57,0.045)] hover:border-[#1677FF]/40 hover:shadow-md lg:p-7">
+      <div className="grid h-14 w-14 place-items-center rounded-xl bg-[#EAF3FF] text-[#1677FF] lg:h-16 lg:w-16">
         <Icon className="h-7 w-7" strokeWidth={1.5} />
       </div>
 
-      <h3 className="mt-6 text-xl font-bold text-[#111827]">{title}</h3>
+      <h3 className="mt-6 text-xl font-bold text-[#0B1739]">{title}</h3>
 
-      <p className="mt-4 flex-1 text-base leading-7 text-[#4b5563]">{text}</p>
+      <p className="mt-4 flex-1 text-base leading-7 text-[#53657D]">{text}</p>
 
       <Link
         href="/signup"
-        className="mt-6 inline-flex items-center gap-1 text-sm font-semibold text-[#22c55e]"
+        className="mt-6 inline-flex items-center gap-1 text-sm font-semibold text-[#1677FF]"
       >
         Start Learning <ArrowRight className="h-3.5 w-3.5" />
       </Link>
-    </div>
-  );
-}
-
-function InstructorCard({
-  name,
-  instructorName,
-  role,
-  desc,
-  image,
-}: {
-  name: string;
-  instructorName: string;
-  role: string;
-  desc: string;
-  image: string;
-}) {
-  return (
-    <div className="grid gap-6 rounded-2xl border border-[#dbe3ee] bg-white p-5 sm:p-7 md:grid-cols-[240px_minmax(0,1fr)] md:gap-8">
-      <div className="mx-auto w-full max-w-[280px] md:mx-0 md:max-w-none">
-  <div className="relative aspect-[16/9] w-full overflow-hidden rounded-xl bg-white md:h-[200px]">
-    <img
-      src={image}
-      alt={`${instructorName}, ${role}`}
-      className="h-full w-full object-contain object-center"
-    />
-  </div>
-
-  <p className="mt-3 text-center text-base font-bold text-[#111827]">
-    {instructorName}
-  </p>
-</div>
-
-      <div className="flex min-w-0 flex-col justify-center">
-        <p className="text-xs font-bold uppercase tracking-[0.2em] text-[#22c55e]">
-          Specialty
-        </p>
-        <h3 className="mt-3 text-3xl font-extrabold tracking-[-0.02em] text-[#111827]">
-          {name}
-        </h3>
-        <p className="mt-1 text-base font-semibold text-[#22c55e]">{role}</p>
-        <p className="mt-5 text-base leading-7 text-[#4b5563]">{desc}</p>
-        <Link
-          href="/signup"
-          className="mt-5 inline-flex items-center gap-1 text-sm font-semibold text-[#22c55e]"
-        >
-          Enter World <ArrowRight className="h-3.5 w-3.5" />
-        </Link>
-      </div>
     </div>
   );
 }
@@ -544,13 +459,13 @@ function StepCard({
   text: string;
 }) {
   return (
-    <div className="relative rounded-2xl border border-[#dbe3ee] bg-white p-6 lg:p-7">
+    <div className="relative rounded-2xl border border-[#D7E3F2] bg-white p-6 shadow-[0_10px_30px_rgba(11,23,57,0.045)] lg:p-7">
       <div className="flex items-center gap-3">
-        <span className="h-3 w-3 flex-none rounded-full bg-[#22c55e]" />
-        <h3 className="text-lg font-bold text-[#111827]">{title}</h3>
+        <span className="h-3 w-3 flex-none rounded-full bg-[#1677FF]" />
+        <h3 className="text-lg font-bold text-[#0B1739]">{title}</h3>
       </div>
 
-      <p className="mt-3 text-sm leading-6 text-[#4b5563]">{text}</p>
+      <p className="mt-3 text-sm leading-6 text-[#53657D]">{text}</p>
     </div>
   );
 }
@@ -565,24 +480,24 @@ function SchoolCard({
   text: string;
 }) {
   return (
-    <div className="rounded-2xl border border-[#dbe3ee] bg-white p-6 sm:p-7">
-      <div className="grid h-12 w-12 place-items-center rounded-xl bg-[#dcfce7] text-[#22c55e]">
+    <div className="rounded-2xl border border-[#D7E3F2] bg-white p-6 shadow-[0_10px_30px_rgba(11,23,57,0.045)] sm:p-7">
+      <div className="grid h-12 w-12 place-items-center rounded-xl bg-[#EAF3FF] text-[#1677FF]">
         <Icon className="h-5 w-5" strokeWidth={1.75} />
       </div>
-      <h3 className="mt-5 text-lg font-bold text-[#111827]">{title}</h3>
-      <p className="mt-3 text-base leading-7 text-[#4b5563]">{text}</p>
+      <h3 className="mt-5 text-lg font-bold text-[#0B1739]">{title}</h3>
+      <p className="mt-3 text-base leading-7 text-[#53657D]">{text}</p>
     </div>
   );
 }
 
 function RoadmapCard({ stage, text }: { stage: string; text: string }) {
   return (
-    <div className="rounded-2xl border border-[#dbe3ee] bg-white p-6 sm:p-7">
-      <div className="grid h-12 w-12 place-items-center rounded-xl bg-[#dcfce7]">
-        <span className="h-3 w-3 rotate-45 bg-[#22c55e]" />
+    <div className="rounded-2xl border border-[#D7E3F2] bg-white p-6 shadow-[0_10px_30px_rgba(11,23,57,0.045)] sm:p-7">
+      <div className="grid h-12 w-12 place-items-center rounded-xl bg-[#EAF3FF]">
+        <span className="h-3 w-3 rotate-45 bg-[#1677FF]" />
       </div>
-      <h3 className="mt-5 text-lg font-bold text-[#111827]">{stage}</h3>
-      <p className="mt-3 text-base leading-7 text-[#4b5563]">{text}</p>
+      <h3 className="mt-5 text-lg font-bold text-[#0B1739]">{stage}</h3>
+      <p className="mt-3 text-base leading-7 text-[#53657D]">{text}</p>
     </div>
   );
 }
@@ -617,25 +532,25 @@ function LessonDemo() {
   }
 
   return (
-    <div className="mx-auto max-w-5xl rounded-2xl border border-[#dbe3ee] bg-white shadow-sm">
+    <div className="mx-auto max-w-5xl rounded-2xl border border-[#D7E3F2] bg-white shadow-sm">
       {/* Lesson header + progress */}
-      <div className="border-b border-[#dbe3ee] p-6 sm:p-8">
+      <div className="border-b border-[#D7E3F2] p-6 sm:p-8">
         <div className="flex flex-wrap items-start justify-between gap-4">
           <div>
-            <p className="text-xs font-bold uppercase tracking-[0.2em] text-[#22c55e]">
+            <p className="text-xs font-bold uppercase tracking-[0.2em] text-[#1677FF]">
               Career Skills · Lesson 3 of 12
             </p>
-            <h3 className="mt-2 text-xl font-bold text-[#111827] sm:text-2xl">
+            <h3 className="mt-2 text-xl font-bold text-[#0B1739] sm:text-2xl">
               Negotiation Basics
             </h3>
           </div>
-          <span className="rounded-full bg-[#ffffff] px-3 py-1.5 text-[11px] font-bold uppercase tracking-[0.1em] text-[#4b5563]">
+          <span className="rounded-full bg-[#ffffff] px-3 py-1.5 text-[11px] font-bold uppercase tracking-[0.1em] text-[#53657D]">
             Preview
           </span>
         </div>
 
         <div className="mt-5 h-2 w-full overflow-hidden rounded-full bg-[#ffffff]">
-          <div className="h-full w-[28%] rounded-full bg-[#22c55e]" />
+          <div className="h-full w-[28%] rounded-full bg-[#1677FF]" />
         </div>
       </div>
 
@@ -650,12 +565,12 @@ function LessonDemo() {
             />
           </div>
 
-          <p className="mt-4 text-xs font-bold uppercase tracking-[0.2em] text-[#22c55e]">
+          <p className="mt-4 text-xs font-bold uppercase tracking-[0.2em] text-[#1677FF]">
             Your Instructor
           </p>
-          <h4 className="mt-1 text-lg font-bold text-[#111827]">Arin</h4>
-          <p className="text-sm font-semibold text-[#22c55e]">Career &amp; Finance Instructor</p>
-          <p className="mt-3 text-sm leading-6 text-[#4b5563]">
+          <h4 className="mt-1 text-lg font-bold text-[#0B1739]">Arin</h4>
+          <p className="text-sm font-semibold text-[#1677FF]">Career &amp; Finance Instructor</p>
+          <p className="mt-3 text-sm leading-6 text-[#53657D]">
             Teaching negotiation, budgeting, and real-world financial decision-making.
           </p>
         </div>
@@ -663,14 +578,14 @@ function LessonDemo() {
         {/* Main workspace */}
         <div className="min-w-0 space-y-6">
           {/* Concept */}
-          <div className="rounded-xl border border-[#dbe3ee] bg-[#ffffff] p-5 sm:p-6">
-            <p className="text-xs font-bold uppercase tracking-[0.2em] text-[#22c55e]">
+          <div className="rounded-xl border border-[#D7E3F2] bg-[#ffffff] p-5 sm:p-6">
+            <p className="text-xs font-bold uppercase tracking-[0.2em] text-[#1677FF]">
               Concept
             </p>
-            <h4 className="mt-2 text-lg font-bold text-[#111827]">
+            <h4 className="mt-2 text-lg font-bold text-[#0B1739]">
               Before You Respond to an Offer
             </h4>
-            <p className="mt-3 text-sm leading-7 text-[#4b5563]">
+            <p className="mt-3 text-sm leading-7 text-[#53657D]">
               Never accept or reject a job offer immediately. The strongest
               negotiators research the market rate for the role first, then
               respond with a counter that&apos;s grounded in that data instead
@@ -679,19 +594,19 @@ function LessonDemo() {
           </div>
 
           {/* Practice task */}
-          <div className="rounded-xl border border-[#dbe3ee] bg-white p-5 sm:p-6">
+          <div className="rounded-xl border border-[#D7E3F2] bg-white p-5 sm:p-6">
             <div className="flex items-center justify-between">
-              <p className="text-xs font-bold uppercase tracking-[0.2em] text-[#22c55e]">
+              <p className="text-xs font-bold uppercase tracking-[0.2em] text-[#1677FF]">
                 Practice Task
               </p>
               {attempt === 1 && stage !== "correct" && (
-                <span className="rounded-full bg-[#ffffff] px-3 py-1 text-[11px] font-bold uppercase tracking-[0.1em] text-[#4b5563]">
+                <span className="rounded-full bg-[#ffffff] px-3 py-1 text-[11px] font-bold uppercase tracking-[0.1em] text-[#53657D]">
                   Retry
                 </span>
               )}
             </div>
 
-            <p className="mt-2 text-base font-semibold leading-7 text-[#111827]">
+            <p className="mt-2 text-base font-semibold leading-7 text-[#0B1739]">
               You receive a job offer of $52,000. What should you do before responding?
             </p>
 
@@ -702,11 +617,11 @@ function LessonDemo() {
                   onChange={(e) => setAnswer(e.target.value)}
                   placeholder="Type your answer..."
                   rows={3}
-                  className="w-full rounded-lg border border-[#dbe3ee] px-4 py-3 text-sm leading-6 text-[#111827] outline-none focus:border-[#22c55e]"
+                  className="w-full rounded-lg border border-[#D7E3F2] px-4 py-3 text-sm leading-6 text-[#0B1739] outline-none focus:border-[#1677FF]"
                 />
                 <button
                   type="submit"
-                  className="rounded-lg bg-[#22c55e] px-6 py-3 text-sm font-semibold text-white transition hover:bg-[#16a34a]"
+                  className="rounded-lg bg-[#1677FF] px-6 py-3 text-sm font-semibold text-white hover:bg-[#0F65E8]"
                 >
                   Submit Answer
                 </button>
@@ -716,14 +631,14 @@ function LessonDemo() {
 
           {/* Correction panel */}
           {stage === "incorrect" && (
-            <div className="rounded-xl border border-[#dbe3ee] bg-white p-5 sm:p-6">
-              <div className="flex items-start gap-3 border-l-2 border-[#22c55e]/20 pl-4">
-                <XCircle className="mt-0.5 h-5 w-5 flex-none text-[#4b5563]" strokeWidth={1.75} />
+            <div className="rounded-xl border border-[#D7E3F2] bg-white p-5 sm:p-6">
+              <div className="flex items-start gap-3 border-l-2 border-[#1677FF]/20 pl-4">
+                <XCircle className="mt-0.5 h-5 w-5 flex-none text-[#53657D]" strokeWidth={1.75} />
                 <div>
-                  <p className="text-sm font-bold text-[#111827]">
+                  <p className="text-sm font-bold text-[#0B1739]">
                     Not quite — here&apos;s what was missed
                   </p>
-                  <p className="mt-2 text-sm leading-6 text-[#4b5563]">
+                  <p className="mt-2 text-sm leading-6 text-[#53657D]">
                     Accepting immediately skips research and gives up room to
                     negotiate. Look up the market rate for this role first,
                     then respond with a specific counter number.
@@ -734,7 +649,7 @@ function LessonDemo() {
               <button
                 type="button"
                 onClick={handleRetry}
-                className="mt-5 rounded-lg border border-[#dbe3ee] px-6 py-3 text-sm font-semibold text-[#111827] transition hover:border-[#22c55e]/40"
+                className="mt-5 rounded-lg border border-[#D7E3F2] px-6 py-3 text-sm font-semibold text-[#0B1739] hover:border-[#1677FF]/40"
               >
                 Retry Task
               </button>
@@ -743,14 +658,14 @@ function LessonDemo() {
 
           {/* Understanding confirmation */}
           {stage === "correct" && (
-            <div className="rounded-xl border border-[#dbe3ee] bg-white p-5 sm:p-6">
-              <div className="flex items-start gap-3 border-l-2 border-[#22c55e]/20 pl-4">
-                <CheckCircle2 className="mt-0.5 h-5 w-5 flex-none text-[#22c55e]" strokeWidth={1.75} />
+            <div className="rounded-xl border border-[#D7E3F2] bg-white p-5 sm:p-6">
+              <div className="flex items-start gap-3 border-l-2 border-[#1677FF]/20 pl-4">
+                <CheckCircle2 className="mt-0.5 h-5 w-5 flex-none text-[#1677FF]" strokeWidth={1.75} />
                 <div>
-                  <p className="text-sm font-bold text-[#111827]">
+                  <p className="text-sm font-bold text-[#0B1739]">
                     Correct — understanding confirmed
                   </p>
-                  <p className="mt-2 text-sm leading-6 text-[#4b5563]">
+                  <p className="mt-2 text-sm leading-6 text-[#53657D]">
                     You grounded the ask in market data instead of emotion.
                     That&apos;s the core negotiation skill for this lesson.
                   </p>
@@ -760,11 +675,11 @@ function LessonDemo() {
           )}
 
           {/* Notes & lesson recap controls */}
-          <div className="flex flex-col gap-3 border-t border-[#dbe3ee] pt-6 sm:flex-row sm:items-center sm:justify-between">
+          <div className="flex flex-col gap-3 border-t border-[#D7E3F2] pt-6 sm:flex-row sm:items-center sm:justify-between">
             <button
               type="button"
               onClick={() => setNoteSaved(true)}
-              className="flex items-center justify-center gap-2 rounded-lg border border-[#dbe3ee] px-5 py-3 text-sm font-semibold text-[#111827] transition hover:border-[#22c55e]/40"
+              className="flex items-center justify-center gap-2 rounded-lg border border-[#D7E3F2] px-5 py-3 text-sm font-semibold text-[#0B1739] hover:border-[#1677FF]/40"
             >
               <StickyNote className="h-4 w-4" strokeWidth={1.75} />
               {noteSaved ? "Saved to Notes" : "Save to Notes"}
@@ -773,7 +688,7 @@ function LessonDemo() {
             <button
               type="button"
               onClick={() => setRecapOpen((open) => !open)}
-              className="flex items-center justify-center gap-2 rounded-lg border border-[#dbe3ee] px-5 py-3 text-sm font-semibold text-[#111827] transition hover:border-[#22c55e]/40"
+              className="flex items-center justify-center gap-2 rounded-lg border border-[#D7E3F2] px-5 py-3 text-sm font-semibold text-[#0B1739] hover:border-[#1677FF]/40"
             >
               <ListChecks className="h-4 w-4" strokeWidth={1.75} />
               {recapOpen ? "Hide Lesson Recap" : "View Lesson Recap"}
@@ -781,7 +696,7 @@ function LessonDemo() {
           </div>
 
           {recapOpen && (
-            <div className="rounded-xl border border-[#dbe3ee] bg-[#ffffff] p-5 text-sm leading-6 text-[#4b5563]">
+            <div className="rounded-xl border border-[#D7E3F2] bg-[#ffffff] p-5 text-sm leading-6 text-[#53657D]">
               Research the market rate before responding to any offer, then
               counter with a specific number backed by that data.
             </div>
@@ -789,7 +704,7 @@ function LessonDemo() {
         </div>
       </div>
 
-      <p className="border-t border-[#dbe3ee] p-6 text-sm leading-6 text-[#4b5563] sm:p-8">
+      <p className="border-t border-[#D7E3F2] p-6 text-sm leading-6 text-[#53657D] sm:p-8">
         This is a preview of how AI instructors teach. Real lessons adapt to
         your answers in real time.
       </p>
@@ -799,18 +714,18 @@ function LessonDemo() {
 
 function ComparisonTable() {
   return (
-    <div className="overflow-x-auto rounded-2xl border border-[#dbe3ee]">
+    <div className="overflow-x-auto rounded-2xl border border-[#D7E3F2]">
       <table className="w-full min-w-[640px] border-collapse text-left">
         <thead>
-          <tr className="border-b border-[#dbe3ee] bg-[#ffffff]">
-            <th className="p-5 text-sm font-bold text-[#111827]">
+          <tr className="border-b border-[#D7E3F2] bg-[#ffffff]">
+            <th className="p-5 text-sm font-bold text-[#0B1739]">
               What matters when learning
             </th>
             {comparisonColumns.map((col, index) => (
               <th
                 key={col}
                 className={`p-5 text-sm ${
-                  index === 0 ? "font-bold text-[#22c55e]" : "font-semibold text-[#4b5563]"
+                  index === 0 ? "font-bold text-[#1677FF]" : "font-semibold text-[#53657D]"
                 }`}
               >
                 {col}
@@ -820,14 +735,14 @@ function ComparisonTable() {
         </thead>
         <tbody>
           {comparisonRows.map((row) => (
-            <tr key={row.feature} className="border-b border-[#dbe3ee] last:border-0">
-              <td className="p-5 text-sm font-semibold text-[#111827]">{row.feature}</td>
+            <tr key={row.feature} className="border-b border-[#D7E3F2] last:border-0">
+              <td className="p-5 text-sm font-semibold text-[#0B1739]">{row.feature}</td>
               {row.values.map((value, index) => (
                 <td key={index} className="p-5">
                   {value ? (
-                    <CheckCircle2 className="h-5 w-5 text-[#22c55e]" strokeWidth={1.75} />
+                    <CheckCircle2 className="h-5 w-5 text-[#1677FF]" strokeWidth={1.75} />
                   ) : (
-                    <Minus className="h-5 w-5 text-[#4b5563]/40" strokeWidth={1.75} />
+                    <Minus className="h-5 w-5 text-[#53657D]/40" strokeWidth={1.75} />
                   )}
                 </td>
               ))}
@@ -841,24 +756,24 @@ function ComparisonTable() {
 
 function WhyFasterCard({ Icon, title, text }: { Icon: LucideIcon; title: string; text: string }) {
   return (
-    <div className="rounded-2xl border border-[#dbe3ee] bg-white p-6 sm:p-7">
-      <div className="grid h-12 w-12 place-items-center rounded-xl bg-[#dcfce7] text-[#22c55e]">
+    <div className="rounded-2xl border border-[#D7E3F2] bg-white p-6 shadow-[0_10px_30px_rgba(11,23,57,0.045)] sm:p-7">
+      <div className="grid h-12 w-12 place-items-center rounded-xl bg-[#EAF3FF] text-[#1677FF]">
         <Icon className="h-5 w-5" strokeWidth={1.75} />
       </div>
-      <h3 className="mt-5 text-lg font-bold text-[#111827]">{title}</h3>
-      <p className="mt-3 text-sm leading-6 text-[#4b5563]">{text}</p>
+      <h3 className="mt-5 text-lg font-bold text-[#0B1739]">{title}</h3>
+      <p className="mt-3 text-sm leading-6 text-[#53657D]">{text}</p>
     </div>
   );
 }
 
 function PreviewMiniCard({ Icon, title, text }: { Icon: LucideIcon; title: string; text: string }) {
   return (
-    <div className="rounded-2xl border border-[#dbe3ee] bg-white p-5">
-      <div className="grid h-10 w-10 place-items-center rounded-lg bg-[#dcfce7] text-[#22c55e]">
+    <div className="rounded-2xl border border-[#D7E3F2] bg-white p-5 shadow-[0_10px_30px_rgba(11,23,57,0.045)]">
+      <div className="grid h-10 w-10 place-items-center rounded-lg bg-[#EAF3FF] text-[#1677FF]">
         <Icon className="h-4.5 w-4.5" strokeWidth={1.75} />
       </div>
-      <h3 className="mt-4 text-sm font-bold text-[#111827]">{title}</h3>
-      <p className="mt-2 text-xs leading-5 text-[#4b5563]">{text}</p>
+      <h3 className="mt-4 text-sm font-bold text-[#0B1739]">{title}</h3>
+      <p className="mt-2 text-xs leading-5 text-[#53657D]">{text}</p>
     </div>
   );
 }
@@ -875,16 +790,16 @@ function FaqItem({
   onToggle: () => void;
 }) {
   return (
-    <div className="rounded-2xl border border-[#dbe3ee] bg-white">
+    <div className="rounded-2xl border border-[#D7E3F2] bg-white">
       <button
         type="button"
         onClick={onToggle}
         aria-expanded={isOpen}
         className="flex w-full items-center justify-between gap-4 p-5 text-left sm:p-6"
       >
-        <span className="text-base font-bold text-[#111827]">{question}</span>
+        <span className="text-base font-bold text-[#0B1739]">{question}</span>
         <ChevronDown
-          className={`h-5 w-5 flex-none text-[#22c55e] transition-transform ${
+          className={`h-5 w-5 flex-none text-[#1677FF] ${
             isOpen ? "rotate-180" : ""
           }`}
           strokeWidth={1.75}
@@ -893,7 +808,7 @@ function FaqItem({
 
       {isOpen && (
         <div className="px-5 pb-5 sm:px-6 sm:pb-6">
-          <p className="text-sm leading-7 text-[#4b5563]">{answer}</p>
+          <p className="text-sm leading-7 text-[#53657D]">{answer}</p>
         </div>
       )}
     </div>
@@ -909,13 +824,13 @@ function FooterColumn({
 }) {
   return (
     <div>
-      <p className="text-xs font-bold uppercase tracking-[0.18em] text-[#111827]">{title}</p>
+      <p className="text-xs font-bold uppercase tracking-[0.18em] text-[#0B1739]">{title}</p>
       <ul className="mt-4 space-y-3">
         {links.map((link) => (
           <li key={link.label}>
             <Link
               href={link.href}
-              className="text-sm text-[#4b5563] transition hover:text-[#22c55e]"
+              className="text-sm text-[#53657D] hover:text-[#1677FF]"
             >
               {link.label}
             </Link>
@@ -933,9 +848,9 @@ export default function Home() {
   return (
     <main
       id="top"
-      className="min-h-screen scroll-smooth bg-white font-sans text-[#111827] xl:[zoom:0.85]"
+      className={`${sourceSans.className} min-h-screen scroll-smooth bg-white text-[#0B1739]`}
     >
-      <header className="sticky top-0 z-50 border-b border-[#dbe3ee] bg-white/90 backdrop-blur">
+      <header className="sticky top-0 z-50 border-b border-[#D7E3F2] bg-white/95 shadow-[0_1px_0_rgba(11,23,57,0.02)] backdrop-blur">
         <nav
           className={`${shellClass} flex min-h-[74px] items-center justify-between py-3 sm:min-h-[82px] sm:py-4`}
         >
@@ -949,7 +864,7 @@ export default function Home() {
               <p className="truncate text-xl font-extrabold tracking-[-0.02em] sm:text-2xl">
                 GAHN AI
               </p>
-              <p className="hidden text-[8px] font-bold uppercase tracking-[0.16em] text-[#4b5563] sm:block lg:text-[9px]">
+              <p className="hidden text-[8px] font-bold uppercase tracking-[0.16em] text-[#53657D] sm:block lg:text-[9px]">
                 Global AI Human Helper Network
               </p>
             </div>
@@ -960,12 +875,12 @@ export default function Home() {
   <a
     key={link.label}
     href={link.href}
-    className="transition hover:text-[#22c55e]"
+    className="hover:text-[#1677FF]"
   >
     {link.label}
   </a>
 ))}
-            <Link href="/pricing" className="transition hover:text-[#22c55e]">
+            <Link href="/pricing" className="hover:text-[#1677FF]">
               Pricing
             </Link>
           </div>
@@ -973,13 +888,13 @@ export default function Home() {
           <div className="hidden items-center gap-3 xl:flex">
             <Link
               href="/login"
-              className="rounded-lg border border-[#dbe3ee] px-5 py-2.5 text-sm font-semibold transition hover:border-[#22c55e]/40 hover:bg-[#ffffff]"
+              className="rounded-lg border border-[#D7E3F2] px-5 py-2.5 text-sm font-semibold hover:border-[#1677FF]/40 hover:bg-[#F5F8FC]"
             >
               Log In
             </Link>
             <Link
               href="/signup"
-              className="rounded-lg bg-[#22c55e] px-6 py-2.5 text-sm font-semibold text-white transition hover:bg-[#16a34a]"
+              className="rounded-lg bg-[#1677FF] px-6 py-2.5 text-sm font-semibold text-white hover:bg-[#0F65E8]"
             >
               Sign Up
             </Link>
@@ -990,7 +905,7 @@ export default function Home() {
             onClick={() => setMenuOpen((open) => !open)}
             aria-label={menuOpen ? "Close menu" : "Open menu"}
             aria-expanded={menuOpen}
-            className="grid h-11 w-11 place-items-center rounded-lg border border-[#dbe3ee] text-[#111827] xl:hidden"
+            className="grid h-11 w-11 place-items-center rounded-lg border border-[#D7E3F2] text-[#0B1739] xl:hidden"
           >
             {menuOpen ? (
               <X className="h-5 w-5" />
@@ -1001,7 +916,7 @@ export default function Home() {
         </nav>
 
         {menuOpen && (
-          <div className="border-t border-[#dbe3ee] bg-white xl:hidden">
+          <div className="border-t border-[#D7E3F2] bg-white xl:hidden">
             <div className={`${shellClass} py-5`}>
               <div className="flex flex-col gap-1 text-sm font-semibold">
                 {navLinks.map((link) => (
@@ -1009,7 +924,7 @@ export default function Home() {
     key={link.label}
     href={link.href}
     onClick={() => setMenuOpen(false)}
-    className="rounded-lg px-3 py-3 transition hover:bg-[#ffffff] hover:text-[#22c55e]"
+    className="rounded-lg px-3 py-3 hover:bg-[#F5F8FC] hover:text-[#1677FF]"
   >
     {link.label}
   </a>
@@ -1017,22 +932,22 @@ export default function Home() {
                 <Link
                   href="/pricing"
                   onClick={() => setMenuOpen(false)}
-                  className="rounded-lg px-3 py-3 transition hover:bg-[#ffffff] hover:text-[#22c55e]"
+                  className="rounded-lg px-3 py-3 hover:bg-[#F5F8FC] hover:text-[#1677FF]"
                 >
                   Pricing
                 </Link>
               </div>
 
-              <div className="mt-4 flex flex-col gap-3 border-t border-[#dbe3ee] pt-4 sm:flex-row">
+              <div className="mt-4 flex flex-col gap-3 border-t border-[#D7E3F2] pt-4 sm:flex-row">
                 <Link
                   href="/login"
-                  className="w-full rounded-lg border border-[#dbe3ee] px-6 py-3 text-center text-sm font-semibold transition hover:border-[#22c55e]/40"
+                  className="w-full rounded-lg border border-[#D7E3F2] px-6 py-3 text-center text-sm font-semibold hover:border-[#1677FF]/40"
                 >
                   Log In
                 </Link>
                 <Link
                   href="/signup"
-                  className="w-full rounded-lg bg-[#22c55e] px-7 py-3 text-center text-sm font-semibold text-white transition hover:bg-[#16a34a]"
+                  className="w-full rounded-lg bg-[#1677FF] px-7 py-3 text-center text-sm font-semibold text-white hover:bg-[#0F65E8]"
                 >
                   Sign Up
                 </Link>
@@ -1043,22 +958,38 @@ export default function Home() {
       </header>
 
       {/* HERO */}
-      <section className="relative overflow-hidden bg-[#ffffff]">
+      <section className="relative overflow-hidden border-b border-[#D7E3F2] bg-white">
         <div
-          className={`${shellClass} relative grid items-center gap-10 py-12 sm:py-14 lg:grid-cols-[minmax(0,1.2fr)_minmax(360px,430px)] lg:gap-16 lg:py-16 xl:gap-20 xl:py-20`}
+          aria-hidden="true"
+          className="pointer-events-none absolute inset-0 bg-[linear-gradient(135deg,#FFFFFF_0%,#FFFFFF_46%,#F5F8FC_46%,#F5F8FC_72%,#EAF3FF_100%)]"
+        />
+        <div
+          aria-hidden="true"
+          className="pointer-events-none absolute -right-32 -top-40 h-[620px] w-[620px] rounded-full bg-[#EAF3FF]/80"
+        />
+        <div
+          aria-hidden="true"
+          className="pointer-events-none absolute right-[28%] top-[-18%] h-[650px] w-[190px] rotate-[18deg] rounded-[999px] bg-white/80"
+        />
+        <div
+          aria-hidden="true"
+          className="pointer-events-none absolute -bottom-40 left-[38%] h-[340px] w-[680px] rotate-[-8deg] rounded-[999px] bg-white/90"
+        />
+
+        <div
+          className={`${shellClass} relative grid items-center gap-12 py-14 sm:py-16 xl:grid-cols-[minmax(0,0.88fr)_minmax(0,1.12fr)] xl:gap-10 xl:py-20 2xl:grid-cols-[minmax(0,0.84fr)_minmax(0,1.16fr)] 2xl:gap-12 2xl:py-24`}
         >
           <div className="min-w-0">
-            <p className="text-xs font-bold uppercase tracking-[0.24em] text-[#22c55e] sm:text-sm">
+            <p className="text-xs font-bold uppercase tracking-[0.24em] text-[#1677FF] sm:text-sm">
               AI-Powered Learning for Students and Self-Learners
             </p>
 
-            <h1 className="mt-5 max-w-[860px] text-[3.1rem] font-semibold leading-[1.12] tracking-[-0.035em] text-[#111827] sm:mt-6 sm:text-[3.9rem] xl:text-[4.55rem]">
-  <span className="block">AI instructors that</span>
-  <span className="block">teach, check, and</span>
-  <span className="block text-[#22c55e]">adapt to you.</span>
-</h1>
+            <h1 className="mt-5 max-w-[690px] text-[2.85rem] font-extrabold leading-[1.04] tracking-[-0.045em] text-[#0B1739] sm:mt-6 sm:text-[3.55rem] xl:text-[3.85rem] 2xl:text-[4.2rem]">
+              <span className="block">Learn Smarter with</span>
+              <span className="block text-[#1677FF]">AI Instructors.</span>
+            </h1>
 
-            <p className="mt-6 max-w-[760px] text-base leading-7 text-[#4b5563] sm:mt-7 sm:text-lg sm:leading-8 lg:text-lg lg:leading-8">
+            <p className="mt-6 max-w-[650px] text-base leading-7 text-[#53657D] sm:mt-7 sm:text-lg sm:leading-8 xl:max-w-[590px] xl:text-base 2xl:max-w-[640px] 2xl:text-lg">
               GAHN AI helps students and self-learners build real skills through
               structured lessons. Instead of only giving answers, the AI teaches
               concepts, gives practice, checks understanding, corrects mistakes,
@@ -1068,7 +999,7 @@ export default function Home() {
             <div className="mt-7 flex flex-col gap-3 sm:mt-8 sm:flex-row sm:flex-wrap sm:gap-4">
               <Link
                 href="/signup"
-                className="inline-flex w-full items-center justify-center rounded-lg bg-[#22c55e] px-7 py-3.5 text-sm font-semibold text-white transition hover:bg-[#16a34a] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#22c55e] focus-visible:ring-offset-2 sm:w-auto sm:px-8 sm:text-base"
+                className="inline-flex w-full items-center justify-center rounded-lg bg-[#1677FF] px-7 py-3.5 text-sm font-semibold text-white hover:bg-[#0F65E8] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#1677FF] focus-visible:ring-offset-2 sm:w-auto sm:px-8 sm:text-base"
               >
                 Start Learning
               </Link>
@@ -1076,13 +1007,13 @@ export default function Home() {
               <a
                               
                 href="#how-it-works"
-                className="inline-flex w-full items-center justify-center gap-2 rounded-lg border border-[#dbe3ee] bg-white px-8 py-4 text-base font-semibold text-[#111827] transition hover:border-[#22c55e]/40 sm:w-auto sm:px-9"
+                className="inline-flex w-full items-center justify-center gap-2 rounded-lg border border-[#D7E3F2] bg-white px-8 py-4 text-base font-semibold text-[#0B1739] hover:border-[#1677FF]/40 sm:w-auto sm:px-9"
               >
                 See How It Works <ArrowRight className="h-4 w-4" />
               </a>
             </div>
 
-            <div className="mt-9 grid grid-cols-2 gap-x-5 gap-y-6 border-t border-[#dbe3ee] pt-7 sm:mt-10 sm:pt-8 lg:grid-cols-4">
+            <div className="mt-9 grid grid-cols-2 gap-3 rounded-2xl border border-[#D7E3F2] bg-white/80 p-4 shadow-[0_12px_30px_rgba(11,23,57,0.05)] sm:mt-10 sm:p-5 lg:grid-cols-4">
               {[
                 ["Structured Lessons", "Not random chats"],
                 ["Active Practice", "You must think and respond"],
@@ -1090,25 +1021,25 @@ export default function Home() {
                 ["Saved Progress", "Continue where you left off"],
               ].map(([item, sub]) => (
                 <div key={item}>
-                  <p className="flex items-start gap-1.5 text-sm font-bold text-[#111827]">
+                  <p className="flex items-start gap-1.5 text-sm font-bold text-[#0B1739]">
                     <CheckCircle2
-                      className="mt-0.5 h-4 w-4 flex-none text-[#22c55e]"
+                      className="mt-0.5 h-4 w-4 flex-none text-[#1677FF]"
                       strokeWidth={1.75}
                     />
                     <span>{item}</span>
                   </p>
-                  <p className="mt-1 text-sm text-[#4b5563]">{sub}</p>
+                  <p className="mt-1 text-sm text-[#53657D]">{sub}</p>
                 </div>
               ))}
             </div>
           </div>
 
-          <HeroSignupCard />
+          <HeroInstructorShowcase />
         </div>
       </section>
 
       {/* WHO IT IS FOR */}
-      <section className="border-y border-[#dbe3ee] bg-white py-16 sm:py-20">
+      <section className="border-y border-[#D7E3F2] bg-[#F8FBFF] py-16 sm:py-20">
         <div className={shellClass}>
           <SectionIntro
             eyebrow="Who GAHN AI Is For"
@@ -1133,23 +1064,23 @@ export default function Home() {
             ].map((item) => (
               <div
                 key={item.title}
-                className="rounded-2xl border border-[#dbe3ee] bg-[#ffffff] p-6 sm:p-7"
+                className="rounded-2xl border border-[#D7E3F2] bg-[#ffffff] p-6 sm:p-7"
               >
-                <h3 className="text-xl font-bold text-[#111827]">
+                <h3 className="text-xl font-bold text-[#0B1739]">
                   {item.title}
                 </h3>
-                <p className="mt-4 text-base leading-7 text-[#4b5563]">
+                <p className="mt-4 text-base leading-7 text-[#53657D]">
                   {item.text}
                 </p>
               </div>
             ))}
           </div>
 
-          <div className="mt-8 rounded-2xl border border-[#dbe3ee] bg-[#ffffff] px-6 py-7 sm:px-8 sm:py-8">
-            <p className="text-xs font-bold uppercase tracking-[0.22em] text-[#22c55e]">
+          <div className="mt-8 rounded-2xl border border-[#D7E3F2] bg-[#ffffff] px-6 py-7 sm:px-8 sm:py-8">
+            <p className="text-xs font-bold uppercase tracking-[0.22em] text-[#1677FF]">
               Why It Is Different
             </p>
-            <p className="mt-3 max-w-5xl text-lg leading-8 text-[#111827] sm:text-xl">
+            <p className="mt-3 max-w-5xl text-lg leading-8 text-[#0B1739] sm:text-xl">
               Traditional chatbots answer questions. GAHN AI manages the learning
               process by teaching a concept, asking the learner to do something,
               checking the response, correcting misunderstandings, and requiring
@@ -1176,49 +1107,48 @@ export default function Home() {
         </div>
       </section>
 
-      {/* INSTRUCTORS */}
+      {/* AI INSTRUCTOR EXPERIENCE */}
       <section
         id="instructors"
-        className="scroll-mt-24 bg-white py-20 sm:py-24"
+        className="scroll-mt-24 border-y border-[#D7E3F2] bg-[#F8FBFF] py-20 sm:py-24"
       >
         <div className={shellClass}>
           <SectionIntro
-            eyebrow="AI Instructors"
-            title="Learn from specialized AI instructors."
-            text="Choose from focused AI instructors built for different fields and industries."
+            eyebrow="AI Instructor Experience"
+            title="See how an AI instructor teaches."
+            text="The instructor experience is designed to feel natural and familiar while the software underneath handles structured teaching, feedback, correction, and problem solving."
           />
 
-          <div className="grid gap-6 xl:grid-cols-2">
-  {instructors.map((instructor, index) => (
-    <div
-      key={instructor.name}
-      className={
-        index === instructors.length - 1
-          ? "xl:col-span-2 xl:mx-auto xl:w-[calc(50%-12px)]"
-          : ""
-      }
-    >
-      <InstructorCard {...instructor} />
-    </div>
-  ))}
-</div>
+          <div className="mx-auto grid max-w-6xl gap-7 lg:grid-cols-[minmax(0,1.25fr)_minmax(0,0.75fr)] lg:items-stretch">
+            <div className="relative flex min-h-[280px] min-w-0 w-full items-center justify-center overflow-hidden rounded-[1.75rem] border-2 border-dashed border-[#C7D9F0] bg-white shadow-[0_18px_50px_rgba(11,23,57,0.055)] sm:min-h-[360px] lg:min-h-[420px]">
+              <div
+                aria-hidden="true"
+                className="pointer-events-none absolute inset-0 bg-[linear-gradient(135deg,#FFFFFF_0%,#FFFFFF_52%,#F5F8FC_52%,#EAF3FF_100%)]"
+              />
+              <div className="relative px-6 text-center">
+                <div className="mx-auto grid h-14 w-14 place-items-center rounded-2xl bg-[#EAF3FF] text-[#1677FF]">
+                  <Bot className="h-6 w-6" strokeWidth={1.7} />
+                </div>
+                <p className="mt-4 text-sm font-bold text-[#0B1739] sm:text-base">
+                  AI instructor demo video
+                </p>
+                <p className="mt-2 text-sm text-[#53657D]">
+                  Your instructor video will appear here when you add the file.
+                </p>
+              </div>
+            </div>
 
-          <div className="mx-auto mt-10 max-w-4xl rounded-2xl border border-[#dbe3ee] bg-[#ffffff] p-6 sm:p-8">
-            <h3 className="text-lg font-bold text-[#111827] sm:text-xl">
-              Designed to feel approachable. Built for serious learning.
-            </h3>
-            <p className="mt-3 text-sm leading-7 text-[#4b5563] sm:text-base sm:leading-8">
-              While GAHN AI features friendly 3D instructors, the platform is
-              designed primarily for teens and adults seeking meaningful skill
-              development. Every lesson is built around evidence-based learning
-              principles—including active recall, spaced repetition, retrieval
-              practice, the Feynman Technique, blurting, interleaving, deliberate
-              practice, mastery learning, adaptive feedback, and guided
-              practice—to improve long-term understanding rather than short-term
-              memorization. Instructors communicate in a clear, professional, and
-              age-appropriate manner while adapting to each learner&apos;s pace
-              and progress.
-            </p>
+            <div className="min-w-0 flex flex-col justify-center rounded-[1.75rem] border border-[#D7E3F2] bg-white p-7 shadow-[0_18px_50px_rgba(11,23,57,0.05)] sm:p-8">
+              <p className="text-xs font-bold uppercase tracking-[0.22em] text-[#1677FF]">
+                Simple on the surface
+              </p>
+              <h3 className="mt-4 text-2xl font-extrabold leading-tight tracking-[-0.025em] text-[#0B1739] sm:text-3xl">
+                Human-looking instructors. Advanced software underneath.
+              </h3>
+              <p className="mt-5 text-sm leading-7 text-[#53657D] sm:text-base sm:leading-8">
+                The instructors are intentionally familiar and easy to interact with, but the system behind them is designed for much more than appearance. Even in the MVP, GAHN AI is focused on structured teaching, adaptive reasoning, mistake correction, and real problem solving so the experience can feel natural, polished, and high-end without becoming complicated to use.
+              </p>
+            </div>
           </div>
         </div>
       </section>
@@ -1246,19 +1176,19 @@ export default function Home() {
       {/* PLATFORM PREVIEW */}
       <section
         id="platform"
-        className="scroll-mt-24 bg-[#ffffff] py-20 sm:py-24"
+        className="scroll-mt-24 bg-[#F8FBFF] py-20 sm:py-24"
       >
         <div
           className={`${shellClass} grid items-center gap-12 lg:grid-cols-[360px_minmax(0,1fr)] lg:gap-14 xl:grid-cols-[410px_minmax(0,1fr)]`}
         >
           <div>
-            <p className="text-xs font-bold uppercase tracking-[0.24em] text-[#22c55e]">
+            <p className="text-xs font-bold uppercase tracking-[0.24em] text-[#1677FF]">
               Platform Preview
             </p>
             <h2 className="mt-4 text-3xl font-extrabold leading-tight tracking-[-0.02em] sm:text-4xl lg:text-5xl">
               A dashboard built for learning action.
             </h2>
-            <p className="mt-5 text-base leading-7 text-[#4b5563] sm:text-lg sm:leading-8">
+            <p className="mt-5 text-base leading-7 text-[#53657D] sm:text-lg sm:leading-8">
               The dashboard is where users choose learning worlds, meet AI
               instructors, continue lessons, track progress, save notes, and
               build a skill portfolio over time.
@@ -1268,10 +1198,10 @@ export default function Home() {
               {platformFeatures.map((feature) => (
                 <li key={feature} className="flex items-start gap-3">
                   <CheckCircle2
-                    className="mt-1 h-5 w-5 flex-none text-[#22c55e]"
+                    className="mt-1 h-5 w-5 flex-none text-[#1677FF]"
                     strokeWidth={1.75}
                   />
-                  <span className="text-base leading-7 text-[#4b5563]">
+                  <span className="text-base leading-7 text-[#53657D]">
                     {feature}
                   </span>
                 </li>
@@ -1283,7 +1213,7 @@ export default function Home() {
         </div>
 
         <div className={`${shellClass} mt-10 sm:mt-14`}>
-          <p className="text-sm font-bold text-[#111827]">Every page you'll actually use:</p>
+          <p className="text-sm font-bold text-[#0B1739]">Every page you'll actually use:</p>
           <div className="mt-5 grid gap-4 sm:grid-cols-2 lg:grid-cols-5">
             {previewPages.map((page) => (
               <PreviewMiniCard key={page.title} {...page} />
@@ -1295,15 +1225,15 @@ export default function Home() {
       {/* CTA BANNER */}
       <section className="bg-white py-20 sm:py-24">
         <div className={shellClass}>
-          <div className="flex flex-col items-start justify-between gap-8 rounded-2xl border border-[#dbe3ee] bg-[#ffffff] px-6 py-9 sm:px-8 sm:py-10 lg:flex-row lg:items-center lg:px-10 lg:py-12">
+          <div className="relative overflow-hidden flex flex-col items-start justify-between gap-8 rounded-[1.5rem] border border-[#D7E3F2] bg-[linear-gradient(135deg,#FFFFFF_0%,#F8FBFF_60%,#EAF3FF_100%)] px-6 py-9 shadow-[0_18px_50px_rgba(11,23,57,0.06)] sm:px-8 sm:py-10 lg:flex-row lg:items-center lg:px-10 lg:py-12">
             <div>
-              <p className="text-xs font-bold uppercase tracking-[0.24em] text-[#22c55e]">
+              <p className="text-xs font-bold uppercase tracking-[0.24em] text-[#1677FF]">
                 Get started today
               </p>
-              <h2 className="mt-3 max-w-3xl text-2xl font-extrabold leading-tight tracking-[-0.02em] text-[#111827] sm:text-3xl lg:text-4xl">
+              <h2 className="mt-3 max-w-3xl text-2xl font-extrabold leading-tight tracking-[-0.02em] text-[#0B1739] sm:text-3xl lg:text-4xl">
                 Your first AI-guided lesson is one click away.
               </h2>
-              <p className="mt-3 max-w-xl text-base leading-7 text-[#4b5563]">
+              <p className="mt-3 max-w-xl text-base leading-7 text-[#53657D]">
                 New users create an account first. Returning users log in with
                 their email.
               </p>
@@ -1311,8 +1241,8 @@ export default function Home() {
               <div className="mt-6 flex flex-wrap gap-x-6 gap-y-2">
                 {["No credit card required to start", "Cancel anytime", "Built for every learner"].map(
                   (point) => (
-                    <p key={point} className="flex items-center gap-2 text-sm font-semibold text-[#4b5563]">
-                      <CheckCircle2 className="h-4 w-4 flex-none text-[#22c55e]" strokeWidth={1.75} />
+                    <p key={point} className="flex items-center gap-2 text-sm font-semibold text-[#53657D]">
+                      <CheckCircle2 className="h-4 w-4 flex-none text-[#1677FF]" strokeWidth={1.75} />
                       {point}
                     </p>
                   )
@@ -1323,13 +1253,13 @@ export default function Home() {
             <div className="flex w-full flex-col gap-3 sm:w-auto sm:flex-row sm:gap-4 lg:flex-none">
               <Link
                 href="/signup"
-                className="w-full rounded-lg bg-[#22c55e] px-8 py-4 text-center text-sm font-semibold text-white transition hover:bg-[#16a34a] sm:w-auto"
+                className="w-full rounded-lg bg-[#1677FF] px-8 py-4 text-center text-sm font-semibold text-white hover:bg-[#0F65E8] sm:w-auto"
               >
                 Sign Up
               </Link>
               <Link
                 href="/login"
-                className="w-full rounded-lg border border-[#dbe3ee] bg-white px-8 py-4 text-center text-sm font-semibold text-[#111827] transition hover:border-[#22c55e]/40 sm:w-auto"
+                className="w-full rounded-lg border border-[#D7E3F2] bg-white px-8 py-4 text-center text-sm font-semibold text-[#0B1739] hover:border-[#1677FF]/40 sm:w-auto"
               >
                 Log In
               </Link>
@@ -1339,7 +1269,7 @@ export default function Home() {
       </section>
 
       {/* FOOTER */}
-      <footer className="border-t border-[#dbe3ee] bg-white py-14">
+      <footer className="border-t border-[#D7E3F2] bg-white py-14">
         <div className={shellClass}>
           <div className="flex flex-col items-start justify-between gap-6 sm:flex-row sm:items-center">
             <Link href="/" className="flex items-center gap-3">
@@ -1352,30 +1282,30 @@ export default function Home() {
                 <p className="text-base font-extrabold tracking-[-0.02em]">
                   GAHN AI
                 </p>
-                <p className="text-[8px] font-bold uppercase tracking-[0.16em] text-[#4b5563]">
+                <p className="text-[8px] font-bold uppercase tracking-[0.16em] text-[#53657D]">
                   Global AI Human Helper Network
                 </p>
               </div>
             </Link>
 
-            <div className="flex flex-wrap items-center gap-6 text-sm font-semibold text-[#4b5563]">
-              <Link href="/about" className="transition hover:text-[#22c55e]">
+            <div className="flex flex-wrap items-center gap-6 text-sm font-semibold text-[#53657D]">
+              <Link href="/about" className="hover:text-[#1677FF]">
                 About
               </Link>
-              <Link href="/contact" className="transition hover:text-[#22c55e]">
+              <Link href="/contact" className="hover:text-[#1677FF]">
                 Contact
               </Link>
-              <Link href="/privacy" className="transition hover:text-[#22c55e]">
+              <Link href="/privacy" className="hover:text-[#1677FF]">
                 Privacy Policy
               </Link>
-              <Link href="/terms" className="transition hover:text-[#22c55e]">
+              <Link href="/terms" className="hover:text-[#1677FF]">
                 Terms of Service
               </Link>
             </div>
           </div>
 
-          <div className="mt-12 flex flex-col items-center justify-between gap-4 border-t border-[#dbe3ee] pt-8 sm:flex-row">
-            <p className="text-xs text-[#4b5563]">
+          <div className="mt-12 flex flex-col items-center justify-between gap-4 border-t border-[#D7E3F2] pt-8 sm:flex-row">
+            <p className="text-xs text-[#53657D]">
               © 2026 GAHN AI. All rights reserved.
             </p>
 

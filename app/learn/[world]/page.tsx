@@ -436,22 +436,22 @@ export default function LearningWorldPage() {
 
   if (!learningWorld) {
     return (
-      <main className="min-h-screen bg-white px-6 py-12 text-[#111827]">
+      <main className="min-h-screen bg-[#F8FBFF] px-6 py-12 text-[#0B1739]">
         <div className="mx-auto max-w-4xl">
           <Link
             href="/dashboard"
-            className="inline-flex items-center gap-2 text-sm font-semibold text-[#16a34a]"
+            className="inline-flex items-center gap-2 text-sm font-semibold text-[#1677FF] hover:text-[#0F65E8]"
           >
             <ArrowLeft className="h-4 w-4" />
             Back to Dashboard
           </Link>
 
-          <div className="mt-12 rounded-2xl border border-[#dbe3ee] bg-white p-10 text-center shadow-sm">
+          <div className="mt-12 rounded-[1.5rem] border border-[#D7E3F2] bg-white p-10 text-center shadow-[0_18px_55px_rgba(11,23,57,0.08)]">
             <h1 className="text-3xl font-extrabold">
               Learning world not found
             </h1>
 
-            <p className="mt-3 text-[#4b5563]">
+            <p className="mt-3 text-[#53657D]">
               This learning world does not exist.
             </p>
           </div>
@@ -480,50 +480,75 @@ export default function LearningWorldPage() {
   }
 
   return (
-    <main className="min-h-screen bg-white px-5 py-8 text-[#111827] sm:px-8 lg:px-10">
+    <main className="min-h-screen bg-[#F8FBFF] px-5 py-8 font-sans text-[#0B1739] sm:px-8 lg:px-10">
       <div className="mx-auto max-w-7xl">
-        <Link
-          href="/dashboard"
-          className="inline-flex items-center gap-2 text-sm font-semibold text-[#16a34a] transition hover:text-[#15803d]"
-        >
-          <ArrowLeft className="h-4 w-4" />
-          Back to Dashboard
-        </Link>
+        <div className="flex items-center justify-between gap-4">
+          <Link
+            href="/dashboard"
+            className="inline-flex items-center gap-2 text-sm font-semibold text-[#53657D] hover:text-[#1677FF]"
+          >
+            <ArrowLeft className="h-4 w-4" />
+            Back to Dashboard
+          </Link>
 
-        <section className="mt-8 rounded-2xl border border-[#dbe3ee] bg-white p-6 shadow-sm sm:p-8 lg:p-10">
-          <div className="flex flex-col gap-5 sm:flex-row sm:items-center">
-            <div className="grid h-16 w-16 shrink-0 place-items-center rounded-2xl bg-[#dcfce7] text-[#16a34a]">
+          <Link href="/" className="flex items-center gap-2">
+            <img
+              src="/logo/favicon.png"
+              alt="GAHN AI"
+              className="h-9 w-9 rounded-full object-cover"
+            />
+            <span className="hidden text-sm font-extrabold sm:block">
+              GAHN AI
+            </span>
+          </Link>
+        </div>
+
+        <section className="relative mt-8 overflow-hidden rounded-[1.75rem] border border-[#D7E3F2] bg-white p-6 shadow-[0_18px_55px_rgba(11,23,57,0.07)] sm:p-8 lg:p-10">
+          <div
+            aria-hidden="true"
+            className="pointer-events-none absolute -right-24 -top-28 h-72 w-72 rounded-full bg-[#EAF3FF]"
+          />
+          <div
+            aria-hidden="true"
+            className="pointer-events-none absolute -bottom-24 left-[35%] h-44 w-96 rotate-[-8deg] rounded-[999px] bg-[#F5F8FC]"
+          />
+
+          <div className="relative flex flex-col gap-5 sm:flex-row sm:items-center">
+            <div className="grid h-16 w-16 shrink-0 place-items-center rounded-2xl bg-[#EAF3FF] text-[#1677FF]">
               <Icon className="h-7 w-7" strokeWidth={1.75} />
             </div>
 
             <div>
-              <p className="text-xs font-bold uppercase tracking-[0.18em] text-[#22c55e]">
+              <p className="text-xs font-bold uppercase tracking-[0.22em] text-[#1677FF]">
                 Learning World
               </p>
 
-              <h1 className="mt-2 text-3xl font-extrabold tracking-[-0.02em] sm:text-4xl">
+              <h1 className="mt-2 text-3xl font-extrabold tracking-[-0.03em] sm:text-4xl lg:text-5xl">
                 {title}
               </h1>
 
-              <p className="mt-3 max-w-3xl text-sm leading-7 text-[#4b5563] sm:text-base">
+              <p className="mt-3 max-w-3xl text-sm leading-7 text-[#53657D] sm:text-base">
                 {description}
               </p>
             </div>
           </div>
         </section>
 
-        <section className="mt-6 rounded-2xl border border-[#bbf7d0] bg-[#f0fdf4] p-6 sm:p-8">
+        <section className="mt-6 rounded-[1.5rem] border border-[#CFE0F5] bg-[linear-gradient(135deg,#FFFFFF_0%,#F8FBFF_58%,#EAF3FF_100%)] p-6 sm:p-8">
           <div className="flex items-start gap-3">
-            <div className="grid h-10 w-10 shrink-0 place-items-center rounded-xl bg-white text-[#16a34a]">
+            <div className="grid h-11 w-11 shrink-0 place-items-center rounded-xl bg-white text-[#1677FF] shadow-sm">
               <Sparkles className="h-5 w-5" strokeWidth={1.75} />
             </div>
 
             <div>
-              <h2 className="text-xl font-extrabold">
+              <p className="text-xs font-bold uppercase tracking-[0.2em] text-[#1677FF]">
+                Start with anything
+              </p>
+              <h2 className="mt-1 text-2xl font-extrabold tracking-[-0.02em]">
                 What do you want to learn?
               </h2>
 
-              <p className="mt-1 text-sm leading-6 text-[#4b5563]">
+              <p className="mt-2 text-sm leading-6 text-[#53657D]">
                 You are not limited to the categories below. Ask about almost
                 any topic that belongs in {title}.
               </p>
@@ -536,7 +561,7 @@ export default function LearningWorldPage() {
           >
             <div className="relative flex-1">
               <Search
-                className="pointer-events-none absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-[#6b7280]"
+                className="pointer-events-none absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-[#7A8AA0]"
                 strokeWidth={1.75}
               />
 
@@ -544,14 +569,14 @@ export default function LearningWorldPage() {
                 value={learningRequest}
                 onChange={(event) => setLearningRequest(event.target.value)}
                 placeholder={placeholder}
-                className="h-14 w-full rounded-xl border border-[#dbe3ee] bg-white pl-12 pr-4 text-sm outline-none transition focus:border-[#22c55e] focus:ring-2 focus:ring-[#22c55e]/15"
+                className="h-14 w-full rounded-xl border border-[#D7E3F2] bg-white pl-12 pr-4 text-sm text-[#0B1739] outline-none placeholder:text-[#7A8AA0] focus:border-[#1677FF] focus:ring-2 focus:ring-[#1677FF]/15"
               />
             </div>
 
             <button
               type="submit"
               disabled={!learningRequest.trim()}
-              className="inline-flex h-14 items-center justify-center gap-2 rounded-xl bg-[#22c55e] px-6 text-sm font-bold text-white transition hover:bg-[#16a34a] disabled:cursor-not-allowed disabled:bg-[#d1d5db]"
+              className="inline-flex h-14 items-center justify-center gap-2 rounded-xl bg-[#1677FF] px-6 text-sm font-bold text-white hover:bg-[#0F65E8] disabled:cursor-not-allowed disabled:bg-[#B8C7DA]"
             >
               Start Learning
               <ArrowRight className="h-4 w-4" />
@@ -560,25 +585,27 @@ export default function LearningWorldPage() {
         </section>
 
         <section className="mt-10">
-          <h2 className="text-2xl font-extrabold tracking-[-0.02em]">
-            Explore {title}
-          </h2>
-
-          <p className="mt-2 text-sm text-[#4b5563]">
-            Choose a category or start with a specific topic.
-          </p>
+          <div>
+            <p className="text-xs font-bold uppercase tracking-[0.22em] text-[#1677FF]">
+              Explore Topics
+            </p>
+            <h2 className="mt-2 text-3xl font-extrabold tracking-[-0.03em]">
+              Explore {title}
+            </h2>
+            <p className="mt-2 text-sm text-[#53657D]">
+              Choose a category or start with a specific topic.
+            </p>
+          </div>
 
           <div className="mt-6 grid gap-5 lg:grid-cols-2">
             {categories.map((category) => (
               <div
                 key={category.title}
-                className="rounded-2xl border border-[#dbe3ee] bg-white p-6 shadow-sm"
+                className="rounded-[1.5rem] border border-[#D7E3F2] bg-white p-6 shadow-[0_12px_35px_rgba(11,23,57,0.05)]"
               >
-                <h3 className="text-xl font-bold">
-                  {category.title}
-                </h3>
+                <h3 className="text-xl font-bold">{category.title}</h3>
 
-                <p className="mt-2 text-sm leading-6 text-[#4b5563]">
+                <p className="mt-2 text-sm leading-6 text-[#53657D]">
                   {category.description}
                 </p>
 
@@ -588,7 +615,7 @@ export default function LearningWorldPage() {
                       key={topic}
                       type="button"
                       onClick={() => startLearning(topic)}
-                      className="rounded-full border border-[#dbe3ee] bg-white px-4 py-2 text-sm font-semibold text-[#374151] transition hover:border-[#22c55e] hover:bg-[#f0fdf4] hover:text-[#15803d]"
+                      className="rounded-full border border-[#D7E3F2] bg-white px-4 py-2 text-sm font-semibold text-[#53657D] hover:border-[#1677FF]/45 hover:bg-[#F1F7FF] hover:text-[#1677FF]"
                     >
                       {topic}
                     </button>
@@ -598,7 +625,7 @@ export default function LearningWorldPage() {
                 <button
                   type="button"
                   onClick={() => startLearning(category.title)}
-                  className="mt-6 inline-flex items-center gap-2 text-sm font-bold text-[#16a34a] transition hover:text-[#15803d]"
+                  className="mt-6 inline-flex items-center gap-2 text-sm font-bold text-[#1677FF] hover:text-[#0F65E8]"
                 >
                   Learn about {category.title}
                   <ArrowRight className="h-4 w-4" />
@@ -608,12 +635,15 @@ export default function LearningWorldPage() {
           </div>
         </section>
 
-        <section className="mt-10 rounded-2xl border border-[#dbe3ee] bg-white p-6 text-center shadow-sm sm:p-8">
-          <h2 className="text-xl font-extrabold">
-            Can't find what you're looking for?
+        <section className="mt-10 rounded-[1.5rem] border border-[#D7E3F2] bg-white p-6 text-center shadow-[0_12px_35px_rgba(11,23,57,0.05)] sm:p-8">
+          <p className="text-xs font-bold uppercase tracking-[0.2em] text-[#1677FF]">
+            Custom Learning
+          </p>
+          <h2 className="mt-2 text-xl font-extrabold">
+            Can&apos;t find what you&apos;re looking for?
           </h2>
 
-          <p className="mx-auto mt-2 max-w-2xl text-sm leading-6 text-[#4b5563]">
+          <p className="mx-auto mt-2 max-w-2xl text-sm leading-6 text-[#53657D]">
             Use the search box above. GAHN AI is designed to build a learning
             path around what you actually want or need to learn.
           </p>

@@ -2,7 +2,14 @@
 
 import Link from "next/link";
 import { useState } from "react";
-import { ArrowLeft, CheckCircle2, Send } from "lucide-react";
+import {
+  ArrowLeft,
+  Building2,
+  CheckCircle2,
+  MessageSquare,
+  Send,
+  ShieldCheck,
+} from "lucide-react";
 
 export default function ContactPage() {
   const [name, setName] = useState("");
@@ -63,22 +70,35 @@ export default function ContactPage() {
   }
 
   return (
-    <main className="min-h-screen bg-white px-5 py-8 text-[#111827] sm:px-8 sm:py-12">
-      <div className="mx-auto max-w-6xl">
-        <header className="flex items-center justify-between">
-          <Link href="/" className="flex items-center gap-3">
+    <main className="relative min-h-screen overflow-hidden bg-white px-5 py-8 font-sans text-[#0B1739] sm:px-8 sm:py-10">
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-0 bg-[linear-gradient(135deg,#FFFFFF_0%,#FFFFFF_54%,#F5F8FC_54%,#EAF3FF_100%)]"
+      />
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute -right-56 -top-56 h-[700px] w-[700px] rounded-full bg-[#EAF3FF]/80"
+      />
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute bottom-[-260px] left-[4%] h-[430px] w-[800px] rotate-[-8deg] rounded-[999px] bg-white/90"
+      />
+
+      <div className="relative mx-auto max-w-6xl">
+        <header className="flex items-center justify-between gap-4">
+          <Link href="/" className="flex min-w-0 items-center gap-3">
             <img
               src="/logo/favicon.png"
               alt="GAHN AI"
-              className="h-11 w-11 rounded-full object-cover"
+              className="h-11 w-11 flex-none rounded-full object-cover"
             />
 
-            <div>
-              <p className="text-xl font-extrabold tracking-[-0.025em]">
+            <div className="min-w-0">
+              <p className="truncate text-xl font-extrabold tracking-[-0.025em]">
                 GAHN AI
               </p>
 
-              <p className="hidden text-[8px] font-bold uppercase tracking-[0.16em] text-[#4b5563] sm:block">
+              <p className="hidden text-[8px] font-bold uppercase tracking-[0.18em] text-[#53657D] sm:block">
                 Global AI Human Helper Network
               </p>
             </div>
@@ -86,53 +106,83 @@ export default function ContactPage() {
 
           <Link
             href="/"
-            className="inline-flex items-center gap-2 text-sm font-semibold text-[#22c55e] transition hover:text-[#16a34a]"
+            className="inline-flex items-center gap-2 text-sm font-semibold text-[#53657D] hover:text-[#1677FF]"
           >
             <ArrowLeft className="h-4 w-4" />
             Back Home
           </Link>
         </header>
 
-        <section className="grid gap-10 py-14 lg:grid-cols-[minmax(0,0.8fr)_minmax(500px,1.2fr)] lg:items-start lg:gap-16 lg:py-20">
-          <div className="pt-4">
-            <p className="text-xs font-bold uppercase tracking-[0.24em] text-[#22c55e]">
+        <section className="grid gap-10 py-12 sm:py-16 lg:grid-cols-[0.88fr_1.12fr] lg:items-start lg:gap-14 lg:py-20">
+          <div className="pt-3 lg:pt-8">
+            <p className="text-xs font-bold uppercase tracking-[0.24em] text-[#1677FF]">
               Contact GAHN AI
             </p>
 
-            <h1 className="mt-4 text-4xl font-extrabold leading-tight tracking-[-0.03em] sm:text-5xl lg:text-6xl">
-              How can we help?
+            <h1 className="mt-5 max-w-xl text-4xl font-extrabold leading-[1.05] tracking-[-0.04em] sm:text-5xl lg:text-6xl">
+              How can we{" "}
+              <span className="text-[#1677FF]">help?</span>
             </h1>
 
-            <p className="mt-6 max-w-xl text-base leading-8 text-[#4b5563] sm:text-lg">
+            <p className="mt-6 max-w-xl text-base leading-8 text-[#53657D] sm:text-lg">
               Send us a message about support, partnerships, schools, product
-              feedback, or general questions. We will review your message and
+              feedback, or general questions. We&apos;ll review your message and
               respond through the email address you provide.
             </p>
 
-            <div className="mt-8 space-y-4">
+            <div className="mt-10 space-y-5">
               {[
-                "General questions and account support",
-                "School and organization partnerships",
-                "Product feedback and suggestions",
-              ].map((item) => (
-                <div key={item} className="flex items-start gap-3">
-                  <CheckCircle2
-                    className="mt-1 h-5 w-5 flex-none text-[#22c55e]"
-                    strokeWidth={1.75}
-                  />
+                {
+                  Icon: MessageSquare,
+                  title: "General support",
+                  text: "Questions about accounts, access, learning worlds, or using the platform.",
+                },
+                {
+                  Icon: Building2,
+                  title: "Schools and partnerships",
+                  text: "Talk with us about classrooms, organizations, or future institutional use.",
+                },
+                {
+                  Icon: ShieldCheck,
+                  title: "Product feedback",
+                  text: "Share suggestions, bugs, or ideas that can improve the GAHN AI MVP.",
+                },
+              ].map(({ Icon, title, text }) => (
+                <div key={title} className="flex gap-4">
+                  <div className="grid h-12 w-12 flex-none place-items-center rounded-xl bg-[#EAF3FF] text-[#1677FF]">
+                    <Icon className="h-5 w-5" strokeWidth={1.75} />
+                  </div>
 
-                  <p className="text-sm leading-7 text-[#4b5563]">{item}</p>
+                  <div>
+                    <h2 className="text-base font-bold text-[#0B1739]">
+                      {title}
+                    </h2>
+                    <p className="mt-1 text-sm leading-6 text-[#53657D]">
+                      {text}
+                    </p>
+                  </div>
                 </div>
               ))}
             </div>
+
+            <div className="mt-10 rounded-2xl border border-[#D7E3F2] bg-white/85 p-5 shadow-[0_12px_35px_rgba(11,23,57,0.05)]">
+              <p className="flex items-center gap-2 text-sm font-semibold text-[#0B1739]">
+                <CheckCircle2 className="h-4 w-4 text-[#1677FF]" />
+                Messages are handled through the GAHN AI support form.
+              </p>
+            </div>
           </div>
 
-          <div className="rounded-2xl border border-[#dbe3ee] bg-white p-6 shadow-sm sm:p-8 lg:p-10">
-            <h2 className="text-2xl font-extrabold tracking-[-0.02em] sm:text-3xl">
-              Send a message
+          <div className="rounded-[1.75rem] border border-[#D7E3F2] bg-white p-6 shadow-[0_24px_70px_rgba(11,23,57,0.10)] sm:p-8 lg:p-10">
+            <p className="text-xs font-bold uppercase tracking-[0.22em] text-[#1677FF]">
+              Send a Message
+            </p>
+
+            <h2 className="mt-3 text-3xl font-extrabold tracking-[-0.03em] sm:text-4xl">
+              Tell us what you need.
             </h2>
 
-            <p className="mt-3 text-sm leading-7 text-[#4b5563]">
+            <p className="mt-3 text-sm leading-7 text-[#53657D]">
               Complete the form below. Every field is required.
             </p>
 
@@ -140,7 +190,7 @@ export default function ContactPage() {
               <div>
                 <label
                   htmlFor="name"
-                  className="mb-2 block text-sm font-bold text-[#111827]"
+                  className="mb-2 block text-sm font-bold text-[#0B1739]"
                 >
                   Name
                 </label>
@@ -155,14 +205,14 @@ export default function ContactPage() {
                   maxLength={100}
                   required
                   placeholder="Your name"
-                  className="w-full rounded-lg border border-[#dbe3ee] bg-white px-4 py-3.5 text-sm outline-none transition placeholder:text-[#4b5563]/60 focus:border-[#22c55e] focus:ring-2 focus:ring-[#22c55e]/15"
+                  className="w-full rounded-xl border border-[#D7E3F2] bg-white px-4 py-3.5 text-sm text-[#0B1739] outline-none placeholder:text-[#7A8AA0] focus:border-[#1677FF] focus:ring-2 focus:ring-[#1677FF]/15"
                 />
               </div>
 
               <div>
                 <label
                   htmlFor="email"
-                  className="mb-2 block text-sm font-bold text-[#111827]"
+                  className="mb-2 block text-sm font-bold text-[#0B1739]"
                 >
                   Email address
                 </label>
@@ -176,14 +226,14 @@ export default function ContactPage() {
                   onChange={(e) => setEmail(e.target.value)}
                   required
                   placeholder="you@example.com"
-                  className="w-full rounded-lg border border-[#dbe3ee] bg-white px-4 py-3.5 text-sm outline-none transition placeholder:text-[#4b5563]/60 focus:border-[#22c55e] focus:ring-2 focus:ring-[#22c55e]/15"
+                  className="w-full rounded-xl border border-[#D7E3F2] bg-white px-4 py-3.5 text-sm text-[#0B1739] outline-none placeholder:text-[#7A8AA0] focus:border-[#1677FF] focus:ring-2 focus:ring-[#1677FF]/15"
                 />
               </div>
 
               <div>
                 <label
                   htmlFor="subject"
-                  className="mb-2 block text-sm font-bold text-[#111827]"
+                  className="mb-2 block text-sm font-bold text-[#0B1739]"
                 >
                   Subject
                 </label>
@@ -197,7 +247,7 @@ export default function ContactPage() {
                   maxLength={150}
                   required
                   placeholder="What is your message about?"
-                  className="w-full rounded-lg border border-[#dbe3ee] bg-white px-4 py-3.5 text-sm outline-none transition placeholder:text-[#4b5563]/60 focus:border-[#22c55e] focus:ring-2 focus:ring-[#22c55e]/15"
+                  className="w-full rounded-xl border border-[#D7E3F2] bg-white px-4 py-3.5 text-sm text-[#0B1739] outline-none placeholder:text-[#7A8AA0] focus:border-[#1677FF] focus:ring-2 focus:ring-[#1677FF]/15"
                 />
               </div>
 
@@ -205,12 +255,12 @@ export default function ContactPage() {
                 <div className="mb-2 flex items-center justify-between gap-4">
                   <label
                     htmlFor="message"
-                    className="block text-sm font-bold text-[#111827]"
+                    className="block text-sm font-bold text-[#0B1739]"
                   >
                     Message
                   </label>
 
-                  <span className="text-xs text-[#4b5563]">
+                  <span className="text-xs text-[#7A8AA0]">
                     {message.length}/5000
                   </span>
                 </div>
@@ -224,14 +274,14 @@ export default function ContactPage() {
                   required
                   rows={7}
                   placeholder="Write your message here..."
-                  className="w-full resize-y rounded-lg border border-[#dbe3ee] bg-white px-4 py-3.5 text-sm leading-7 outline-none transition placeholder:text-[#4b5563]/60 focus:border-[#22c55e] focus:ring-2 focus:ring-[#22c55e]/15"
+                  className="w-full resize-y rounded-xl border border-[#D7E3F2] bg-white px-4 py-3.5 text-sm leading-7 text-[#0B1739] outline-none placeholder:text-[#7A8AA0] focus:border-[#1677FF] focus:ring-2 focus:ring-[#1677FF]/15"
                 />
               </div>
 
               {errorMessage && (
                 <p
                   role="alert"
-                  className="rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm font-semibold text-red-700"
+                  className="rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm font-semibold text-red-700"
                 >
                   {errorMessage}
                 </p>
@@ -240,7 +290,7 @@ export default function ContactPage() {
               {successMessage && (
                 <p
                   role="status"
-                  className="rounded-lg border border-green-200 bg-green-50 px-4 py-3 text-sm font-semibold text-green-700"
+                  className="rounded-xl border border-blue-200 bg-[#F1F7FF] px-4 py-3 text-sm font-semibold text-[#0F65E8]"
                 >
                   {successMessage}
                 </p>
@@ -249,29 +299,26 @@ export default function ContactPage() {
               <button
                 type="submit"
                 disabled={loading}
-                className="inline-flex w-full items-center justify-center gap-2 rounded-lg bg-[#22c55e] px-6 py-4 text-sm font-semibold text-white transition hover:bg-[#16a34a] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#22c55e] focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-60"
+                className="inline-flex w-full items-center justify-center gap-2 rounded-xl bg-[#1677FF] px-6 py-4 text-sm font-semibold text-white hover:bg-[#0F65E8] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#1677FF] focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-60"
               >
                 <Send className="h-4 w-4" />
-
                 {loading ? "Sending Message..." : "Send Message"}
               </button>
             </form>
           </div>
         </section>
 
-        <footer className="flex flex-col items-center justify-between gap-4 border-t border-[#dbe3ee] py-8 text-xs text-[#4b5563] sm:flex-row">
+        <footer className="flex flex-col items-center justify-between gap-4 border-t border-[#D7E3F2] py-8 text-xs text-[#53657D] sm:flex-row">
           <p>© 2026 GAHN AI. All rights reserved.</p>
 
           <div className="flex flex-wrap items-center justify-center gap-5">
-            <Link href="/about" className="transition hover:text-[#22c55e]">
+            <Link href="/about" className="hover:text-[#1677FF]">
               About
             </Link>
-
-            <Link href="/privacy" className="transition hover:text-[#22c55e]">
+            <Link href="/privacy" className="hover:text-[#1677FF]">
               Privacy Policy
             </Link>
-
-            <Link href="/terms" className="transition hover:text-[#22c55e]">
+            <Link href="/terms" className="hover:text-[#1677FF]">
               Terms of Service
             </Link>
           </div>

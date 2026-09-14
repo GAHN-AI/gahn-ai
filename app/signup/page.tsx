@@ -1,14 +1,38 @@
 "use client";
 
 import Link from "next/link";
+import { Source_Sans_3 } from "next/font/google";
 import { useEffect, useState } from "react";
 import { supabase } from "@/lib/supabaseClient";
-import { Brain, Layers, Trophy } from "lucide-react";
+import {
+  ArrowLeft,
+  Brain,
+  CheckCircle2,
+  Layers,
+  ShieldCheck,
+  Trophy,
+} from "lucide-react";
+
+const sourceSans = Source_Sans_3({
+  subsets: ["latin"],
+});
 
 const features = [
-  { Icon: Brain, title: "Personalized Learning", text: "AI instructors adapt lessons and explanations to your needs." },
-  { Icon: Layers, title: "Structured Learning Paths", text: "Follow guided learning journeys designed for real progress." },
-  { Icon: Trophy, title: "Track Achievement", text: "Build skills, unlock milestones, and showcase growth." },
+  {
+    Icon: Brain,
+    title: "Personalized Learning",
+    text: "AI instructors adapt explanations, practice, and pacing to your needs.",
+  },
+  {
+    Icon: Layers,
+    title: "Structured Learning Paths",
+    text: "Follow guided learning journeys designed around real understanding.",
+  },
+  {
+    Icon: Trophy,
+    title: "Track Your Growth",
+    text: "Save progress, build skills, and unlock future achievements.",
+  },
 ];
 
 export default function SignupPage() {
@@ -24,13 +48,17 @@ export default function SignupPage() {
 
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
+
     if (params.get("error") === "google_account_exists") {
-      setError("This Google account is already registered. Please login instead.");
+      setError(
+        "This Google account is already registered. Please login instead."
+      );
     }
   }, []);
 
   async function handleSignup(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
+
     setError("");
     setMessage("");
 
@@ -39,8 +67,10 @@ export default function SignupPage() {
 
     if (!cleanName) return setError("Please enter your full name.");
     if (!cleanEmail) return setError("Please enter your email address.");
-    if (password.length < 6) return setError("Password must be at least 6 characters.");
-    if (password !== confirmPassword) return setError("Passwords do not match.");
+    if (password.length < 6)
+      return setError("Password must be at least 6 characters.");
+    if (password !== confirmPassword)
+      return setError("Passwords do not match.");
 
     setLoading(true);
 
@@ -72,7 +102,9 @@ export default function SignupPage() {
 
       if (signupError) return setError(signupError.message);
 
-      setMessage("Account created. Please check your email to verify your account.");
+      setMessage(
+        "Account created. Please check your email to verify your account."
+      );
     } catch (err) {
       setLoading(false);
       setError("Something went wrong. Please try again.");
@@ -99,87 +131,234 @@ export default function SignupPage() {
   }
 
   return (
-    <main className="min-h-screen bg-white px-6 py-10 font-sans text-[#111827]">
-      <div className="mx-auto mb-8 text-center">
-        <img src="/logo/favicon.png" alt="GAHN AI" className="mx-auto mb-4 h-16 w-16 object-contain" />
-        <h1 className="text-4xl font-extrabold tracking-[-0.02em] text-[#111827]">GAHN AI</h1>
-        <p className="mt-1 text-xs font-bold uppercase tracking-[0.2em] text-[#4b5563]">
-          Global AI Human Helper Network
-        </p>
-      </div>
+    <main
+      className={`${sourceSans.className} relative min-h-screen overflow-hidden bg-white px-5 py-8 text-[#0B1739] sm:px-8 sm:py-10`}
+    >
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-0 bg-[linear-gradient(135deg,#FFFFFF_0%,#FFFFFF_50%,#F5F8FC_50%,#EAF3FF_100%)]"
+      />
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute -right-52 -top-52 h-[650px] w-[650px] rounded-full bg-[#EAF3FF]/80"
+      />
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute bottom-[-240px] left-[8%] h-[420px] w-[760px] rotate-[-8deg] rounded-[999px] bg-white/90"
+      />
 
-      <div className="mx-auto grid max-w-5xl overflow-hidden rounded-2xl border border-[#dbe3ee] bg-white shadow-sm lg:grid-cols-2">
-        <section className="relative bg-white p-10 text-[#111827] lg:p-12">
-          <h2 className="text-3xl font-extrabold tracking-[-0.02em]">Start Your Journey</h2>
-          <div className="mt-5 h-1 w-16 bg-[#22c55e]" />
-          <p className="mt-8 text-lg leading-8 text-[#4b5563]">
-            Build skills, master subjects, and grow with{" "}
-            <span className="font-semibold text-[#22c55e]">GAHN AI</span>
-          </p>
+      <div className="relative mx-auto w-full max-w-6xl">
+        <header className="flex items-center justify-between gap-4">
+          <Link href="/" className="flex min-w-0 items-center gap-3">
+            <img
+              src="/logo/favicon.png"
+              alt="GAHN AI"
+              className="h-11 w-11 flex-none rounded-full object-cover"
+            />
 
-          <div className="mt-10 space-y-7">
-            {features.map(({ Icon, title, text }) => (
-              <div key={title} className="flex gap-4">
-                <div className="grid h-11 w-11 shrink-0 place-items-center rounded-full bg-[#dcfce7]">
-                  <Icon className="h-5 w-5 text-[#22c55e]" strokeWidth={1.75} />
+            <div className="min-w-0">
+              <p className="truncate text-xl font-extrabold tracking-[-0.025em]">
+                GAHN AI
+              </p>
+              <p className="hidden text-[8px] font-bold uppercase tracking-[0.18em] text-[#53657D] sm:block">
+                Global AI Human Helper Network
+              </p>
+            </div>
+          </Link>
+
+          <Link
+            href="/"
+            className="inline-flex items-center gap-2 text-sm font-semibold text-[#53657D] hover:text-[#1677FF]"
+          >
+            <ArrowLeft className="h-4 w-4" />
+            Back Home
+          </Link>
+        </header>
+
+        <section className="grid min-h-[calc(100vh-140px)] items-center py-10 sm:py-14 lg:grid-cols-[0.92fr_1.08fr] lg:gap-10">
+          <div className="hidden pr-6 lg:block">
+            <p className="text-xs font-bold uppercase tracking-[0.24em] text-[#1677FF]">
+              Start Learning
+            </p>
+
+            <h1 className="mt-5 max-w-xl text-5xl font-extrabold leading-[1.04] tracking-[-0.04em]">
+              Build your own path with{" "}
+              <span className="text-[#1677FF]">GAHN AI.</span>
+            </h1>
+
+            <p className="mt-6 max-w-xl text-lg leading-8 text-[#53657D]">
+              Create one account for structured AI lessons across school,
+              careers, brain development, general knowledge, and books.
+            </p>
+
+            <div className="mt-10 space-y-6">
+              {features.map(({ Icon, title, text }) => (
+                <div key={title} className="flex gap-4">
+                  <div className="grid h-12 w-12 flex-none place-items-center rounded-xl bg-[#EAF3FF] text-[#1677FF]">
+                    <Icon className="h-5 w-5" strokeWidth={1.75} />
+                  </div>
+
+                  <div>
+                    <h2 className="text-base font-bold">{title}</h2>
+                    <p className="mt-1 text-sm leading-6 text-[#53657D]">
+                      {text}
+                    </p>
+                  </div>
                 </div>
+              ))}
+            </div>
+
+            <div className="mt-10 flex items-center gap-2 text-sm font-semibold text-[#53657D]">
+              <ShieldCheck className="h-4 w-4 text-[#1677FF]" />
+              Secure signup with email verification and Google authentication.
+            </div>
+          </div>
+
+          <div className="mx-auto w-full max-w-xl rounded-[1.75rem] border border-[#D7E3F2] bg-white p-6 shadow-[0_24px_70px_rgba(11,23,57,0.10)] sm:p-8 lg:p-10">
+            <div className="lg:hidden">
+              <p className="text-xs font-bold uppercase tracking-[0.24em] text-[#1677FF]">
+                Start Learning
+              </p>
+            </div>
+
+            <h2 className="mt-2 text-3xl font-extrabold tracking-[-0.03em] sm:text-4xl lg:mt-0">
+              Create your account
+            </h2>
+
+            <p className="mt-3 text-sm leading-6 text-[#53657D] sm:text-base">
+              Join the GAHN AI MVP and begin with full early access.
+            </p>
+
+            <button
+              type="button"
+              onClick={handleGoogleSignup}
+              disabled={googleLoading}
+              className="mt-8 flex w-full items-center justify-center gap-3 rounded-xl border border-[#D7E3F2] bg-white px-5 py-3.5 text-sm font-semibold text-[#0B1739] shadow-sm hover:border-[#1677FF]/40 hover:bg-[#F8FBFF] disabled:cursor-not-allowed disabled:opacity-60"
+            >
+              <img
+                src="/google-logo/google.svg"
+                alt="Google"
+                className="h-5 w-5 object-contain"
+              />
+              <span>
+                {googleLoading ? "Connecting..." : "Continue with Google"}
+              </span>
+            </button>
+
+            <div className="my-6 flex items-center gap-4 text-xs font-bold uppercase tracking-[0.12em] text-[#7A8AA0]">
+              <div className="h-px flex-1 bg-[#D7E3F2]" />
+              Or
+              <div className="h-px flex-1 bg-[#D7E3F2]" />
+            </div>
+
+            <form onSubmit={handleSignup}>
+              <label
+                htmlFor="fullName"
+                className="mb-2 block text-sm font-bold text-[#0B1739]"
+              >
+                Full name
+              </label>
+              <input
+                id="fullName"
+                placeholder="Your full name"
+                autoComplete="name"
+                value={fullName}
+                onChange={(e) => setFullName(e.target.value)}
+                className="w-full rounded-xl border border-[#D7E3F2] bg-white px-4 py-3.5 text-sm text-[#0B1739] outline-none placeholder:text-[#7A8AA0] focus:border-[#1677FF] focus:ring-2 focus:ring-[#1677FF]/15"
+              />
+
+              <label
+                htmlFor="email"
+                className="mb-2 mt-5 block text-sm font-bold text-[#0B1739]"
+              >
+                Email address
+              </label>
+              <input
+                id="email"
+                placeholder="you@example.com"
+                type="email"
+                autoComplete="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                className="w-full rounded-xl border border-[#D7E3F2] bg-white px-4 py-3.5 text-sm text-[#0B1739] outline-none placeholder:text-[#7A8AA0] focus:border-[#1677FF] focus:ring-2 focus:ring-[#1677FF]/15"
+              />
+
+              <div className="mt-5 grid gap-4 sm:grid-cols-2">
                 <div>
-                  <h3 className="text-base font-bold text-[#111827]">{title}</h3>
-                  <p className="mt-1.5 text-sm leading-6 text-[#4b5563]">{text}</p>
+                  <label
+                    htmlFor="password"
+                    className="mb-2 block text-sm font-bold text-[#0B1739]"
+                  >
+                    Password
+                  </label>
+                  <input
+                    id="password"
+                    placeholder="6+ characters"
+                    type="password"
+                    autoComplete="new-password"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    className="w-full rounded-xl border border-[#D7E3F2] bg-white px-4 py-3.5 text-sm text-[#0B1739] outline-none placeholder:text-[#7A8AA0] focus:border-[#1677FF] focus:ring-2 focus:ring-[#1677FF]/15"
+                  />
+                </div>
+
+                <div>
+                  <label
+                    htmlFor="confirmPassword"
+                    className="mb-2 block text-sm font-bold text-[#0B1739]"
+                  >
+                    Confirm password
+                  </label>
+                  <input
+                    id="confirmPassword"
+                    placeholder="Repeat password"
+                    type="password"
+                    autoComplete="new-password"
+                    value={confirmPassword}
+                    onChange={(e) => setConfirmPassword(e.target.value)}
+                    className="w-full rounded-xl border border-[#D7E3F2] bg-white px-4 py-3.5 text-sm text-[#0B1739] outline-none placeholder:text-[#7A8AA0] focus:border-[#1677FF] focus:ring-2 focus:ring-[#1677FF]/15"
+                  />
                 </div>
               </div>
-            ))}
+
+              {error && (
+                <p className="mt-5 rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm font-medium text-red-600">
+                  {error}
+                </p>
+              )}
+
+              {message && (
+                <p className="mt-5 rounded-xl border border-blue-200 bg-[#F1F7FF] px-4 py-3 text-sm font-medium text-[#0F65E8]">
+                  {message}
+                </p>
+              )}
+
+              <button
+                type="submit"
+                disabled={loading}
+                className="mt-6 flex w-full items-center justify-center rounded-xl bg-[#1677FF] px-5 py-3.5 text-sm font-semibold text-white hover:bg-[#0F65E8] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#1677FF] focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-60"
+              >
+                {loading ? "Creating Account..." : "Create Account"}
+              </button>
+            </form>
+
+            <div className="mt-6 flex items-center justify-center gap-2 text-sm text-[#53657D]">
+              <CheckCircle2 className="h-4 w-4 text-[#1677FF]" />
+              <span>No credit card required for the MVP.</span>
+            </div>
+
+            <p className="mt-6 text-center text-sm text-[#53657D]">
+              Already have an account?{" "}
+              <Link
+                href="/login"
+                className="font-semibold text-[#1677FF] hover:text-[#0F65E8]"
+              >
+                Log in
+              </Link>
+            </p>
           </div>
-        </section>
-
-        <section className="p-10 lg:p-12">
-          <h2 className="text-center text-3xl font-extrabold tracking-[-0.02em] text-[#111827]">Create Account</h2>
-          <p className="mt-2 text-center text-sm text-[#4b5563]">
-            Join GAHN AI and start learning today.
-          </p>
-
-          <button
-            type="button"
-            onClick={handleGoogleSignup}
-            disabled={googleLoading}
-            className="mt-8 flex w-full items-center justify-center gap-4 rounded-lg border border-[#dbe3ee] bg-white px-5 py-3.5 text-sm font-semibold shadow-sm transition hover:border-[#22c55e]/40 hover:bg-white disabled:cursor-not-allowed disabled:opacity-60"
-          >
-            <img src="/google-logo/google.svg" alt="Google" className="h-5 w-5 object-contain" />
-            <span>{googleLoading ? "Connecting..." : "Continue with Google"}</span>
-          </button>
-
-          <div className="my-6 flex items-center gap-4 text-xs font-bold uppercase tracking-[0.1em] text-[#4b5563]">
-            <div className="h-px flex-1 bg-[#dbe3ee]" />
-            Or
-            <div className="h-px flex-1 bg-[#dbe3ee]" />
-          </div>
-
-          <form onSubmit={handleSignup}>
-            <input placeholder="Full Name" value={fullName} onChange={(e) => setFullName(e.target.value)} className="w-full rounded-lg border border-[#dbe3ee] px-4 py-3.5 text-sm outline-none focus:border-[#22c55e] focus:ring-2 focus:ring-[#22c55e]/15" />
-            <input placeholder="Email Address" type="email" value={email} onChange={(e) => setEmail(e.target.value)} className="mt-4 w-full rounded-lg border border-[#dbe3ee] px-4 py-3.5 text-sm outline-none focus:border-[#22c55e] focus:ring-2 focus:ring-[#22c55e]/15" />
-            <input placeholder="Password" type="password" value={password} onChange={(e) => setPassword(e.target.value)} className="mt-4 w-full rounded-lg border border-[#dbe3ee] px-4 py-3.5 text-sm outline-none focus:border-[#22c55e] focus:ring-2 focus:ring-[#22c55e]/15" />
-            <input placeholder="Confirm Password" type="password" value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} className="mt-4 w-full rounded-lg border border-[#dbe3ee] px-4 py-3.5 text-sm outline-none focus:border-[#22c55e] focus:ring-2 focus:ring-[#22c55e]/15" />
-
-            {error && <p className="mt-4 rounded-lg border border-red-200 bg-red-50 p-3.5 text-sm text-red-600">{error}</p>}
-            {message && <p className="mt-4 rounded-lg border border-emerald-200 bg-emerald-50 p-3.5 text-sm text-emerald-700">{message}</p>}
-
-            <button type="submit" disabled={loading} className="mt-6 flex w-full justify-center rounded-lg bg-[#22c55e] px-5 py-3.5 text-sm font-semibold text-white transition hover:bg-[#16a34a] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#22c55e] focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-60">
-              {loading ? "Creating Account..." : "Create Account"}
-            </button>
-          </form>
-
-          <p className="mt-6 text-center text-sm text-[#4b5563]">
-            Already have an account?{" "}
-            <Link href="/login" className="font-semibold text-[#22c55e]">
-              Login
-            </Link>
-          </p>
         </section>
       </div>
-
-      <p className="mt-8 text-center text-xs font-semibold text-[#4b5563]">
-        Secure. Private. Built for your future.
-      </p>
     </main>
   );
 }
