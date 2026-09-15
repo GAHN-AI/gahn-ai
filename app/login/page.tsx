@@ -13,6 +13,9 @@ import {
   Rocket,
 } from "lucide-react";
 
+const SITE_URL =
+  process.env.NEXT_PUBLIC_SITE_URL || "https://gahnai.com";
+
 const sourceSans = Source_Sans_3({
   subsets: ["latin"],
 });
@@ -88,7 +91,7 @@ export default function LoginPage() {
     const { error: googleError } = await supabase.auth.signInWithOAuth({
       provider: "google",
       options: {
-        redirectTo: `${window.location.origin}/auth/callback?intent=login`,
+        redirectTo: `${SITE_URL}/auth/callback?intent=login`,
         queryParams: {
           prompt: "select_account",
         },
@@ -117,7 +120,7 @@ export default function LoginPage() {
 
     const { error: resetError } =
       await supabase.auth.resetPasswordForEmail(cleanEmail, {
-        redirectTo: `${window.location.origin}/auth/callback?next=/update-password`,
+        redirectTo: `${SITE_URL}/auth/callback?next=/update-password`,
       });
 
     setResetLoading(false);
