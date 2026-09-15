@@ -69,6 +69,17 @@ export default function SitePresence() {
 
     visitorIdRef.current = getVisitorId();
 
+    void fetch("/api/analytics/visit", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ visitor_id: visitorIdRef.current }),
+      keepalive: true,
+    }).catch((error) => {
+      console.error("Persistent visitor tracking failed:", error);
+    });
+
     const channel = supabase.channel(PRESENCE_CHANNEL, {
       config: {
         presence: {
