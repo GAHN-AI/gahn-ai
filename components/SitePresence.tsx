@@ -27,6 +27,7 @@ function getVisitorId() {
 
 export default function SitePresence() {
   const pathname = usePathname();
+  const isAdminRoute = pathname?.startsWith("/admin") ?? false;
   const channelRef = useRef<RealtimeChannel | null>(null);
   const visitorIdRef = useRef<string | null>(null);
   const pathRef = useRef(pathname || "/");
@@ -41,12 +42,6 @@ export default function SitePresence() {
 
     const path = pathRef.current || "/";
 
-    // Do not count the owner/admin dashboard as a website visitor.
-    if (path.startsWith("/admin")) {
-      await channel.untrack();
-      return;
-    }
-
     await channel.track({
       visitor_id: visitorId,
       authenticated: authenticatedRef.current,
@@ -57,10 +52,21 @@ export default function SitePresence() {
 
   useEffect(() => {
     pathRef.current = pathname || "/";
-    void trackCurrent();
-  }, [pathname, trackCurrent]);
+    if (!isAdminRoute) {
+      void trackCurrent();
+    }
+  }, [pathname, isAdminRoute, trackCurrent]);
 
   useEffect(() => {
+    // The admin analytics page needs to subscribe to the same Presence topic as
+    // an observer. Do not also mount the visitor tracker there, because two
+    // subscriptions to the same topic on one Supabase client conflict.
+    if (isAdminRoute) {
+      channelRef.current = null;
+      subscribedRef.current = false;
+      return;
+    }
+
     visitorIdRef.current = getVisitorId();
 
     const channel = supabase.channel(PRESENCE_CHANNEL, {
@@ -109,7 +115,7 @@ export default function SitePresence() {
       void supabase.removeChannel(channel);
       channelRef.current = null;
     };
-  }, [trackCurrent]);
+  }, [isAdminRoute, trackCurrent]);
 
   return null;
 }
