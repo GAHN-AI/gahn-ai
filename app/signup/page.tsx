@@ -13,9 +13,10 @@ import {
   Trophy,
 } from "lucide-react";
 
-const sourceSans = Source_Sans_3({
-  subsets: ["latin"],
-});
+const SITE_URL =
+  process.env.NEXT_PUBLIC_SITE_URL || "https://gahnai.com";
+
+const sourceSans = Source_Sans_3({ subsets: ["latin"] });
 
 const features = [
   {
@@ -40,76 +41,111 @@ export default function SignupPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
-
   const [loading, setLoading] = useState(false);
   const [googleLoading, setGoogleLoading] = useState(false);
+  const [resendLoading, setResendLoading] = useState(false);
+  const [resendCooldown, setResendCooldown] = useState(0);
+  const [awaitingVerification, setAwaitingVerification] = useState(false);
   const [error, setError] = useState("");
   const [message, setMessage] = useState("");
 
   useEffect(() => {
-    const params = new URLSearchParams(window.location.search);
+    if (!awaitingVerification) return;
 
-    if (params.get("error") === "google_account_exists") {
-      setError(
-        "This Google account is already registered. Please login instead."
-      );
+    let cancelled = false;
+
+    async function checkSession() {
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
+
+      if (!cancelled && user) {
+        window.location.replace("/dashboard");
+      }
     }
-  }, []);
+
+    void checkSession();
+    const interval = window.setInterval(() => void checkSession(), 1500);
+
+    return () => {
+      cancelled = true;
+      window.clearInterval(interval);
+    };
+  }, [awaitingVerification]);
+
+  useEffect(() => {
+    if (resendCooldown <= 0) return;
+    const timer = window.setTimeout(
+      () => setResendCooldown((value) => Math.max(0, value - 1)),
+      1000
+    );
+    return () => window.clearTimeout(timer);
+  }, [resendCooldown]);
 
   async function handleSignup(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
-
     setError("");
     setMessage("");
 
-    const cleanEmail = email.trim().toLowerCase();
     const cleanName = fullName.trim();
+    const cleanEmail = email.trim().toLowerCase();
 
     if (!cleanName) return setError("Please enter your full name.");
     if (!cleanEmail) return setError("Please enter your email address.");
-    if (password.length < 6)
-      return setError("Password must be at least 6 characters.");
+    if (password.length < 8)
+      return setError("Password must be at least 8 characters.");
     if (password !== confirmPassword)
       return setError("Passwords do not match.");
 
     setLoading(true);
 
-    try {
-      const checkResponse = await fetch("/api/check-email", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email: cleanEmail }),
-      });
+    const { error: signupError } = await supabase.auth.signUp({
+      email: cleanEmail,
+      password,
+      options: {
+        data: { full_name: cleanName },
+        emailRedirectTo: `${SITE_URL}/auth/callback`,
+      },
+    });
 
-      const checkData = await checkResponse.json();
+    setLoading(false);
 
-      if (checkData.exists) {
-        setError("This account already exists. Please login.");
-        setLoading(false);
-        return;
-      }
-
-      const { error: signupError } = await supabase.auth.signUp({
-        email: cleanEmail,
-        password,
-        options: {
-          data: { full_name: cleanName },
-          emailRedirectTo: `${window.location.origin}/auth/callback`,
-        },
-      });
-
-      setLoading(false);
-
-      if (signupError) return setError(signupError.message);
-
-      setMessage(
-        "Account created. Please check your email to verify your account."
-      );
-    } catch (err) {
-      setLoading(false);
-      setError("Something went wrong. Please try again.");
-      console.error(err);
+    if (signupError) {
+      setError(signupError.message);
+      return;
     }
+
+    setAwaitingVerification(true);
+    setResendCooldown(60);
+    setMessage(
+      "Account created. Check your email and click Verify Email. Keep this tab open and it will move to your dashboard after verification."
+    );
+  }
+
+  async function handleResendVerification() {
+    const cleanEmail = email.trim().toLowerCase();
+    if (!cleanEmail || resendCooldown > 0) return;
+
+    setError("");
+    setResendLoading(true);
+
+    const { error: resendError } = await supabase.auth.resend({
+      type: "signup",
+      email: cleanEmail,
+      options: {
+        emailRedirectTo: `${SITE_URL}/auth/callback`,
+      },
+    });
+
+    setResendLoading(false);
+
+    if (resendError) {
+      setError(resendError.message);
+      return;
+    }
+
+    setResendCooldown(60);
+    setMessage("Verification email sent again. Check your inbox and spam folder.");
   }
 
   async function handleGoogleSignup() {
@@ -120,13 +156,12 @@ export default function SignupPage() {
     const { error: googleError } = await supabase.auth.signInWithOAuth({
       provider: "google",
       options: {
-        redirectTo: `${window.location.origin}/auth/callback?intent=signup`,
+        redirectTo: `${SITE_URL}/auth/callback?intent=signup`,
         queryParams: { prompt: "select_account" },
       },
     });
 
     setGoogleLoading(false);
-
     if (googleError) setError(googleError.message);
   }
 
@@ -142,24 +177,17 @@ export default function SignupPage() {
         aria-hidden="true"
         className="pointer-events-none absolute -right-52 -top-52 h-[650px] w-[650px] rounded-full bg-[#EAF3FF]/80"
       />
-      <div
-        aria-hidden="true"
-        className="pointer-events-none absolute bottom-[-240px] left-[8%] h-[420px] w-[760px] rotate-[-8deg] rounded-[999px] bg-white/90"
-      />
 
       <div className="relative mx-auto w-full max-w-6xl">
         <header className="flex items-center justify-between gap-4">
-          <Link href="/" className="flex min-w-0 items-center gap-3">
+          <Link href="/" className="flex items-center gap-3">
             <img
               src="/logo/favicon.png"
               alt="GAHN AI"
-              className="h-11 w-11 flex-none rounded-full object-cover"
+              className="h-11 w-11 rounded-full object-cover"
             />
-
-            <div className="min-w-0">
-              <p className="truncate text-xl font-extrabold tracking-[-0.025em]">
-                GAHN AI
-              </p>
+            <div>
+              <p className="text-xl font-extrabold tracking-[-0.025em]">GAHN AI</p>
               <p className="hidden text-[8px] font-bold uppercase tracking-[0.18em] text-[#53657D] sm:block">
                 Global AI Human Helper Network
               </p>
@@ -180,12 +208,10 @@ export default function SignupPage() {
             <p className="text-xs font-bold uppercase tracking-[0.24em] text-[#1677FF]">
               Start Learning
             </p>
-
             <h1 className="mt-5 max-w-xl text-5xl font-extrabold leading-[1.04] tracking-[-0.04em]">
               Build your own path with{" "}
               <span className="text-[#1677FF]">GAHN AI.</span>
             </h1>
-
             <p className="mt-6 max-w-xl text-lg leading-8 text-[#53657D]">
               Create one account for structured AI lessons across school,
               careers, brain development, general knowledge, and books.
@@ -197,12 +223,9 @@ export default function SignupPage() {
                   <div className="grid h-12 w-12 flex-none place-items-center rounded-xl bg-[#EAF3FF] text-[#1677FF]">
                     <Icon className="h-5 w-5" strokeWidth={1.75} />
                   </div>
-
                   <div>
-                    <h2 className="text-base font-bold">{title}</h2>
-                    <p className="mt-1 text-sm leading-6 text-[#53657D]">
-                      {text}
-                    </p>
+                    <h2 className="font-bold">{title}</h2>
+                    <p className="mt-1 text-sm leading-6 text-[#53657D]">{text}</p>
                   </div>
                 </div>
               ))}
@@ -215,16 +238,9 @@ export default function SignupPage() {
           </div>
 
           <div className="mx-auto w-full max-w-xl rounded-[1.75rem] border border-[#D7E3F2] bg-white p-6 shadow-[0_24px_70px_rgba(11,23,57,0.10)] sm:p-8 lg:p-10">
-            <div className="lg:hidden">
-              <p className="text-xs font-bold uppercase tracking-[0.24em] text-[#1677FF]">
-                Start Learning
-              </p>
-            </div>
-
-            <h2 className="mt-2 text-3xl font-extrabold tracking-[-0.03em] sm:text-4xl lg:mt-0">
+            <h2 className="text-3xl font-extrabold tracking-[-0.03em] sm:text-4xl">
               Create your account
             </h2>
-
             <p className="mt-3 text-sm leading-6 text-[#53657D] sm:text-base">
               Join the GAHN AI MVP and begin with full early access.
             </p>
@@ -233,16 +249,10 @@ export default function SignupPage() {
               type="button"
               onClick={handleGoogleSignup}
               disabled={googleLoading}
-              className="mt-8 flex w-full items-center justify-center gap-3 rounded-xl border border-[#D7E3F2] bg-white px-5 py-3.5 text-sm font-semibold text-[#0B1739] shadow-sm hover:border-[#1677FF]/40 hover:bg-[#F8FBFF] disabled:cursor-not-allowed disabled:opacity-60"
+              className="mt-8 flex w-full items-center justify-center gap-3 rounded-xl border border-[#D7E3F2] bg-white px-5 py-3.5 text-sm font-semibold shadow-sm hover:bg-[#F8FBFF] disabled:opacity-60"
             >
-              <img
-                src="/google-logo/google.svg"
-                alt="Google"
-                className="h-5 w-5 object-contain"
-              />
-              <span>
-                {googleLoading ? "Connecting..." : "Continue with Google"}
-              </span>
+              <img src="/google-logo/google.svg" alt="Google" className="h-5 w-5" />
+              {googleLoading ? "Connecting..." : "Continue with Google"}
             </button>
 
             <div className="my-6 flex items-center gap-4 text-xs font-bold uppercase tracking-[0.12em] text-[#7A8AA0]">
@@ -252,71 +262,59 @@ export default function SignupPage() {
             </div>
 
             <form onSubmit={handleSignup}>
-              <label
-                htmlFor="fullName"
-                className="mb-2 block text-sm font-bold text-[#0B1739]"
-              >
+              <label htmlFor="fullName" className="mb-2 block text-sm font-bold">
                 Full name
               </label>
               <input
                 id="fullName"
-                placeholder="Your full name"
-                autoComplete="name"
                 value={fullName}
                 onChange={(e) => setFullName(e.target.value)}
-                className="w-full rounded-xl border border-[#D7E3F2] bg-white px-4 py-3.5 text-sm text-[#0B1739] outline-none placeholder:text-[#7A8AA0] focus:border-[#1677FF] focus:ring-2 focus:ring-[#1677FF]/15"
+                autoComplete="name"
+                placeholder="Your full name"
+                className="w-full rounded-xl border border-[#D7E3F2] px-4 py-3.5 outline-none focus:border-[#1677FF]"
               />
 
-              <label
-                htmlFor="email"
-                className="mb-2 mt-5 block text-sm font-bold text-[#0B1739]"
-              >
+              <label htmlFor="email" className="mb-2 mt-5 block text-sm font-bold">
                 Email address
               </label>
               <input
                 id="email"
-                placeholder="you@example.com"
                 type="email"
-                autoComplete="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className="w-full rounded-xl border border-[#D7E3F2] bg-white px-4 py-3.5 text-sm text-[#0B1739] outline-none placeholder:text-[#7A8AA0] focus:border-[#1677FF] focus:ring-2 focus:ring-[#1677FF]/15"
+                autoComplete="email"
+                placeholder="you@example.com"
+                className="w-full rounded-xl border border-[#D7E3F2] px-4 py-3.5 outline-none focus:border-[#1677FF]"
               />
 
               <div className="mt-5 grid gap-4 sm:grid-cols-2">
                 <div>
-                  <label
-                    htmlFor="password"
-                    className="mb-2 block text-sm font-bold text-[#0B1739]"
-                  >
+                  <label htmlFor="password" className="mb-2 block text-sm font-bold">
                     Password
                   </label>
                   <input
                     id="password"
-                    placeholder="6+ characters"
                     type="password"
-                    autoComplete="new-password"
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
-                    className="w-full rounded-xl border border-[#D7E3F2] bg-white px-4 py-3.5 text-sm text-[#0B1739] outline-none placeholder:text-[#7A8AA0] focus:border-[#1677FF] focus:ring-2 focus:ring-[#1677FF]/15"
+                    autoComplete="new-password"
+                    placeholder="8+ characters"
+                    className="w-full rounded-xl border border-[#D7E3F2] px-4 py-3.5 outline-none focus:border-[#1677FF]"
                   />
                 </div>
 
                 <div>
-                  <label
-                    htmlFor="confirmPassword"
-                    className="mb-2 block text-sm font-bold text-[#0B1739]"
-                  >
+                  <label htmlFor="confirmPassword" className="mb-2 block text-sm font-bold">
                     Confirm password
                   </label>
                   <input
                     id="confirmPassword"
-                    placeholder="Repeat password"
                     type="password"
-                    autoComplete="new-password"
                     value={confirmPassword}
                     onChange={(e) => setConfirmPassword(e.target.value)}
-                    className="w-full rounded-xl border border-[#D7E3F2] bg-white px-4 py-3.5 text-sm text-[#0B1739] outline-none placeholder:text-[#7A8AA0] focus:border-[#1677FF] focus:ring-2 focus:ring-[#1677FF]/15"
+                    autoComplete="new-password"
+                    placeholder="Repeat password"
+                    className="w-full rounded-xl border border-[#D7E3F2] px-4 py-3.5 outline-none focus:border-[#1677FF]"
                   />
                 </div>
               </div>
@@ -333,10 +331,25 @@ export default function SignupPage() {
                 </p>
               )}
 
+              {awaitingVerification && (
+                <button
+                  type="button"
+                  onClick={handleResendVerification}
+                  disabled={resendLoading || resendCooldown > 0}
+                  className="mt-4 w-full rounded-xl border border-[#D7E3F2] px-5 py-3 text-sm font-semibold text-[#1677FF] disabled:opacity-60"
+                >
+                  {resendLoading
+                    ? "Sending..."
+                    : resendCooldown > 0
+                      ? `Resend available in ${resendCooldown}s`
+                      : "Resend verification email"}
+                </button>
+              )}
+
               <button
                 type="submit"
                 disabled={loading}
-                className="mt-6 flex w-full items-center justify-center rounded-xl bg-[#1677FF] px-5 py-3.5 text-sm font-semibold text-white hover:bg-[#0F65E8] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#1677FF] focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-60"
+                className="mt-6 w-full rounded-xl bg-[#1677FF] px-5 py-3.5 text-sm font-semibold text-white hover:bg-[#0F65E8] disabled:opacity-60"
               >
                 {loading ? "Creating Account..." : "Create Account"}
               </button>
@@ -349,10 +362,7 @@ export default function SignupPage() {
 
             <p className="mt-6 text-center text-sm text-[#53657D]">
               Already have an account?{" "}
-              <Link
-                href="/login"
-                className="font-semibold text-[#1677FF] hover:text-[#0F65E8]"
-              >
+              <Link href="/login" className="font-semibold text-[#1677FF]">
                 Log in
               </Link>
             </p>
