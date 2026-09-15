@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Activity, Eye, LogIn, UsersRound } from "lucide-react";
 import { supabase } from "@/lib/supabaseClient";
 
 const PRESENCE_CHANNEL = "gahn-site-presence";
@@ -28,30 +27,54 @@ const emptySnapshot: Snapshot = {
   pages: [],
 };
 
-function summarizePresence(state: Record<string, PresenceMeta[]>): Snapshot {
+function isPresenceMeta(value: unknown): value is PresenceMeta {
+  return typeof value === "object" && value !== null;
+}
+
+function summarizePresence(state: unknown): Snapshot {
+  if (!state || typeof state !== "object") return emptySnapshot;
+
   const visitors = new Map<string, PresenceMeta>();
 
-  for (const metas of Object.values(state)) {
-    for (const meta of metas) {
-      const path = meta.path || "/";
+  for (const value of Object.values(state as Record<string, unknown>)) {
+    if (!Array.isArray(value)) continue;
+
+    for (const item of value) {
+      if (!isPresenceMeta(item)) continue;
+
+      const path = typeof item.path === "string" ? item.path : "/";
       if (path.startsWith("/admin")) continue;
 
-      const id = meta.visitor_id || meta.presence_ref;
+      const id =
+        typeof item.visitor_id === "string"
+          ? item.visitor_id
+          : typeof item.presence_ref === "string"
+            ? item.presence_ref
+            : null;
+
       if (!id) continue;
 
       const current = visitors.get(id);
-      if (!current || (meta.online_at ?? "") >= (current.online_at ?? "")) {
-        visitors.set(id, meta);
+      const itemTime = typeof item.online_at === "string" ? item.online_at : "";
+      const currentTime =
+        current && typeof current.online_at === "string" ? current.online_at : "";
+
+      if (!current || itemTime >= currentTime) {
+        visitors.set(id, {
+          ...item,
+          path,
+          authenticated: item.authenticated === true,
+        });
       }
     }
   }
 
   const rows = [...visitors.values()];
-  const signedIn = rows.filter((visitor) => visitor.authenticated).length;
+  const signedIn = rows.filter((visitor) => visitor.authenticated === true).length;
   const pageCounts = new Map<string, number>();
 
   for (const visitor of rows) {
-    const path = visitor.path || "/";
+    const path = typeof visitor.path === "string" ? visitor.path : "/";
     pageCounts.set(path, (pageCounts.get(path) ?? 0) + 1);
   }
 
@@ -67,21 +90,10 @@ function summarizePresence(state: Record<string, PresenceMeta[]>): Snapshot {
   };
 }
 
-function StatCard({
-  label,
-  value,
-  icon,
-}: {
-  label: string;
-  value: number;
-  icon: React.ReactNode;
-}) {
+function StatCard({ label, value }: { label: string; value: number }) {
   return (
     <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
-      <div className="flex items-center justify-between">
-        <p className="text-sm font-medium text-slate-500">{label}</p>
-        <div className="rounded-xl bg-slate-100 p-2 text-slate-700">{icon}</div>
-      </div>
+      <p className="text-sm font-medium text-slate-500">{label}</p>
       <p className="mt-4 text-3xl font-semibold tracking-tight text-slate-950">
         {value}
       </p>
@@ -92,30 +104,59 @@ function StatCard({
 export default function LiveAnalyticsDashboard() {
   const [snapshot, setSnapshot] = useState<Snapshot>(emptySnapshot);
   const [connected, setConnected] = useState(false);
+  const [connectionError, setConnectionError] = useState(false);
 
   useEffect(() => {
-    const channel = supabase.channel(PRESENCE_CHANNEL);
+    let active = true;
 
-    const sync = () => {
-      setSnapshot(
-        summarizePresence(
-          channel.presenceState() as unknown as Record<string, PresenceMeta[]>
-        )
-      );
-    };
+    try {
+      const channel = supabase.channel(PRESENCE_CHANNEL);
 
-    channel
-      .on("presence", { event: "sync" }, sync)
-      .on("presence", { event: "join" }, sync)
-      .on("presence", { event: "leave" }, sync)
-      .subscribe((status) => {
-        setConnected(status === "SUBSCRIBED");
-        if (status === "SUBSCRIBED") sync();
-      });
+      const sync = () => {
+        if (!active) return;
 
-    return () => {
-      void supabase.removeChannel(channel);
-    };
+        try {
+          setSnapshot(summarizePresence(channel.presenceState()));
+        } catch (error) {
+          console.error("Live analytics presence sync failed:", error);
+          setConnectionError(true);
+        }
+      };
+
+      channel
+        .on("presence", { event: "sync" }, sync)
+        .on("presence", { event: "join" }, sync)
+        .on("presence", { event: "leave" }, sync)
+        .subscribe((status) => {
+          if (!active) return;
+
+          if (status === "SUBSCRIBED") {
+            setConnected(true);
+            setConnectionError(false);
+            sync();
+            return;
+          }
+
+          if (status === "CHANNEL_ERROR" || status === "TIMED_OUT") {
+            setConnected(false);
+            setConnectionError(true);
+          }
+
+          if (status === "CLOSED") {
+            setConnected(false);
+          }
+        });
+
+      return () => {
+        active = false;
+        void supabase.removeChannel(channel);
+      };
+    } catch (error) {
+      console.error("Live analytics setup failed:", error);
+      setConnected(false);
+      setConnectionError(true);
+      return undefined;
+    }
   }, []);
 
   return (
@@ -138,36 +179,28 @@ export default function LiveAnalyticsDashboard() {
           <div className="flex items-center gap-2 rounded-full border border-slate-200 bg-white px-3 py-2 text-sm shadow-sm">
             <span
               className={`h-2.5 w-2.5 rounded-full ${
-                connected ? "bg-emerald-500" : "bg-amber-500"
+                connected
+                  ? "bg-emerald-500"
+                  : connectionError
+                    ? "bg-red-500"
+                    : "bg-amber-500"
               }`}
             />
             <span className="font-medium text-slate-700">
-              {connected ? "Live connection" : "Connecting..."}
+              {connected
+                ? "Live connection"
+                : connectionError
+                  ? "Connection unavailable"
+                  : "Connecting..."}
             </span>
           </div>
         </div>
 
         <section className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-          <StatCard
-            label="Online now"
-            value={snapshot.total}
-            icon={<Activity className="h-5 w-5" />}
-          />
-          <StatCard
-            label="Signed in"
-            value={snapshot.signedIn}
-            icon={<LogIn className="h-5 w-5" />}
-          />
-          <StatCard
-            label="Anonymous"
-            value={snapshot.anonymous}
-            icon={<UsersRound className="h-5 w-5" />}
-          />
-          <StatCard
-            label="Active pages"
-            value={snapshot.pages.length}
-            icon={<Eye className="h-5 w-5" />}
-          />
+          <StatCard label="Online now" value={snapshot.total} />
+          <StatCard label="Signed in" value={snapshot.signedIn} />
+          <StatCard label="Anonymous" value={snapshot.anonymous} />
+          <StatCard label="Active pages" value={snapshot.pages.length} />
         </section>
 
         <section className="mt-6 overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
@@ -205,8 +238,8 @@ export default function LiveAnalyticsDashboard() {
         </section>
 
         <p className="mt-4 text-xs leading-5 text-slate-500">
-          Disconnects normally disappear within a few seconds. One browser is
-          counted once even if it has multiple GAHN AI tabs open.
+          Disconnects normally disappear within a few seconds. A visitor is
+          deduplicated by its browser visitor ID.
         </p>
       </div>
     </main>
