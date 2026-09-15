@@ -20,11 +20,21 @@ type Snapshot = {
   pages: Array<{ path: string; count: number }>;
 };
 
+type CumulativeTotals = {
+  totalVisitors: number;
+  totalAccounts: number;
+};
+
 const emptySnapshot: Snapshot = {
   total: 0,
   signedIn: 0,
   anonymous: 0,
   pages: [],
+};
+
+const emptyTotals: CumulativeTotals = {
+  totalVisitors: 0,
+  totalAccounts: 0,
 };
 
 function isPresenceMeta(value: unknown): value is PresenceMeta {
@@ -103,8 +113,44 @@ function StatCard({ label, value }: { label: string; value: number }) {
 
 export default function LiveAnalyticsDashboard() {
   const [snapshot, setSnapshot] = useState<Snapshot>(emptySnapshot);
+  const [totals, setTotals] = useState<CumulativeTotals>(emptyTotals);
   const [connected, setConnected] = useState(false);
   const [connectionError, setConnectionError] = useState(false);
+
+  useEffect(() => {
+    let active = true;
+
+    const loadTotals = async () => {
+      try {
+        const response = await fetch("/api/admin/analytics-totals", {
+          cache: "no-store",
+        });
+
+        if (!response.ok) return;
+
+        const data = (await response.json()) as Partial<CumulativeTotals>;
+
+        if (!active) return;
+
+        setTotals({
+          totalVisitors:
+            typeof data.totalVisitors === "number" ? data.totalVisitors : 0,
+          totalAccounts:
+            typeof data.totalAccounts === "number" ? data.totalAccounts : 0,
+        });
+      } catch (error) {
+        console.error("Cumulative analytics totals failed:", error);
+      }
+    };
+
+    void loadTotals();
+    const interval = window.setInterval(() => void loadTotals(), 5000);
+
+    return () => {
+      active = false;
+      window.clearInterval(interval);
+    };
+  }, []);
 
   useEffect(() => {
     let active = true;
@@ -201,6 +247,8 @@ export default function LiveAnalyticsDashboard() {
           <StatCard label="Signed in" value={snapshot.signedIn} />
           <StatCard label="Anonymous" value={snapshot.anonymous} />
           <StatCard label="Active pages" value={snapshot.pages.length} />
+          <StatCard label="Total visitors" value={totals.totalVisitors} />
+          <StatCard label="Total accounts" value={totals.totalAccounts} />
         </section>
 
         <section className="mt-6 overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
