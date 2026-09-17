@@ -106,8 +106,6 @@ const instructors = [
   },
 ];
 
-
-
 const steps = [
   {
     number: "01",
@@ -533,7 +531,6 @@ function LessonDemo() {
 
   return (
     <div className="mx-auto max-w-5xl rounded-2xl border border-[#D7E3F2] bg-white shadow-sm">
-      {/* Lesson header + progress */}
       <div className="border-b border-[#D7E3F2] p-6 sm:p-8">
         <div className="flex flex-wrap items-start justify-between gap-4">
           <div>
@@ -555,7 +552,6 @@ function LessonDemo() {
       </div>
 
       <div className="grid gap-8 p-6 sm:p-8 lg:grid-cols-[220px_minmax(0,1fr)]">
-        {/* Instructor panel */}
         <div className="flex flex-col items-center text-center lg:items-start lg:text-left">
           <div className="relative h-32 w-32 overflow-hidden rounded-2xl bg-[#ffffff] lg:h-40 lg:w-40">
             <img
@@ -575,9 +571,7 @@ function LessonDemo() {
           </p>
         </div>
 
-        {/* Main workspace */}
         <div className="min-w-0 space-y-6">
-          {/* Concept */}
           <div className="rounded-xl border border-[#D7E3F2] bg-[#ffffff] p-5 sm:p-6">
             <p className="text-xs font-bold uppercase tracking-[0.2em] text-[#1677FF]">
               Concept
@@ -593,7 +587,6 @@ function LessonDemo() {
             </p>
           </div>
 
-          {/* Practice task */}
           <div className="rounded-xl border border-[#D7E3F2] bg-white p-5 sm:p-6">
             <div className="flex items-center justify-between">
               <p className="text-xs font-bold uppercase tracking-[0.2em] text-[#1677FF]">
@@ -629,7 +622,6 @@ function LessonDemo() {
             )}
           </div>
 
-          {/* Correction panel */}
           {stage === "incorrect" && (
             <div className="rounded-xl border border-[#D7E3F2] bg-white p-5 sm:p-6">
               <div className="flex items-start gap-3 border-l-2 border-[#1677FF]/20 pl-4">
@@ -656,7 +648,6 @@ function LessonDemo() {
             </div>
           )}
 
-          {/* Understanding confirmation */}
           {stage === "correct" && (
             <div className="rounded-xl border border-[#D7E3F2] bg-white p-5 sm:p-6">
               <div className="flex items-start gap-3 border-l-2 border-[#1677FF]/20 pl-4">
@@ -674,7 +665,6 @@ function LessonDemo() {
             </div>
           )}
 
-          {/* Notes & lesson recap controls */}
           <div className="flex flex-col gap-3 border-t border-[#D7E3F2] pt-6 sm:flex-row sm:items-center sm:justify-between">
             <button
               type="button"
@@ -872,14 +862,14 @@ export default function Home() {
 
           <div className="hidden items-center gap-5 text-sm font-semibold xl:flex 2xl:gap-7">
             {navLinks.map((link) => (
-  <a
-    key={link.label}
-    href={link.href}
-    className="hover:text-[#1677FF]"
-  >
-    {link.label}
-  </a>
-))}
+              <a
+                key={link.label}
+                href={link.href}
+                className="hover:text-[#1677FF]"
+              >
+                {link.label}
+              </a>
+            ))}
             <Link href="/pricing" className="hover:text-[#1677FF]">
               Pricing
             </Link>
@@ -920,15 +910,15 @@ export default function Home() {
             <div className={`${shellClass} py-5`}>
               <div className="flex flex-col gap-1 text-sm font-semibold">
                 {navLinks.map((link) => (
-  <a
-    key={link.label}
-    href={link.href}
-    onClick={() => setMenuOpen(false)}
-    className="rounded-lg px-3 py-3 hover:bg-[#F5F8FC] hover:text-[#1677FF]"
-  >
-    {link.label}
-  </a>
-))}
+                  <a
+                    key={link.label}
+                    href={link.href}
+                    onClick={() => setMenuOpen(false)}
+                    className="rounded-lg px-3 py-3 hover:bg-[#F5F8FC] hover:text-[#1677FF]"
+                  >
+                    {link.label}
+                  </a>
+                ))}
                 <Link
                   href="/pricing"
                   onClick={() => setMenuOpen(false)}
@@ -957,7 +947,6 @@ export default function Home() {
         )}
       </header>
 
-      {/* HERO */}
       <section className="relative overflow-hidden border-b border-[#D7E3F2] bg-white">
         <div
           aria-hidden="true"
@@ -981,19 +970,21 @@ export default function Home() {
         >
           <div className="min-w-0">
             <p className="text-xs font-bold uppercase tracking-[0.24em] text-[#1677FF] sm:text-sm">
-              AI-Powered Learning for Students and Self-Learners
+              AI-Powered Learning for Students, Professors, Self-Learners & Everyone
             </p>
 
             <h1 className="mt-5 max-w-[690px] text-[2.85rem] font-extrabold leading-[1.04] tracking-[-0.045em] text-[#0B1739] sm:mt-6 sm:text-[3.55rem] xl:text-[3.85rem] 2xl:text-[4.2rem]">
-              <span className="block">Learn Smarter with</span>
-              <span className="block text-[#1677FF]">AI Instructors.</span>
+              <span className="block">Your Private AI Tutor for Anything.</span>
+              <span className="block text-[#1677FF]">Learn Without Limits.</span>
             </h1>
 
             <p className="mt-6 max-w-[650px] text-base leading-7 text-[#53657D] sm:mt-7 sm:text-lg sm:leading-8 xl:max-w-[590px] xl:text-base 2xl:max-w-[640px] 2xl:text-lg">
-              GAHN AI helps students and self-learners build real skills through
-              structured lessons. Instead of only giving answers, the AI teaches
-              concepts, gives practice, checks understanding, corrects mistakes,
-              and guides learners until the lesson makes sense.
+              GAHN AI is designed to turn any subject, career, book, skill, or
+              question into a guided learning experience. Learn in your language
+              with clear explanations, interactive practice, adaptive feedback,
+              and mastery checks—all inside one private system built to make
+              learning less confusing, more personal, and far more engaging than
+              traditional courses.
             </p>
 
             <div className="mt-7 flex flex-col gap-3 sm:mt-8 sm:flex-row sm:flex-wrap sm:gap-4">
@@ -1005,7 +996,6 @@ export default function Home() {
               </Link>
 
               <a
-                              
                 href="#how-it-works"
                 className="inline-flex w-full items-center justify-center gap-2 rounded-lg border border-[#D7E3F2] bg-white px-8 py-4 text-base font-semibold text-[#0B1739] hover:border-[#1677FF]/40 sm:w-auto sm:px-9"
               >
@@ -1038,7 +1028,6 @@ export default function Home() {
         </div>
       </section>
 
-      {/* WHO IT IS FOR */}
       <section className="border-y border-[#D7E3F2] bg-[#F8FBFF] py-16 sm:py-20">
         <div className={shellClass}>
           <SectionIntro
@@ -1066,12 +1055,8 @@ export default function Home() {
                 key={item.title}
                 className="rounded-2xl border border-[#D7E3F2] bg-[#ffffff] p-6 sm:p-7"
               >
-                <h3 className="text-xl font-bold text-[#0B1739]">
-                  {item.title}
-                </h3>
-                <p className="mt-4 text-base leading-7 text-[#53657D]">
-                  {item.text}
-                </p>
+                <h3 className="text-xl font-bold text-[#0B1739]">{item.title}</h3>
+                <p className="mt-4 text-base leading-7 text-[#53657D]">{item.text}</p>
               </div>
             ))}
           </div>
@@ -1090,7 +1075,6 @@ export default function Home() {
         </div>
       </section>
 
-      {/* PROGRAMS */}
       <section id="programs" className="scroll-mt-24 bg-white py-20 sm:py-24">
         <div className={shellClass}>
           <SectionIntro
@@ -1107,7 +1091,6 @@ export default function Home() {
         </div>
       </section>
 
-      {/* AI INSTRUCTOR EXPERIENCE */}
       <section
         id="instructors"
         className="scroll-mt-24 border-y border-[#D7E3F2] bg-[#F8FBFF] py-20 sm:py-24"
@@ -1153,7 +1136,6 @@ export default function Home() {
         </div>
       </section>
 
-      {/* HOW IT WORKS */}
       <section
         id="how-it-works"
         className="scroll-mt-24 bg-white py-20 sm:py-24"
@@ -1173,7 +1155,6 @@ export default function Home() {
         </div>
       </section>
 
-      {/* PLATFORM PREVIEW */}
       <section
         id="platform"
         className="scroll-mt-24 bg-[#F8FBFF] py-20 sm:py-24"
@@ -1201,9 +1182,7 @@ export default function Home() {
                     className="mt-1 h-5 w-5 flex-none text-[#1677FF]"
                     strokeWidth={1.75}
                   />
-                  <span className="text-base leading-7 text-[#53657D]">
-                    {feature}
-                  </span>
+                  <span className="text-base leading-7 text-[#53657D]">{feature}</span>
                 </li>
               ))}
             </ul>
@@ -1222,7 +1201,6 @@ export default function Home() {
         </div>
       </section>
 
-      {/* CTA BANNER */}
       <section className="bg-white py-20 sm:py-24">
         <div className={shellClass}>
           <div className="relative overflow-hidden flex flex-col items-start justify-between gap-8 rounded-[1.5rem] border border-[#D7E3F2] bg-[linear-gradient(135deg,#FFFFFF_0%,#F8FBFF_60%,#EAF3FF_100%)] px-6 py-9 shadow-[0_18px_50px_rgba(11,23,57,0.06)] sm:px-8 sm:py-10 lg:flex-row lg:items-center lg:px-10 lg:py-12">
@@ -1268,7 +1246,6 @@ export default function Home() {
         </div>
       </section>
 
-      {/* FOOTER */}
       <footer className="border-t border-[#D7E3F2] bg-white py-14">
         <div className={shellClass}>
           <div className="flex flex-col items-start justify-between gap-6 sm:flex-row sm:items-center">
@@ -1279,9 +1256,7 @@ export default function Home() {
                 className="h-9 w-9 rounded-full object-cover"
               />
               <div>
-                <p className="text-base font-extrabold tracking-[-0.02em]">
-                  GAHN AI
-                </p>
+                <p className="text-base font-extrabold tracking-[-0.02em]">GAHN AI</p>
                 <p className="text-[8px] font-bold uppercase tracking-[0.16em] text-[#53657D]">
                   Global AI Human Helper Network
                 </p>
@@ -1289,27 +1264,15 @@ export default function Home() {
             </Link>
 
             <div className="flex flex-wrap items-center gap-6 text-sm font-semibold text-[#53657D]">
-              <Link href="/about" className="hover:text-[#1677FF]">
-                About
-              </Link>
-              <Link href="/contact" className="hover:text-[#1677FF]">
-                Contact
-              </Link>
-              <Link href="/privacy" className="hover:text-[#1677FF]">
-                Privacy Policy
-              </Link>
-              <Link href="/terms" className="hover:text-[#1677FF]">
-                Terms of Service
-              </Link>
+              <Link href="/about" className="hover:text-[#1677FF]">About</Link>
+              <Link href="/contact" className="hover:text-[#1677FF]">Contact</Link>
+              <Link href="/privacy" className="hover:text-[#1677FF]">Privacy Policy</Link>
+              <Link href="/terms" className="hover:text-[#1677FF]">Terms of Service</Link>
             </div>
           </div>
 
           <div className="mt-12 flex flex-col items-center justify-between gap-4 border-t border-[#D7E3F2] pt-8 sm:flex-row">
-            <p className="text-xs text-[#53657D]">
-              © 2026 GAHN AI. All rights reserved.
-            </p>
-
-           
+            <p className="text-xs text-[#53657D]">© 2026 GAHN AI. All rights reserved.</p>
           </div>
         </div>
       </footer>
