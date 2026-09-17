@@ -17,7 +17,6 @@ import {
 
 import AIInstructor from "@/components/instructors/AIInstructor";
 import LanguageSelector from "@/components/LanguageSelector";
-import { supabase } from "@/lib/supabaseClient";
 
 const worldInformation = {
   "career-skills": { title: "Career Skills", instructor: "Alex" },
@@ -66,69 +65,6 @@ export default function LessonPage() {
     setLanguage(nextLanguage);
     window.localStorage.setItem("gahn-language", nextLanguage);
   }
-
-  useEffect(() => {
-    let active = true;
-
-    async function trackLesson() {
-      const {
-        data: { user },
-      } = await supabase.auth.getUser();
-
-      if (!active || !user) return;
-
-      const now = new Date().toISOString();
-
-      const { data: existing, error: lookupError } = await supabase
-        .from("learning_progress")
-        .select("id, status, progress_percent")
-        .eq("user_id", user.id)
-        .eq("world_slug", resolvedWorldSlug)
-        .eq("topic", requestedTopic)
-        .maybeSingle();
-
-      if (!active) return;
-
-      if (lookupError) {
-        console.error("Learning progress lookup failed:", lookupError);
-        return;
-      }
-
-      if (existing) {
-        const { error: updateError } = await supabase
-          .from("learning_progress")
-          .update({ last_activity_at: now })
-          .eq("id", existing.id)
-          .eq("user_id", user.id);
-
-        if (updateError) {
-          console.error("Learning progress update failed:", updateError);
-        }
-        return;
-      }
-
-      const { error: insertError } = await supabase
-        .from("learning_progress")
-        .insert({
-          user_id: user.id,
-          world_slug: resolvedWorldSlug,
-          topic: requestedTopic,
-          lesson_id: lessonId,
-          status: "in_progress",
-          progress_percent: 10,
-          last_activity_at: now,
-        });
-
-      if (insertError) {
-        console.error("Learning progress creation failed:", insertError);
-      }
-    }
-
-    trackLesson();
-    return () => {
-      active = false;
-    };
-  }, [lessonId, requestedTopic, resolvedWorldSlug]);
 
   const backHref =
     resolvedWorldSlug === "career-skills" && careerSection
@@ -187,7 +123,7 @@ export default function LessonPage() {
                 <div className="mt-3 flex flex-wrap items-center gap-4 text-xs font-semibold text-[#53657D]">
                   <span className="flex items-center gap-2">
                     <CheckCircle2 className="h-4 w-4 text-[#1677FF]" />
-                    This lesson is saved to your dashboard automatically.
+                    Progress tracking is off until live AI lessons are enabled.
                   </span>
                   <span className="rounded-full bg-[#F1F7FF] px-3 py-1.5 text-[#1677FF]">
                     Teaching in {language}
