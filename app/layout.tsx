@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import SitePresence from "@/components/SitePresence";
+import LandingHeroEnhancer from "@/components/LandingHeroEnhancer";
 import "./globals.css";
 
 export const viewport = {
@@ -20,7 +21,8 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: "GAHN AI",
-  description: "Global AI Human Helper Network",
+  description:
+    "Private AI learning for careers, school, skills, books, and almost any topic, with clear step-by-step teaching in your preferred language.",
 };
 
 export default function RootLayout({
@@ -35,6 +37,7 @@ export default function RootLayout({
     >
       <body className="min-h-full flex flex-col">
         <SitePresence />
+        <LandingHeroEnhancer />
         {children}
       </body>
     </html>
