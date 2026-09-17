@@ -2,131 +2,229 @@
 
 import { useCallback, useEffect, useRef } from "react";
 import { usePathname } from "next/navigation";
-import type { RealtimeChannel } from "@supabase/supabase-js";
 import { supabase } from "@/lib/supabaseClient";
 
-const PRESENCE_CHANNEL = "gahn-site-presence";
 const VISITOR_ID_KEY = "gahn_presence_visitor_id";
+const SESSION_ID_KEY = "gahn_analytics_session_id";
+const ATTRIBUTION_KEY = "gahn_analytics_attribution";
+const HEARTBEAT_MS = 10_000;
+
+type Attribution = {
+  referrer: string;
+  source: string;
+  medium: string;
+  campaign: string;
+};
+
+function createId(prefix: string) {
+  const value =
+    typeof crypto !== "undefined" && "randomUUID" in crypto
+      ? crypto.randomUUID()
+      : `${Date.now()}_${Math.random().toString(36).slice(2)}`;
+  return `${prefix}_${value}`;
+}
 
 function getVisitorId() {
   try {
     const existing = window.localStorage.getItem(VISITOR_ID_KEY);
     if (existing) return existing;
-
-    const created =
-      typeof crypto !== "undefined" && "randomUUID" in crypto
-        ? crypto.randomUUID()
-        : `visitor_${Date.now()}_${Math.random().toString(36).slice(2)}`;
-
+    const created = createId("visitor");
     window.localStorage.setItem(VISITOR_ID_KEY, created);
     return created;
   } catch {
-    return `visitor_${Date.now()}_${Math.random().toString(36).slice(2)}`;
+    return createId("visitor");
   }
+}
+
+function getSessionId() {
+  try {
+    const existing = window.sessionStorage.getItem(SESSION_ID_KEY);
+    if (existing) return existing;
+    const created = createId("session");
+    window.sessionStorage.setItem(SESSION_ID_KEY, created);
+    return created;
+  } catch {
+    return createId("session");
+  }
+}
+
+function getAttribution(): Attribution {
+  try {
+    const existing = window.sessionStorage.getItem(ATTRIBUTION_KEY);
+    if (existing) return JSON.parse(existing) as Attribution;
+  } catch {
+    // Fall through and rebuild attribution.
+  }
+
+  const params = new URLSearchParams(window.location.search);
+  const referrer = document.referrer || "";
+  let source = params.get("utm_source") || "";
+
+  if (!source && referrer) {
+    try {
+      const referrerHost = new URL(referrer).hostname.replace(/^www\./, "");
+      const currentHost = window.location.hostname.replace(/^www\./, "");
+      if (referrerHost && referrerHost !== currentHost) source = referrerHost;
+    } catch {
+      // Ignore malformed referrers.
+    }
+  }
+
+  const attribution: Attribution = {
+    referrer,
+    source: source || "Direct",
+    medium: params.get("utm_medium") || "",
+    campaign: params.get("utm_campaign") || "",
+  };
+
+  try {
+    window.sessionStorage.setItem(ATTRIBUTION_KEY, JSON.stringify(attribution));
+  } catch {
+    // Analytics should never interfere with the website.
+  }
+
+  return attribution;
 }
 
 export default function SitePresence() {
   const pathname = usePathname();
   const isAdminRoute = pathname?.startsWith("/admin") ?? false;
-  const channelRef = useRef<RealtimeChannel | null>(null);
-  const visitorIdRef = useRef<string | null>(null);
-  const pathRef = useRef(pathname || "/");
+  const visitorIdRef = useRef("");
+  const sessionIdRef = useRef("");
+  const currentPathRef = useRef(pathname || "/");
   const authenticatedRef = useRef(false);
-  const subscribedRef = useRef(false);
+  const initializedRef = useRef(false);
+  const lastTrackedPathRef = useRef("");
+  const attributionRef = useRef<Attribution>({
+    referrer: "",
+    source: "Direct",
+    medium: "",
+    campaign: "",
+  });
 
-  const trackCurrent = useCallback(async () => {
-    const channel = channelRef.current;
-    const visitorId = visitorIdRef.current;
-
-    if (!channel || !visitorId || !subscribedRef.current) return;
-
-    const path = pathRef.current || "/";
-
-    await channel.track({
-      visitor_id: visitorId,
+  const buildPayload = useCallback(
+    (action: "page_view" | "heartbeat" | "leave", pathOverride?: string) => ({
+      action,
+      visitor_id: visitorIdRef.current,
+      session_id: sessionIdRef.current,
+      path: pathOverride || currentPathRef.current || "/",
+      title: typeof document !== "undefined" ? document.title : "",
       authenticated: authenticatedRef.current,
-      path,
-      online_at: new Date().toISOString(),
-    });
-  }, []);
+      referrer: attributionRef.current.referrer,
+      source: attributionRef.current.source,
+      medium: attributionRef.current.medium,
+      campaign: attributionRef.current.campaign,
+      language: typeof navigator !== "undefined" ? navigator.language : "",
+      timezone:
+        typeof Intl !== "undefined"
+          ? Intl.DateTimeFormat().resolvedOptions().timeZone || ""
+          : "",
+      screen_width: typeof window !== "undefined" ? window.innerWidth : null,
+      screen_height: typeof window !== "undefined" ? window.innerHeight : null,
+    }),
+    []
+  );
+
+  const send = useCallback(
+    async (action: "page_view" | "heartbeat" | "leave", pathOverride?: string) => {
+      if (!visitorIdRef.current || !sessionIdRef.current || isAdminRoute) return;
+
+      try {
+        await fetch("/api/analytics/track", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(buildPayload(action, pathOverride)),
+          keepalive: true,
+          cache: "no-store",
+        });
+      } catch {
+        // Analytics failures must never interrupt the user experience.
+      }
+    },
+    [buildPayload, isAdminRoute]
+  );
+
+  const sendLeaveBeacon = useCallback(() => {
+    if (!visitorIdRef.current || !sessionIdRef.current || isAdminRoute) return;
+
+    try {
+      const payload = JSON.stringify(buildPayload("leave"));
+      const blob = new Blob([payload], { type: "application/json" });
+      navigator.sendBeacon("/api/analytics/track", blob);
+    } catch {
+      // Best-effort disconnect signal.
+    }
+  }, [buildPayload, isAdminRoute]);
 
   useEffect(() => {
-    pathRef.current = pathname || "/";
-    if (!isAdminRoute) {
-      void trackCurrent();
+    currentPathRef.current = pathname || "/";
+
+    if (
+      initializedRef.current &&
+      !isAdminRoute &&
+      lastTrackedPathRef.current !== currentPathRef.current
+    ) {
+      lastTrackedPathRef.current = currentPathRef.current;
+      void send("page_view", currentPathRef.current);
     }
-  }, [pathname, isAdminRoute, trackCurrent]);
+  }, [pathname, isAdminRoute, send]);
 
   useEffect(() => {
-    // The admin analytics page needs to subscribe to the same Presence topic as
-    // an observer. Do not also mount the visitor tracker there, because two
-    // subscriptions to the same topic on one Supabase client conflict.
-    if (isAdminRoute) {
-      channelRef.current = null;
-      subscribedRef.current = false;
-      return;
-    }
+    if (isAdminRoute) return;
 
+    let active = true;
     visitorIdRef.current = getVisitorId();
+    sessionIdRef.current = getSessionId();
+    attributionRef.current = getAttribution();
 
-    void fetch("/api/analytics/visit", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ visitor_id: visitorIdRef.current }),
-      keepalive: true,
-    }).catch((error) => {
-      console.error("Persistent visitor tracking failed:", error);
-    });
+    const initialize = async () => {
+      const {
+        data: { session },
+      } = await supabase.auth.getSession();
 
-    const channel = supabase.channel(PRESENCE_CHANNEL, {
-      config: {
-        presence: {
-          key: visitorIdRef.current,
-        },
-      },
-    });
+      if (!active) return;
+      authenticatedRef.current = Boolean(session?.user);
+      initializedRef.current = true;
+      lastTrackedPathRef.current = currentPathRef.current;
+      await send("page_view", currentPathRef.current);
+    };
 
-    channelRef.current = channel;
+    void initialize();
 
     const {
       data: { subscription: authSubscription },
     } = supabase.auth.onAuthStateChange((_event, session) => {
       authenticatedRef.current = Boolean(session?.user);
-      void trackCurrent();
+      if (initializedRef.current) void send("heartbeat");
     });
 
-    channel.subscribe(async (status) => {
-      if (status !== "SUBSCRIBED") return;
+    const heartbeat = window.setInterval(() => {
+      if (document.visibilityState === "visible") void send("heartbeat");
+    }, HEARTBEAT_MS);
 
-      subscribedRef.current = true;
-
-      const {
-        data: { session },
-      } = await supabase.auth.getSession();
-
-      authenticatedRef.current = Boolean(session?.user);
-      await trackCurrent();
-    });
-
-    const handlePageHide = () => {
-      if (subscribedRef.current) {
-        void channel.untrack();
+    const handleVisibility = () => {
+      if (document.visibilityState === "visible") {
+        void send("heartbeat");
+      } else {
+        sendLeaveBeacon();
       }
     };
 
+    const handlePageHide = () => sendLeaveBeacon();
+
+    document.addEventListener("visibilitychange", handleVisibility);
     window.addEventListener("pagehide", handlePageHide);
 
     return () => {
+      active = false;
+      initializedRef.current = false;
+      window.clearInterval(heartbeat);
+      document.removeEventListener("visibilitychange", handleVisibility);
       window.removeEventListener("pagehide", handlePageHide);
-      subscribedRef.current = false;
       authSubscription.unsubscribe();
-      void channel.untrack();
-      void supabase.removeChannel(channel);
-      channelRef.current = null;
+      sendLeaveBeacon();
     };
-  }, [isAdminRoute, trackCurrent]);
+  }, [isAdminRoute, send, sendLeaveBeacon]);
 
   return null;
 }
