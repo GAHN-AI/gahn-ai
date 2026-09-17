@@ -114,10 +114,10 @@ export default function CareerSectionPage() {
               <Sparkles className="h-5 w-5" strokeWidth={1.75} />
             </div>
             <div>
-              <p className="text-xs font-bold uppercase tracking-[0.2em] text-[#1677FF]">Choose what to learn</p>
-              <h2 className="mt-1 text-2xl font-extrabold tracking-[-0.02em]">Pick a career or skill path</h2>
+              <p className="text-xs font-bold uppercase tracking-[0.2em] text-[#1677FF]">Choose your path</p>
+              <h2 className="mt-1 text-2xl font-extrabold tracking-[-0.02em]">Choose the career you want to learn</h2>
               <p className="mt-2 text-sm leading-6 text-[#53657D]">
-                Choose one option below. It opens the same AI learning panel you already use, with Alex teaching that specific path in {language}.
+                Pick a career below. GAHN AI will open the same learning panel you already use, with Alex teaching that career step by step in {language}.
               </p>
             </div>
           </div>
@@ -130,7 +130,7 @@ export default function CareerSectionPage() {
             <input
               value={search}
               onChange={(event) => setSearch(event.target.value)}
-              placeholder={`Search ${careerSection.title.toLowerCase()}...`}
+              placeholder={`Search ${careerSection.title.toLowerCase()} careers...`}
               className="h-14 w-full rounded-xl border border-[#D7E3F2] bg-white pl-12 pr-4 text-sm text-[#0B1739] outline-none placeholder:text-[#7A8AA0] focus:border-[#1677FF] focus:ring-2 focus:ring-[#1677FF]/15"
             />
           </div>
@@ -139,9 +139,9 @@ export default function CareerSectionPage() {
         <section className="mt-8">
           <div className="flex flex-wrap items-end justify-between gap-3">
             <div>
-              <p className="text-xs font-bold uppercase tracking-[0.22em] text-[#1677FF]">Career Paths</p>
+              <p className="text-xs font-bold uppercase tracking-[0.22em] text-[#1677FF]">Career Options</p>
               <h2 className="mt-2 text-3xl font-extrabold tracking-[-0.03em]">
-                Learn a specific path
+                Pick what you want to become or learn
               </h2>
             </div>
             <p className="text-sm font-semibold text-[#53657D]">
@@ -164,7 +164,7 @@ export default function CareerSectionPage() {
                 <h3 className="mt-4 text-lg font-bold text-[#0B1739]">{lesson.title}</h3>
                 <p className="mt-2 flex-1 text-sm leading-6 text-[#53657D]">{lesson.description}</p>
                 <div className="mt-4 inline-flex items-center gap-2 text-sm font-bold text-[#1677FF]">
-                  Start this lesson
+                  Learn this career
                   <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
                 </div>
               </Link>
@@ -173,7 +173,7 @@ export default function CareerSectionPage() {
 
           {!filteredLessons.length && (
             <div className="mt-6 rounded-[1.5rem] border border-dashed border-[#D7E3F2] bg-white p-8 text-center text-sm text-[#53657D]">
-              No matching career paths. Try another search.
+              No matching career options. Try another search.
             </div>
           )}
         </section>
