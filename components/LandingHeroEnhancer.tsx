@@ -3,11 +3,11 @@
 import { useEffect } from "react";
 import { usePathname } from "next/navigation";
 
-const HERO_LINE_ONE = "Learn Anything You Want,";
-const HERO_LINE_TWO = "in a Way You Understand.";
+const HERO_LINE_ONE = "Learn Anything in the World.";
+const HERO_LINE_TWO = "Understand It Clearly.";
 const HERO_EYEBROW = "PRIVATE AI LEARNING — ANY TOPIC, ANY LANGUAGE";
 const HERO_DESCRIPTION =
-  "Choose a career, school subject, skill, book, or topic. GAHN AI teaches it step by step in clear language—English or your preferred language—then gives practice and checks that you actually understand.";
+  "Your private AI learning system can teach careers, school subjects, books, skills, and almost any topic step by step—in plain English or the language you speak—so you can learn without confusion.";
 
 export default function LandingHeroEnhancer() {
   const pathname = usePathname();
@@ -21,6 +21,7 @@ export default function LandingHeroEnhancer() {
         const text = heading.textContent?.replace(/\s+/g, " ").trim() || "";
         return (
           text.includes("Learn Smarter with") ||
+          text.includes("Learn Anything You Want") ||
           text.includes(HERO_LINE_ONE) ||
           text.includes(HERO_LINE_TWO)
         );
