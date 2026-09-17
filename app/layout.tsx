@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import SitePresence from "@/components/SitePresence";
-import LandingHeroEnhancer from "@/components/LandingHeroEnhancer";
 import "./globals.css";
 
 export const viewport = {
@@ -37,7 +36,6 @@ export default function RootLayout({
     >
       <body className="min-h-full flex flex-col">
         <SitePresence />
-        <LandingHeroEnhancer />
         {children}
       </body>
     </html>
