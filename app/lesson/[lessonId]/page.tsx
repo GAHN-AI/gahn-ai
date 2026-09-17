@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { useEffect } from "react";
 import { useParams, useSearchParams } from "next/navigation";
 import {
   ArrowLeft,
@@ -15,6 +16,7 @@ import {
 } from "lucide-react";
 
 import AIInstructor from "@/components/instructors/AIInstructor";
+import { supabase } from "@/lib/supabaseClient";
 
 const worldInformation = {
   "career-skills": {
@@ -57,24 +59,90 @@ export default function LessonPage() {
   const searchParams = useSearchParams();
 
   const lessonId = params.lessonId;
+  const requestedWorldSlug = searchParams.get("world") || "general-knowledge";
 
-  const worldSlug = searchParams.get("world") || "general-knowledge";
+  const resolvedWorldSlug: WorldKey =
+    requestedWorldSlug in worldInformation
+      ? (requestedWorldSlug as WorldKey)
+      : "general-knowledge";
 
   const requestedTopic =
     searchParams.get("topic") ||
     (lessonId !== "custom" ? formatSlug(lessonId) : "New Learning Topic");
 
-  const world =
-    worldInformation[worldSlug as WorldKey] ||
-    worldInformation["general-knowledge"];
+  const world = worldInformation[resolvedWorldSlug];
+
+  useEffect(() => {
+    let active = true;
+
+    async function trackLesson() {
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
+
+      if (!active || !user) return;
+
+      const now = new Date().toISOString();
+
+      const { data: existing, error: lookupError } = await supabase
+        .from("learning_progress")
+        .select("id, status, progress_percent")
+        .eq("user_id", user.id)
+        .eq("world_slug", resolvedWorldSlug)
+        .eq("topic", requestedTopic)
+        .maybeSingle();
+
+      if (!active) return;
+
+      if (lookupError) {
+        console.error("Learning progress lookup failed:", lookupError);
+        return;
+      }
+
+      if (existing) {
+        const { error: updateError } = await supabase
+          .from("learning_progress")
+          .update({ last_activity_at: now })
+          .eq("id", existing.id)
+          .eq("user_id", user.id);
+
+        if (updateError) {
+          console.error("Learning progress update failed:", updateError);
+        }
+
+        return;
+      }
+
+      const { error: insertError } = await supabase
+        .from("learning_progress")
+        .insert({
+          user_id: user.id,
+          world_slug: resolvedWorldSlug,
+          topic: requestedTopic,
+          lesson_id: lessonId,
+          status: "in_progress",
+          progress_percent: 10,
+          last_activity_at: now,
+        });
+
+      if (insertError) {
+        console.error("Learning progress creation failed:", insertError);
+      }
+    }
+
+    trackLesson();
+
+    return () => {
+      active = false;
+    };
+  }, [lessonId, requestedTopic, resolvedWorldSlug]);
 
   return (
     <main className="min-h-screen bg-[#F8FBFF] font-sans text-[#0B1739]">
-      {/* HEADER */}
       <header className="border-b border-[#D7E3F2] bg-white">
         <div className="mx-auto flex max-w-[1600px] items-center justify-between px-5 py-4 sm:px-8">
           <Link
-            href={`/learn/${worldSlug}`}
+            href={`/learn/${resolvedWorldSlug}`}
             className="inline-flex items-center gap-2 text-sm font-semibold text-[#53657D] hover:text-[#1677FF]"
           >
             <ArrowLeft className="h-4 w-4" />
@@ -101,7 +169,6 @@ export default function LessonPage() {
       </header>
 
       <div className="mx-auto max-w-[1600px] px-5 py-7 sm:px-8">
-        {/* LESSON INFORMATION */}
         <section className="relative mb-6 overflow-hidden rounded-[1.5rem] border border-[#D7E3F2] bg-white px-6 py-6 shadow-[0_12px_35px_rgba(11,23,57,0.05)] sm:px-8">
           <div
             aria-hidden="true"
@@ -124,6 +191,11 @@ export default function LessonPage() {
                   Your AI instructor will build this learning path around your
                   current knowledge, responses, mistakes, and progress.
                 </p>
+
+                <div className="mt-3 flex items-center gap-2 text-xs font-semibold text-[#53657D]">
+                  <CheckCircle2 className="h-4 w-4 text-[#1677FF]" />
+                  This lesson is saved to your dashboard automatically.
+                </div>
               </div>
 
               <div className="w-fit rounded-full border border-[#CFE0F5] bg-[#EAF3FF] px-4 py-2 text-sm font-bold text-[#1677FF]">
@@ -133,9 +205,7 @@ export default function LessonPage() {
           </div>
         </section>
 
-        {/* MAIN CLASSROOM */}
         <section className="grid gap-6 xl:grid-cols-[minmax(0,1.25fr)_minmax(420px,0.75fr)]">
-          {/* LEFT — AI INSTRUCTOR */}
           <div className="min-w-0">
             <AIInstructor
               instructorName={world.instructor}
@@ -144,7 +214,6 @@ export default function LessonPage() {
             />
           </div>
 
-          {/* RIGHT — VISUAL LEARNING PANEL */}
           <aside className="overflow-hidden rounded-[1.5rem] border border-[#D7E3F2] bg-white shadow-[0_16px_45px_rgba(11,23,57,0.06)]">
             <div className="border-b border-[#D7E3F2] bg-[linear-gradient(135deg,#FFFFFF_0%,#F8FBFF_65%,#EAF3FF_100%)] p-5 sm:p-6">
               <p className="text-xs font-bold uppercase tracking-[0.18em] text-[#1677FF]">
@@ -162,7 +231,6 @@ export default function LessonPage() {
             </div>
 
             <div className="max-h-[640px] space-y-4 overflow-y-auto p-5 sm:p-6">
-              {/* OBJECTIVE */}
               <div className="rounded-xl border border-[#CFE0F5] bg-[#F1F7FF] p-5">
                 <div className="flex items-center gap-3">
                   <div className="grid h-9 w-9 place-items-center rounded-lg bg-white text-[#1677FF]">
@@ -178,7 +246,6 @@ export default function LessonPage() {
                 </p>
               </div>
 
-              {/* CURRENT EXPLANATION */}
               <div className="rounded-xl border border-[#D7E3F2] bg-white p-5">
                 <div className="flex items-center gap-3">
                   <div className="grid h-9 w-9 place-items-center rounded-lg bg-[#EAF3FF] text-[#1677FF]">
@@ -196,7 +263,6 @@ export default function LessonPage() {
                 </div>
               </div>
 
-              {/* VISUAL EXAMPLE */}
               <div className="rounded-xl border border-[#D7E3F2] bg-white p-5">
                 <div className="flex items-center gap-3">
                   <div className="grid h-9 w-9 place-items-center rounded-lg bg-[#EAF3FF] text-[#1677FF]">
@@ -220,7 +286,6 @@ export default function LessonPage() {
                 </div>
               </div>
 
-              {/* IMPORTANT NOTE */}
               <div className="rounded-xl border border-[#D7E3F2] bg-white p-5">
                 <div className="flex items-center gap-3">
                   <div className="grid h-9 w-9 place-items-center rounded-lg bg-[#EAF3FF] text-[#1677FF]">
@@ -236,7 +301,6 @@ export default function LessonPage() {
                 </p>
               </div>
 
-              {/* PRACTICE */}
               <div className="rounded-xl border border-[#D7E3F2] bg-white p-5">
                 <div className="flex items-center gap-3">
                   <div className="grid h-9 w-9 place-items-center rounded-lg bg-[#EAF3FF] text-[#1677FF]">
@@ -264,7 +328,6 @@ export default function LessonPage() {
           </aside>
         </section>
 
-        {/* LEARNING PATH */}
         <section className="mt-6 rounded-[1.5rem] border border-[#D7E3F2] bg-white p-6 shadow-[0_12px_35px_rgba(11,23,57,0.05)]">
           <div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-center">
             <div>
