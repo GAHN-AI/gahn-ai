@@ -6,19 +6,24 @@ import { useRouter } from "next/navigation";
 import { supabase } from "@/lib/supabaseClient";
 import type { LucideIcon } from "lucide-react";
 import {
+  AlertCircle,
   Award,
   Bell,
   Bot,
   BookOpen,
   Brain,
   Briefcase,
+  CalendarDays,
+  CheckCircle2,
   ChevronDown,
+  Clock3,
   Crown,
   Flame,
   FolderKanban,
   Globe2,
   GraduationCap,
   LayoutDashboard,
+  ListChecks,
   LogOut,
   MessageSquare,
   Search,
@@ -27,43 +32,95 @@ import {
   Users,
 } from "lucide-react";
 
-const navItems: { label: string; Icon: LucideIcon }[] = [
-  { label: "Dashboard", Icon: LayoutDashboard },
-  { label: "Career Skills", Icon: Briefcase },
-  { label: "School Help", Icon: GraduationCap },
-  { label: "Brain Development", Icon: Brain },
-  { label: "General Knowledge", Icon: Globe2 },
-  { label: "Book Intelligence", Icon: BookOpen },
-  { label: "AI Instructors", Icon: Bot },
-  { label: "My Notes", Icon: StickyNote },
-  { label: "Certificates", Icon: Award },
-  { label: "Portfolio", Icon: FolderKanban },
-  { label: "Progress", Icon: TrendingUp },
-  { label: "Community", Icon: Users },
+type LearningProgressRow = {
+  id: string;
+  world_slug: string;
+  topic: string;
+  lesson_id: string;
+  status: "in_progress" | "completed";
+  progress_percent: number;
+  score: number | null;
+  started_at: string;
+  last_activity_at: string;
+  completed_at: string | null;
+};
+
+type AssignmentRow = {
+  id: string;
+  world_slug: string;
+  topic: string | null;
+  title: string;
+  description: string | null;
+  due_at: string | null;
+  status: "assigned" | "in_progress" | "submitted" | "graded";
+  score: number | null;
+  max_score: number;
+  created_at: string;
+  submitted_at: string | null;
+  graded_at: string | null;
+};
+
+type WorldDefinition = {
+  slug: string;
+  Icon: LucideIcon;
+  title: string;
+  text: string;
+};
+
+const navItems: { label: string; Icon: LucideIcon; href: string }[] = [
+  { label: "Dashboard", Icon: LayoutDashboard, href: "/dashboard" },
+  { label: "Career Skills", Icon: Briefcase, href: "/learn/career-skills" },
+  { label: "School Help", Icon: GraduationCap, href: "/learn/school-help" },
+  {
+    label: "Brain Development",
+    Icon: Brain,
+    href: "/learn/brain-development",
+  },
+  {
+    label: "General Knowledge",
+    Icon: Globe2,
+    href: "/learn/general-knowledge",
+  },
+  {
+    label: "Book Intelligence",
+    Icon: BookOpen,
+    href: "/learn/book-intelligence",
+  },
+  { label: "AI Instructors", Icon: Bot, href: "/in-progress" },
+  { label: "My Notes", Icon: StickyNote, href: "/in-progress" },
+  { label: "Certificates", Icon: Award, href: "/in-progress" },
+  { label: "Portfolio", Icon: FolderKanban, href: "/in-progress" },
+  { label: "Progress", Icon: TrendingUp, href: "/in-progress" },
+  { label: "Community", Icon: Users, href: "/in-progress" },
 ];
 
-const worlds: { Icon: LucideIcon; title: string; text: string }[] = [
+const worlds: WorldDefinition[] = [
   {
+    slug: "career-skills",
     Icon: Briefcase,
     title: "Career Skills",
     text: "Build real skills. Get job ready.",
   },
   {
+    slug: "school-help",
     Icon: GraduationCap,
     title: "School Help",
     text: "Master your subjects. Excel in school.",
   },
   {
+    slug: "brain-development",
     Icon: Brain,
     title: "Brain Development",
     text: "Train your brain. Upgrade your mind.",
   },
   {
+    slug: "general-knowledge",
     Icon: Globe2,
     title: "General Knowledge",
     text: "Learn life skills. Grow every day.",
   },
   {
+    slug: "book-intelligence",
     Icon: BookOpen,
     title: "Book Intelligence",
     text: "Learn from books. Remember more.",
@@ -97,17 +154,82 @@ function getInitialColor(name: string) {
   return colors[total % colors.length];
 }
 
+function formatDate(value: string | null) {
+  if (!value) return "No due date";
+
+  return new Intl.DateTimeFormat("en-US", {
+    month: "short",
+    day: "numeric",
+    year: "numeric",
+  }).format(new Date(value));
+}
+
+function formatWorldName(slug: string) {
+  return worlds.find((world) => world.slug === slug)?.title || slug;
+}
+
+function getPercentageScore(score: number | null, maxScore = 100) {
+  if (score === null || !maxScore) return null;
+  return Math.round((Number(score) / Number(maxScore)) * 100);
+}
+
+function getLetterGrade(score: number | null) {
+  if (score === null) return "—";
+  if (score >= 90) return "A";
+  if (score >= 80) return "B";
+  if (score >= 70) return "C";
+  if (score >= 60) return "D";
+  return "F";
+}
+
+function dayKey(date: Date) {
+  return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(
+    2,
+    "0"
+  )}-${String(date.getDate()).padStart(2, "0")}`;
+}
+
+function calculateStreak(progress: LearningProgressRow[]) {
+  if (!progress.length) return 0;
+
+  const activeDays = new Set(
+    progress.map((item) => dayKey(new Date(item.last_activity_at)))
+  );
+
+  const cursor = new Date();
+  cursor.setHours(0, 0, 0, 0);
+
+  if (!activeDays.has(dayKey(cursor))) {
+    cursor.setDate(cursor.getDate() - 1);
+    if (!activeDays.has(dayKey(cursor))) return 0;
+  }
+
+  let streak = 0;
+
+  while (activeDays.has(dayKey(cursor))) {
+    streak += 1;
+    cursor.setDate(cursor.getDate() - 1);
+  }
+
+  return streak;
+}
+
 export default function DashboardPage() {
   const router = useRouter();
 
   const [fullName, setFullName] = useState("Learner");
   const [initials, setInitials] = useState("AI");
   const [avatarUrl, setAvatarUrl] = useState("");
+  const [learningProgress, setLearningProgress] = useState<LearningProgressRow[]>(
+    []
+  );
+  const [assignments, setAssignments] = useState<AssignmentRow[]>([]);
+  const [dashboardLoading, setDashboardLoading] = useState(true);
 
   const avatarColor = useMemo(() => getInitialColor(fullName), [fullName]);
 
   useEffect(() => {
-    async function loadUserProfile() {
+    async function loadDashboard() {
       const {
         data: { user },
       } = await supabase.auth.getUser();
@@ -117,17 +239,17 @@ export default function DashboardPage() {
         return;
       }
 
-      const { data: profile } = await supabase
-        .from("profiles")
-        .select("full_name, avatar_url, email")
-        .eq("id", user.id)
-        .maybeSingle();
-
       const fallbackName =
         user.user_metadata?.full_name ||
         user.user_metadata?.name ||
         user.email?.split("@")[0] ||
         "Learner";
+
+      const { data: profile } = await supabase
+        .from("profiles")
+        .select("full_name, avatar_url, email")
+        .eq("id", user.id)
+        .maybeSingle();
 
       if (!profile) {
         await supabase.from("profiles").insert({
@@ -140,18 +262,60 @@ export default function DashboardPage() {
         setFullName(fallbackName);
         setInitials(getInitials(fallbackName));
         setAvatarUrl("");
-        return;
+      } else {
+        const savedName = profile.full_name || fallbackName;
+        const savedAvatar = profile.avatar_url || "";
+
+        setFullName(savedName);
+        setInitials(getInitials(savedName));
+        setAvatarUrl(savedAvatar);
       }
 
-      const savedName = profile.full_name || fallbackName;
-      const savedAvatar = profile.avatar_url || "";
+      const [progressResult, assignmentResult] = await Promise.all([
+        supabase
+          .from("learning_progress")
+          .select(
+            "id, world_slug, topic, lesson_id, status, progress_percent, score, started_at, last_activity_at, completed_at"
+          )
+          .eq("user_id", user.id)
+          .order("last_activity_at", { ascending: false }),
+        supabase
+          .from("assignments")
+          .select(
+            "id, world_slug, topic, title, description, due_at, status, score, max_score, created_at, submitted_at, graded_at"
+          )
+          .eq("user_id", user.id)
+          .order("created_at", { ascending: false }),
+      ]);
 
-      setFullName(savedName);
-      setInitials(getInitials(savedName));
-      setAvatarUrl(savedAvatar);
+      if (progressResult.error) {
+        console.error("Learning progress failed to load:", progressResult.error);
+      } else {
+        setLearningProgress(
+          (progressResult.data || []).map((item) => ({
+            ...item,
+            progress_percent: Number(item.progress_percent || 0),
+            score: item.score === null ? null : Number(item.score),
+          })) as LearningProgressRow[]
+        );
+      }
+
+      if (assignmentResult.error) {
+        console.error("Assignments failed to load:", assignmentResult.error);
+      } else {
+        setAssignments(
+          (assignmentResult.data || []).map((item) => ({
+            ...item,
+            score: item.score === null ? null : Number(item.score),
+            max_score: Number(item.max_score || 100),
+          })) as AssignmentRow[]
+        );
+      }
+
+      setDashboardLoading(false);
     }
 
-    loadUserProfile();
+    loadDashboard();
   }, [router]);
 
   async function handleLogout() {
@@ -159,6 +323,116 @@ export default function DashboardPage() {
     router.push("/login");
     router.refresh();
   }
+
+  const dashboardData = useMemo(() => {
+    const activeLessons = learningProgress.filter(
+      (item) => item.status === "in_progress"
+    );
+    const completedTopics = learningProgress.filter(
+      (item) => item.status === "completed"
+    );
+
+    const overallProgress = learningProgress.length
+      ? Math.round(
+          learningProgress.reduce(
+            (total, item) => total + Number(item.progress_percent || 0),
+            0
+          ) / learningProgress.length
+        )
+      : 0;
+
+    const openAssignments = assignments.filter(
+      (item) => item.status === "assigned" || item.status === "in_progress"
+    );
+
+    const currentTime = Date.now();
+    const sevenDaysFromNow = currentTime + 7 * 24 * 60 * 60 * 1000;
+
+    const overdueAssignments = openAssignments
+      .filter(
+        (item) => item.due_at && new Date(item.due_at).getTime() < currentTime
+      )
+      .sort(
+        (a, b) =>
+          new Date(a.due_at || 0).getTime() - new Date(b.due_at || 0).getTime()
+      );
+
+    const dueSoonAssignments = openAssignments
+      .filter((item) => {
+        if (!item.due_at) return false;
+        const dueTime = new Date(item.due_at).getTime();
+        return dueTime >= currentTime && dueTime <= sevenDaysFromNow;
+      })
+      .sort(
+        (a, b) =>
+          new Date(a.due_at || 0).getTime() - new Date(b.due_at || 0).getTime()
+      );
+
+    const gradedAssignments = assignments
+      .filter((item) => item.score !== null)
+      .sort(
+        (a, b) =>
+          new Date(b.graded_at || b.created_at).getTime() -
+          new Date(a.graded_at || a.created_at).getTime()
+      );
+
+    const gradePercentages = gradedAssignments
+      .map((item) => getPercentageScore(item.score, item.max_score))
+      .filter((value): value is number => value !== null);
+
+    const overallGrade = gradePercentages.length
+      ? Math.round(
+          gradePercentages.reduce((total, grade) => total + grade, 0) /
+            gradePercentages.length
+        )
+      : null;
+
+    const worldSummaries = worlds.map((world) => {
+      const worldRows = learningProgress.filter(
+        (item) => item.world_slug === world.slug
+      );
+      const scoredRows = worldRows.filter((item) => item.score !== null);
+
+      const progress = worldRows.length
+        ? Math.round(
+            worldRows.reduce(
+              (total, item) => total + Number(item.progress_percent || 0),
+              0
+            ) / worldRows.length
+          )
+        : 0;
+
+      const score = scoredRows.length
+        ? Math.round(
+            scoredRows.reduce(
+              (total, item) => total + Number(item.score || 0),
+              0
+            ) / scoredRows.length
+          )
+        : null;
+
+      return {
+        ...world,
+        progress,
+        score,
+        completed: worldRows.filter((item) => item.status === "completed")
+          .length,
+      };
+    });
+
+    return {
+      activeLessons,
+      completedTopics,
+      overallProgress,
+      openAssignments,
+      overdueAssignments,
+      dueSoonAssignments,
+      recentGrades: gradedAssignments.slice(0, 4),
+      overallGrade,
+      worldSummaries,
+      streak: calculateStreak(learningProgress),
+    };
+  }, [assignments, learningProgress]);
 
   return (
     <main className="min-h-screen bg-[#F8FBFF] font-sans text-[#0B1739]">
@@ -181,10 +455,10 @@ export default function DashboardPage() {
           </Link>
 
           <nav className="mt-6 grid grid-cols-2 gap-2 sm:grid-cols-3 lg:block lg:space-y-1.5">
-            {navItems.map(({ label, Icon }, index) => (
+            {navItems.map(({ label, Icon, href }, index) => (
               <Link
                 key={label}
-                href={index === 0 ? "/dashboard" : "/in-progress"}
+                href={href}
                 className={`flex items-center gap-2 rounded-lg px-3 py-3 text-xs font-semibold sm:text-sm lg:gap-3 lg:px-4 ${
                   index === 0
                     ? "bg-[#EAF3FF] text-[#1677FF]"
@@ -238,7 +512,7 @@ export default function DashboardPage() {
                       className="h-4 w-4 text-[#1677FF]"
                       strokeWidth={1.75}
                     />
-                    0 Day Streak
+                    {dashboardData.streak} Day Streak
                   </span>
 
                   <Link
@@ -311,17 +585,33 @@ export default function DashboardPage() {
                 Welcome back, {fullName}
               </h2>
               <p className="mt-1 text-sm text-[#53657D]">
-                Continue your learning journey. Your progress starts after your
-                first lesson.
+                Track lessons, assignments, deadlines, grades, and progress in
+                one place.
               </p>
             </section>
 
             <section className="mt-6 grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
               {[
-                { Icon: Flame, number: "0", label: "Day Streak" },
-                { Icon: BookOpen, number: "0", label: "Active Lessons" },
-                { Icon: Award, number: "0", label: "Certificates" },
-                { Icon: TrendingUp, number: "0%", label: "Overall Progress" },
+                {
+                  Icon: Flame,
+                  number: String(dashboardData.streak),
+                  label: "Day Streak",
+                },
+                {
+                  Icon: BookOpen,
+                  number: String(dashboardData.activeLessons.length),
+                  label: "Active Lessons",
+                },
+                {
+                  Icon: ListChecks,
+                  number: String(dashboardData.openAssignments.length),
+                  label: "Assigned Work",
+                },
+                {
+                  Icon: TrendingUp,
+                  number: `${dashboardData.overallProgress}%`,
+                  label: "Overall Progress",
+                },
               ].map(({ Icon, number, label }) => (
                 <div
                   key={label}
@@ -334,9 +624,8 @@ export default function DashboardPage() {
 
                     <div className="min-w-0">
                       <p className="text-xl font-bold leading-none text-[#0B1739]">
-                        {number}
+                        {dashboardLoading ? "—" : number}
                       </p>
-
                       <p className="mt-1 whitespace-normal text-xs font-semibold leading-4 text-[#53657D]">
                         {label}
                       </p>
@@ -352,30 +641,63 @@ export default function DashboardPage() {
               </h3>
 
               <div className="mt-4 grid gap-4 sm:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-5">
-                {worlds.map(({ Icon, title, text }) => {
-                  const worldSlug = title.toLowerCase().replace(/\s+/g, "-");
+                {worlds.map(({ slug, Icon, title, text }) => (
+                  <Link
+                    href={`/learn/${slug}`}
+                    key={title}
+                    className="rounded-2xl border border-[#D7E3F2] bg-white p-4 shadow-[0_8px_24px_rgba(11,23,57,0.04)] hover:border-[#1677FF]/40 hover:shadow-md"
+                  >
+                    <div className="grid h-12 w-12 place-items-center rounded-xl bg-[#EAF3FF] text-[#1677FF]">
+                      <Icon className="h-5 w-5" strokeWidth={1.75} />
+                    </div>
+                    <h4 className="mt-4 text-sm font-bold uppercase leading-tight text-[#0B1739]">
+                      {title}
+                    </h4>
+                    <p className="mt-3 text-xs leading-5 text-[#53657D]">
+                      {text}
+                    </p>
+                    <div className="mt-5 inline-block rounded-lg bg-[#1677FF] px-4 py-2 text-xs font-semibold text-white">
+                      Explore →
+                    </div>
+                  </Link>
+                ))}
+              </div>
+            </section>
 
-                  return (
-                    <Link
-                      href={`/learn/${worldSlug}`}
-                      key={title}
-                      className="rounded-2xl border border-[#D7E3F2] bg-white p-4 shadow-[0_8px_24px_rgba(11,23,57,0.04)] hover:border-[#1677FF]/40 hover:shadow-md"
-                    >
-                      <div className="grid h-12 w-12 place-items-center rounded-xl bg-[#EAF3FF] text-[#1677FF]">
-                        <Icon className="h-5 w-5" strokeWidth={1.75} />
-                      </div>
-                      <h4 className="mt-4 text-sm font-bold uppercase leading-tight text-[#0B1739]">
-                        {title}
-                      </h4>
-                      <p className="mt-3 text-xs leading-5 text-[#53657D]">
-                        {text}
-                      </p>
-                      <div className="mt-5 inline-block rounded-lg bg-[#1677FF] px-4 py-2 text-xs font-semibold text-white">
-                        Explore →
-                      </div>
-                    </Link>
-                  );
-                })}
+            <section className="mt-6">
+              <div className="flex items-center justify-between gap-3">
+                <div>
+                  <h3 className="text-xl font-bold text-[#0B1739]">
+                    Assignments & Deadlines
+                  </h3>
+                  <p className="mt-1 text-sm text-[#53657D]">
+                    Homework, upcoming due dates, and overdue work.
+                  </p>
+                </div>
+              </div>
+
+              <div className="mt-4 grid gap-4 lg:grid-cols-3">
+                <AssignmentSummaryCard
+                  Icon={ListChecks}
+                  title="Assigned Homework"
+                  count={dashboardData.openAssignments.length}
+                  emptyText="No homework has been assigned yet."
+                  assignments={dashboardData.openAssignments.slice(0, 3)}
+                />
+                <AssignmentSummaryCard
+                  Icon={Clock3}
+                  title="Due Soon"
+                  count={dashboardData.dueSoonAssignments.length}
+                  emptyText="Nothing is due in the next 7 days."
+                  assignments={dashboardData.dueSoonAssignments.slice(0, 3)}
+                />
+                <AssignmentSummaryCard
+                  Icon={AlertCircle}
+                  title="Overdue"
+                  count={dashboardData.overdueAssignments.length}
+                  emptyText="You have no overdue assignments."
+                  assignments={dashboardData.overdueAssignments.slice(0, 3)}
+                />
               </div>
             </section>
 
@@ -392,22 +714,175 @@ export default function DashboardPage() {
                 </Link>
               </div>
 
-              <div className="mt-4 rounded-2xl border border-dashed border-[#D7E3F2] bg-white p-6 text-center shadow-sm sm:p-8">
-                <p className="text-lg font-bold text-[#0B1739] sm:text-xl">
-                  Your saved work will be displayed here.
+              {dashboardData.activeLessons.length ? (
+                <div className="mt-4 grid gap-4 md:grid-cols-2">
+                  {dashboardData.activeLessons.slice(0, 4).map((item) => (
+                    <Link
+                      key={item.id}
+                      href={`/lesson/${encodeURIComponent(
+                        item.lesson_id || "custom"
+                      )}?world=${encodeURIComponent(
+                        item.world_slug
+                      )}&topic=${encodeURIComponent(item.topic)}`}
+                      className="rounded-2xl border border-[#D7E3F2] bg-white p-5 shadow-[0_8px_24px_rgba(11,23,57,0.04)] hover:border-[#1677FF]/40"
+                    >
+                      <p className="text-xs font-bold uppercase tracking-[0.15em] text-[#1677FF]">
+                        {formatWorldName(item.world_slug)}
+                      </p>
+                      <h4 className="mt-2 text-lg font-bold text-[#0B1739]">
+                        {item.topic}
+                      </h4>
+                      <div className="mt-4 h-2 overflow-hidden rounded-full bg-[#EAF3FF]">
+                        <div
+                          className="h-full rounded-full bg-[#1677FF]"
+                          style={{ width: `${item.progress_percent}%` }}
+                        />
+                      </div>
+                      <div className="mt-2 flex items-center justify-between text-xs font-semibold text-[#53657D]">
+                        <span>{item.progress_percent}% complete</span>
+                        <span>Continue →</span>
+                      </div>
+                    </Link>
+                  ))}
+                </div>
+              ) : (
+                <div className="mt-4 rounded-2xl border border-dashed border-[#D7E3F2] bg-white p-6 text-center shadow-sm sm:p-8">
+                  <p className="text-lg font-bold text-[#0B1739] sm:text-xl">
+                    No active lessons yet.
+                  </p>
+                  <p className="mx-auto mt-3 max-w-2xl text-sm leading-7 text-[#53657D]">
+                    Start a topic in any learning world and it will appear here
+                    automatically.
+                  </p>
+                </div>
+              )}
+            </section>
+
+            <section className="mt-6 grid gap-4 2xl:grid-cols-[0.9fr_1.1fr]">
+              <div className="rounded-2xl border border-[#D7E3F2] bg-white p-5 shadow-[0_8px_24px_rgba(11,23,57,0.04)]">
+                <div className="flex items-center justify-between gap-3">
+                  <div>
+                    <h3 className="text-lg font-bold text-[#0B1739]">
+                      Recent Grades
+                    </h3>
+                    <p className="mt-1 text-sm text-[#53657D]">
+                      Graded homework and assessments.
+                    </p>
+                  </div>
+
+                  <div className="rounded-xl bg-[#EAF3FF] px-4 py-3 text-right">
+                    <p className="text-xs font-bold uppercase tracking-[0.12em] text-[#1677FF]">
+                      Overall
+                    </p>
+                    <p className="mt-1 text-xl font-extrabold text-[#0B1739]">
+                      {dashboardData.overallGrade === null
+                        ? "—"
+                        : `${dashboardData.overallGrade}%`}
+                    </p>
+                  </div>
+                </div>
+
+                {dashboardData.recentGrades.length ? (
+                  <div className="mt-5 space-y-3">
+                    {dashboardData.recentGrades.map((assignment) => {
+                      const grade = getPercentageScore(
+                        assignment.score,
+                        assignment.max_score
+                      );
+
+                      return (
+                        <div
+                          key={assignment.id}
+                          className="flex items-center justify-between gap-4 rounded-xl border border-[#D7E3F2] bg-[#F8FBFF] p-4"
+                        >
+                          <div className="min-w-0">
+                            <p className="truncate font-bold text-[#0B1739]">
+                              {assignment.title}
+                            </p>
+                            <p className="mt-1 text-xs text-[#53657D]">
+                              {formatWorldName(assignment.world_slug)}
+                            </p>
+                          </div>
+                          <div className="shrink-0 text-right">
+                            <p className="text-lg font-extrabold text-[#1677FF]">
+                              {grade}%
+                            </p>
+                            <p className="text-xs font-bold text-[#53657D]">
+                              {getLetterGrade(grade)}
+                            </p>
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                ) : (
+                  <div className="mt-5 rounded-xl border border-dashed border-[#D7E3F2] bg-[#F8FBFF] p-6 text-center">
+                    <Award className="mx-auto h-5 w-5 text-[#1677FF]" />
+                    <p className="mt-3 font-bold text-[#0B1739]">
+                      No grades yet
+                    </p>
+                    <p className="mt-1 text-sm text-[#53657D]">
+                      Scores will appear here after graded work is completed.
+                    </p>
+                  </div>
+                )}
+              </div>
+
+              <div className="rounded-2xl border border-[#D7E3F2] bg-white p-5 shadow-[0_8px_24px_rgba(11,23,57,0.04)]">
+                <h3 className="text-lg font-bold text-[#0B1739]">
+                  Progress Across All 5 Worlds
+                </h3>
+                <p className="mt-1 text-sm text-[#53657D]">
+                  Topic completion, average progress, and mastery scores.
                 </p>
-                <p className="mx-auto mt-3 max-w-2xl text-sm leading-7 text-[#53657D]">
-                  After you start lessons, this section will show your active
-                  lessons, saved notes, practice, projects, and recent progress.
-                </p>
+
+                <div className="mt-5 space-y-4">
+                  {dashboardData.worldSummaries.map((world) => (
+                    <div key={world.slug}>
+                      <div className="flex items-center justify-between gap-3">
+                        <div className="flex min-w-0 items-center gap-3">
+                          <div className="grid h-9 w-9 shrink-0 place-items-center rounded-lg bg-[#EAF3FF] text-[#1677FF]">
+                            <world.Icon className="h-4 w-4" strokeWidth={1.75} />
+                          </div>
+                          <div className="min-w-0">
+                            <p className="truncate text-sm font-bold text-[#0B1739]">
+                              {world.title}
+                            </p>
+                            <p className="text-xs text-[#53657D]">
+                              {world.completed} completed topic
+                              {world.completed === 1 ? "" : "s"}
+                            </p>
+                          </div>
+                        </div>
+
+                        <div className="shrink-0 text-right">
+                          <p className="text-sm font-bold text-[#0B1739]">
+                            {world.progress}%
+                          </p>
+                          <p className="text-xs text-[#53657D]">
+                            Score {world.score === null ? "—" : `${world.score}%`}
+                          </p>
+                        </div>
+                      </div>
+                      <div className="mt-2 h-2 overflow-hidden rounded-full bg-[#EAF3FF]">
+                        <div
+                          className="h-full rounded-full bg-[#1677FF]"
+                          style={{ width: `${world.progress}%` }}
+                        />
+                      </div>
+                    </div>
+                  ))}
+                </div>
               </div>
             </section>
 
             <section className="mt-6 grid gap-4 md:grid-cols-2 2xl:grid-cols-3">
-              <DashboardMiniCard title="Learning Overview" sideText="This Week">
-                <p className="font-bold text-[#0B1739]">No learning data yet</p>
-                <p className="mt-1 text-sm text-[#53657D]">
-                  Activity appears after your first lesson.
+              <DashboardMiniCard title="Completed Topics" sideText="All Time">
+                <p className="text-3xl font-extrabold text-[#0B1739]">
+                  {dashboardData.completedTopics.length}
+                </p>
+                <p className="mt-2 text-sm text-[#53657D]">
+                  Completed topics across your learning worlds.
                 </p>
               </DashboardMiniCard>
 
@@ -435,16 +910,80 @@ export default function DashboardPage() {
             </section>
 
             <section className="mt-6 grid gap-4 xl:hidden">
-              <DashboardRightColumn />
+              <DashboardRightColumn
+                overallProgress={dashboardData.overallProgress}
+                dueSoon={dashboardData.dueSoonAssignments}
+                overdue={dashboardData.overdueAssignments}
+              />
             </section>
           </section>
         </div>
 
         <aside className="hidden space-y-4 border-l border-[#D7E3F2] bg-white p-5 xl:block">
-          <DashboardRightColumn />
+          <DashboardRightColumn
+            overallProgress={dashboardData.overallProgress}
+            dueSoon={dashboardData.dueSoonAssignments}
+            overdue={dashboardData.overdueAssignments}
+          />
         </aside>
       </div>
     </main>
+  );
+}
+
+function AssignmentSummaryCard({
+  Icon,
+  title,
+  count,
+  emptyText,
+  assignments,
+}: {
+  Icon: LucideIcon;
+  title: string;
+  count: number;
+  emptyText: string;
+  assignments: AssignmentRow[];
+}) {
+  return (
+    <div className="rounded-2xl border border-[#D7E3F2] bg-white p-5 shadow-[0_8px_24px_rgba(11,23,57,0.04)]">
+      <div className="flex items-center justify-between gap-3">
+        <div className="flex items-center gap-3">
+          <div className="grid h-10 w-10 place-items-center rounded-xl bg-[#EAF3FF] text-[#1677FF]">
+            <Icon className="h-4.5 w-4.5" strokeWidth={1.75} />
+          </div>
+          <h4 className="font-bold text-[#0B1739]">{title}</h4>
+        </div>
+        <span className="rounded-full bg-[#EAF3FF] px-3 py-1 text-sm font-bold text-[#1677FF]">
+          {count}
+        </span>
+      </div>
+
+      {assignments.length ? (
+        <div className="mt-4 space-y-3">
+          {assignments.map((assignment) => (
+            <div
+              key={assignment.id}
+              className="rounded-xl border border-[#D7E3F2] bg-[#F8FBFF] p-3"
+            >
+              <p className="text-sm font-bold text-[#0B1739]">
+                {assignment.title}
+              </p>
+              <div className="mt-2 flex items-center justify-between gap-3 text-xs text-[#53657D]">
+                <span>{formatWorldName(assignment.world_slug)}</span>
+                <span className="flex items-center gap-1 font-semibold">
+                  <CalendarDays className="h-3.5 w-3.5" />
+                  {formatDate(assignment.due_at)}
+                </span>
+              </div>
+            </div>
+          ))}
+        </div>
+      ) : (
+        <div className="mt-4 rounded-xl border border-dashed border-[#D7E3F2] bg-[#F8FBFF] p-5 text-center text-sm text-[#53657D]">
+          {emptyText}
+        </div>
+      )}
+    </div>
   );
 }
 
@@ -491,7 +1030,17 @@ function DashboardMiniCard({
   );
 }
 
-function DashboardRightColumn() {
+function DashboardRightColumn({
+  overallProgress,
+  dueSoon,
+  overdue,
+}: {
+  overallProgress: number;
+  dueSoon: AssignmentRow[];
+  overdue: AssignmentRow[];
+}) {
+  const schedule = [...overdue, ...dueSoon].slice(0, 3);
+
   return (
     <>
       <div className="rounded-2xl border border-[#D7E3F2] bg-white p-5 shadow-[0_8px_24px_rgba(11,23,57,0.04)]">
@@ -519,15 +1068,38 @@ function DashboardRightColumn() {
 
       <div className="rounded-2xl border border-[#D7E3F2] bg-white p-5 shadow-[0_8px_24px_rgba(11,23,57,0.04)]">
         <h3 className="font-bold text-[#0B1739]">Today&apos;s Schedule</h3>
-        <div className="mt-4 rounded-xl border border-dashed border-[#D7E3F2] bg-[#F5F8FC] p-5 text-center text-sm text-[#53657D]">
-          No lessons scheduled yet.
-        </div>
+
+        {schedule.length ? (
+          <div className="mt-4 space-y-3">
+            {schedule.map((assignment) => (
+              <div
+                key={assignment.id}
+                className="rounded-xl border border-[#D7E3F2] bg-[#F8FBFF] p-3"
+              >
+                <p className="text-sm font-bold text-[#0B1739]">
+                  {assignment.title}
+                </p>
+                <p className="mt-1 text-xs text-[#53657D]">
+                  Due {formatDate(assignment.due_at)}
+                </p>
+              </div>
+            ))}
+          </div>
+        ) : (
+          <div className="mt-4 rounded-xl border border-dashed border-[#D7E3F2] bg-[#F5F8FC] p-5 text-center text-sm text-[#53657D]">
+            No lessons or assignments scheduled yet.
+          </div>
+        )}
       </div>
 
       <div className="rounded-2xl border border-[#D7E3F2] bg-white p-5 shadow-[0_8px_24px_rgba(11,23,57,0.04)]">
         <h3 className="font-bold text-[#0B1739]">Your Progress</h3>
         <div className="mx-auto mt-5 grid h-28 w-28 place-items-center rounded-full border-[12px] border-[#EAF3FF] text-2xl font-bold text-[#0B1739]">
-          0%
+          {overallProgress}%
+        </div>
+        <div className="mt-4 flex items-center justify-center gap-2 text-xs font-semibold text-[#53657D]">
+          <CheckCircle2 className="h-4 w-4 text-[#1677FF]" />
+          Across all learning worlds
         </div>
       </div>
 
