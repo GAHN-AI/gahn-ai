@@ -1,6 +1,9 @@
 export type LearningOption = {
   title: string;
   description: string;
+  skills?: string[];
+  tools?: string[];
+  modules?: string[];
 };
 
 export type LearningSection = {
@@ -10,128 +13,241 @@ export type LearningSection = {
   options: LearningOption[];
 };
 
+function option(
+  title: string,
+  description: string,
+  skills: string[] = [],
+  tools: string[] = [],
+  modules: string[] = []
+): LearningOption {
+  return { title, description, skills, tools, modules };
+}
+
+function grade(
+  slug: string,
+  title: string,
+  description: string,
+  options: LearningOption[]
+): LearningSection {
+  return { slug, title, description, options };
+}
+
+const elementarySubjects = (gradeNumber: number): LearningOption[] => [
+  option(
+    "Math",
+    `Grade ${gradeNumber} number sense, operations, measurement, geometry, and problem solving.`,
+    ["Number Sense", "Problem Solving", "Mental Math", "Math Reasoning"]
+  ),
+  option(
+    "Reading",
+    `Grade ${gradeNumber} reading fluency, comprehension, vocabulary, and understanding stories and informational text.`,
+    ["Reading Comprehension", "Vocabulary", "Main Idea", "Inference"]
+  ),
+  option(
+    "Writing",
+    `Grade ${gradeNumber} sentences, paragraphs, storytelling, explanations, and clear written communication.`,
+    ["Writing", "Grammar", "Organization", "Revision"]
+  ),
+  option(
+    "Science",
+    `Grade ${gradeNumber} life, Earth, physical science, observation, experiments, and scientific thinking.`,
+    ["Scientific Thinking", "Observation", "Evidence", "Experiments"]
+  ),
+  option(
+    "Social Studies",
+    `Grade ${gradeNumber} communities, geography, history, citizenship, and how people live and work together.`,
+    ["History", "Geography", "Civics", "Communities"]
+  ),
+  option(
+    "Grammar & Vocabulary",
+    `Grade ${gradeNumber} language conventions, word meaning, spelling, sentence structure, and usage.`,
+    ["Grammar", "Vocabulary", "Spelling", "Sentence Structure"]
+  ),
+  option(
+    "Health",
+    `Grade ${gradeNumber} health, safety, wellness, body awareness, and healthy daily choices.`,
+    ["Health", "Safety", "Wellness", "Healthy Habits"]
+  ),
+  option(
+    "Computer Skills",
+    `Grade ${gradeNumber} digital literacy, keyboarding, files, safe internet use, and basic computing.`,
+    ["Digital Literacy", "Keyboarding", "Internet Safety", "Computer Basics"]
+  ),
+];
+
+const middleSchoolSubjects = (gradeNumber: number): LearningOption[] => [
+  option(
+    "Math",
+    `Grade ${gradeNumber} ratios, equations, geometry, data, expressions, and multi-step problem solving.`,
+    ["Pre-Algebra", "Equations", "Geometry", "Data Analysis"]
+  ),
+  option(
+    "English Language Arts",
+    `Grade ${gradeNumber} reading, writing, grammar, vocabulary, argument, and literary analysis.`,
+    ["Reading", "Writing", "Grammar", "Text Evidence"]
+  ),
+  option(
+    "Science",
+    `Grade ${gradeNumber} life, Earth, physical science, labs, data, models, and scientific reasoning.`,
+    ["Scientific Reasoning", "Lab Skills", "Data Analysis", "Models"]
+  ),
+  option(
+    "History & Social Studies",
+    `Grade ${gradeNumber} history, civics, geography, economics, culture, and primary-source thinking.`,
+    ["History", "Civics", "Geography", "Source Analysis"]
+  ),
+  option(
+    "Computer Science",
+    `Grade ${gradeNumber} coding foundations, algorithms, digital systems, and computational thinking.`,
+    ["Coding", "Algorithms", "Logic", "Digital Systems"],
+    ["Browser", "Code Editor"]
+  ),
+  option(
+    "World Languages",
+    `Practice school-level vocabulary, grammar, reading, writing, listening, and conversation.`,
+    ["Vocabulary", "Grammar", "Reading", "Conversation"]
+  ),
+  option(
+    "Health & Wellness",
+    `Grade ${gradeNumber} wellness, fitness, nutrition, safety, decision-making, and healthy habits.`,
+    ["Wellness", "Nutrition", "Fitness", "Decision Making"]
+  ),
+  option(
+    "Study & Test Skills",
+    `Build note-taking, organization, review, test preparation, and homework routines for grade ${gradeNumber}.`,
+    ["Study Planning", "Active Recall", "Note Taking", "Test Prep"]
+  ),
+];
+
 export const learningSectionsByWorld: Record<string, LearningSection[]> = {
   "school-help": [
-    {
-      slug: "math",
-      title: "Math",
-      description: "Learn mathematics from basic arithmetic through advanced high-school and college topics.",
-      options: [
-        { title: "Arithmetic", description: "Whole numbers, fractions, decimals, percentages, and everyday calculations." },
-        { title: "Pre-Algebra", description: "Variables, expressions, equations, ratios, and foundations for algebra." },
-        { title: "Algebra I", description: "Linear equations, functions, inequalities, systems, and graphing." },
-        { title: "Geometry", description: "Shapes, proofs, angles, area, volume, similarity, and coordinate geometry." },
-        { title: "Algebra II", description: "Quadratics, polynomials, exponentials, logarithms, and complex equations." },
-        { title: "Trigonometry", description: "Triangles, unit circle, trigonometric functions, identities, and applications." },
-        { title: "Statistics & Probability", description: "Data, distributions, probability, sampling, and statistical reasoning." },
-        { title: "Pre-Calculus", description: "Functions, transformations, sequences, limits, and preparation for calculus." },
-        { title: "Calculus", description: "Limits, derivatives, integrals, rates of change, and applications." },
-      ],
-    },
-    {
-      slug: "science",
-      title: "Science",
-      description: "Understand scientific concepts, solve problems, analyze evidence, and prepare for assessments.",
-      options: [
-        { title: "Biology", description: "Cells, genetics, evolution, ecology, organisms, and life processes." },
-        { title: "Chemistry", description: "Atoms, bonding, reactions, stoichiometry, acids, bases, and chemical systems." },
-        { title: "Physics", description: "Motion, forces, energy, waves, electricity, magnetism, and modern physics." },
-        { title: "Environmental Science", description: "Ecosystems, biodiversity, climate, resources, pollution, and conservation." },
-        { title: "Earth Science", description: "Geology, weather, oceans, plate tectonics, and Earth systems." },
-        { title: "Anatomy & Physiology", description: "Human body systems, structures, functions, and health foundations." },
-        { title: "Astronomy", description: "Planets, stars, galaxies, space, gravity, and the universe." },
-        { title: "Scientific Method & Labs", description: "Hypotheses, variables, experiments, data analysis, and lab reasoning." },
-      ],
-    },
-    {
-      slug: "english-writing",
-      title: "English & Writing",
-      description: "Improve reading, writing, grammar, vocabulary, research, and literary analysis.",
-      options: [
-        { title: "Essay Writing", description: "Plan, organize, draft, revise, and strengthen academic essays." },
-        { title: "Grammar", description: "Sentence structure, punctuation, usage, agreement, and common mistakes." },
-        { title: "Reading Comprehension", description: "Understand main ideas, details, inference, tone, and evidence." },
-        { title: "Vocabulary", description: "Build word knowledge, context clues, roots, and precise usage." },
-        { title: "Literature Analysis", description: "Analyze character, theme, symbolism, conflict, tone, and structure." },
-        { title: "Research Writing", description: "Find sources, organize evidence, cite correctly, and build arguments." },
-        { title: "Thesis Statements", description: "Create clear, focused claims that guide strong essays." },
-        { title: "Creative Writing", description: "Develop stories, characters, dialogue, description, and voice." },
-      ],
-    },
-    {
-      slug: "history-social-studies",
-      title: "History & Social Studies",
-      description: "Study historical events, government, economics, geography, civics, and society.",
-      options: [
-        { title: "U.S. History", description: "Major periods, events, people, conflicts, and changes in United States history." },
-        { title: "World History", description: "Civilizations, empires, revolutions, wars, and global historical change." },
-        { title: "Government", description: "Institutions, branches, constitutions, elections, rights, and public policy." },
-        { title: "Civics", description: "Citizenship, rights, responsibilities, law, participation, and communities." },
-        { title: "Economics", description: "Markets, scarcity, incentives, trade, inflation, unemployment, and policy." },
-        { title: "Geography", description: "Regions, maps, population, resources, culture, and human-environment interaction." },
-        { title: "Sociology", description: "Groups, institutions, culture, inequality, norms, and social behavior." },
-        { title: "Primary Source Analysis", description: "Interpret documents, evidence, perspective, context, and historical claims." },
-      ],
-    },
-    {
-      slug: "computer-science-technology",
-      title: "Computer Science & Technology",
-      description: "Learn coding, computer concepts, digital systems, and technology skills for school.",
-      options: [
-        { title: "Computer Science Fundamentals", description: "Algorithms, logic, data, computing systems, and computational thinking." },
-        { title: "HTML & CSS", description: "Build and style webpages using core web technologies." },
-        { title: "JavaScript", description: "Programming basics, variables, functions, logic, arrays, and web interaction." },
-        { title: "Python", description: "Learn programming through syntax, logic, functions, data, and projects." },
-        { title: "AP Computer Science Principles", description: "Computing ideas, data, algorithms, networks, impact, and exam preparation." },
-        { title: "AP Computer Science A", description: "Java programming, classes, arrays, algorithms, and AP-style practice." },
-        { title: "Digital Literacy", description: "Files, software, internet safety, productivity tools, and responsible technology use." },
-        { title: "Cybersecurity Basics", description: "Passwords, threats, privacy, networks, phishing, and digital safety." },
-      ],
-    },
-    {
-      slug: "homework-assignment-help",
-      title: "Homework & Assignment Help",
-      description: "Bring real schoolwork and learn how to solve it instead of only receiving an answer.",
-      options: [
-        { title: "Explain My Homework", description: "Break down the assignment and teach the ideas needed to complete it." },
-        { title: "Teach Me This Problem", description: "Work through a difficult question one step at a time." },
-        { title: "Check My Work", description: "Review your attempt, identify mistakes, and explain how to improve it." },
-        { title: "Practice a Similar Problem", description: "Generate a new problem that practices the same skill." },
-        { title: "Break Down Instructions", description: "Turn confusing assignment directions into clear steps." },
-        { title: "Project Help", description: "Plan research, tasks, structure, and next steps for a school project." },
-        { title: "Study From My Notes", description: "Turn class notes into explanations, questions, and review material." },
-      ],
-    },
-    {
-      slug: "test-quiz-exam-prep",
-      title: "Test, Quiz & Exam Prep",
-      description: "Prepare for assessments with targeted review, practice, explanations, and mistake correction.",
-      options: [
-        { title: "Prepare for a Test", description: "Build a focused study plan around the topics on your test." },
-        { title: "Prepare for a Quiz", description: "Review the exact skills and concepts likely to appear on a quiz." },
-        { title: "Practice Questions", description: "Generate questions and receive feedback after each response." },
-        { title: "Review My Weak Areas", description: "Identify topics you struggle with and target them first." },
-        { title: "Explain My Mistakes", description: "Understand why an answer was wrong and how to avoid the mistake." },
-        { title: "Create a Study Guide", description: "Organize important concepts, definitions, examples, and practice." },
-        { title: "Flashcard Review", description: "Use quick recall prompts for vocabulary, facts, formulas, and concepts." },
-        { title: "Mock Exam", description: "Practice under test-like conditions and review performance afterward." },
-      ],
-    },
-    {
-      slug: "world-languages",
-      title: "World Languages",
-      description: "Practice vocabulary, grammar, reading, conversation, and school language assignments.",
-      options: [
-        { title: "Spanish", description: "Vocabulary, grammar, reading, writing, listening, and conversation practice." },
-        { title: "French", description: "Build French language skills through explanations and guided practice." },
-        { title: "German", description: "Learn vocabulary, grammar, sentence structure, and conversation." },
-        { title: "Mandarin Chinese", description: "Practice vocabulary, characters, pronunciation, grammar, and comprehension." },
-        { title: "Japanese", description: "Learn vocabulary, grammar, kana, reading, and conversational basics." },
-        { title: "Arabic", description: "Practice vocabulary, script, grammar, reading, and conversation." },
-        { title: "English Language Learning", description: "Improve English vocabulary, grammar, speaking, reading, and writing." },
-        { title: "Language Test Practice", description: "Prepare for classroom language tests with targeted review." },
-      ],
-    },
+    grade(
+      "grade-1",
+      "Grade 1",
+      "Build strong foundations in reading, writing, math, science, social studies, and digital skills.",
+      elementarySubjects(1)
+    ),
+    grade(
+      "grade-2",
+      "Grade 2",
+      "Strengthen elementary foundations with guided practice across the core school subjects.",
+      elementarySubjects(2)
+    ),
+    grade(
+      "grade-3",
+      "Grade 3",
+      "Develop stronger reading, writing, math, science, and independent learning skills.",
+      elementarySubjects(3)
+    ),
+    grade(
+      "grade-4",
+      "Grade 4",
+      "Move into more advanced elementary concepts with explanations, examples, and practice.",
+      elementarySubjects(4)
+    ),
+    grade(
+      "grade-5",
+      "Grade 5",
+      "Prepare for middle school with stronger problem solving, reading, writing, science, and study habits.",
+      elementarySubjects(5)
+    ),
+    grade(
+      "grade-6",
+      "Grade 6",
+      "Start middle-school learning with structured support across core and practical subjects.",
+      middleSchoolSubjects(6)
+    ),
+    grade(
+      "grade-7",
+      "Grade 7",
+      "Build deeper reasoning, academic writing, math, science, history, and study skills.",
+      middleSchoolSubjects(7)
+    ),
+    grade(
+      "grade-8",
+      "Grade 8",
+      "Prepare for high school through stronger subject mastery and independent learning.",
+      middleSchoolSubjects(8)
+    ),
+    grade(
+      "grade-9",
+      "Grade 9",
+      "High-school foundations with subject-specific learning paths and assessment preparation.",
+      [
+        option("Algebra I", "Linear equations, functions, inequalities, systems, exponents, and graphing.", ["Algebra", "Functions", "Graphing", "Problem Solving"]),
+        option("English I", "Reading analysis, grammar, vocabulary, essays, evidence, and literature.", ["Essay Writing", "Reading Analysis", "Grammar", "Text Evidence"]),
+        option("Biology", "Cells, genetics, evolution, ecology, organisms, and biological systems.", ["Biology", "Lab Reasoning", "Scientific Models", "Data"]),
+        option("World History", "Civilizations, empires, revolutions, conflict, culture, and historical change.", ["History", "Chronology", "Source Analysis", "Cause & Effect"]),
+        option("Computer Science", "Programming foundations, logic, algorithms, data, and digital systems.", ["Programming", "Algorithms", "Logic", "Computing"], ["Code Editor", "Browser"]),
+        option("Health", "Wellness, nutrition, fitness, safety, decision-making, and health literacy.", ["Wellness", "Health Literacy", "Decision Making"]),
+        option("World Language", "School-level vocabulary, grammar, reading, writing, listening, and speaking.", ["Vocabulary", "Grammar", "Reading", "Speaking"]),
+        option("Study & Test Prep", "Organization, note-taking, review systems, test preparation, and homework planning.", ["Active Recall", "Study Planning", "Test Prep", "Notes"]),
+      ]
+    ),
+    grade(
+      "grade-10",
+      "Grade 10",
+      "Continue high-school learning with deeper math, science, writing, history, technology, and practical skills.",
+      [
+        option("Geometry", "Proofs, angles, triangles, circles, similarity, area, volume, and coordinate geometry.", ["Geometry", "Proofs", "Spatial Reasoning", "Problem Solving"]),
+        option("English II", "Literature, argument, research, grammar, vocabulary, and analytical writing.", ["Literary Analysis", "Argument Writing", "Research", "Grammar"]),
+        option("Chemistry", "Atoms, bonding, reactions, stoichiometry, matter, acids, bases, and energy.", ["Chemistry", "Equations", "Lab Reasoning", "Stoichiometry"]),
+        option("U.S. History", "Major eras, institutions, conflicts, movements, and changes in United States history.", ["U.S. History", "Source Analysis", "Chronology", "Cause & Effect"]),
+        option("Computer Science", "Programming, data, web concepts, algorithms, debugging, and projects.", ["Programming", "Debugging", "Algorithms", "Web Basics"], ["Code Editor", "GitHub"]),
+        option("Personal Finance", "Budgeting, banking, saving, credit, interest, investing basics, and financial decisions.", ["Budgeting", "Credit", "Saving", "Financial Literacy"]),
+        option("World Language", "Intermediate vocabulary, grammar, reading, writing, listening, and conversation.", ["Vocabulary", "Grammar", "Listening", "Conversation"]),
+        option("Test & Quiz Prep", "Target weak areas, build study guides, practice questions, and improve test performance.", ["Test Prep", "Recall", "Practice", "Error Review"]),
+      ]
+    ),
+    grade(
+      "grade-11",
+      "Grade 11",
+      "Advanced high-school coursework with college-readiness and standardized-test support.",
+      [
+        option("Algebra II", "Quadratics, polynomials, rational functions, exponentials, logarithms, and complex equations.", ["Algebra", "Functions", "Polynomials", "Logarithms"]),
+        option("English III", "Advanced reading, rhetoric, argument, research, and evidence-based writing.", ["Rhetoric", "Research", "Argument", "Writing"]),
+        option("Physics", "Motion, forces, energy, momentum, waves, electricity, and quantitative problem solving.", ["Physics", "Modeling", "Equations", "Problem Solving"]),
+        option("U.S. Government & Civics", "Constitutional systems, institutions, rights, elections, law, and civic participation.", ["Government", "Civics", "Constitution", "Institutions"]),
+        option("Statistics", "Data, probability, distributions, sampling, inference, and statistical reasoning.", ["Statistics", "Probability", "Data Analysis", "Inference"]),
+        option("Computer Science", "Programming, data structures, algorithms, web development, and software projects.", ["Programming", "Data Structures", "Algorithms", "Projects"], ["Code Editor", "Git", "GitHub"]),
+        option("SAT / ACT Prep", "Math, reading, grammar, timing, strategy, practice, and targeted weakness review.", ["Test Strategy", "Math", "Reading", "Grammar"]),
+        option("World Language", "Intermediate-to-advanced reading, writing, listening, grammar, and conversation.", ["Reading", "Writing", "Listening", "Speaking"]),
+      ]
+    ),
+    grade(
+      "grade-12",
+      "Grade 12",
+      "Finish high school with advanced academics, practical life knowledge, and college or career preparation.",
+      [
+        option("Precalculus & Calculus", "Functions, trigonometry, limits, derivatives, integrals, and college-math preparation.", ["Precalculus", "Calculus", "Functions", "Problem Solving"]),
+        option("English IV", "Advanced literature, composition, research, argument, and college-level writing preparation.", ["Writing", "Literature", "Research", "Argument"]),
+        option("Environmental Science", "Ecosystems, biodiversity, climate, resources, pollution, and sustainability.", ["Ecology", "Climate", "Data", "Environmental Systems"]),
+        option("Government & Economics", "Institutions, markets, public policy, personal economics, and civic decision-making.", ["Government", "Economics", "Policy", "Civics"]),
+        option("Statistics", "Probability, data analysis, sampling, inference, and evidence-based conclusions.", ["Statistics", "Probability", "Inference", "Data"]),
+        option("Personal Finance", "Banking, taxes, credit, insurance, investing, budgeting, and adult financial decisions.", ["Budgeting", "Taxes", "Credit", "Investing"]),
+        option("College & Career Prep", "Applications, resumes, interviews, majors, careers, workplace skills, and planning.", ["Applications", "Resume", "Interviewing", "Planning"]),
+        option("Computer Science", "Programming, software projects, web systems, data, algorithms, and deployment basics.", ["Programming", "Software Projects", "Git", "Deployment"], ["VS Code", "Git", "GitHub"]),
+      ]
+    ),
+    grade(
+      "college",
+      "College",
+      "College-level support across common general-education, STEM, business, writing, and technology courses.",
+      [
+        option("College Algebra", "Functions, equations, graphs, polynomial, rational, exponential, and logarithmic models.", ["Algebra", "Functions", "Modeling"]),
+        option("Calculus", "Limits, derivatives, integrals, applications, and problem solving.", ["Calculus", "Derivatives", "Integrals"]),
+        option("Statistics", "Probability, distributions, confidence intervals, hypothesis testing, and data analysis.", ["Statistics", "Probability", "Inference"]),
+        option("Biology", "Cells, genetics, evolution, ecology, physiology, and college-level scientific reasoning.", ["Biology", "Scientific Reasoning", "Data"]),
+        option("Chemistry", "Atomic structure, bonding, reactions, stoichiometry, thermochemistry, and equilibrium.", ["Chemistry", "Stoichiometry", "Equilibrium"]),
+        option("Physics", "Mechanics, energy, momentum, waves, electricity, and mathematical modeling.", ["Physics", "Modeling", "Problem Solving"]),
+        option("Academic Writing", "Thesis, argument, evidence, research, citation, organization, and revision.", ["Research", "Argument", "Citation", "Writing"]),
+        option("Economics", "Microeconomics, macroeconomics, markets, incentives, growth, inflation, and policy.", ["Economics", "Markets", "Policy"]),
+        option("Psychology", "Cognition, behavior, development, social psychology, research, and major theories.", ["Psychology", "Research", "Behavior"]),
+        option("Computer Science", "Programming, algorithms, data structures, software engineering, and computer systems.", ["Programming", "Algorithms", "Data Structures"], ["VS Code", "Git", "GitHub"]),
+        option("Business", "Management, marketing, finance, accounting, operations, and business strategy.", ["Business", "Finance", "Marketing", "Management"]),
+        option("Research & Study Skills", "Read academic sources, take useful notes, plan projects, study efficiently, and prepare for exams.", ["Research", "Active Recall", "Notes", "Study Planning"]),
+      ]
+    ),
   ],
 
   "brain-development": [
@@ -140,14 +256,12 @@ export const learningSectionsByWorld: Record<string, LearningSection[]> = {
       title: "Focus & Attention",
       description: "Train concentration, distraction control, sustained attention, and deep-work ability.",
       options: [
-        { title: "Focus Training", description: "Practice staying mentally engaged with one task for longer periods." },
-        { title: "Attention Control", description: "Learn to direct attention intentionally instead of reacting to every distraction." },
-        { title: "Distraction Control", description: "Identify distractions and build systems that reduce interruptions." },
-        { title: "Deep Work", description: "Build routines for concentrated, high-effort thinking and learning." },
-        { title: "Concentration Practice", description: "Use short exercises that strengthen sustained mental effort." },
-        { title: "Focus Routines", description: "Create repeatable routines that make starting and staying focused easier." },
-        { title: "Digital Distraction Management", description: "Reduce interruptions from phones, apps, notifications, and browsing." },
-        { title: "Task Switching Control", description: "Reduce unnecessary switching and recover focus faster when interrupted." },
+        option("Focus Training", "Build the ability to stay mentally engaged with one task for longer periods.", ["Concentration", "Attention Control", "Focus Routines"]),
+        option("Deep Work", "Create focused work blocks for difficult learning and problem solving.", ["Deep Work", "Planning", "Distraction Control"]),
+        option("Digital Distraction Control", "Reduce interruptions from phones, apps, notifications, and compulsive browsing.", ["Digital Discipline", "Environment Design", "Attention"]),
+        option("Task Switching Control", "Reduce unnecessary switching and recover focus faster when interruptions happen.", ["Attention Recovery", "Task Management", "Focus"]),
+        option("Mental Endurance", "Gradually increase how long you can sustain demanding thinking.", ["Mental Stamina", "Concentration", "Pacing"]),
+        option("Focus Routines", "Build repeatable start-up and shutdown routines that make focused work easier.", ["Habits", "Planning", "Consistency"]),
       ],
     },
     {
@@ -155,74 +269,51 @@ export const learningSectionsByWorld: Record<string, LearningSection[]> = {
       title: "Memory & Recall",
       description: "Strengthen how you encode, retain, retrieve, and review information.",
       options: [
-        { title: "Active Recall", description: "Practice retrieving information from memory instead of rereading it." },
-        { title: "Spaced Repetition", description: "Review information at increasing intervals to improve long-term retention." },
-        { title: "Long-Term Memory", description: "Learn how information becomes durable and easier to retrieve later." },
-        { title: "Memorization Techniques", description: "Use chunking, association, imagery, and other memory strategies." },
-        { title: "Remember What I Study", description: "Build a study process focused on durable recall instead of familiarity." },
-        { title: "Names & Facts Memory", description: "Practice remembering names, terms, details, and factual information." },
-        { title: "Memory Palace Basics", description: "Use spatial imagery to organize and retrieve information." },
-        { title: "Recall Testing", description: "Test what you actually remember and target weak spots." },
+        option("Active Recall", "Practice retrieving information from memory instead of only rereading it.", ["Active Recall", "Testing Effect", "Retention"]),
+        option("Spaced Repetition", "Review information at increasing intervals to improve long-term memory.", ["Spaced Repetition", "Review Planning", "Retention"]),
+        option("Memorization Techniques", "Use chunking, association, imagery, and other strategies to remember information.", ["Chunking", "Association", "Visualization"]),
+        option("Long-Term Memory", "Understand how durable memories form and how to strengthen retrieval.", ["Encoding", "Consolidation", "Retrieval"]),
+        option("Memory Palace", "Learn the basics of spatial-memory techniques for organized recall.", ["Visualization", "Association", "Recall"]),
+        option("Remember What I Study", "Build a complete study process around durable memory instead of familiarity.", ["Recall", "Review", "Study Design"]),
       ],
     },
     {
-      slug: "reading-comprehension",
-      title: "Reading & Comprehension",
-      description: "Read more effectively, understand difficult material, and remember what you read.",
-      options: [
-        { title: "Reading Comprehension", description: "Find main ideas, supporting details, implications, and meaning." },
-        { title: "Reading Retention", description: "Use active methods to remember important information after reading." },
-        { title: "Difficult Text", description: "Break complicated passages into simpler ideas and relationships." },
-        { title: "Reading Speed", description: "Improve efficiency while protecting understanding and retention." },
-        { title: "Vocabulary in Context", description: "Infer unfamiliar words using context, roots, and surrounding ideas." },
-        { title: "Summarization", description: "Identify what matters and restate it accurately in fewer words." },
-        { title: "Annotation Skills", description: "Mark and question text in ways that support understanding." },
-        { title: "Critical Reading", description: "Evaluate claims, evidence, assumptions, bias, and reasoning while reading." },
-      ],
-    },
-    {
-      slug: "critical-thinking-reasoning",
+      slug: "critical-thinking",
       title: "Critical Thinking & Reasoning",
       description: "Strengthen logic, analysis, evidence evaluation, and clear thinking.",
       options: [
-        { title: "Critical Thinking", description: "Question assumptions, evaluate evidence, and form better conclusions." },
-        { title: "Logical Reasoning", description: "Practice valid reasoning, relationships, deductions, and structured thought." },
-        { title: "Argument Analysis", description: "Identify claims, evidence, assumptions, strengths, and weaknesses." },
-        { title: "Spotting Bias", description: "Recognize cognitive bias, framing, and distorted reasoning." },
-        { title: "Evidence Evaluation", description: "Judge whether information actually supports a conclusion." },
-        { title: "Cause vs Correlation", description: "Distinguish relationships from true causal explanations." },
-        { title: "Reasoning Practice", description: "Solve short reasoning problems and receive explanation-focused feedback." },
-        { title: "Mental Models", description: "Use reusable thinking frameworks to understand complex situations." },
+        option("Critical Thinking", "Question assumptions, evaluate evidence, and form stronger conclusions.", ["Evidence", "Reasoning", "Analysis"]),
+        option("Logical Reasoning", "Practice valid reasoning, deductions, relationships, and structured thought.", ["Logic", "Deduction", "Pattern Recognition"]),
+        option("Argument Analysis", "Identify claims, evidence, assumptions, strengths, and weaknesses.", ["Arguments", "Evidence", "Assumptions"]),
+        option("Spotting Bias", "Recognize cognitive bias, framing, and distorted reasoning.", ["Bias Detection", "Metacognition", "Evaluation"]),
+        option("Evidence Evaluation", "Judge the quality, relevance, and limits of evidence.", ["Evidence Quality", "Sources", "Reasoning"]),
+        option("Mental Models", "Use reusable thinking frameworks to understand complex situations.", ["Systems Thinking", "Models", "Analysis"]),
       ],
     },
     {
-      slug: "problem-solving-decisions",
-      title: "Problem Solving & Decision Making",
-      description: "Learn to define problems, generate options, compare tradeoffs, and choose better actions.",
-      options: [
-        { title: "Problem Solving", description: "Break complex problems into smaller parts and work toward solutions." },
-        { title: "Decision Making", description: "Compare options, consequences, uncertainty, and priorities." },
-        { title: "Root Cause Analysis", description: "Look beyond symptoms to identify why a problem is happening." },
-        { title: "Systems Thinking", description: "Understand how connected parts influence one another over time." },
-        { title: "Creative Problem Solving", description: "Generate more possibilities before choosing a solution." },
-        { title: "Tradeoff Analysis", description: "Compare benefits, costs, risks, and constraints across options." },
-        { title: "Planning Under Uncertainty", description: "Make decisions when information is incomplete or changing." },
-        { title: "Real-World Scenarios", description: "Practice decisions using realistic situations and feedback." },
-      ],
-    },
-    {
-      slug: "learning-study-systems",
+      slug: "learning-study",
       title: "Learning & Study Systems",
       description: "Build efficient systems for learning, practicing, reviewing, and improving.",
       options: [
-        { title: "How to Study", description: "Use active, evidence-based study habits instead of passive review." },
-        { title: "How to Take Notes", description: "Capture useful information without copying everything." },
-        { title: "How to Practice", description: "Design practice that targets weaknesses and builds skill." },
-        { title: "How to Learn Faster", description: "Improve learning efficiency through focus, retrieval, and feedback." },
-        { title: "Study Planning", description: "Turn deadlines and goals into realistic study sessions." },
-        { title: "Interleaving", description: "Mix related skills so you learn when and how to use them." },
-        { title: "Feedback Loops", description: "Use mistakes and results to choose what to work on next." },
-        { title: "Teach It Back", description: "Test understanding by explaining ideas in your own words." },
+        option("How to Study", "Use active study methods instead of passive rereading.", ["Study Strategy", "Active Recall", "Review"]),
+        option("How to Take Notes", "Capture useful information without copying everything.", ["Note Taking", "Summarization", "Organization"]),
+        option("How to Practice", "Design practice that targets weaknesses and produces feedback.", ["Deliberate Practice", "Feedback", "Skill Building"]),
+        option("Study Planning", "Turn deadlines and goals into realistic study sessions.", ["Planning", "Prioritization", "Time Management"]),
+        option("Interleaving", "Mix related skills so you learn when and how to use them.", ["Interleaving", "Transfer", "Practice Design"]),
+        option("Teach It Back", "Test understanding by explaining ideas clearly in your own words.", ["Explanation", "Recall", "Understanding"]),
+      ],
+    },
+    {
+      slug: "problem-solving",
+      title: "Problem Solving & Decisions",
+      description: "Define problems, generate options, compare tradeoffs, and choose better actions.",
+      options: [
+        option("Problem Solving", "Break complex problems into manageable parts and work toward solutions.", ["Problem Framing", "Analysis", "Solutions"]),
+        option("Decision Making", "Compare options, consequences, uncertainty, and priorities.", ["Tradeoffs", "Judgment", "Decision Making"]),
+        option("Root Cause Analysis", "Look beyond symptoms to identify why a problem is happening.", ["Root Cause", "Systems Thinking", "Analysis"]),
+        option("Systems Thinking", "Understand how connected parts influence one another over time.", ["Systems", "Feedback Loops", "Relationships"]),
+        option("Creative Problem Solving", "Generate more possible solutions before choosing one.", ["Creativity", "Ideation", "Evaluation"]),
+        option("Planning Under Uncertainty", "Make reasonable decisions when information is incomplete or changing.", ["Risk", "Uncertainty", "Planning"]),
       ],
     },
     {
@@ -230,29 +321,25 @@ export const learningSectionsByWorld: Record<string, LearningSection[]> = {
       title: "Discipline & Habits",
       description: "Build routines, consistency, self-control, and follow-through for long-term goals.",
       options: [
-        { title: "Habit Building", description: "Create repeatable behaviors using cues, routines, and rewards." },
-        { title: "Consistency", description: "Keep important behaviors going even when motivation changes." },
-        { title: "Self-Discipline", description: "Practice doing planned work despite discomfort or distraction." },
-        { title: "Goal Setting", description: "Turn broad goals into specific targets and measurable actions." },
-        { title: "Breaking Bad Habits", description: "Identify triggers and redesign routines that reinforce unwanted behavior." },
-        { title: "Procrastination Control", description: "Reduce avoidance and make difficult tasks easier to start." },
-        { title: "Daily Routines", description: "Build practical morning, work, study, and evening routines." },
-        { title: "Progress Reflection", description: "Review what worked, what failed, and what to adjust next." },
+        option("Habit Building", "Create repeatable behaviors using cues, routines, and rewards.", ["Habit Design", "Consistency", "Behavior"]),
+        option("Self-Discipline", "Practice doing planned work despite discomfort or distraction.", ["Discipline", "Follow-Through", "Self-Control"]),
+        option("Goal Setting", "Turn broad goals into specific targets and measurable actions.", ["Goals", "Planning", "Measurement"]),
+        option("Procrastination Control", "Reduce avoidance and make difficult tasks easier to start.", ["Task Initiation", "Planning", "Behavior Change"]),
+        option("Daily Routines", "Build practical routines around study, work, health, and recovery.", ["Routines", "Consistency", "Planning"]),
+        option("Progress Reflection", "Review what worked, what failed, and what to adjust next.", ["Reflection", "Feedback", "Adjustment"]),
       ],
     },
     {
-      slug: "creativity-mental-flexibility",
+      slug: "creativity-flexibility",
       title: "Creativity & Mental Flexibility",
       description: "Generate ideas, shift perspectives, connect concepts, and think beyond obvious answers.",
       options: [
-        { title: "Creative Thinking", description: "Practice producing varied and original ideas." },
-        { title: "Brainstorming", description: "Generate options quickly before filtering or judging them." },
-        { title: "Perspective Shifting", description: "Look at the same situation through multiple viewpoints." },
-        { title: "Idea Connection", description: "Combine unrelated concepts to create useful new possibilities." },
-        { title: "Imagination Exercises", description: "Strengthen mental simulation and possibility generation." },
-        { title: "Flexible Thinking", description: "Adapt when rules, information, or conditions change." },
-        { title: "Design Thinking Basics", description: "Understand people, define problems, generate ideas, and test solutions." },
-        { title: "Creative Challenges", description: "Use short challenges to practice originality and adaptability." },
+        option("Creative Thinking", "Practice producing varied and original ideas.", ["Creativity", "Ideation", "Originality"]),
+        option("Brainstorming", "Generate options quickly before filtering or judging them.", ["Brainstorming", "Idea Generation", "Divergent Thinking"]),
+        option("Perspective Shifting", "Look at the same situation through multiple viewpoints.", ["Perspective", "Flexibility", "Empathy"]),
+        option("Idea Connection", "Combine unrelated concepts to create useful new possibilities.", ["Connections", "Synthesis", "Creativity"]),
+        option("Flexible Thinking", "Adapt when rules, information, or conditions change.", ["Adaptability", "Reframing", "Mental Flexibility"]),
+        option("Design Thinking Basics", "Understand people, define problems, generate ideas, and test solutions.", ["Empathy", "Ideation", "Prototyping"]),
       ],
     },
   ],
@@ -261,16 +348,16 @@ export const learningSectionsByWorld: Record<string, LearningSection[]> = {
     {
       slug: "history-civilizations",
       title: "History & Civilizations",
-      description: "Understand major civilizations, events, movements, conflicts, and historical change.",
+      description: "Understand civilizations, major events, movements, conflicts, and historical change.",
       options: [
-        { title: "Ancient Civilizations", description: "Mesopotamia, Egypt, Greece, Rome, early Asia, Africa, and the Americas." },
-        { title: "World History", description: "Major global developments from early societies to the modern world." },
-        { title: "U.S. History", description: "Colonial America, independence, expansion, conflict, reform, and modern history." },
-        { title: "European History", description: "Empires, religion, revolution, industrialization, war, and integration." },
-        { title: "African History", description: "Kingdoms, trade, colonization, independence, culture, and modern states." },
-        { title: "Asian History", description: "China, India, Japan, Southeast Asia, empires, trade, and modern change." },
-        { title: "Military History", description: "Strategy, technology, major wars, and how conflict shaped societies." },
-        { title: "Modern History", description: "Industrialization, world wars, Cold War, globalization, and recent change." },
+        option("Ancient Civilizations", "Mesopotamia, Egypt, Greece, Rome, early Asia, Africa, and the Americas."),
+        option("World History", "Major global developments from early societies to the modern world."),
+        option("U.S. History", "Colonial America, independence, expansion, conflict, reform, and modern history."),
+        option("European History", "Empires, religion, revolution, industrialization, war, and integration."),
+        option("African History", "Kingdoms, trade, colonization, independence, culture, and modern states."),
+        option("Asian History", "China, India, Japan, Southeast Asia, empires, trade, and modern change."),
+        option("Military History", "Strategy, technology, major wars, and how conflict shaped societies."),
+        option("Modern History", "Industrialization, world wars, Cold War, globalization, and recent change."),
       ],
     },
     {
@@ -278,14 +365,14 @@ export const learningSectionsByWorld: Record<string, LearningSection[]> = {
       title: "Science & Nature",
       description: "Explore the physical universe, living systems, Earth, space, and scientific discovery.",
       options: [
-        { title: "Biology", description: "Life, cells, genetics, evolution, ecology, and organisms." },
-        { title: "Physics", description: "Matter, motion, energy, forces, fields, waves, and the universe." },
-        { title: "Chemistry", description: "Atoms, molecules, reactions, materials, and chemical behavior." },
-        { title: "Space & Astronomy", description: "Planets, stars, galaxies, black holes, cosmology, and exploration." },
-        { title: "Earth Science", description: "Geology, atmosphere, oceans, climate, and Earth systems." },
-        { title: "Environment", description: "Ecosystems, biodiversity, resources, pollution, conservation, and climate." },
-        { title: "Human Body", description: "Anatomy, physiology, body systems, health, and biological function." },
-        { title: "Scientific Breakthroughs", description: "How major discoveries changed what humans understand about nature." },
+        option("Biology", "Life, cells, genetics, evolution, ecology, and organisms."),
+        option("Physics", "Matter, motion, energy, forces, fields, waves, and the universe."),
+        option("Chemistry", "Atoms, molecules, reactions, materials, and chemical behavior."),
+        option("Space & Astronomy", "Planets, stars, galaxies, black holes, cosmology, and exploration."),
+        option("Earth Science", "Geology, atmosphere, oceans, climate, and Earth systems."),
+        option("Environment", "Ecosystems, biodiversity, resources, pollution, conservation, and climate."),
+        option("Human Body", "Anatomy, physiology, body systems, health, and biological function."),
+        option("Scientific Breakthroughs", "How major discoveries changed what humans understand about nature."),
       ],
     },
     {
@@ -293,14 +380,14 @@ export const learningSectionsByWorld: Record<string, LearningSection[]> = {
       title: "Technology & The Digital World",
       description: "Understand computers, software, AI, networks, cybersecurity, and emerging technology.",
       options: [
-        { title: "How Computers Work", description: "Hardware, software, operating systems, memory, storage, and processing." },
-        { title: "The Internet", description: "Networks, websites, servers, protocols, domains, and online communication." },
-        { title: "Artificial Intelligence", description: "Machine learning, models, agents, capabilities, limitations, and applications." },
-        { title: "Cybersecurity", description: "Threats, defense, privacy, authentication, networks, and digital safety." },
-        { title: "Software", description: "How applications are designed, built, deployed, and maintained." },
-        { title: "Robotics", description: "Sensors, control, automation, hardware, and intelligent machines." },
-        { title: "Cloud Computing", description: "Remote infrastructure, services, storage, scaling, and modern computing." },
-        { title: "Emerging Technology", description: "Explore new developments across AI, biotech, energy, computing, and more." },
+        option("How Computers Work", "Hardware, software, operating systems, memory, storage, and processing."),
+        option("The Internet", "Networks, websites, servers, protocols, domains, and online communication."),
+        option("Artificial Intelligence", "Machine learning, models, agents, capabilities, limitations, and applications."),
+        option("Cybersecurity", "Threats, defense, privacy, authentication, networks, and digital safety."),
+        option("Software", "How applications are designed, built, deployed, and maintained."),
+        option("Robotics", "Sensors, control, automation, hardware, and intelligent machines."),
+        option("Cloud Computing", "Remote infrastructure, services, storage, scaling, and modern computing."),
+        option("Emerging Technology", "New developments across AI, biotech, energy, computing, and more."),
       ],
     },
     {
@@ -308,14 +395,14 @@ export const learningSectionsByWorld: Record<string, LearningSection[]> = {
       title: "Economics, Money & Business",
       description: "Learn how markets, money, companies, incentives, finance, and economic systems work.",
       options: [
-        { title: "Economics", description: "Scarcity, incentives, markets, trade, growth, inflation, and policy." },
-        { title: "Personal Finance", description: "Budgeting, saving, banking, investing, credit, and financial planning." },
-        { title: "Investing Basics", description: "Stocks, bonds, funds, risk, return, diversification, and long-term investing." },
-        { title: "How Businesses Work", description: "Customers, products, operations, revenue, costs, teams, and competition." },
-        { title: "Entrepreneurship", description: "Ideas, customers, business models, startups, funding, and growth." },
-        { title: "Banking & Credit", description: "Banks, loans, interest, credit scores, debt, and financial institutions." },
-        { title: "Taxes", description: "Why taxes exist, major tax types, filing basics, and public finance." },
-        { title: "Global Trade", description: "Imports, exports, exchange rates, supply chains, and international markets." },
+        option("Economics", "Scarcity, incentives, markets, trade, growth, inflation, and policy."),
+        option("Personal Finance", "Budgeting, saving, banking, investing, credit, and financial planning."),
+        option("Investing Basics", "Stocks, bonds, funds, risk, return, diversification, and long-term investing."),
+        option("How Businesses Work", "Customers, products, operations, revenue, costs, teams, and competition."),
+        option("Entrepreneurship", "Ideas, customers, business models, startups, funding, and growth."),
+        option("Banking & Credit", "Banks, loans, interest, credit scores, debt, and financial institutions."),
+        option("Taxes", "Why taxes exist, major tax types, filing basics, and public finance."),
+        option("Global Trade", "Imports, exports, exchange rates, supply chains, and international markets."),
       ],
     },
     {
@@ -323,29 +410,28 @@ export const learningSectionsByWorld: Record<string, LearningSection[]> = {
       title: "Government, Law & Civics",
       description: "Understand institutions, legal systems, rights, public policy, and civic life.",
       options: [
-        { title: "How Government Works", description: "Branches, institutions, elections, agencies, and public administration." },
-        { title: "Constitutions & Rights", description: "Foundational rules, civil liberties, rights, and legal protections." },
-        { title: "Law Basics", description: "Courts, legal categories, procedures, evidence, and legal reasoning." },
-        { title: "Civics", description: "Citizenship, participation, responsibilities, community, and public institutions." },
-        { title: "Public Policy", description: "How governments identify problems, choose policies, and measure outcomes." },
-        { title: "International Relations", description: "States, diplomacy, conflict, alliances, institutions, and global cooperation." },
-        { title: "Political Systems", description: "Compare democracies, monarchies, authoritarian systems, and institutions." },
-        { title: "Local Government", description: "Cities, counties, services, budgets, planning, and local decision making." },
+        option("How Government Works", "Branches, institutions, elections, agencies, and public administration."),
+        option("Constitutions & Rights", "Foundational rules, civil liberties, rights, and legal protections."),
+        option("Law Basics", "Courts, legal categories, procedures, evidence, and legal reasoning."),
+        option("Civics", "Citizenship, participation, responsibilities, community, and public institutions."),
+        option("Public Policy", "How governments identify problems, choose policies, and measure outcomes."),
+        option("International Relations", "States, diplomacy, conflict, alliances, institutions, and global cooperation."),
+        option("Political Systems", "Compare democracies, monarchies, authoritarian systems, and institutions."),
+        option("Local Government", "Cities, counties, services, budgets, planning, and local decision making."),
       ],
     },
     {
-      slug: "geography-global-affairs",
-      title: "Geography & Global Affairs",
-      description: "Learn how places, populations, resources, borders, and global events connect.",
+      slug: "geography-world",
+      title: "Geography & The World",
+      description: "Learn how places, populations, resources, borders, and regions connect.",
       options: [
-        { title: "World Geography", description: "Countries, regions, physical features, populations, and spatial relationships." },
-        { title: "Maps & Navigation", description: "Coordinates, scale, projections, direction, and reading maps." },
-        { title: "Population & Migration", description: "Population patterns, cities, migration, demographics, and human movement." },
-        { title: "Resources & Energy", description: "Where resources come from and how societies use and trade them." },
-        { title: "Global Affairs", description: "Understand major international issues, institutions, and relationships." },
-        { title: "Climate & Regions", description: "Climate zones, environments, adaptation, and regional differences." },
-        { title: "Cities & Urbanization", description: "How cities grow, function, and shape economic and social life." },
-        { title: "Countries of the World", description: "Learn about individual countries, cultures, geography, and institutions." },
+        option("World Geography", "Countries, regions, physical features, populations, and spatial relationships."),
+        option("Maps & Navigation", "Coordinates, scale, projections, direction, and reading maps."),
+        option("Population & Migration", "Population patterns, cities, migration, demographics, and human movement."),
+        option("Resources & Energy", "Where resources come from and how societies use and trade them."),
+        option("Climate & Regions", "Climate zones, environments, adaptation, and regional differences."),
+        option("Cities & Urbanization", "How cities grow, function, and shape economic and social life."),
+        option("Countries of the World", "Learn about individual countries, cultures, geography, and institutions."),
       ],
     },
     {
@@ -353,29 +439,29 @@ export const learningSectionsByWorld: Record<string, LearningSection[]> = {
       title: "Psychology & Human Behavior",
       description: "Understand thinking, emotion, behavior, personality, development, and social interaction.",
       options: [
-        { title: "Psychology Basics", description: "Core ideas about behavior, thought, emotion, and scientific study." },
-        { title: "Cognitive Psychology", description: "Attention, memory, perception, language, learning, and thinking." },
-        { title: "Social Psychology", description: "Groups, influence, identity, relationships, and social behavior." },
-        { title: "Developmental Psychology", description: "How people change from childhood through adulthood." },
-        { title: "Personality", description: "Traits, individual differences, personality theories, and behavior patterns." },
-        { title: "Motivation", description: "Goals, rewards, needs, habits, effort, and why people act." },
-        { title: "Communication", description: "How people exchange information, interpret messages, and avoid misunderstandings." },
-        { title: "Decision Psychology", description: "Biases, judgment, risk, choices, and how people make decisions." },
+        option("Psychology Basics", "Core ideas about behavior, thought, emotion, and scientific study."),
+        option("Cognitive Psychology", "Attention, memory, perception, language, learning, and thinking."),
+        option("Social Psychology", "Groups, influence, identity, relationships, and social behavior."),
+        option("Developmental Psychology", "How people change from childhood through adulthood."),
+        option("Personality", "Traits, individual differences, personality theories, and behavior patterns."),
+        option("Motivation", "Goals, rewards, needs, habits, effort, and why people act."),
+        option("Communication", "How people exchange information, interpret messages, and avoid misunderstandings."),
+        option("Decision Psychology", "Biases, judgment, risk, choices, and how people make decisions."),
       ],
     },
     {
-      slug: "practical-life-knowledge",
+      slug: "practical-life",
       title: "Practical Life Knowledge",
-      description: "Learn useful everyday knowledge for adult life, independence, work, and decision making.",
+      description: "Useful everyday knowledge for adult life, independence, work, and decision making.",
       options: [
-        { title: "Budgeting", description: "Plan income, expenses, savings, and financial priorities." },
-        { title: "Credit", description: "Understand credit scores, cards, borrowing, interest, and responsible use." },
-        { title: "Renting & Housing", description: "Leases, deposits, utilities, moving, maintenance, and housing basics." },
-        { title: "Insurance Basics", description: "Health, auto, renters, life, deductibles, premiums, and coverage." },
-        { title: "Job & Workplace Basics", description: "Applications, interviews, communication, pay, policies, and workplace behavior." },
-        { title: "Time Management", description: "Prioritize responsibilities, schedule work, and manage competing demands." },
-        { title: "Everyday Problem Solving", description: "Handle practical decisions, compare options, and solve common life problems." },
-        { title: "Digital Safety", description: "Protect accounts, recognize scams, manage privacy, and use technology safely." },
+        option("Budgeting", "Plan income, expenses, savings, and financial priorities."),
+        option("Credit", "Understand credit scores, cards, borrowing, interest, and responsible use."),
+        option("Renting & Housing", "Leases, deposits, utilities, moving, maintenance, and housing basics."),
+        option("Insurance Basics", "Health, auto, renters, life, deductibles, premiums, and coverage."),
+        option("Job & Workplace Basics", "Applications, interviews, communication, pay, policies, and workplace behavior."),
+        option("Time Management", "Prioritize responsibilities, schedule work, and manage competing demands."),
+        option("Everyday Problem Solving", "Handle practical decisions, compare options, and solve common life problems."),
+        option("Digital Safety", "Protect accounts, recognize scams, manage privacy, and use technology safely."),
       ],
     },
     {
@@ -383,136 +469,94 @@ export const learningSectionsByWorld: Record<string, LearningSection[]> = {
       title: "Culture, Arts & Media",
       description: "Explore art, music, film, literature, media, culture, and creative expression.",
       options: [
-        { title: "Art History", description: "Major artistic periods, movements, creators, works, and visual ideas." },
-        { title: "Music", description: "Genres, theory basics, history, instruments, production, and culture." },
-        { title: "Film & Cinema", description: "Storytelling, directing, editing, genres, history, and visual language." },
-        { title: "Literature", description: "Genres, authors, themes, movements, and major works." },
-        { title: "Media Literacy", description: "Evaluate media messages, sources, framing, advertising, and misinformation." },
-        { title: "World Cultures", description: "Traditions, beliefs, language, food, customs, and cultural diversity." },
-        { title: "Architecture", description: "Styles, structures, design ideas, history, and the built environment." },
-        { title: "Photography", description: "Composition, light, cameras, visual storytelling, and image interpretation." },
+        option("Art History", "Major artistic periods, movements, creators, works, and visual ideas."),
+        option("Music", "Genres, theory basics, history, instruments, production, and culture."),
+        option("Film & Cinema", "Storytelling, directing, editing, genres, history, and visual language."),
+        option("Literature", "Genres, authors, themes, movements, and major works."),
+        option("Media Literacy", "Evaluate media messages, sources, framing, advertising, and misinformation."),
+        option("World Cultures", "Traditions, beliefs, language, food, customs, and cultural diversity."),
+        option("Architecture", "Styles, structures, design ideas, history, and the built environment."),
+        option("Photography", "Composition, light, cameras, visual storytelling, and image interpretation."),
       ],
     },
   ],
 
   "book-intelligence": [
     {
-      slug: "learn-a-book",
-      title: "Learn a Book",
-      description: "Turn a book into a guided learning experience instead of only reading it once.",
+      slug: "fiction-library",
+      title: "Fiction Library",
+      description: "Use fictional stories to build imagination, creativity, interpretation, empathy, and literary understanding.",
       options: [
-        { title: "Teach Me a Book", description: "Build a complete guided learning path around a book you choose." },
-        { title: "Main Ideas", description: "Identify and explain the book's central ideas clearly." },
-        { title: "Chapter by Chapter", description: "Work through the book one chapter at a time with teaching and review." },
-        { title: "Important Lessons", description: "Find the most useful lessons and explain why they matter." },
-        { title: "Key Concepts", description: "Break down important concepts, terms, frameworks, and relationships." },
-        { title: "Author's Purpose", description: "Understand what the author is trying to accomplish and why." },
-        { title: "Book Roadmap", description: "Preview the structure and create a plan for reading and learning." },
+        option("Novels", "Study long-form fiction through plot, character, theme, worldbuilding, and interpretation.", ["Character Analysis", "Theme", "Plot", "Interpretation"]),
+        option("Short Stories", "Study compact fiction through structure, symbolism, voice, and meaning.", ["Close Reading", "Symbolism", "Structure", "Interpretation"]),
+        option("Fantasy", "Explore imagined worlds, systems, myth, character arcs, and creative worldbuilding.", ["Worldbuilding", "Creativity", "Theme", "Character"]),
+        option("Science Fiction", "Explore speculative technology, society, ethics, futures, and imaginative ideas.", ["Speculation", "Technology Themes", "Worldbuilding", "Critical Reading"]),
+        option("Mystery & Thriller", "Analyze clues, suspense, pacing, perspective, and problem solving in fiction.", ["Inference", "Evidence", "Plot", "Suspense"]),
+        option("Historical Fiction", "Connect fictional stories with real historical settings, events, and perspectives.", ["Historical Context", "Character", "Interpretation", "Research"]),
+        option("Drama & Plays", "Study dialogue, performance, conflict, character, structure, and dramatic themes.", ["Dialogue", "Drama", "Character", "Theme"]),
+        option("Poetry", "Study imagery, sound, form, figurative language, voice, and interpretation.", ["Poetry", "Imagery", "Language", "Interpretation"]),
       ],
     },
     {
-      slug: "deep-understanding",
-      title: "Deep Understanding",
-      description: "Go beyond summaries and understand difficult passages, arguments, themes, and concepts.",
+      slug: "nonfiction-library",
+      title: "Nonfiction Library",
+      description: "Learn from books built around real facts, real people, research, ideas, events, and documented experience.",
       options: [
-        { title: "Explain a Passage", description: "Break a difficult passage into plain language and key ideas." },
-        { title: "Analyze a Chapter", description: "Examine what a chapter says, how it works, and why it matters." },
-        { title: "Themes", description: "Identify recurring ideas, patterns, and deeper meaning." },
-        { title: "Arguments", description: "Map claims, evidence, assumptions, and reasoning." },
-        { title: "Author's Ideas", description: "Understand the author's worldview, framework, and main claims." },
-        { title: "Difficult Concepts", description: "Slow down and unpack ideas that are hard to understand." },
-        { title: "Context", description: "Learn the historical, cultural, intellectual, or personal context behind the text." },
-        { title: "Question the Book", description: "Challenge assumptions and examine what may be incomplete or debatable." },
+        option("Biography & Memoir", "Learn from real lives, decisions, experiences, context, and documented events.", ["Biography", "Context", "Evidence", "Life Lessons"]),
+        option("History", "Learn documented events, chronology, evidence, competing interpretations, and historical context.", ["History", "Evidence", "Chronology", "Source Evaluation"]),
+        option("Science", "Understand scientific ideas, discoveries, evidence, experiments, and explanations.", ["Science", "Evidence", "Concepts", "Research"]),
+        option("Business & Entrepreneurship", "Learn real business frameworks, cases, strategy, finance, leadership, and operations.", ["Business", "Strategy", "Finance", "Leadership"]),
+        option("Finance & Investing", "Learn money, markets, investing, risk, valuation, and financial decision-making.", ["Finance", "Investing", "Risk", "Valuation"]),
+        option("Psychology & Human Behavior", "Learn research-based ideas about thinking, behavior, relationships, and decision-making.", ["Psychology", "Behavior", "Research", "Decision Making"]),
+        option("Self-Development", "Evaluate practical frameworks for habits, productivity, learning, communication, and growth.", ["Habits", "Learning", "Productivity", "Reflection"]),
+        option("Politics & Society", "Study institutions, history, policy, social systems, arguments, evidence, and public life.", ["Institutions", "Policy", "Evidence", "Society"]),
+        option("Technology", "Learn how technologies work, how they developed, and how they affect people and industries.", ["Technology", "Systems", "Innovation", "Impact"]),
+        option("Textbooks & Academic Books", "Turn dense academic reading into clear explanations, notes, practice, and review.", ["Academic Reading", "Notes", "Recall", "Concepts"]),
       ],
     },
     {
-      slug: "remember-what-you-read",
-      title: "Remember What You Read",
-      description: "Use recall, review, and testing so important ideas stay available after you finish reading.",
+      slug: "understand-analyze",
+      title: "Understand & Analyze",
+      description: "Go deeper than summaries by examining passages, themes, arguments, evidence, and author choices.",
       options: [
-        { title: "Book Recall", description: "Retrieve the important ideas without looking back at the book." },
-        { title: "Practice Questions", description: "Answer questions that test real understanding rather than recognition." },
-        { title: "Flashcards", description: "Create concise prompts for concepts, definitions, people, and arguments." },
-        { title: "Memory Review", description: "Review weak ideas at useful intervals to improve retention." },
-        { title: "Chapter Review", description: "Test what you remember after each chapter before moving on." },
-        { title: "Test My Understanding", description: "Use increasingly difficult questions to expose gaps." },
-        { title: "Teach It Back", description: "Explain the book in your own words and receive feedback." },
-        { title: "Spaced Book Review", description: "Build a schedule for revisiting important ideas over time." },
+        option("Explain a Passage", "Break a difficult passage into plain language and key ideas."),
+        option("Analyze a Chapter", "Examine what a chapter says, how it works, and why it matters."),
+        option("Themes & Ideas", "Identify recurring ideas, patterns, and deeper meaning."),
+        option("Arguments & Evidence", "Map claims, evidence, assumptions, and reasoning."),
+        option("Author's Purpose", "Understand what the author is trying to accomplish and why."),
+        option("Difficult Concepts", "Slow down and unpack ideas that are hard to understand."),
+        option("Context", "Learn the historical, cultural, intellectual, or personal context behind the text."),
+        option("Question the Book", "Challenge assumptions and examine what may be incomplete or debatable."),
       ],
     },
     {
-      slug: "apply-what-you-learn",
-      title: "Apply What You Learn",
-      description: "Turn book knowledge into decisions, skills, habits, projects, and real-world action.",
+      slug: "remember-study",
+      title: "Remember & Study",
+      description: "Turn reading into durable knowledge with recall, notes, testing, and spaced review.",
       options: [
-        { title: "Apply This Book", description: "Turn the book's ideas into practical actions for your situation." },
-        { title: "Real-World Examples", description: "Connect abstract ideas to realistic cases and situations." },
-        { title: "Exercises", description: "Practice using the book's concepts instead of only discussing them." },
-        { title: "Projects", description: "Build a project that requires applying the book's lessons." },
-        { title: "Personal Application", description: "Adapt useful ideas to your goals, habits, work, or life." },
-        { title: "Action Plan", description: "Convert important lessons into a sequence of concrete next steps." },
-        { title: "Decision Frameworks", description: "Use the book's models to make better choices." },
-        { title: "Habit Implementation", description: "Turn useful principles into repeatable behavior." },
+        option("Book Recall", "Retrieve the important ideas without looking back at the book."),
+        option("Practice Questions", "Answer questions that test real understanding rather than recognition."),
+        option("Flashcards", "Create concise prompts for concepts, definitions, people, and arguments."),
+        option("Chapter Review", "Test what you remember after each chapter before moving on."),
+        option("Teach It Back", "Explain the book in your own words and receive feedback."),
+        option("Spaced Book Review", "Build a schedule for revisiting important ideas over time."),
+        option("Book Study Guide", "Organize concepts, people, arguments, examples, and review questions."),
+        option("Concept Map", "Show how the book's major ideas connect to one another."),
       ],
     },
     {
-      slug: "compare-books-ideas",
-      title: "Compare Books & Ideas",
-      description: "Connect and contrast authors, arguments, frameworks, perspectives, and subjects.",
+      slug: "apply-create",
+      title: "Apply & Create",
+      description: "Turn what you read into actions, projects, writing, creativity, decisions, and new ideas.",
       options: [
-        { title: "Compare Two Books", description: "See where two books agree, disagree, overlap, and differ." },
-        { title: "Compare Authors", description: "Contrast authors' assumptions, goals, methods, and viewpoints." },
-        { title: "Connect Ideas", description: "Find useful relationships between concepts across different books." },
-        { title: "Compare Arguments", description: "Evaluate which claims use stronger evidence and reasoning." },
-        { title: "Different Perspectives", description: "Study the same issue through opposing or complementary viewpoints." },
-        { title: "Synthesize Multiple Books", description: "Combine insights from several sources into one coherent understanding." },
-        { title: "Contradictions", description: "Identify apparent conflicts and examine why they exist." },
-        { title: "Shared Themes", description: "Trace common ideas across authors, genres, or time periods." },
-      ],
-    },
-    {
-      slug: "fiction-literature",
-      title: "Fiction & Literature",
-      description: "Study novels, stories, plays, and literature through character, theme, style, and interpretation.",
-      options: [
-        { title: "Character Analysis", description: "Understand motivation, development, relationships, and conflict." },
-        { title: "Theme Analysis", description: "Identify deeper ideas and how the text develops them." },
-        { title: "Plot & Structure", description: "Analyze how events, pacing, scenes, and structure shape the story." },
-        { title: "Symbolism", description: "Interpret recurring images, objects, settings, and symbolic meaning." },
-        { title: "Point of View", description: "Understand narration, perspective, reliability, and effect." },
-        { title: "Literary Devices", description: "Study imagery, metaphor, irony, foreshadowing, and other techniques." },
-        { title: "Historical Context", description: "Connect literature to the period and culture in which it was created." },
-        { title: "Essay Preparation", description: "Build evidence-based literary analysis for assignments and exams." },
-      ],
-    },
-    {
-      slug: "nonfiction-research",
-      title: "Nonfiction & Research",
-      description: "Learn from textbooks, biographies, essays, research, business books, and other nonfiction.",
-      options: [
-        { title: "Argument Breakdown", description: "Separate claims, evidence, assumptions, and conclusions." },
-        { title: "Evidence Quality", description: "Judge the strength, relevance, and limits of supporting evidence." },
-        { title: "Research Paper Reading", description: "Understand abstracts, methods, results, limitations, and conclusions." },
-        { title: "Biography Learning", description: "Extract events, decisions, context, and lessons from a person's life." },
-        { title: "Textbook Learning", description: "Turn dense textbook material into explanations, practice, and review." },
-        { title: "Business Book Learning", description: "Analyze frameworks, examples, assumptions, and practical applications." },
-        { title: "History Book Learning", description: "Track evidence, chronology, interpretation, and historical argument." },
-        { title: "Fact vs Interpretation", description: "Separate documented information from the author's analysis or opinion." },
-      ],
-    },
-    {
-      slug: "notes-study-guides",
-      title: "Notes & Study Guides",
-      description: "Turn reading into organized notes, review systems, and materials you can actually study from.",
-      options: [
-        { title: "Chapter Notes", description: "Create concise notes that capture important ideas without copying everything." },
-        { title: "Book Study Guide", description: "Organize concepts, people, arguments, examples, and review questions." },
-        { title: "Concept Map", description: "Show how major ideas connect to one another." },
-        { title: "Key Quote Analysis", description: "Study important quotations and explain their meaning and relevance." },
-        { title: "Vocabulary List", description: "Build a list of important terms with useful explanations." },
-        { title: "One-Page Summary", description: "Compress a book or chapter into the information most worth retaining." },
-        { title: "Exam Review", description: "Turn assigned reading into targeted review for a test or class discussion." },
-        { title: "Discussion Questions", description: "Generate questions that require interpretation, evidence, and deeper thinking." },
+        option("Apply This Book", "Turn the book's ideas into practical actions for your situation."),
+        option("Real-World Examples", "Connect abstract ideas to realistic cases and situations."),
+        option("Projects", "Build a project that requires applying the book's lessons."),
+        option("Personal Application", "Adapt useful ideas to your goals, habits, work, or life."),
+        option("Action Plan", "Convert important lessons into a sequence of concrete next steps."),
+        option("Creative Writing From Fiction", "Use fictional techniques to strengthen imagination, characters, scenes, and storytelling."),
+        option("Compare Two Books", "See where two books agree, disagree, overlap, and differ."),
+        option("Synthesize Multiple Books", "Combine insights from several books into one coherent understanding."),
       ],
     },
   ],
@@ -524,4 +568,27 @@ export function getLearningSections(world: string) {
 
 export function getLearningSection(world: string, sectionSlug: string) {
   return getLearningSections(world).find((section) => section.slug === sectionSlug);
+}
+
+export function slugifyLearningTitle(value: string) {
+  return value
+    .toLowerCase()
+    .replace(/&/g, "and")
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-+|-+$/g, "");
+}
+
+export function getLearningOption(
+  world: string,
+  sectionSlug: string,
+  topicSlug: string
+) {
+  const section = getLearningSection(world, sectionSlug);
+  if (!section) return null;
+
+  const option = section.options.find(
+    (item) => slugifyLearningTitle(item.title) === topicSlug
+  );
+
+  return option ? { section, option } : null;
 }
