@@ -359,7 +359,7 @@ export default function LearningWorldPage() {
                   </p>
 
                   <Link
-                    href={`/learn/school-help/homework?language=${encodeURIComponent(
+                    href={`/learn/school-help/homework-help?language=${encodeURIComponent(
                       language
                     )}`}
                     className="mt-5 inline-flex items-center gap-2 rounded-xl bg-[#1677FF] px-5 py-3 text-sm font-bold text-white hover:bg-[#0F65E8]"
