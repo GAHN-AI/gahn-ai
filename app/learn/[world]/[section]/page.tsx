@@ -11,8 +11,10 @@ import {
   Brain,
   Globe2,
   GraduationCap,
+  FileUp,
   Search,
   Sparkles,
+  X,
 } from "lucide-react";
 import LanguageSelector from "@/components/LanguageSelector";
 import {
@@ -53,6 +55,7 @@ export default function LearningSectionPage() {
   const section = getLearningSection(params.world, params.section);
 
   const [search, setSearch] = useState("");
+  const [homeworkFile, setHomeworkFile] = useState<File | null>(null);
   const [language, setLanguage] = useState(
     searchParams.get("language") || "English"
   );
@@ -159,6 +162,66 @@ export default function LearningSectionPage() {
             </div>
           </div>
         </section>
+
+        {params.world === "school-help" && params.section === "homework-help" && (
+          <section className="mt-6 rounded-[1.5rem] border border-[#BFD7F7] bg-white p-6 shadow-[0_12px_35px_rgba(11,23,57,0.05)] sm:p-8">
+            <div className="flex items-start gap-3">
+              <div className="grid h-11 w-11 shrink-0 place-items-center rounded-xl bg-[#EAF3FF] text-[#1677FF]">
+                <FileUp className="h-5 w-5" strokeWidth={1.75} />
+              </div>
+              <div>
+                <p className="text-xs font-bold uppercase tracking-[0.2em] text-[#1677FF]">
+                  Upload Your Assignment
+                </p>
+                <h2 className="mt-1 text-2xl font-extrabold tracking-[-0.02em]">
+                  Bring a file, screenshot, or photo of your homework
+                </h2>
+                <p className="mt-2 max-w-3xl text-sm leading-6 text-[#53657D]">
+                  Choose a PDF, document, image, screenshot, or phone photo. The
+                  live AI file-analysis connection will use this area when the
+                  instructor software is connected.
+                </p>
+              </div>
+            </div>
+
+            {!homeworkFile ? (
+              <label className="mt-6 flex cursor-pointer flex-col items-center justify-center rounded-2xl border border-dashed border-[#BFD7F7] bg-[#F8FBFF] px-6 py-10 text-center hover:border-[#1677FF]">
+                <FileUp className="h-7 w-7 text-[#1677FF]" strokeWidth={1.75} />
+                <p className="mt-3 font-bold text-[#0B1739]">Choose homework file</p>
+                <p className="mt-2 text-xs leading-5 text-[#53657D]">
+                  PDF, DOC, DOCX, TXT, PNG, JPG, or WEBP
+                </p>
+                <input
+                  type="file"
+                  accept=".pdf,.doc,.docx,.txt,image/png,image/jpeg,image/webp"
+                  onChange={(event) =>
+                    setHomeworkFile(event.target.files?.[0] ?? null)
+                  }
+                  className="sr-only"
+                />
+              </label>
+            ) : (
+              <div className="mt-6 flex flex-col gap-4 rounded-2xl border border-[#CFE0F5] bg-[#F8FBFF] p-5 sm:flex-row sm:items-center sm:justify-between">
+                <div className="min-w-0">
+                  <p className="truncate font-bold text-[#0B1739]">
+                    {homeworkFile.name}
+                  </p>
+                  <p className="mt-1 text-xs text-[#53657D]">
+                    {(homeworkFile.size / 1024 / 1024).toFixed(2)} MB selected
+                  </p>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => setHomeworkFile(null)}
+                  className="inline-flex items-center justify-center gap-2 rounded-xl border border-[#D7E3F2] bg-white px-4 py-2.5 text-sm font-semibold text-[#53657D]"
+                >
+                  <X className="h-4 w-4" />
+                  Remove file
+                </button>
+              </div>
+            )}
+          </section>
+        )}
 
         <section className="mt-6 rounded-[1.5rem] border border-[#CFE0F5] bg-[linear-gradient(135deg,#FFFFFF_0%,#F8FBFF_58%,#EAF3FF_100%)] p-6 sm:p-8">
           <div className="flex items-start gap-3">
