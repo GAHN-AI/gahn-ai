@@ -23,6 +23,7 @@ import {
 } from "lucide-react";
 import LanguageSelector from "@/components/LanguageSelector";
 import { getCareerSection } from "@/lib/careerCatalog";
+import { getCareerCurriculum } from "@/lib/careerCurriculum";
 import {
   getLearningOption,
   slugifyLearningTitle,
@@ -68,6 +69,7 @@ type LearningDetail = {
   skills: string[];
   resources: string[];
   modules: { title: string; description: string }[];
+  requirementNote?: string;
 };
 
 const techCareerSkills = [
@@ -131,11 +133,23 @@ function subjectModules(topic: string) {
 
 function buildLearningDetail(
   world: string,
+  sectionSlug: string,
   sectionTitle: string,
   title: string,
   description: string,
   option?: LearningOption
 ): LearningDetail {
+  if (world === "career-skills") {
+    const career = getCareerCurriculum(sectionSlug, title);
+
+    return {
+      whatYouLearn: career.whatYouLearn,
+      skills: career.skills,
+      resources: career.tools,
+      modules: career.modules,
+      requirementNote: career.requirementNote,
+    };
+  }
   if (title === "Web Developer") {
     return {
       whatYouLearn: [
@@ -388,6 +402,7 @@ export default function TopicOverviewPage() {
 
   const detail = buildLearningDetail(
     params.world,
+    params.section,
     resolved.sectionTitle,
     resolved.title,
     resolved.description,
@@ -539,7 +554,10 @@ export default function TopicOverviewPage() {
                 <div className="flex items-center gap-3">
                   <Wrench className="h-5 w-5 text-[#1677FF]" strokeWidth={1.75} />
                   <h2 className="text-2xl font-extrabold tracking-[-0.02em]">
-                    Tools & resources you&apos;ll use
+                    {params.world === "career-skills" &&
+                    params.section === "technology-computing"
+                      ? "Languages, technologies & tools you’ll learn"
+                      : "Tools, systems & resources you’ll use"}
                   </h2>
                 </div>
                 <div className="mt-4 flex flex-wrap gap-2.5">
@@ -553,6 +571,17 @@ export default function TopicOverviewPage() {
                   ))}
                 </div>
               </section>
+
+              {detail.requirementNote && (
+                <section className="rounded-2xl border border-[#CFE0F5] bg-[#F1F7FF] p-5">
+                  <p className="text-xs font-bold uppercase tracking-[0.18em] text-[#1677FF]">
+                    Career requirement note
+                  </p>
+                  <p className="mt-2 text-sm leading-6 text-[#40536D]">
+                    {detail.requirementNote}
+                  </p>
+                </section>
+              )}
 
               <section className="border-t border-[#E2EAF4] pt-8">
                 <div className="flex items-center gap-3">
