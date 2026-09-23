@@ -15,7 +15,10 @@ import {
   Sparkles,
 } from "lucide-react";
 import LanguageSelector from "@/components/LanguageSelector";
-import { getLearningSection } from "@/lib/learningCatalog";
+import {
+  getLearningSection,
+  slugifyLearningTitle,
+} from "@/lib/learningCatalog";
 
 const worldInformation: Record<
   string,
@@ -24,7 +27,7 @@ const worldInformation: Record<
   "school-help": {
     title: "School Help",
     Icon: GraduationCap,
-    optionLabel: "topic",
+    optionLabel: "subject",
   },
   "brain-development": {
     title: "Brain Development",
@@ -72,7 +75,8 @@ export default function LearningSectionPage() {
     return section.options.filter(
       (option) =>
         option.title.toLowerCase().includes(query) ||
-        option.description.toLowerCase().includes(query)
+        option.description.toLowerCase().includes(query) ||
+        option.skills?.some((skill) => skill.toLowerCase().includes(query))
     );
   }, [section, search]);
 
@@ -136,7 +140,9 @@ export default function LearningSectionPage() {
 
             <div>
               <p className="text-xs font-bold uppercase tracking-[0.22em] text-[#1677FF]">
-                {worldInfo.title} Section
+                {params.world === "school-help"
+                  ? "Grade-Level Subjects"
+                  : `${worldInfo.title} Section`}
               </p>
 
               <h1 className="mt-2 text-3xl font-extrabold tracking-[-0.03em] sm:text-4xl lg:text-5xl">
@@ -162,16 +168,15 @@ export default function LearningSectionPage() {
 
             <div>
               <p className="text-xs font-bold uppercase tracking-[0.2em] text-[#1677FF]">
-                Choose what to learn
+                Browse the section
               </p>
-
               <h2 className="mt-1 text-2xl font-extrabold tracking-[-0.02em]">
-                Pick a {worldInfo.optionLabel}
+                Choose a {worldInfo.optionLabel}
               </h2>
-
               <p className="mt-2 text-sm leading-6 text-[#53657D]">
-                Choose an option below. GAHN AI will open the same instructor and
-                learning-panel experience for that exact topic in {language}.
+                Open an option to see exactly what you will learn, the skills you
+                will build, useful tools or resources, and the learning sequence
+                before you enter the AI instructor panel.
               </p>
             </div>
           </div>
@@ -181,7 +186,6 @@ export default function LearningSectionPage() {
               className="pointer-events-none absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-[#7A8AA0]"
               strokeWidth={1.75}
             />
-
             <input
               value={search}
               onChange={(event) => setSearch(event.target.value)}
@@ -195,50 +199,65 @@ export default function LearningSectionPage() {
           <div className="flex flex-wrap items-end justify-between gap-3">
             <div>
               <p className="text-xs font-bold uppercase tracking-[0.22em] text-[#1677FF]">
-                Learning Options
+                {params.world === "school-help" ? "Subjects" : "Learning Options"}
               </p>
-
               <h2 className="mt-2 text-3xl font-extrabold tracking-[-0.03em]">
-                Choose what you want your AI instructor to teach
+                {params.world === "school-help"
+                  ? `Learn ${section.title} subjects`
+                  : "Pick what you want to master"}
               </h2>
             </div>
 
             <p className="text-sm font-semibold text-[#53657D]">
-              {filteredOptions.length} option{filteredOptions.length === 1 ? "" : "s"}
+              {filteredOptions.length} option
+              {filteredOptions.length === 1 ? "" : "s"}
             </p>
           </div>
 
           <div className="mt-6 grid gap-4 md:grid-cols-2 xl:grid-cols-3">
-            {filteredOptions.map((option) => (
-              <Link
-                key={option.title}
-                href={`/lesson/custom?world=${encodeURIComponent(
-                  params.world
-                )}&section=${encodeURIComponent(
-                  section.slug
-                )}&topic=${encodeURIComponent(
-                  option.title
-                )}&language=${encodeURIComponent(language)}`}
-                className="group flex min-h-48 flex-col rounded-[1.4rem] border border-[#D7E3F2] bg-white p-5 shadow-[0_10px_30px_rgba(11,23,57,0.05)] hover:border-[#1677FF]/45 hover:shadow-md"
-              >
-                <div className="grid h-10 w-10 place-items-center rounded-xl bg-[#EAF3FF] text-[#1677FF]">
-                  <Icon className="h-4.5 w-4.5" strokeWidth={1.75} />
-                </div>
+            {filteredOptions.map((option) => {
+              const topicSlug = slugifyLearningTitle(option.title);
 
-                <h3 className="mt-4 text-lg font-bold text-[#0B1739]">
-                  {option.title}
-                </h3>
+              return (
+                <Link
+                  key={option.title}
+                  href={`/learn/${params.world}/${section.slug}/${topicSlug}?language=${encodeURIComponent(
+                    language
+                  )}`}
+                  className="group flex min-h-56 flex-col rounded-[1.4rem] border border-[#D7E3F2] bg-white p-5 shadow-[0_10px_30px_rgba(11,23,57,0.05)] hover:border-[#1677FF]/45 hover:shadow-md"
+                >
+                  <div className="grid h-10 w-10 place-items-center rounded-xl bg-[#EAF3FF] text-[#1677FF]">
+                    <Icon className="h-4.5 w-4.5" strokeWidth={1.75} />
+                  </div>
 
-                <p className="mt-2 flex-1 text-sm leading-6 text-[#53657D]">
-                  {option.description}
-                </p>
+                  <h3 className="mt-4 text-lg font-bold text-[#0B1739]">
+                    {option.title}
+                  </h3>
 
-                <div className="mt-4 inline-flex items-center gap-2 text-sm font-bold text-[#1677FF]">
-                  Start learning
-                  <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
-                </div>
-              </Link>
-            ))}
+                  <p className="mt-2 flex-1 text-sm leading-6 text-[#53657D]">
+                    {option.description}
+                  </p>
+
+                  {option.skills && option.skills.length > 0 && (
+                    <div className="mt-4 flex flex-wrap gap-2">
+                      {option.skills.slice(0, 3).map((skill) => (
+                        <span
+                          key={skill}
+                          className="rounded-full bg-[#F1F7FF] px-3 py-1 text-[11px] font-semibold text-[#53657D]"
+                        >
+                          {skill}
+                        </span>
+                      ))}
+                    </div>
+                  )}
+
+                  <div className="mt-5 inline-flex items-center gap-2 text-sm font-bold text-[#1677FF]">
+                    View what you&apos;ll learn
+                    <ArrowRight className="h-4 w-4" />
+                  </div>
+                </Link>
+              );
+            })}
           </div>
 
           {!filteredOptions.length && (
