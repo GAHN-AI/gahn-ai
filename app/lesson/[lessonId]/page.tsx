@@ -40,7 +40,7 @@ export default function LessonPage() {
   const searchParams = useSearchParams();
   const lessonId = params.lessonId;
   const requestedWorldSlug = searchParams.get("world") || "general-knowledge";
-  const careerSection = searchParams.get("section");
+  const learningSection = searchParams.get("section");
 
   const resolvedWorldSlug: WorldKey =
     requestedWorldSlug in worldInformation
@@ -66,12 +66,11 @@ export default function LessonPage() {
     window.localStorage.setItem("gahn-language", nextLanguage);
   }
 
-  const backHref =
-    resolvedWorldSlug === "career-skills" && careerSection
-      ? `/learn/career-skills/${encodeURIComponent(
-          careerSection
-        )}?language=${encodeURIComponent(language)}`
-      : `/learn/${resolvedWorldSlug}?language=${encodeURIComponent(language)}`;
+  const backHref = learningSection
+    ? `/learn/${resolvedWorldSlug}/${encodeURIComponent(
+        learningSection
+      )}?language=${encodeURIComponent(language)}`
+    : `/learn/${resolvedWorldSlug}?language=${encodeURIComponent(language)}`;
 
   return (
     <main className="min-h-screen bg-[#F8FBFF] font-sans text-[#0B1739]">
@@ -82,7 +81,7 @@ export default function LessonPage() {
             className="inline-flex items-center gap-2 text-sm font-semibold text-[#53657D] hover:text-[#1677FF]"
           >
             <ArrowLeft className="h-4 w-4" />
-            Back to {careerSection ? "career options" : world.title}
+            Back to {learningSection ? "section options" : world.title}
           </Link>
 
           <div className="flex items-center gap-3">
