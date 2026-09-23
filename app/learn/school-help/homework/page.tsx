@@ -1,6 +1,6 @@
 "use client";
 
-import { ChangeEvent, FormEvent, useEffect, useState } from "react";
+import { useEffect, useState, type ChangeEvent, type FormEvent } from "react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import {
@@ -152,7 +152,6 @@ export default function HomeworkHelpPage() {
                   <input
                     type="file"
                     accept="image/*"
-                    capture="environment"
                     onChange={selectFile}
                     className="sr-only"
                   />
