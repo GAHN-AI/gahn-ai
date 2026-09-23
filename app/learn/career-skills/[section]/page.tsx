@@ -12,6 +12,7 @@ import {
 } from "lucide-react";
 import LanguageSelector from "@/components/LanguageSelector";
 import { getCareerSection } from "@/lib/careerCatalog";
+import { slugifyLearningTitle } from "@/lib/learningCatalog";
 
 export default function CareerSectionPage() {
   const params = useParams<{ section: string }>();
@@ -117,7 +118,7 @@ export default function CareerSectionPage() {
               <p className="text-xs font-bold uppercase tracking-[0.2em] text-[#1677FF]">Choose your path</p>
               <h2 className="mt-1 text-2xl font-extrabold tracking-[-0.02em]">Choose the career you want to learn</h2>
               <p className="mt-2 text-sm leading-6 text-[#53657D]">
-                Pick a career below. GAHN AI will open the same learning panel you already use, with Alex teaching that career step by step in {language}.
+                Pick a career below. First you will see exactly what the path covers, the skills and tools involved, and the learning sequence. Then you can start the private AI lesson in {language}.
               </p>
             </div>
           </div>
@@ -153,9 +154,9 @@ export default function CareerSectionPage() {
             {filteredLessons.map((lesson) => (
               <Link
                 key={lesson.title}
-                href={`/lesson/custom?world=career-skills&section=${encodeURIComponent(
-                  careerSection.slug
-                )}&topic=${encodeURIComponent(lesson.title)}&language=${encodeURIComponent(language)}`}
+                href={`/learn/career-skills/${careerSection.slug}/${slugifyLearningTitle(
+                  lesson.title
+                )}?language=${encodeURIComponent(language)}`}
                 className="group flex min-h-48 flex-col rounded-[1.4rem] border border-[#D7E3F2] bg-white p-5 shadow-[0_10px_30px_rgba(11,23,57,0.05)] hover:border-[#1677FF]/45 hover:shadow-md"
               >
                 <div className="grid h-10 w-10 place-items-center rounded-xl bg-[#EAF3FF] text-[#1677FF]">
@@ -164,7 +165,7 @@ export default function CareerSectionPage() {
                 <h3 className="mt-4 text-lg font-bold text-[#0B1739]">{lesson.title}</h3>
                 <p className="mt-2 flex-1 text-sm leading-6 text-[#53657D]">{lesson.description}</p>
                 <div className="mt-4 inline-flex items-center gap-2 text-sm font-bold text-[#1677FF]">
-                  Learn this career
+                  View what you&apos;ll learn
                   <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
                 </div>
               </Link>
