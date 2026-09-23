@@ -121,6 +121,20 @@ const middleSchoolSubjects = (gradeNumber: number): LearningOption[] => [
 
 export const learningSectionsByWorld: Record<string, LearningSection[]> = {
   "school-help": [
+    {
+      slug: "homework-help",
+      title: "Homework Help",
+      description: "Upload or bring real schoolwork and get step-by-step teaching, explanation, checking, and guided practice.",
+      options: [
+        option("Explain My Homework", "Break down the assignment and teach the concepts needed to understand it.", ["Understanding", "Instructions", "Concepts", "Problem Solving"]),
+        option("Teach Me This Problem", "Work through a difficult problem one step at a time without skipping the reasoning.", ["Reasoning", "Steps", "Problem Solving", "Practice"]),
+        option("Check My Work", "Review your attempt, identify mistakes, and explain how to improve it.", ["Error Review", "Feedback", "Correction", "Understanding"]),
+        option("Practice a Similar Problem", "Create a new problem that practices the same skill before returning to the assignment.", ["Practice", "Transfer", "Recall", "Problem Solving"]),
+        option("Break Down Instructions", "Turn confusing assignment directions into clear, manageable steps.", ["Instructions", "Planning", "Organization", "Understanding"]),
+        option("Project Help", "Plan research, tasks, structure, sources, and next steps for a school project.", ["Planning", "Research", "Organization", "Projects"]),
+        option("Study From My Notes", "Turn class notes into explanations, review questions, and a useful study plan.", ["Notes", "Recall", "Study Planning", "Review"]),
+      ],
+    },
     grade(
       "grade-1",
       "Grade 1",
