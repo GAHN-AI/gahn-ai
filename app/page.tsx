@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { Inter } from "next/font/google";
+import { Source_Sans_3 } from "next/font/google";
 import { useState } from "react";
 import type { LucideIcon } from "lucide-react";
 import {
@@ -29,7 +29,7 @@ import {
   X,
   XCircle,
 } from "lucide-react";
-const sourceSans = Inter({
+const sourceSans = Source_Sans_3({
   subsets: ["latin"],
 });
 const navLinks = [
@@ -313,7 +313,7 @@ function HeroInstructorShowcase() {
                   : ""
               }`}
             >
-              <div className="gahn-image-hover aspect-[4/5] w-full overflow-hidden rounded-[1.25rem] border border-[#D7E3F2] bg-white shadow-[0_16px_38px_rgba(11,23,57,0.09)]">
+              <div className="aspect-[4/5] w-full overflow-hidden rounded-[1.25rem] border border-[#D7E3F2] bg-white shadow-[0_16px_38px_rgba(11,23,57,0.09)]">
                 <img
                   src={instructor.image}
                   alt={`${instructor.instructorName}, ${instructor.role}`}
@@ -428,7 +428,7 @@ function ProgramCard({
   text: string;
 }) {
   return (
-    <div className="gahn-card-hover flex h-full flex-col rounded-[1.35rem] border border-[#D7E3F2] bg-white p-6 shadow-[0_10px_30px_rgba(11,23,57,0.045)] lg:p-7">
+    <div className="flex h-full flex-col rounded-2xl border border-[#D7E3F2] bg-white p-6 shadow-[0_10px_30px_rgba(11,23,57,0.045)] hover:border-[#1677FF]/40 hover:shadow-md lg:p-7">
       <div className="grid h-14 w-14 place-items-center rounded-xl bg-[#EAF3FF] text-[#1677FF] lg:h-16 lg:w-16">
         <Icon className="h-7 w-7" strokeWidth={1.5} />
       </div>
@@ -457,7 +457,7 @@ function StepCard({
   text: string;
 }) {
   return (
-    <div className="gahn-card-hover relative rounded-[1.35rem] border border-[#D7E3F2] bg-white p-6 shadow-[0_10px_30px_rgba(11,23,57,0.045)] lg:p-7">
+    <div className="relative rounded-2xl border border-[#D7E3F2] bg-white p-6 shadow-[0_10px_30px_rgba(11,23,57,0.045)] lg:p-7">
       <div className="flex items-center gap-3">
         <span className="h-3 w-3 flex-none rounded-full bg-[#1677FF]" />
         <h3 className="text-lg font-bold text-[#0B1739]">{title}</h3>
@@ -478,7 +478,7 @@ function SchoolCard({
   text: string;
 }) {
   return (
-    <div className="gahn-card-hover rounded-[1.35rem] border border-[#D7E3F2] bg-white p-6 shadow-[0_10px_30px_rgba(11,23,57,0.045)] sm:p-7">
+    <div className="rounded-2xl border border-[#D7E3F2] bg-white p-6 shadow-[0_10px_30px_rgba(11,23,57,0.045)] sm:p-7">
       <div className="grid h-12 w-12 place-items-center rounded-xl bg-[#EAF3FF] text-[#1677FF]">
         <Icon className="h-5 w-5" strokeWidth={1.75} />
       </div>
@@ -758,7 +758,7 @@ function WhyFasterCard({ Icon, title, text }: { Icon: LucideIcon; title: string;
 
 function PreviewMiniCard({ Icon, title, text }: { Icon: LucideIcon; title: string; text: string }) {
   return (
-    <div className="gahn-card-hover rounded-[1.25rem] border border-[#D7E3F2] bg-white p-5 shadow-[0_10px_30px_rgba(11,23,57,0.045)]">
+    <div className="rounded-2xl border border-[#D7E3F2] bg-white p-5 shadow-[0_10px_30px_rgba(11,23,57,0.045)]">
       <div className="grid h-10 w-10 place-items-center rounded-lg bg-[#EAF3FF] text-[#1677FF]">
         <Icon className="h-4.5 w-4.5" strokeWidth={1.75} />
       </div>
@@ -947,7 +947,23 @@ export default function Home() {
         )}
       </header>
 
-      <section className="landing-wave-surface relative overflow-hidden border-b border-[#D7E3F2]">
+      <section className="relative overflow-hidden border-b border-[#D7E3F2] bg-white">
+        <div
+          aria-hidden="true"
+          className="pointer-events-none absolute inset-0 bg-[linear-gradient(135deg,#FFFFFF_0%,#FFFFFF_46%,#F5F8FC_46%,#F5F8FC_72%,#EAF3FF_100%)]"
+        />
+        <div
+          aria-hidden="true"
+          className="pointer-events-none absolute -right-32 -top-40 h-[620px] w-[620px] rounded-full bg-[#EAF3FF]/80"
+        />
+        <div
+          aria-hidden="true"
+          className="pointer-events-none absolute right-[28%] top-[-18%] h-[650px] w-[190px] rotate-[18deg] rounded-[999px] bg-white/80"
+        />
+        <div
+          aria-hidden="true"
+          className="pointer-events-none absolute -bottom-40 left-[38%] h-[340px] w-[680px] rotate-[-8deg] rounded-[999px] bg-white/90"
+        />
 
         <div
           className={`${shellClass} relative grid items-center gap-12 py-14 sm:py-16 xl:grid-cols-[minmax(0,0.88fr)_minmax(0,1.12fr)] xl:gap-10 xl:py-20 2xl:grid-cols-[minmax(0,0.84fr)_minmax(0,1.16fr)] 2xl:gap-12 2xl:py-24`}
@@ -987,7 +1003,7 @@ export default function Home() {
               </a>
             </div>
 
-            <div className="gahn-glass mt-9 grid grid-cols-2 gap-3 rounded-[1.35rem] border p-4 sm:mt-10 sm:p-5 lg:grid-cols-4">
+            <div className="mt-9 grid grid-cols-2 gap-3 rounded-2xl border border-[#D7E3F2] bg-white/80 p-4 shadow-[0_12px_30px_rgba(11,23,57,0.05)] sm:mt-10 sm:p-5 lg:grid-cols-4">
               {[
                 ["Structured Lessons", "Not random chats"],
                 ["Active Practice", "You must think and respond"],
@@ -1012,7 +1028,7 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="landing-wave-surface-subtle border-y border-[#D7E3F2] py-16 sm:py-20">
+      <section className="border-y border-[#D7E3F2] bg-[#F8FBFF] py-16 sm:py-20">
         <div className={shellClass}>
           <SectionIntro
             eyebrow="Who GAHN AI Is For"
@@ -1037,7 +1053,7 @@ export default function Home() {
             ].map((item) => (
               <div
                 key={item.title}
-                className="gahn-card-hover rounded-[1.35rem] border border-[#D7E3F2] bg-white/90 p-6 shadow-[0_12px_30px_rgba(11,23,57,0.04)] sm:p-7"
+                className="rounded-2xl border border-[#D7E3F2] bg-[#ffffff] p-6 sm:p-7"
               >
                 <h3 className="text-xl font-bold text-[#0B1739]">{item.title}</h3>
                 <p className="mt-4 text-base leading-7 text-[#53657D]">{item.text}</p>
@@ -1045,7 +1061,7 @@ export default function Home() {
             ))}
           </div>
 
-          <div className="gahn-glass mt-8 rounded-[1.4rem] border px-6 py-7 sm:px-8 sm:py-8">
+          <div className="mt-8 rounded-2xl border border-[#D7E3F2] bg-[#ffffff] px-6 py-7 sm:px-8 sm:py-8">
             <p className="text-xs font-bold uppercase tracking-[0.22em] text-[#1677FF]">
               Why It Is Different
             </p>
@@ -1077,7 +1093,7 @@ export default function Home() {
 
       <section
         id="instructors"
-        className="landing-wave-surface-subtle scroll-mt-24 border-y border-[#D7E3F2] py-20 sm:py-24"
+        className="scroll-mt-24 border-y border-[#D7E3F2] bg-[#F8FBFF] py-20 sm:py-24"
       >
         <div className={shellClass}>
           <SectionIntro
@@ -1087,7 +1103,7 @@ export default function Home() {
           />
 
           <div className="mx-auto grid max-w-6xl gap-7 lg:grid-cols-[minmax(0,1.25fr)_minmax(0,0.75fr)] lg:items-stretch">
-            <div className="gahn-glass relative flex min-h-[280px] min-w-0 w-full items-center justify-center overflow-hidden rounded-[1.75rem] border sm:min-h-[360px] lg:min-h-[420px]">
+            <div className="relative flex min-h-[280px] min-w-0 w-full items-center justify-center overflow-hidden rounded-[1.75rem] border-2 border-dashed border-[#C7D9F0] bg-white shadow-[0_18px_50px_rgba(11,23,57,0.055)] sm:min-h-[360px] lg:min-h-[420px]">
               <div
                 aria-hidden="true"
                 className="pointer-events-none absolute inset-0 bg-[linear-gradient(135deg,#FFFFFF_0%,#FFFFFF_52%,#F5F8FC_52%,#EAF3FF_100%)]"
@@ -1105,7 +1121,7 @@ export default function Home() {
               </div>
             </div>
 
-            <div className="gahn-glass min-w-0 flex flex-col justify-center rounded-[1.75rem] border p-7 sm:p-8">
+            <div className="min-w-0 flex flex-col justify-center rounded-[1.75rem] border border-[#D7E3F2] bg-white p-7 shadow-[0_18px_50px_rgba(11,23,57,0.05)] sm:p-8">
               <p className="text-xs font-bold uppercase tracking-[0.22em] text-[#1677FF]">
                 Simple on the surface
               </p>
@@ -1141,7 +1157,7 @@ export default function Home() {
 
       <section
         id="platform"
-        className="landing-wave-surface-subtle scroll-mt-24 py-20 sm:py-24"
+        className="scroll-mt-24 bg-[#F8FBFF] py-20 sm:py-24"
       >
         <div
           className={`${shellClass} grid items-center gap-12 lg:grid-cols-[360px_minmax(0,1fr)] lg:gap-14 xl:grid-cols-[410px_minmax(0,1fr)]`}
