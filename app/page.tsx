@@ -71,35 +71,35 @@ const worlds = [
 const instructors = [
   {
     name: "Career Fields",
-    instructorName: "Alex",
+    instructorName: "Maya",
     role: "Career Skills Instructor",
     desc: "Explore a wide range of career skills, including communication, leadership, business, workplace habits, interviews, resumes, entrepreneurship, teamwork, and professional growth.",
     image: "/instructors/alexCareerSkills.png",
   },
   {
     name: "School Help",
-    instructorName: "Henry",
+    instructorName: "",
     role: "School Help Instructor",
     desc: "Get guided support with math, science, reading, writing, history, homework, studying, assignments, and test preparation.",
     image: "/instructors/HenrySchoolHelp.jpg",
   },
   {
     name: "Brain Development",
-    instructorName: "Aanya",
+    instructorName: "",
     role: "Brain Development Instructor",
     desc: "Strengthen focus, memory, discipline, reasoning, productive habits, emotional control, and learning performance.",
     image: "/instructors/AanyaBrainDevelopment.png",
   },
   {
     name: "General Knowledge",
-    instructorName: "Sarah",
+    instructorName: "",
     role: "General Knowledge Instructor",
     desc: "Learn history, technology, culture, communication, life skills, current events, and practical real-world knowledge.",
     image: "/instructors/sarahGeneralKnowledge.png",
   },
   {
     name: "Book Intelligence",
-    instructorName: "Hannah",
+    instructorName: "",
     role: "Book Intelligence Instructor",
     desc: "Understand books through summaries, key lessons, notes, quizzes, study paths, reading improvement, and practical applications.",
     image: "/instructors/HannahBookIntelligence.jpg",
@@ -306,7 +306,7 @@ function HeroInstructorShowcase() {
         <div className="grid min-w-0 grid-cols-2 items-end gap-3 sm:grid-cols-3 xl:grid-cols-5 xl:gap-3">
           {instructors.map((instructor, index) => (
             <div
-              key={instructor.instructorName}
+              key={instructor.role}
               className={`min-w-0 ${
                 index === instructors.length - 1
                   ? "col-span-2 mx-auto w-1/2 sm:col-span-1 sm:w-auto"
@@ -316,16 +316,20 @@ function HeroInstructorShowcase() {
               <div className="aspect-[4/5] w-full overflow-hidden rounded-[1.25rem] border border-[#D7E3F2] bg-white shadow-[0_16px_38px_rgba(11,23,57,0.09)]">
                 <img
                   src={instructor.image}
-                  alt={`${instructor.instructorName}, ${instructor.role}`}
+                  alt={instructor.instructorName ? `${instructor.instructorName}, ${instructor.role}` : instructor.role}
                   className="block h-full w-full object-cover object-top"
                 />
               </div>
 
-              <p className="mt-3 truncate text-center text-sm font-extrabold text-[#0B1739]">
-                {instructor.instructorName}
-              </p>
+              {instructor.instructorName && (
+                <p className="mt-3 truncate text-center text-sm font-extrabold text-[#0B1739]">
+                  {instructor.instructorName}
+                </p>
+              )}
 
-              <p className="mt-0.5 truncate text-center text-[10px] font-semibold text-[#53657D] 2xl:text-[11px]">
+              <p
+                className={`${instructor.instructorName ? "mt-0.5" : "mt-3"} truncate text-center text-[10px] font-semibold text-[#53657D] 2xl:text-[11px]`}
+              >
                 {instructor.role.replace(" Instructor", "")}
               </p>
             </div>
