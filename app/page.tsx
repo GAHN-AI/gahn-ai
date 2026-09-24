@@ -276,11 +276,11 @@ function SectionIntro({
         {eyebrow}
       </p>
 
-      <h2 className="mt-4 text-3xl font-bold leading-[1.08] tracking-[-0.035em] text-[#0B1739] sm:text-4xl lg:text-5xl">
+      <h2 className="mt-4 text-3xl font-extrabold leading-tight tracking-[-0.02em] text-[#0B1739] sm:text-4xl lg:text-5xl">
         {title}
       </h2>
 
-      <p className="mx-auto mt-5 max-w-3xl text-[17px] leading-8 text-[#53657D] sm:text-lg">
+      <p className="mx-auto mt-5 max-w-3xl text-base leading-7 text-[#53657D] sm:text-lg sm:leading-8">
         {text}
       </p>
     </div>
@@ -957,12 +957,12 @@ export default function Home() {
               AI-Powered Learning for Students, Professors, Self-Learners & Everyone
             </p>
 
-            <h1 className="mt-5 max-w-[720px] text-[2.85rem] font-bold leading-[1.02] tracking-[-0.055em] text-[#0B1739] sm:mt-6 sm:text-[3.6rem] xl:text-[4rem] 2xl:text-[4.35rem]">
+            <h1 className="mt-5 max-w-[690px] text-[2.85rem] font-extrabold leading-[1.04] tracking-[-0.045em] text-[#0B1739] sm:mt-6 sm:text-[3.55rem] xl:text-[3.85rem] 2xl:text-[4.2rem]">
               <span className="block">Your Private AI Tutor for Anything.</span>
               <span className="block text-[#1677FF]">Learn Without Limits.</span>
             </h1>
 
-            <p className="mt-6 max-w-[660px] text-[17px] leading-8 text-[#53657D] sm:mt-7 sm:text-lg xl:max-w-[610px] 2xl:max-w-[660px]">
+            <p className="mt-6 max-w-[650px] text-base leading-7 text-[#53657D] sm:mt-7 sm:text-lg sm:leading-8 xl:max-w-[590px] xl:text-base 2xl:max-w-[640px] 2xl:text-lg">
               GAHN AI is designed to turn any subject, career, book, skill, or
               question into a guided learning experience. Learn in your language
               with clear explanations, interactive practice, adaptive feedback,
