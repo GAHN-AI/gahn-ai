@@ -18,3 +18,83 @@
     --foreground: #ededed;
   }
 }
+
+@keyframes gahn-surface-drift {
+  0% {
+    background-position: 0% 42%, 100% 55%, 50% 50%;
+  }
+  50% {
+    background-position: 100% 58%, 0% 45%, 50% 50%;
+  }
+  100% {
+    background-position: 0% 42%, 100% 55%, 50% 50%;
+  }
+}
+
+.landing-wave-surface {
+  background-image:
+    radial-gradient(ellipse at 18% 15%, rgba(255, 255, 255, 0.98) 0%, rgba(255, 255, 255, 0) 44%),
+    radial-gradient(ellipse at 82% 70%, rgba(220, 226, 235, 0.62) 0%, rgba(220, 226, 235, 0) 46%),
+    linear-gradient(118deg, #ffffff 0%, #f7f8fa 38%, #eceff3 62%, #ffffff 100%);
+  background-size: 160% 160%, 170% 170%, 180% 180%;
+  animation: gahn-surface-drift 24s ease-in-out infinite;
+}
+
+.landing-wave-surface-subtle {
+  background-image:
+    radial-gradient(ellipse at 30% 20%, rgba(255, 255, 255, 0.95) 0%, rgba(255, 255, 255, 0) 45%),
+    radial-gradient(ellipse at 70% 78%, rgba(229, 233, 239, 0.58) 0%, rgba(229, 233, 239, 0) 48%),
+    linear-gradient(125deg, #fafbfc 0%, #f3f5f7 52%, #ffffff 100%);
+  background-size: 160% 160%, 180% 180%, 180% 180%;
+  animation: gahn-surface-drift 30s ease-in-out infinite reverse;
+}
+
+.gahn-glass {
+  background: rgba(255, 255, 255, 0.78);
+  border-color: rgba(196, 205, 218, 0.72);
+  box-shadow:
+    0 18px 48px rgba(15, 23, 42, 0.07),
+    inset 0 1px 0 rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(14px);
+}
+
+.gahn-card-hover {
+  transition:
+    transform 260ms ease,
+    box-shadow 260ms ease,
+    border-color 260ms ease,
+    background-color 260ms ease;
+}
+
+.gahn-card-hover:hover {
+  transform: translateY(-4px);
+  border-color: rgba(111, 130, 154, 0.52);
+  box-shadow:
+    0 20px 48px rgba(15, 23, 42, 0.10),
+    0 2px 10px rgba(15, 23, 42, 0.04);
+}
+
+.gahn-image-hover img {
+  transition: transform 420ms cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+
+.gahn-image-hover:hover img {
+  transform: scale(1.035);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .landing-wave-surface,
+  .landing-wave-surface-subtle {
+    animation: none;
+  }
+
+  .gahn-card-hover,
+  .gahn-image-hover img {
+    transition: none;
+  }
+
+  .gahn-card-hover:hover,
+  .gahn-image-hover:hover img {
+    transform: none;
+  }
+}
