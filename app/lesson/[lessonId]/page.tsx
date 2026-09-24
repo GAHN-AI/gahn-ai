@@ -8,7 +8,10 @@ import {
   BookOpen,
   Brain,
   CheckCircle2,
+  ChevronDown,
   ChevronRight,
+  CirclePlay,
+  LockKeyhole,
   Lightbulb,
   ListChecks,
   PencilLine,
@@ -17,6 +20,7 @@ import {
 
 import AIInstructor from "@/components/instructors/AIInstructor";
 import LanguageSelector from "@/components/LanguageSelector";
+import { getCareerCourseSections } from "@/lib/careerCurriculum";
 
 const worldInformation = {
   "career-skills": { title: "Career Skills", instructor: "Alex" },
@@ -66,6 +70,14 @@ export default function LessonPage() {
     setLanguage(nextLanguage);
     window.localStorage.setItem("gahn-language", nextLanguage);
   }
+
+  const careerCourseSections =
+    resolvedWorldSlug === "career-skills" && learningSection
+      ? getCareerCourseSections(learningSection, requestedTopic)
+      : [];
+
+  const currentCareerLesson =
+    careerCourseSections[0]?.lessons[0] || requestedTopic;
 
   const backHref =
     learningSection && topicSlug
@@ -136,7 +148,9 @@ export default function LessonPage() {
                 </div>
               </div>
 
-              <div className="w-fit rounded-full border border-[#CFE0F5] bg-[#EAF3FF] px-4 py-2 text-sm font-bold text-[#1677FF]">Lesson 1</div>
+              <div className="w-fit rounded-full border border-[#CFE0F5] bg-[#EAF3FF] px-4 py-2 text-sm font-bold text-[#1677FF]">
+                {resolvedWorldSlug === "career-skills" ? "Section 1 · Lesson 1" : "Lesson 1"}
+              </div>
             </div>
           </div>
         </section>
@@ -169,7 +183,9 @@ export default function LessonPage() {
                   <h3 className="font-bold">Lesson Objective</h3>
                 </div>
                 <p className="mt-3 text-sm leading-6 text-[#53657D]">
-                  Understand the foundations of {requestedTopic} and be able to explain the core idea in your own words.
+                  {resolvedWorldSlug === "career-skills"
+                    ? `Learn ${currentCareerLesson} as part of the ${requestedTopic} path and demonstrate the skill through explanation or practice.`
+                    : `Understand the foundations of ${requestedTopic} and be able to explain the core idea in your own words.`}
                 </p>
               </div>
 
@@ -240,24 +256,105 @@ export default function LessonPage() {
               <h2 className="mt-1 text-xl font-extrabold">Your Learning Path</h2>
               <p className="mt-1 text-sm text-[#53657D]">Later lessons remain locked until you demonstrate mastery.</p>
             </div>
-            <span className="w-fit rounded-full bg-[#EAF3FF] px-4 py-2 text-sm font-bold text-[#1677FF]">Lesson 1 in progress</span>
+            <span className="w-fit rounded-full bg-[#EAF3FF] px-4 py-2 text-sm font-bold text-[#1677FF]">
+              {resolvedWorldSlug === "career-skills"
+                ? careerCourseSections.length
+                  ? `${careerCourseSections.length} course sections`
+                  : "Career curriculum"
+                : "Lesson 1 in progress"}
+            </span>
           </div>
 
-          <div className="mt-5 grid gap-3 md:grid-cols-4">
-            <div className="rounded-xl border border-[#CFE0F5] bg-[#F1F7FF] p-4">
-              <p className="text-xs font-bold text-[#1677FF]">LESSON 1</p>
-              <p className="mt-1 font-bold">Foundations</p>
-              <p className="mt-2 text-xs text-[#53657D]">Unlocked</p>
+          {resolvedWorldSlug === "career-skills" ? (
+            <div className="mt-5 overflow-hidden rounded-2xl border border-[#D7E3F2] bg-white">
+              {careerCourseSections.map((courseSection, sectionIndex) => (
+                <details
+                  key={`${courseSection.title}-${sectionIndex}`}
+                  open={sectionIndex === 0}
+                  className="group border-b border-[#E7EDF5] last:border-b-0"
+                >
+                  <summary className="flex cursor-pointer list-none items-center justify-between gap-4 bg-[#FBFCFE] p-5 hover:bg-[#F5F8FC]">
+                    <div className="min-w-0">
+                      <p className="text-xs font-bold uppercase tracking-[0.14em] text-[#1677FF]">
+                        Section {sectionIndex + 1}
+                      </p>
+                      <h3 className="mt-1 font-bold text-[#0B1739]">
+                        {courseSection.title}
+                      </h3>
+                      <p className="mt-1 text-xs text-[#53657D]">
+                        {courseSection.lessons.length} lessons
+                      </p>
+                    </div>
+                    <ChevronDown className="h-5 w-5 shrink-0 text-[#53657D] transition-transform group-open:rotate-180" />
+                  </summary>
+
+                  <div className="border-t border-[#E7EDF5]">
+                    {courseSection.lessons.map((lessonTitle, lessonIndex) => {
+                      const isCurrent = sectionIndex === 0 && lessonIndex === 0;
+
+                      return (
+                        <div
+                          key={`${lessonTitle}-${lessonIndex}`}
+                          className={`flex items-start justify-between gap-4 border-b border-[#EEF2F7] px-5 py-4 last:border-b-0 sm:pl-8 ${
+                            isCurrent ? "bg-[#F1F7FF]" : "bg-white"
+                          }`}
+                        >
+                          <div className="flex min-w-0 items-start gap-3">
+                            {isCurrent ? (
+                              <CirclePlay
+                                className="mt-0.5 h-4 w-4 shrink-0 text-[#1677FF]"
+                                strokeWidth={1.8}
+                              />
+                            ) : (
+                              <LockKeyhole
+                                className="mt-0.5 h-4 w-4 shrink-0 text-[#93A1B3]"
+                                strokeWidth={1.8}
+                              />
+                            )}
+
+                            <div className="min-w-0">
+                              <p
+                                className={`text-sm font-semibold ${
+                                  isCurrent ? "text-[#0B1739]" : "text-[#40536D]"
+                                }`}
+                              >
+                                {lessonTitle}
+                              </p>
+                              <p className="mt-1 text-xs text-[#7A8AA0]">
+                                {isCurrent
+                                  ? "Current lesson"
+                                  : "Unlock after earlier mastery checks"}
+                              </p>
+                            </div>
+                          </div>
+
+                          <span className="shrink-0 text-xs font-semibold text-[#7A8AA0]">
+                            {lessonIndex + 1}
+                          </span>
+                        </div>
+                      );
+                    })}
+                  </div>
+                </details>
+              ))}
             </div>
-
-            {[2, 3, 4].map((lesson) => (
-              <div key={lesson} className="rounded-xl border border-[#D7E3F2] bg-[#F8FBFF] p-4 opacity-75">
-                <p className="text-xs font-bold text-[#7A8AA0]">LESSON {lesson}</p>
-                <p className="mt-1 font-bold">Locked</p>
-                <p className="mt-2 text-xs text-[#7A8AA0]">Pass the previous mastery check</p>
+          ) : (
+            <div className="mt-5 grid gap-3 md:grid-cols-4">
+              <div className="rounded-xl border border-[#CFE0F5] bg-[#F1F7FF] p-4">
+                <p className="text-xs font-bold text-[#1677FF]">LESSON 1</p>
+                <p className="mt-1 font-bold">Foundations</p>
+                <p className="mt-2 text-xs text-[#53657D]">Unlocked</p>
               </div>
-            ))}
-          </div>
+
+              {[2, 3, 4].map((lesson) => (
+                <div key={lesson} className="rounded-xl border border-[#D7E3F2] bg-[#F8FBFF] p-4 opacity-75">
+                  <p className="text-xs font-bold text-[#7A8AA0]">LESSON {lesson}</p>
+                  <p className="mt-1 font-bold">Locked</p>
+                  <p className="mt-2 text-xs text-[#7A8AA0]">Pass the previous mastery check</p>
+                </div>
+              ))}
+            </div>
+          )}
 
           <div className="mt-5 flex items-center gap-2 text-sm text-[#53657D]">
             <CheckCircle2 className="h-4 w-4 text-[#1677FF]" />
