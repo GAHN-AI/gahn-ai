@@ -3,6 +3,12 @@ export type CareerCurriculumModule = {
   description: string;
 };
 
+export type CareerCourseSection = {
+  title: string;
+  description: string;
+  lessons: string[];
+};
+
 export type CareerCurriculum = {
   whatYouLearn: string[];
   skills: string[];
@@ -3612,6 +3618,12 @@ function unique(values: string[]) {
   return [...new Set(values.filter(Boolean))];
 }
 
+function moduleTitleFromTopics(topics: string[]) {
+  if (topics.length === 1) return topics[0];
+  if (topics.length === 2) return `${topics[0]} & ${topics[1]}`;
+  return `${topics[0]}, ${topics[1]} & More`;
+}
+
 function buildModules(title: string, topics: string[], tools: string[]): CareerCurriculumModule[] {
   const chunks: string[][] = [];
   const chunkSize = Math.max(2, Math.ceil(topics.length / 4));
@@ -3620,25 +3632,20 @@ function buildModules(title: string, topics: string[], tools: string[]): CareerC
     chunks.push(topics.slice(index, index + chunkSize));
   }
 
-  const modules = chunks.map((chunk, index) => ({
-    title:
-      index === 0
-        ? "Foundations"
-        : index === 1
-          ? "Core Professional Knowledge"
-          : index === 2
-            ? "Applied Skills"
-            : "Advanced Practice",
+  const modules = chunks.map((chunk) => ({
+    title: moduleTitleFromTopics(chunk),
     description: `Learn and practice ${chunk.join(", ")} for real ${title.toLowerCase()} work.`,
   }));
 
-  modules.push({
-    title: "Tools, Standards & Workflow",
-    description: `Use ${tools.slice(0, 5).join(", ")} while learning documentation, safety, quality, and professional workflow.`,
-  });
+  if (tools.length) {
+    modules.push({
+      title: `Professional Tools: ${tools.slice(0, 2).join(" & ")}`,
+      description: `Use ${tools.slice(0, 5).join(", ")} while learning documentation, safety, quality, standards, and professional workflow.`,
+    });
+  }
 
   modules.push({
-    title: "Real-World Project & Mastery",
+    title: `${title} Project & Mastery`,
     description: `Complete realistic ${title.toLowerCase()} scenarios or projects, explain your decisions, correct mistakes, and demonstrate independent understanding.`,
   });
 
@@ -3686,4 +3693,72 @@ export function getCareerCurriculum(sectionSlug: string, title: string): CareerC
       credentialNotes[title] ??
       "This is a core learning map, not a claim that completing GAHN alone qualifies someone for the occupation. Degrees, licenses, certifications, apprenticeships, supervised hours, and employer requirements vary by career and jurisdiction.",
   };
+}
+
+
+function cleanLessonPhrase(value: string, careerTitle: string) {
+  const escapedCareer = careerTitle.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+  return value
+    .replace(/^Learn and practice\s+/i, "")
+    .replace(/^Use\s+/i, "")
+    .replace(/^Complete realistic\s+/i, "")
+    .replace(new RegExp(`\\s+for real ${escapedCareer.toLowerCase()} work\\.?$`, "i"), "")
+    .replace(new RegExp(`^${escapedCareer}\\s+`, "i"), "")
+    .replace(/\s+while learning.*$/i, "")
+    .replace(/\s+and demonstrate independent understanding\.?$/i, "")
+    .replace(/[.]+$/, "")
+    .trim();
+}
+
+function titleCaseLesson(value: string) {
+  if (!value) return value;
+  return value
+    .split(/\s+/)
+    .map((word) => {
+      if (/^(API|APIs|AI|SQL|HTML|CSS|HTTP|HTTPS|JSON|Git|GitHub|CI\/CD|AWS|GCP|IAM|CAD|EHR|EMR|CRM|SEO|GIS|BI|UX|UI|CPR|AED|PPE|SCBA|HVAC|CNC|MIDI|DAW|PACS|RIS|MRI|CT|DPT|DDS|DMD|RN|EMT)$/i.test(word)) {
+        return word;
+      }
+      return word.length <= 3 && /^(and|or|the|for|with|to|of|in|on)$/i.test(word)
+        ? word.toLowerCase()
+        : word.charAt(0).toUpperCase() + word.slice(1);
+    })
+    .join(" ");
+}
+
+function lessonsFromModule(module: CareerCurriculumModule, careerTitle: string) {
+  let description = cleanLessonPhrase(module.description, careerTitle);
+
+  const rawParts = description
+    .replace(/,\s+and\s+/gi, ", ")
+    .split(/,|;|\band\b(?=\s+[A-Z])/)
+    .map((part) => part.trim())
+    .filter((part) => part.length > 1 && part.length < 90);
+
+  const concrete = unique(rawParts)
+    .map((part) => titleCaseLesson(part))
+    .filter(Boolean);
+
+  if (concrete.length >= 3) {
+    return concrete.slice(0, 10);
+  }
+
+  return [
+    `Introduction to ${module.title}`,
+    `Core Concepts in ${module.title}`,
+    `Applied ${module.title} for ${careerTitle}`,
+    `${module.title} Practice & Review`,
+  ];
+}
+
+export function getCareerCourseSections(
+  sectionSlug: string,
+  title: string
+): CareerCourseSection[] {
+  const curriculum = getCareerCurriculum(sectionSlug, title);
+
+  return curriculum.modules.map((module) => ({
+    title: module.title,
+    description: module.description,
+    lessons: lessonsFromModule(module, title),
+  }));
 }
