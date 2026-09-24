@@ -13,6 +13,8 @@ import {
   Check,
   CheckCircle2,
   Code2,
+  ChevronDown,
+  CirclePlay,
   Globe2,
   GraduationCap,
   Layers3,
@@ -23,7 +25,7 @@ import {
 } from "lucide-react";
 import LanguageSelector from "@/components/LanguageSelector";
 import { getCareerSection } from "@/lib/careerCatalog";
-import { getCareerCurriculum } from "@/lib/careerCurriculum";
+import { getCareerCourseSections, getCareerCurriculum } from "@/lib/careerCurriculum";
 import {
   getLearningOption,
   slugifyLearningTitle,
@@ -409,6 +411,10 @@ export default function TopicOverviewPage() {
     resolved.option
   );
   const { Icon } = world;
+  const careerCourseSections =
+    params.world === "career-skills"
+      ? getCareerCourseSections(params.section, resolved.title)
+      : [];
 
   const startHref = `/lesson/custom?world=${encodeURIComponent(
     params.world
@@ -596,24 +602,68 @@ export default function TopicOverviewPage() {
                   </div>
                 </div>
 
-                <div className="mt-5 overflow-hidden rounded-2xl border border-[#D7E3F2] bg-white">
-                  {detail.modules.map((module, index) => (
-                    <div
-                      key={module.title}
-                      className="grid gap-4 border-b border-[#E7EDF5] p-5 last:border-b-0 sm:grid-cols-[52px_minmax(0,1fr)]"
-                    >
-                      <div className="grid h-10 w-10 place-items-center rounded-xl bg-[#EAF3FF] text-sm font-extrabold text-[#1677FF]">
-                        {index + 1}
+                {params.world === "career-skills" ? (
+                  <div className="mt-5 overflow-hidden rounded-2xl border border-[#D7E3F2] bg-white">
+                    {careerCourseSections.map((courseSection, sectionIndex) => (
+                      <details
+                        key={`${courseSection.title}-${sectionIndex}`}
+                        open={sectionIndex === 0}
+                        className="group border-b border-[#E7EDF5] last:border-b-0"
+                      >
+                        <summary className="flex cursor-pointer list-none items-center justify-between gap-4 p-5 hover:bg-[#F8FBFF]">
+                          <div className="min-w-0">
+                            <p className="text-xs font-bold uppercase tracking-[0.14em] text-[#1677FF]">
+                              Section {sectionIndex + 1}
+                            </p>
+                            <h3 className="mt-1 font-bold text-[#0B1739]">
+                              {courseSection.title}
+                            </h3>
+                            <p className="mt-1 text-xs text-[#53657D]">
+                              {courseSection.lessons.length} built-in lessons
+                            </p>
+                          </div>
+                          <ChevronDown className="h-5 w-5 shrink-0 text-[#53657D] transition-transform group-open:rotate-180" />
+                        </summary>
+
+                        <div className="border-t border-[#E7EDF5] bg-[#FBFCFE]">
+                          {courseSection.lessons.map((lesson, lessonIndex) => (
+                            <div
+                              key={`${lesson}-${lessonIndex}`}
+                              className="flex items-center gap-3 border-b border-[#EEF2F7] px-5 py-3.5 last:border-b-0 sm:pl-8"
+                            >
+                              <CirclePlay
+                                className="h-4 w-4 shrink-0 text-[#1677FF]"
+                                strokeWidth={1.8}
+                              />
+                              <span className="text-sm font-medium text-[#24364D]">
+                                {lesson}
+                              </span>
+                            </div>
+                          ))}
+                        </div>
+                      </details>
+                    ))}
+                  </div>
+                ) : (
+                  <div className="mt-5 overflow-hidden rounded-2xl border border-[#D7E3F2] bg-white">
+                    {detail.modules.map((module, index) => (
+                      <div
+                        key={module.title}
+                        className="grid gap-4 border-b border-[#E7EDF5] p-5 last:border-b-0 sm:grid-cols-[52px_minmax(0,1fr)]"
+                      >
+                        <div className="grid h-10 w-10 place-items-center rounded-xl bg-[#EAF3FF] text-sm font-extrabold text-[#1677FF]">
+                          {index + 1}
+                        </div>
+                        <div>
+                          <h3 className="font-bold text-[#0B1739]">{module.title}</h3>
+                          <p className="mt-1 text-sm leading-6 text-[#53657D]">
+                            {module.description}
+                          </p>
+                        </div>
                       </div>
-                      <div>
-                        <h3 className="font-bold text-[#0B1739]">{module.title}</h3>
-                        <p className="mt-1 text-sm leading-6 text-[#53657D]">
-                          {module.description}
-                        </p>
-                      </div>
-                    </div>
-                  ))}
-                </div>
+                    ))}
+                  </div>
+                )}
               </section>
 
               <section className="border-t border-[#E2EAF4] pt-8">
