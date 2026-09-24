@@ -98,3 +98,52 @@
     transform: none;
   }
 }
+
+
+/* Site-wide button interaction: subtle, consistent, and accessible. */
+button:not(:disabled),
+a[href][class*="rounded"][class*="px-"][class*="py-"] {
+  transition:
+    transform 180ms ease,
+    box-shadow 180ms ease,
+    border-color 180ms ease,
+    background-color 180ms ease,
+    color 180ms ease,
+    filter 180ms ease;
+  will-change: transform;
+}
+
+button:not(:disabled):hover,
+a[href][class*="rounded"][class*="px-"][class*="py-"]:hover {
+  transform: translateY(-2px);
+  box-shadow:
+    0 10px 24px rgba(15, 23, 42, 0.10),
+    0 2px 6px rgba(15, 23, 42, 0.05);
+}
+
+button:not(:disabled):active,
+a[href][class*="rounded"][class*="px-"][class*="py-"]:active {
+  transform: translateY(0) scale(0.985);
+  box-shadow:
+    0 4px 12px rgba(15, 23, 42, 0.08),
+    0 1px 3px rgba(15, 23, 42, 0.04);
+}
+
+button:disabled {
+  transform: none;
+  box-shadow: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  button:not(:disabled),
+  a[href][class*="rounded"][class*="px-"][class*="py-"] {
+    transition: none;
+  }
+
+  button:not(:disabled):hover,
+  button:not(:disabled):active,
+  a[href][class*="rounded"][class*="px-"][class*="py-"]:hover,
+  a[href][class*="rounded"][class*="px-"][class*="py-"]:active {
+    transform: none;
+  }
+}
