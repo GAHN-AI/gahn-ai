@@ -23,11 +23,11 @@ import LanguageSelector from "@/components/LanguageSelector";
 import { getCareerCourseSections } from "@/lib/careerCurriculum";
 
 const worldInformation = {
-  "career-skills": { title: "Career Skills", instructor: "Alex" },
-  "school-help": { title: "School Help", instructor: "Henry" },
-  "brain-development": { title: "Brain Development", instructor: "Aanya" },
-  "general-knowledge": { title: "General Knowledge", instructor: "Sarah" },
-  "book-intelligence": { title: "Book Intelligence", instructor: "Hannah" },
+  "career-skills": { title: "Career Skills", instructor: "Maya" },
+  "school-help": { title: "School Help", instructor: "AI Instructor" },
+  "brain-development": { title: "Brain Development", instructor: "AI Instructor" },
+  "general-knowledge": { title: "General Knowledge", instructor: "AI Instructor" },
+  "book-intelligence": { title: "Book Intelligence", instructor: "AI Instructor" },
 };
 
 type WorldKey = keyof typeof worldInformation;
