@@ -3,11 +3,8 @@
 import Link from "next/link";
 import {
   ArrowRight,
-  BookOpen,
-  Brain,
   Check,
   CheckCircle2,
-  ShieldCheck,
   Sparkles,
 } from "lucide-react";
 
@@ -15,6 +12,7 @@ type Plan = {
   name: string;
   price: string;
   period: string;
+  audience: string;
   description: string;
   buttonLabel: string;
   available: boolean;
@@ -26,58 +24,71 @@ type Plan = {
 const plans: Plan[] = [
   {
     name: "Explore",
-    price: "$0.00",
-    period: "USD / month",
+    price: "$0",
+    period: "/ month",
+    audience: "Try GAHN before paying",
     description:
-      "A simple way to test GAHN AI and experience the core learning system.",
-    buttonLabel: "Start Explore",
+      "Explore the learning system, browse every world, and test the core guided-learning experience.",
+    buttonLabel: "Start free",
     available: true,
     features: [
-      "Access to all 5 learning worlds",
-      "Limited AI instructor learning sessions",
-      "Basic adaptive explanations",
-      "Practice questions and corrections",
-      "Basic lesson notes and history",
-      "Progress tracking",
+      "Browse all 5 learning worlds and their structured libraries",
+      "Limited AI-guided lesson access as live instructors roll out",
+      "Basic explanations, practice questions, corrections, and retries",
+      "School homework text help and learning-path previews",
+      "Basic notes, lesson history, and account-based learning data",
+      "Access to new free MVP features as they become available",
     ],
   },
   {
     name: "Learner Plus",
-    price: "$29.00",
-    period: "USD / month",
+    price: "$29",
+    period: "/ month",
+    audience: "For consistent personal learning",
     description:
-      "For learners who want more AI instruction, personalization, and learning history.",
-    buttonLabel: "Not Available Yet",
+      "A complete everyday learning plan with live instruction, adaptive support, richer memory, and interactive learning tools.",
+    buttonLabel: "Coming soon",
     available: false,
     featured: true,
-    badge: "Planned",
+    badge: "Best value",
     features: [
       "Everything in Explore",
-      "More AI instructor learning time",
-      "Full adaptive instruction and retries",
-      "Personalized lesson recommendations",
-      "Saved notes and detailed lesson recaps",
-      "Expanded learning history and progress",
-      "Priority access to new learning tools",
+      "Higher monthly allowance for live conversational AI instructor sessions",
+      "Voice-based learning with realistic AI instructors",
+      "Interactive learning canvas with visuals, guided examples, quizzes, and practice",
+      "Homework photo, screenshot, PDF, and document analysis when file teaching launches",
+      "Adaptive reteaching that changes explanations after mistakes",
+      "Saved learner memory for strengths, weak areas, preferences, and previous lessons",
+      "Detailed lesson recaps, searchable notes, study guides, and generated review questions",
+      "Multilingual instruction across supported teaching languages",
+      "Expanded progress, mastery checks, and learning history",
+      "Priority access to newly released learner tools",
     ],
   },
   {
     name: "Career Pro",
-    price: "$149.00",
-    period: "USD / month",
+    price: "$149",
+    period: "/ month",
+    audience: "For serious career and professional skill building",
     description:
-      "For serious career development with advanced guidance and professional learning tools.",
-    buttonLabel: "Not Available Yet",
+      "The highest individual plan for deep career programs, advanced AI tools, real projects, and professional preparation.",
+    buttonLabel: "Coming soon",
     available: false,
-    badge: "Planned",
+    badge: "Most advanced",
     features: [
       "Everything in Learner Plus",
-      "Advanced career learning paths",
-      "Portfolio and project guidance",
-      "Resume and interview coaching",
-      "Career-focused mastery assessments",
-      "Priority access to advanced instructor tools",
-      "Early access to professional features",
+      "Highest individual live-instructor allowance and longer career learning sessions",
+      "Complete career curricula with role-specific languages, software, tools, standards, and workflows",
+      "Advanced browser-guided learning for approved websites and professional resources",
+      "Full coding workspace for software careers with editor, testing, debugging, and project guidance",
+      "Advanced file analysis for projects, documents, assignments, resumes, and professional work",
+      "Real-world projects, simulations, case studies, and portfolio-building guidance",
+      "Career mastery assessments with detailed skill-gap feedback",
+      "Resume, LinkedIn, interviewing, presentation, and professional communication coaching",
+      "Role-specific tool training such as GitHub, spreadsheets, analytics, design, cloud, or industry software",
+      "Deeper long-term learning memory and career progress analytics",
+      "Certificates and portfolio evidence when verified completion features launch",
+      "Priority access to advanced instructor and career tools",
     ],
   },
 ];
@@ -85,92 +96,90 @@ const plans: Plan[] = [
 function PlanCard({ plan }: { plan: Plan }) {
   return (
     <div
-      className={`relative flex min-h-[620px] flex-col rounded-[1.6rem] border bg-white p-6 shadow-[0_18px_55px_rgba(11,23,57,0.06)] sm:p-7 ${
+      className={`gahn-card-hover relative flex h-full flex-col overflow-hidden rounded-[1.35rem] border bg-white shadow-[0_14px_40px_rgba(11,23,57,0.055)] ${
         plan.featured
-          ? "border-[#1677FF] shadow-[0_24px_70px_rgba(22,119,255,0.12)]"
+          ? "border-[#0B356F] shadow-[0_20px_55px_rgba(11,53,111,0.10)]"
           : "border-[#D7E3F2]"
       }`}
     >
-      {plan.badge && (
-        <div
-          className={`absolute right-5 top-5 rounded-full px-3 py-1.5 text-[11px] font-bold uppercase tracking-[0.12em] ${
-            plan.featured
-              ? "bg-[#EAF3FF] text-[#1677FF]"
-              : "bg-[#F5F8FC] text-[#53657D]"
-          }`}
-        >
+      {plan.featured && (
+        <div className="bg-[#0B356F] px-6 py-2.5 text-center text-xs font-bold uppercase tracking-[0.14em] text-white">
           {plan.badge}
         </div>
       )}
 
-      <div className="pr-20">
-        <h2 className="text-xl font-extrabold tracking-[-0.02em] text-[#0B1739]">
-          {plan.name}
-        </h2>
-      </div>
+      <div className="flex flex-1 flex-col p-6 sm:p-7">
+        <div>
+          {!plan.featured && plan.badge && (
+            <p className="mb-3 text-xs font-bold uppercase tracking-[0.14em] text-[#1677FF]">
+              {plan.badge}
+            </p>
+          )}
 
-      <div className="mt-7">
-        <div className="flex items-end gap-2">
-          <span className="text-4xl font-extrabold tracking-[-0.04em] text-[#0B1739] sm:text-5xl">
+          <h2 className="text-2xl font-bold tracking-[-0.03em] text-[#0B1739]">
+            {plan.name}
+          </h2>
+
+          <p className="mt-2 text-sm font-semibold text-[#53657D]">
+            {plan.audience}
+          </p>
+        </div>
+
+        <div className="mt-7 flex items-end gap-1.5">
+          <span className="text-4xl font-bold tracking-[-0.045em] text-[#0B1739] sm:text-5xl">
             {plan.price}
           </span>
+          <span className="pb-1.5 text-sm font-medium text-[#53657D]">
+            {plan.period}
+          </span>
         </div>
-        <p className="mt-1 text-xs font-semibold text-[#7A8AA0]">
-          {plan.period}
+
+        <p className="mt-5 min-h-[76px] text-[15px] leading-7 text-[#53657D]">
+          {plan.description}
         </p>
+
+        {plan.available ? (
+          <Link
+            href="/signup"
+            className="mt-5 inline-flex w-full items-center justify-center rounded-lg bg-[#1267D6] px-5 py-3.5 text-sm font-bold text-white transition hover:bg-[#0B56BA]"
+          >
+            {plan.buttonLabel}
+          </Link>
+        ) : (
+          <button
+            type="button"
+            disabled
+            className="mt-5 w-full cursor-not-allowed rounded-lg border border-[#C9D4E2] bg-[#F7F9FB] px-5 py-3.5 text-sm font-bold text-[#68798E]"
+          >
+            {plan.buttonLabel}
+          </button>
+        )}
+
+        <div className="my-7 h-px bg-[#E1E7EF]" />
+
+        <p className="text-sm font-bold text-[#0B1739]">Key features:</p>
+
+        <ul className="mt-5 space-y-3.5">
+          {plan.features.map((feature) => (
+            <li key={feature} className="flex items-start gap-3">
+              <Check
+                className="mt-0.5 h-4.5 w-4.5 flex-none text-[#1267D6]"
+                strokeWidth={2.2}
+              />
+              <span className="text-sm leading-6 text-[#24364D]">
+                {feature}
+              </span>
+            </li>
+          ))}
+        </ul>
+
+        {!plan.available && (
+          <p className="mt-auto pt-7 text-xs leading-5 text-[#7A8AA0]">
+            Planned subscription. It will not accept payment until the listed
+            features and entitlement delivery are connected and tested.
+          </p>
+        )}
       </div>
-
-      <p className="mt-6 min-h-[84px] text-sm leading-7 text-[#53657D]">
-        {plan.description}
-      </p>
-
-      {plan.available ? (
-        <Link
-          href="/signup"
-          className="mt-2 inline-flex w-full items-center justify-center rounded-xl bg-[#1677FF] px-5 py-3.5 text-sm font-bold text-white hover:bg-[#0F65E8]"
-        >
-          {plan.buttonLabel}
-        </Link>
-      ) : (
-        <button
-          type="button"
-          disabled
-          className="mt-2 w-full cursor-not-allowed rounded-xl border border-[#D7E3F2] bg-[#F5F8FC] px-5 py-3.5 text-sm font-bold text-[#7A8AA0]"
-        >
-          {plan.buttonLabel}
-        </button>
-      )}
-
-      <div className="my-7 h-px bg-[#D7E3F2]" />
-
-      <p className="text-sm font-bold text-[#0B1739]">
-        {plan.name === "Explore" ? "Includes:" : "Plan includes:"}
-      </p>
-
-      <ul className="mt-5 space-y-4">
-        {plan.features.map((feature) => (
-          <li key={feature} className="flex items-start gap-3">
-            <span
-              className={`mt-0.5 grid h-5 w-5 flex-none place-items-center rounded-full ${
-                plan.featured
-                  ? "bg-[#EAF3FF] text-[#1677FF]"
-                  : "bg-[#F1F7FF] text-[#1677FF]"
-              }`}
-            >
-              <Check className="h-3 w-3" strokeWidth={2.4} />
-            </span>
-
-            <span className="text-sm leading-6 text-[#0B1739]">{feature}</span>
-          </li>
-        ))}
-      </ul>
-
-      {!plan.available && (
-        <p className="mt-auto pt-7 text-xs leading-5 text-[#7A8AA0]">
-          This plan is shown as a preview and cannot be purchased during MVP
-          testing.
-        </p>
-      )}
     </div>
   );
 }
@@ -293,60 +302,9 @@ export default function PricingPage() {
             </h2>
           </div>
 
-          <div className="grid gap-5 lg:grid-cols-3 lg:items-stretch">
+          <div className="grid gap-5 lg:grid-cols-3 lg:items-stretch xl:gap-6">
             {plans.map((plan) => (
               <PlanCard key={plan.name} plan={plan} />
-            ))}
-          </div>
-        </div>
-      </section>
-
-      <section className="border-y border-[#D7E3F2] bg-white px-5 py-16 sm:px-8 sm:py-20">
-        <div className="mx-auto max-w-6xl">
-          <div className="mx-auto max-w-3xl text-center">
-            <p className="text-xs font-bold uppercase tracking-[0.22em] text-[#1677FF]">
-              Why Start Now
-            </p>
-            <h2 className="mt-4 text-3xl font-extrabold tracking-[-0.035em] sm:text-4xl">
-              Early users help shape what GAHN AI becomes.
-            </h2>
-            <p className="mt-4 text-base leading-8 text-[#53657D]">
-              Your feedback helps us improve the core learning experience before
-              future plans, institution features, and advanced tools become
-              available.
-            </p>
-          </div>
-
-          <div className="mt-10 grid gap-5 md:grid-cols-3">
-            {[
-              {
-                Icon: Brain,
-                title: "Adaptive learning",
-                text: "Lessons can respond to mistakes, progress, and changing understanding.",
-              },
-              {
-                Icon: BookOpen,
-                title: "Five learning worlds",
-                text: "Move between school, careers, brain training, general knowledge, and books.",
-              },
-              {
-                Icon: ShieldCheck,
-                title: "Built around your account",
-                text: "Progress, lesson history, notes, and future learning features stay connected.",
-              },
-            ].map(({ Icon, title, text }) => (
-              <div
-                key={title}
-                className="rounded-2xl border border-[#D7E3F2] bg-[#F8FBFF] p-6"
-              >
-                <div className="grid h-12 w-12 place-items-center rounded-xl bg-[#EAF3FF] text-[#1677FF]">
-                  <Icon className="h-5 w-5" strokeWidth={1.75} />
-                </div>
-                <h3 className="mt-5 text-lg font-bold">{title}</h3>
-                <p className="mt-2 text-sm leading-6 text-[#53657D]">
-                  {text}
-                </p>
-              </div>
             ))}
           </div>
         </div>
