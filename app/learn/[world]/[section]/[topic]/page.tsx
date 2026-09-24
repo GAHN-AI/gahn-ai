@@ -41,27 +41,27 @@ type WorldConfig = {
 const worlds: Record<string, WorldConfig> = {
   "career-skills": {
     title: "Career Skills",
-    instructor: "Alex",
+    instructor: "Maya",
     Icon: Briefcase,
   },
   "school-help": {
     title: "School Help",
-    instructor: "Henry",
+    instructor: "AI Instructor",
     Icon: GraduationCap,
   },
   "brain-development": {
     title: "Brain Development",
-    instructor: "Aanya",
+    instructor: "AI Instructor",
     Icon: Brain,
   },
   "general-knowledge": {
     title: "General Knowledge",
-    instructor: "Sarah",
+    instructor: "AI Instructor",
     Icon: Globe2,
   },
   "book-intelligence": {
     title: "Book Intelligence",
-    instructor: "Hannah",
+    instructor: "AI Instructor",
     Icon: BookOpen,
   },
 };
