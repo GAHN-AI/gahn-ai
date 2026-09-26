@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import {
+  ArrowLeft,
   ArrowRight,
   Check,
   CheckCircle2,
@@ -50,39 +51,13 @@ export default function PricingPage() {
             </div>
           </Link>
 
-          <div className="hidden items-center gap-7 text-sm font-semibold text-[#53657D] lg:flex">
-            <Link href="/" className="hover:text-[#1677FF]">
-              Home
-            </Link>
-
-            <Link href="/#programs" className="hover:text-[#1677FF]">
-              Programs
-            </Link>
-
-            <Link href="/#platform" className="hover:text-[#1677FF]">
-              Platform
-            </Link>
-
-            <Link href="/#instructors" className="hover:text-[#1677FF]">
-              Instructors
-            </Link>
-          </div>
-
-          <div className="flex items-center gap-2 sm:gap-3">
-            <Link
-              href="/login"
-              className="rounded-lg border border-[#D7E3F2] bg-white px-4 py-2.5 text-sm font-semibold text-[#0B1739] hover:border-[#1677FF]/40 hover:bg-[#F8FBFF] sm:px-5"
-            >
-              Log In
-            </Link>
-
-            <Link
-              href="/signup"
-              className="rounded-lg bg-[#1677FF] px-4 py-2.5 text-sm font-semibold text-white hover:bg-[#0F65E8] sm:px-5"
-            >
-              Sign Up
-            </Link>
-          </div>
+          <Link
+            href="/"
+            className="inline-flex items-center gap-2 rounded-lg border border-[#D7E3F2] bg-white px-4 py-2.5 text-sm font-semibold text-[#0B1739] hover:border-[#1677FF]/40 hover:bg-[#F8FBFF] sm:px-5"
+          >
+            <ArrowLeft className="h-4 w-4" />
+            Go Back
+          </Link>
         </nav>
       </header>
 
