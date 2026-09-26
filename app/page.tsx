@@ -313,9 +313,9 @@ function WorldCard({ title, text, image }: { title: string; text: string; image:
   return (
     <Link
       href="/signup"
-      className="group flex h-full flex-col overflow-hidden rounded-3xl border border-gahn-line bg-white transition-shadow duration-300 hover:shadow-[0_24px_48px_-24px_rgba(11,23,57,0.25)] lg:flex-row"
+      className="group flex h-full min-h-[168px] flex-row overflow-hidden rounded-3xl border border-gahn-line bg-white transition-shadow duration-300 hover:shadow-[0_24px_48px_-24px_rgba(11,23,57,0.25)] sm:min-h-[184px] lg:min-h-[208px]"
     >
-      <div className="relative aspect-[4/3] overflow-hidden bg-gahn-night-2 sm:aspect-auto sm:h-64 lg:h-auto lg:min-h-64 lg:w-[45%] lg:flex-none">
+      <div className="relative w-28 flex-none overflow-hidden bg-gahn-night-2 sm:w-32 md:w-36 lg:w-40">
         <img
           src={image}
           alt={`${title} Instructor`}
@@ -323,11 +323,11 @@ function WorldCard({ title, text, image }: { title: string; text: string; image:
         />
         <div
           aria-hidden="true"
-          className="absolute inset-x-0 bottom-0 h-16 bg-gradient-to-t from-gahn-night/25 to-transparent"
+          className="absolute inset-x-0 bottom-0 h-12 bg-gradient-to-t from-gahn-night/20 to-transparent"
         />
       </div>
 
-      <div className="flex flex-1 flex-col p-6">
+      <div className="flex min-w-0 flex-1 flex-col p-4 sm:p-5 lg:p-6">
         <h3 className="text-xl font-semibold tracking-[-0.02em] text-gahn-navy">{title}</h3>
         <p className="mt-2 flex-1 text-[15px] leading-7 text-gahn-slate">{text}</p>
         <span className="mt-5 inline-flex items-center gap-1.5 text-sm font-semibold text-gahn-blue">
