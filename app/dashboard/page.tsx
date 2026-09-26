@@ -103,6 +103,7 @@ export default function DashboardPage() {
   const [fullName, setFullName] = useState("Learner");
   const [initials, setInitials] = useState("AI");
   const [avatarUrl, setAvatarUrl] = useState("");
+  const [planName, setPlanName] = useState("Explore");
   const avatarColor = useMemo(() => getInitialColor(fullName), [fullName]);
 
   useEffect(() => {
@@ -115,6 +116,24 @@ export default function DashboardPage() {
         router.push("/login");
         return;
       }
+
+      const subscriptionResponse = await fetch("/api/subscription/current");
+
+if (subscriptionResponse.ok) {
+  const subscription = await subscriptionResponse.json();
+
+  const planNames: Record<string, string> = {
+    explore: "Explore",
+    learner_plus: "Learner Plus",
+    mastery: "Mastery",
+    career_pro: "Career Pro",
+    classroom_ai: "Classroom AI",
+    school_os: "School OS",
+    district_government: "District / Government",
+  };
+
+  setPlanName(planNames[subscription.planId] || "Explore");
+}
 
       const { data: profile } = await supabase
         .from("profiles")
@@ -268,7 +287,7 @@ export default function DashboardPage() {
 
                   <div className="max-w-[130px] min-w-0">
                     <p className="truncate text-sm font-bold text-[#0B1739]">{fullName}</p>
-                    <p className="text-xs text-[#53657D]">Free Plan</p>
+                    <p className="text-xs text-[#53657D]">{planName}</p>
                   </div>
 
                   <ChevronDown className="h-4 w-4 flex-none text-[#53657D]" strokeWidth={1.75} />
