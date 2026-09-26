@@ -319,7 +319,11 @@ function WorldCard({ title, text, image }: { title: string; text: string; image:
         <img
           src={image}
           alt={`${title} Instructor`}
-          className="absolute inset-0 h-full w-full object-cover object-[center_15%] transition-transform duration-700 ease-out group-hover:scale-[1.03]"
+          className={`absolute inset-0 h-full w-full transition-transform duration-700 ease-out group-hover:scale-[1.03] ${
+            title === "Career Skills"
+              ? "object-contain object-top p-2"
+              : "object-cover object-[center_15%]"
+          }`}
         />
         <div
           aria-hidden="true"
