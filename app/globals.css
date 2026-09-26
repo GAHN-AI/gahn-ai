@@ -10,6 +10,18 @@
   --color-foreground: var(--foreground);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
+
+  /* GAHN marketing palette */
+  --color-gahn-night: #0A1633;
+  --color-gahn-night-2: #10214A;
+  --color-gahn-navy: #0B1739;
+  --color-gahn-blue: #1F6BFF;
+  --color-gahn-blue-hover: #1858E0;
+  --color-gahn-sky: #8DB8FF;
+  --color-gahn-mist: #A7B3CC;
+  --color-gahn-paper: #F6F8FB;
+  --color-gahn-line: #E3E8EF;
+  --color-gahn-slate: #56627A;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -146,4 +158,33 @@ button:disabled {
   a[href][class*="rounded"][class*="px-"][class*="py-"]:active {
     transform: none;
   }
+}
+
+/*
+ * Marketing pages opt out of the site-wide button lift above so each
+ * component can define its own hover state. Scoped to .marketing only,
+ * so the dashboard and app pages keep their current behavior.
+ */
+.marketing button:not(:disabled),
+.marketing a[href][class*="rounded"][class*="px-"][class*="py-"] {
+  transition: revert-layer;
+  will-change: auto;
+}
+
+.marketing button:not(:disabled):hover,
+.marketing button:not(:disabled):active,
+.marketing a[href][class*="rounded"][class*="px-"][class*="py-"]:hover,
+.marketing a[href][class*="rounded"][class*="px-"][class*="py-"]:active {
+  transform: revert-layer;
+  box-shadow: revert-layer;
+}
+
+/* Faint grid texture for the dark hero, fading out toward the edges. */
+.gahn-hero-grid {
+  background-image:
+    linear-gradient(rgba(255, 255, 255, 0.045) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.045) 1px, transparent 1px);
+  background-size: 64px 64px;
+  -webkit-mask-image: radial-gradient(ellipse 70% 60% at 50% 40%, #000 0%, transparent 75%);
+  mask-image: radial-gradient(ellipse 70% 60% at 50% 40%, #000 0%, transparent 75%);
 }
