@@ -361,20 +361,28 @@ async function enforceEvidenceState(args: {
   return turn;
 }
 
-async function saveStudyGuide(args: {
+async function saveLearningMaterial(args: {
   userId: string;
   lessonId: string;
   body: InstructorRequest;
   turn: InstructorTurn;
 }) {
-  if (args.body.action !== "study_guide") return;
+  if (
+    args.body.action !== "study_guide" &&
+    args.body.action !== "summary"
+  ) {
+    return;
+  }
+
+  const isSummary = args.body.action === "summary";
 
   const { error } = await supabaseAdmin.from("study_guides").insert({
     user_id: args.userId,
     world_slug: args.body.worldSlug,
     topic: args.body.topic,
     lesson_id: args.lessonId,
-    title: `${args.body.lessonTitle} Study Guide`,
+    title: `${args.body.lessonTitle} ${isSummary ? "Summary" : "Study Guide"}`,
+    material_type: isSummary ? "summary" : "study_guide",
     content: args.turn.canvas,
   });
 
@@ -618,7 +626,7 @@ export async function POST(req: Request) {
       turn,
     });
 
-    await saveStudyGuide({
+    await saveLearningMaterial({
       userId: user.id,
       lessonId,
       body,
