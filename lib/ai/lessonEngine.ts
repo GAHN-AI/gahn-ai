@@ -18,6 +18,15 @@ export type CanvasBlock = {
   checks?: string[];
 };
 
+export type TeachingAction =
+  | "start"
+  | "respond"
+  | "repeat"
+  | "explain_differently"
+  | "summary"
+  | "study_guide"
+  | "review";
+
 export type InstructorTurn = {
   message: string;
   mode: "teach" | "question" | "feedback" | "activity" | "summary" | "mastery";
@@ -169,9 +178,77 @@ export function buildFallbackTurn(args: {
   lessonTitle: string;
   lessonPoints: string[];
   learnerMessage?: string;
+  action?: TeachingAction;
 }): InstructorTurn {
-  const points = compact(args.lessonPoints).slice(0, 5);
+  const points = compact(args.lessonPoints).slice(0, 6);
   const primary = points[0] || args.lessonTitle;
+  const action = args.action || "respond";
+
+  if (action === "summary" || action === "study_guide") {
+    return {
+      message:
+        action === "study_guide"
+          ? "Here is a study guide built from the lesson structure. It is saved from the actual curriculum points rather than invented progress."
+          : "Here is a concise summary of the lesson so you can review what matters.",
+      mode: "summary",
+      canvas: {
+        title: action === "study_guide" ? "Study Guide" : "Lesson Summary",
+        subtitle: args.lessonTitle,
+        blocks: [
+          {
+            type: "summary",
+            title: "Key ideas",
+            body: primary,
+            bullets: points.slice(1),
+          },
+          {
+            type: "mastery",
+            title: "What you should be able to do",
+            checks: [
+              `Explain ${args.lessonTitle} in your own words`,
+              "Give one concrete example",
+              "Apply the idea without copying the lesson wording",
+            ],
+          },
+        ],
+      },
+      evaluation: {
+        correct: null,
+        concept: args.lessonTitle,
+        state: "learning",
+        reason: "A summary does not count as mastery evidence.",
+      },
+      suggestedReply: "Close the guide and explain the lesson from memory.",
+    };
+  }
+
+  if (action === "review") {
+    return {
+      message:
+        "Review should make you retrieve the idea, not reread it. Answer this without looking back first.",
+      mode: "question",
+      canvas: {
+        title: "Active Review",
+        subtitle: args.lessonTitle,
+        blocks: [
+          {
+            type: "question",
+            title: "Recall from memory",
+            question: `Explain ${args.lessonTitle} and give one example of when it matters.`,
+            answerType: "text",
+            hint: "Try from memory before checking your notes.",
+          },
+        ],
+      },
+      evaluation: {
+        correct: null,
+        concept: args.lessonTitle,
+        state: "practicing",
+        reason: "The learner is beginning a review attempt.",
+      },
+      suggestedReply: "Answer from memory.",
+    };
+  }
 
   if (args.learnerMessage?.trim()) {
     return {
