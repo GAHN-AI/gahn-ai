@@ -27,6 +27,7 @@ type StudyGuide = {
   topic: string | null;
   lesson_id: string | null;
   title: string;
+  material_type: "study_guide" | "summary";
   content: {
     title?: string;
     subtitle?: string;
@@ -56,7 +57,7 @@ export default function StudyGuidesPage() {
       const { data } = await supabase
         .from("study_guides")
         .select(
-          "id, world_slug, topic, lesson_id, title, content, created_at, updated_at"
+          "id, world_slug, topic, lesson_id, title, material_type, content, created_at, updated_at"
         )
         .eq("user_id", user.id)
         .order("updated_at", { ascending: false });
@@ -97,10 +98,10 @@ export default function StudyGuidesPage() {
               <BookMarked className="h-5 w-5" />
             </div>
             <h1 className="mt-4 text-3xl font-extrabold tracking-[-0.035em]">
-              Study Guides
+              Study Guides & Summaries
             </h1>
             <p className="mt-2 max-w-2xl text-sm leading-7 text-[#53657D]">
-              Guides are generated from the lesson you are actually studying and saved to your account for review.
+              Lesson summaries and study guides are built from the material you are actually studying and saved for review.
             </p>
           </div>
 
@@ -110,7 +111,7 @@ export default function StudyGuidesPage() {
               <input
                 value={search}
                 onChange={(event) => setSearch(event.target.value)}
-                placeholder="Search study guides..."
+                placeholder="Search summaries and study guides..."
                 className="h-11 w-full rounded-xl border border-[#D7E3F2] pl-10 pr-4 text-sm outline-none focus:border-[#1677FF] focus:ring-2 focus:ring-[#1677FF]/15"
               />
             </div>
@@ -124,10 +125,10 @@ export default function StudyGuidesPage() {
                 <div className="max-w-md">
                   <Sparkles className="mx-auto h-8 w-8 text-[#1677FF]" />
                   <h2 className="mt-3 text-lg font-extrabold">
-                    No study guides yet
+                    No saved study materials yet
                   </h2>
                   <p className="mt-2 text-sm leading-6 text-[#53657D]">
-                    Start a lesson and press Study Guide in the Learning Studio. GAHN will save it here.
+                    Start a lesson and use Summary or Study Guide in the Learning Studio. GAHN will save the result here.
                   </p>
                   <Link
                     href="/learn/career-skills"
@@ -149,9 +150,14 @@ export default function StudyGuidesPage() {
                     key={guide.id}
                     className="rounded-2xl border border-[#D7E3F2] bg-white p-5 sm:p-6"
                   >
-                    <p className="text-xs font-bold uppercase tracking-[0.14em] text-[#1677FF]">
-                      {guide.topic || "Learning guide"}
-                    </p>
+                    <div className="flex flex-wrap items-center gap-2">
+                      <p className="text-xs font-bold uppercase tracking-[0.14em] text-[#1677FF]">
+                        {guide.topic || "Learning guide"}
+                      </p>
+                      <span className="rounded-full border border-[#CFE0F5] bg-[#F1F7FF] px-2.5 py-1 text-[10px] font-bold uppercase tracking-[0.1em] text-[#1677FF]">
+                        {guide.material_type === "summary" ? "Summary" : "Study Guide"}
+                      </span>
+                    </div>
                     <h2 className="mt-1 text-xl font-extrabold">
                       {guide.title}
                     </h2>
