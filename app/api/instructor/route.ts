@@ -6,6 +6,11 @@ import { supabaseAdmin } from "@/lib/supabaseAdmin";
 import { requireEntitlement } from "@/lib/requireEntitlement";
 import { buildInstructorPrompt } from "@/lib/ai/instructorPrompt";
 import {
+  checkAiUsageLimit,
+  recordAiUsage,
+} from "@/lib/ai/usageLimits";
+import type { SubscriptionPlanId } from "@/lib/subscriptionEntitlements";
+import {
   buildFallbackTurn,
   extractOpenAIText,
   lessonIdFromParts,
@@ -141,6 +146,7 @@ async function createOrTouchSession(
 
 async function callTeachingModel(
   userId: string,
+  planId: SubscriptionPlanId,
   body: InstructorRequest,
   fallback: InstructorTurn,
   capabilities: string[]
@@ -151,6 +157,25 @@ async function callTeachingModel(
     return {
       turn: fallback,
       aiConnected: false,
+      usageLimited: false,
+    };
+  }
+
+  const usage = await checkAiUsageLimit({
+    userId,
+    planId,
+    kind: "teaching_turn",
+  });
+
+  if (!usage.allowed) {
+    return {
+      turn: {
+        ...fallback,
+        message:
+          "You reached today’s adaptive-AI learning limit. Your structured lesson, Magic Canvas, notes, review tools, and saved progress still work. Adaptive instructor feedback resets with the next daily allowance.",
+      },
+      aiConnected: false,
+      usageLimited: true,
     };
   }
 
@@ -245,15 +270,34 @@ async function callTeachingModel(
     return {
       turn: fallback,
       aiConnected: false,
+      usageLimited: false,
     };
   }
 
   const payload = await response.json();
   const raw = extractOpenAIText(payload);
 
+  const turn = parseInstructorTurn(raw, fallback);
+  const model =
+    process.env.OPENAI_TEACHING_MODEL || "gpt-5.6-luna";
+
+  await recordAiUsage({
+    userId,
+    planId,
+    kind: "teaching_turn",
+    model,
+    metadata: {
+      worldSlug: body.worldSlug,
+      topic: body.topic,
+      lessonTitle: body.lessonTitle,
+      action: body.action || "respond",
+    },
+  });
+
   return {
-    turn: parseInstructorTurn(raw, fallback),
+    turn,
     aiConnected: true,
+    usageLimited: false,
   };
 }
 
@@ -550,6 +594,7 @@ export async function POST(req: Request) {
 
     const modelResult = await callTeachingModel(
       user.id,
+      access.planId,
       body,
       fallback,
       capabilities
@@ -599,6 +644,7 @@ export async function POST(req: Request) {
       lessonId,
       turn,
       aiConnected: modelResult.aiConnected,
+      usageLimited: modelResult.usageLimited,
     });
   } catch (error) {
     console.error("Instructor route failed:", error);
