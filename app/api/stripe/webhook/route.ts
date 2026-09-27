@@ -31,6 +31,20 @@ function getStripeId(
 function getPaidPlanFromSubscription(
   subscription: Stripe.Subscription
 ) {
+  // The current Stripe price is the source of truth for upgrades
+  // and downgrades. Metadata is only a fallback for older records.
+  const priceId =
+    subscription.items.data[0]?.price.id;
+
+  if (priceId) {
+    const planFromPrice =
+      getPlanIdFromStripePriceId(priceId);
+
+    if (planFromPrice) {
+      return planFromPrice;
+    }
+  }
+
   const metadataPlan =
     subscription.metadata?.planId;
 
@@ -41,14 +55,7 @@ function getPaidPlanFromSubscription(
     return metadataPlan;
   }
 
-  const priceId =
-    subscription.items.data[0]?.price.id;
-
-  if (!priceId) {
-    return null;
-  }
-
-  return getPlanIdFromStripePriceId(priceId);
+  return null;
 }
 
 async function saveSubscription(
