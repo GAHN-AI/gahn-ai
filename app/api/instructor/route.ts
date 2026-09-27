@@ -1,0 +1,434 @@
+import { NextResponse } from "next/server";
+import { createServerClient } from "@supabase/ssr";
+import { cookies } from "next/headers";
+
+import { supabaseAdmin } from "@/lib/supabaseAdmin";
+import { requireEntitlement } from "@/lib/requireEntitlement";
+import { buildInstructorPrompt } from "@/lib/ai/instructorPrompt";
+import {
+  buildFallbackTurn,
+  extractOpenAIText,
+  lessonIdFromParts,
+  parseInstructorTurn,
+  type InstructorTurn,
+} from "@/lib/ai/lessonEngine";
+
+export const runtime = "nodejs";
+
+type InstructorRequest = {
+  action?: "start" | "respond" | "repeat" | "explain_differently";
+  sessionId?: string | null;
+  worldSlug: string;
+  worldTitle: string;
+  sectionSlug?: string | null;
+  sectionTitle?: string | null;
+  topicSlug?: string | null;
+  topic: string;
+  lessonTitle: string;
+  lessonPoints?: string[];
+  language?: string;
+  learnerMessage?: string;
+  history?: Array<{
+    role: "student" | "instructor";
+    content: string;
+  }>;
+};
+
+async function authenticatedUser() {
+  const cookieStore = await cookies();
+
+  const supabase = createServerClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+    {
+      cookies: {
+        getAll() {
+          return cookieStore.getAll();
+        },
+        setAll(cookiesToSet) {
+          try {
+            cookiesToSet.forEach(({ name, value, options }) => {
+              cookieStore.set(name, value, options);
+            });
+          } catch {
+            // Server components may not always allow cookie writes.
+          }
+        },
+      },
+    }
+  );
+
+  const {
+    data: { user },
+    error,
+  } = await supabase.auth.getUser();
+
+  if (error || !user) return null;
+  return user;
+}
+
+function validRequest(body: Partial<InstructorRequest>) {
+  return Boolean(
+    body.worldSlug &&
+      body.worldTitle &&
+      body.topic &&
+      body.lessonTitle
+  );
+}
+
+async function createOrTouchSession(
+  userId: string,
+  body: InstructorRequest,
+  lessonId: string
+) {
+  if (body.sessionId) {
+    const { data } = await supabaseAdmin
+      .from("lesson_sessions")
+      .update({
+        last_activity_at: new Date().toISOString(),
+        language: body.language || "English",
+      })
+      .eq("id", body.sessionId)
+      .eq("user_id", userId)
+      .select("id")
+      .maybeSingle();
+
+    if (data?.id) return data.id as string;
+  }
+
+  const { data, error } = await supabaseAdmin
+    .from("lesson_sessions")
+    .insert({
+      user_id: userId,
+      world_slug: body.worldSlug,
+      section_slug: body.sectionSlug || null,
+      topic_slug: body.topicSlug || null,
+      topic: body.topic,
+      lesson_id: lessonId,
+      lesson_title: body.lessonTitle,
+      language: body.language || "English",
+      status: "in_progress",
+      metadata: {
+        sectionTitle: body.sectionTitle || null,
+      },
+    })
+    .select("id")
+    .single();
+
+  if (error) throw error;
+
+  await supabaseAdmin.from("learning_progress").upsert(
+    {
+      user_id: userId,
+      world_slug: body.worldSlug,
+      topic: body.topic,
+      lesson_id: lessonId,
+      section_slug: body.sectionSlug || null,
+      topic_slug: body.topicSlug || null,
+      lesson_title: body.lessonTitle,
+      status: "in_progress",
+      mastery_state: "learning",
+      last_activity_at: new Date().toISOString(),
+    },
+    {
+      onConflict: "user_id,world_slug,lesson_id",
+    }
+  );
+
+  return data.id as string;
+}
+
+async function callTeachingModel(
+  body: InstructorRequest,
+  fallback: InstructorTurn
+) {
+  const apiKey = process.env.OPENAI_API_KEY;
+
+  if (!apiKey) {
+    return {
+      turn: fallback,
+      aiConnected: false,
+    };
+  }
+
+  const prompt = buildInstructorPrompt({
+    learnerRole: "unknown",
+    worldTitle: body.worldTitle,
+    sectionTitle: body.sectionTitle || undefined,
+    topic: body.topic,
+    lessonTitle: body.lessonTitle,
+    lessonPoints: body.lessonPoints || [],
+    language: body.language || "English",
+  });
+
+  const recentHistory = (body.history || []).slice(-8);
+
+  const response = await fetch("https://api.openai.com/v1/responses", {
+    method: "POST",
+    headers: {
+      Authorization: `Bearer ${apiKey}`,
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      model: process.env.OPENAI_TEACHING_MODEL || "gpt-5.6-luna",
+      instructions: prompt,
+      input: [
+        {
+          role: "user",
+          content: [
+            {
+              type: "input_text",
+              text: JSON.stringify({
+                action: body.action || "respond",
+                learnerMessage: body.learnerMessage || "",
+                recentHistory,
+              }),
+            },
+          ],
+        },
+      ],
+      max_output_tokens: 1200,
+    }),
+  });
+
+  if (!response.ok) {
+    console.error(
+      "Teaching model request failed:",
+      response.status,
+      await response.text()
+    );
+
+    return {
+      turn: fallback,
+      aiConnected: false,
+    };
+  }
+
+  const payload = await response.json();
+  const raw = extractOpenAIText(payload);
+
+  return {
+    turn: parseInstructorTurn(raw, fallback),
+    aiConnected: true,
+  };
+}
+
+async function saveEvidence(args: {
+  userId: string;
+  sessionId: string;
+  lessonId: string;
+  body: InstructorRequest;
+  turn: InstructorTurn;
+}) {
+  const { userId, sessionId, lessonId, body, turn } = args;
+  const responseText = body.learnerMessage?.trim();
+
+  if (!responseText) return;
+
+  const evidenceType =
+    turn.mode === "mastery"
+      ? "mastery_check"
+      : turn.mode === "activity"
+        ? "activity"
+        : "question";
+
+  const { error } = await supabaseAdmin.from("lesson_evidence").insert({
+    user_id: userId,
+    session_id: sessionId,
+    world_slug: body.worldSlug,
+    lesson_id: lessonId,
+    lesson_title: body.lessonTitle,
+    concept: turn.evaluation.concept || body.lessonTitle,
+    evidence_type: evidenceType,
+    response_text: responseText,
+    correct: turn.evaluation.correct,
+    metadata: {
+      evaluationReason: turn.evaluation.reason,
+      state: turn.evaluation.state,
+    },
+  });
+
+  if (error) throw error;
+
+  const correctIncrement = turn.evaluation.correct === true ? 1 : 0;
+  const retryIncrement = turn.evaluation.correct === false ? 1 : 0;
+
+  const { data: current } = await supabaseAdmin
+    .from("learning_progress")
+    .select("attempts_count, correct_count, retry_count")
+    .eq("user_id", userId)
+    .eq("world_slug", body.worldSlug)
+    .eq("lesson_id", lessonId)
+    .maybeSingle();
+
+  const attempts = (current?.attempts_count || 0) + 1;
+  const correct = (current?.correct_count || 0) + correctIncrement;
+  const retries = (current?.retry_count || 0) + retryIncrement;
+  const completed = turn.evaluation.state === "mastered";
+
+  const { error: progressError } = await supabaseAdmin
+    .from("learning_progress")
+    .upsert(
+      {
+        user_id: userId,
+        world_slug: body.worldSlug,
+        topic: body.topic,
+        lesson_id: lessonId,
+        section_slug: body.sectionSlug || null,
+        topic_slug: body.topicSlug || null,
+        lesson_title: body.lessonTitle,
+        status: completed ? "completed" : "in_progress",
+        mastery_state: turn.evaluation.state,
+        attempts_count: attempts,
+        correct_count: correct,
+        retry_count: retries,
+        evidence: {
+          lastConcept: turn.evaluation.concept,
+          lastReason: turn.evaluation.reason,
+          lastCorrect: turn.evaluation.correct,
+        },
+        last_activity_at: new Date().toISOString(),
+        completed_at: completed ? new Date().toISOString() : null,
+      },
+      {
+        onConflict: "user_id,world_slug,lesson_id",
+      }
+    );
+
+  if (progressError) throw progressError;
+
+  if (turn.evaluation.correct !== null) {
+    const memoryState =
+      turn.evaluation.state === "needs_review"
+        ? "needs_review"
+        : turn.evaluation.state === "mastered" ||
+            turn.evaluation.state === "proficient"
+          ? "strength"
+          : "learning";
+
+    const { data: existingMemory } = await supabaseAdmin
+      .from("learner_memory")
+      .select("evidence_count")
+      .eq("user_id", userId)
+      .eq("concept", turn.evaluation.concept)
+      .maybeSingle();
+
+    const { error: memoryError } = await supabaseAdmin
+      .from("learner_memory")
+      .upsert(
+        {
+          user_id: userId,
+          world_slug: body.worldSlug,
+          topic: body.topic,
+          concept: turn.evaluation.concept,
+          state: memoryState,
+          evidence_count: (existingMemory?.evidence_count || 0) + 1,
+          last_evidence: turn.evaluation.reason,
+          last_seen_at: new Date().toISOString(),
+        },
+        {
+          onConflict: "user_id,concept",
+        }
+      );
+
+    if (memoryError) throw memoryError;
+  }
+}
+
+export async function POST(req: Request) {
+  try {
+    const user = await authenticatedUser();
+
+    if (!user) {
+      return NextResponse.json(
+        { error: "You must be signed in to start a lesson." },
+        { status: 401 }
+      );
+    }
+
+    const body = (await req.json()) as InstructorRequest;
+
+    if (!validRequest(body)) {
+      return NextResponse.json(
+        { error: "Missing lesson context." },
+        { status: 400 }
+      );
+    }
+
+    const access = await requireEntitlement(user.id, "liveInstructor");
+
+    if (!access.allowed) {
+      return NextResponse.json(
+        {
+          error: "Instructor access is not included in your current plan.",
+          planId: access.planId,
+        },
+        { status: 403 }
+      );
+    }
+
+    const lessonId = lessonIdFromParts(
+      body.worldSlug,
+      body.topicSlug || undefined,
+      body.lessonTitle
+    );
+
+    const sessionId = await createOrTouchSession(
+      user.id,
+      body,
+      lessonId
+    );
+
+    const fallback = buildFallbackTurn({
+      lessonTitle: body.lessonTitle,
+      lessonPoints: body.lessonPoints || [],
+      learnerMessage: body.learnerMessage,
+    });
+
+    const { turn, aiConnected } = await callTeachingModel(
+      body,
+      fallback
+    );
+
+    await saveEvidence({
+      userId: user.id,
+      sessionId,
+      lessonId,
+      body,
+      turn,
+    });
+
+    await supabaseAdmin
+      .from("lesson_sessions")
+      .update({
+        last_activity_at: new Date().toISOString(),
+        current_step: body.learnerMessage ? 1 : 0,
+        status:
+          turn.evaluation.state === "mastered"
+            ? "completed"
+            : "in_progress",
+        completed_at:
+          turn.evaluation.state === "mastered"
+            ? new Date().toISOString()
+            : null,
+      })
+      .eq("id", sessionId)
+      .eq("user_id", user.id);
+
+    return NextResponse.json({
+      sessionId,
+      lessonId,
+      turn,
+      aiConnected,
+    });
+  } catch (error) {
+    console.error("Instructor route failed:", error);
+
+    return NextResponse.json(
+      {
+        error: "The lesson could not continue. Please try again.",
+      },
+      { status: 500 }
+    );
+  }
+}
