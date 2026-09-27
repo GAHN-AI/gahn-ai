@@ -29,6 +29,15 @@ type Message = {
   content: string;
 };
 
+type LearningFeatures = {
+  notes: boolean;
+  studyGuides: boolean;
+  reviewQuestions: boolean;
+  masteryAssessments: boolean;
+  fileUploads: boolean;
+  homeworkHelp: boolean;
+};
+
 type Props = {
   worldSlug: string;
   worldTitle: string;
@@ -151,6 +160,14 @@ export default function LearningStudio({
   const [uploadedFileName, setUploadedFileName] = useState("");
   const [fileQuestion, setFileQuestion] = useState("");
   const [fileAnalysis, setFileAnalysis] = useState("");
+  const [features, setFeatures] = useState<LearningFeatures>({
+    notes: false,
+    studyGuides: false,
+    reviewQuestions: false,
+    masteryAssessments: false,
+    fileUploads: false,
+    homeworkHelp: false,
+  });
   const [pendingResponseAction, setPendingResponseAction] =
     useState<TeachingAction>("respond");
   const masteryNotifiedRef = useRef(false);
@@ -158,6 +175,27 @@ export default function LearningStudio({
   useEffect(() => {
     masteryNotifiedRef.current = false;
   }, [lessonId]);
+
+  useEffect(() => {
+    async function loadFeatures() {
+      const response = await fetch("/api/subscription/current");
+      if (!response.ok) return;
+
+      const subscription = await response.json();
+      const entitlements = subscription.entitlements || {};
+
+      setFeatures({
+        notes: Boolean(entitlements.notes),
+        studyGuides: Boolean(entitlements.studyGuides),
+        reviewQuestions: Boolean(entitlements.reviewQuestions),
+        masteryAssessments: Boolean(entitlements.masteryAssessments),
+        fileUploads: Boolean(entitlements.fileUploads),
+        homeworkHelp: Boolean(entitlements.homeworkHelp),
+      });
+    }
+
+    void loadFeatures();
+  }, []);
 
   useEffect(() => {
     if (
@@ -591,22 +629,26 @@ export default function LearningStudio({
                   <Volume2 className="h-4 w-4 text-[#1677FF]" />
                   Read aloud
                 </button>
-                <button
-                  type="button"
-                  onClick={() => setNotesOpen((value) => !value)}
-                  className="inline-flex items-center gap-2 rounded-lg border border-[#D7E3F2] px-3 py-2 text-xs font-bold text-[#40536D] hover:bg-[#F5F8FC]"
-                >
-                  <StickyNote className="h-4 w-4 text-[#1677FF]" />
-                  Notes
-                </button>
-                <button
-                  type="button"
-                  onClick={() => setFileHelpOpen((value) => !value)}
-                  className="inline-flex items-center gap-2 rounded-lg border border-[#D7E3F2] px-3 py-2 text-xs font-bold text-[#40536D] hover:bg-[#F5F8FC]"
-                >
-                  <Paperclip className="h-4 w-4 text-[#1677FF]" />
-                  File Help
-                </button>
+                {features.notes && (
+                  <button
+                    type="button"
+                    onClick={() => setNotesOpen((value) => !value)}
+                    className="inline-flex items-center gap-2 rounded-lg border border-[#D7E3F2] px-3 py-2 text-xs font-bold text-[#40536D] hover:bg-[#F5F8FC]"
+                  >
+                    <StickyNote className="h-4 w-4 text-[#1677FF]" />
+                    Notes
+                  </button>
+                )}
+                {features.fileUploads && features.homeworkHelp && (
+                  <button
+                    type="button"
+                    onClick={() => setFileHelpOpen((value) => !value)}
+                    className="inline-flex items-center gap-2 rounded-lg border border-[#D7E3F2] px-3 py-2 text-xs font-bold text-[#40536D] hover:bg-[#F5F8FC]"
+                  >
+                    <Paperclip className="h-4 w-4 text-[#1677FF]" />
+                    File Help
+                  </button>
+                )}
                 <button
                   type="button"
                   disabled={loading}
@@ -615,30 +657,36 @@ export default function LearningStudio({
                 >
                   Summary
                 </button>
-                <button
-                  type="button"
-                  disabled={loading}
-                  onClick={() => void requestInstructor(undefined, "study_guide")}
-                  className="inline-flex items-center gap-2 rounded-lg border border-[#D7E3F2] px-3 py-2 text-xs font-bold text-[#40536D] hover:bg-[#F5F8FC] disabled:opacity-50"
-                >
-                  Study Guide
-                </button>
-                <button
-                  type="button"
-                  disabled={loading}
-                  onClick={() => void requestInstructor(undefined, "review")}
-                  className="inline-flex items-center gap-2 rounded-lg border border-[#D7E3F2] px-3 py-2 text-xs font-bold text-[#40536D] hover:bg-[#F5F8FC] disabled:opacity-50"
-                >
-                  Review Me
-                </button>
-                <button
-                  type="button"
-                  disabled={loading}
-                  onClick={() => void requestInstructor(undefined, "mastery_check")}
-                  className="inline-flex items-center gap-2 rounded-lg bg-[#0B1739] px-3 py-2 text-xs font-bold text-white disabled:opacity-50"
-                >
-                  Mastery Check
-                </button>
+                {features.studyGuides && (
+                  <button
+                    type="button"
+                    disabled={loading}
+                    onClick={() => void requestInstructor(undefined, "study_guide")}
+                    className="inline-flex items-center gap-2 rounded-lg border border-[#D7E3F2] px-3 py-2 text-xs font-bold text-[#40536D] hover:bg-[#F5F8FC] disabled:opacity-50"
+                  >
+                    Study Guide
+                  </button>
+                )}
+                {features.reviewQuestions && (
+                  <button
+                    type="button"
+                    disabled={loading}
+                    onClick={() => void requestInstructor(undefined, "review")}
+                    className="inline-flex items-center gap-2 rounded-lg border border-[#D7E3F2] px-3 py-2 text-xs font-bold text-[#40536D] hover:bg-[#F5F8FC] disabled:opacity-50"
+                  >
+                    Review Me
+                  </button>
+                )}
+                {features.masteryAssessments && (
+                  <button
+                    type="button"
+                    disabled={loading}
+                    onClick={() => void requestInstructor(undefined, "mastery_check")}
+                    className="inline-flex items-center gap-2 rounded-lg bg-[#0B1739] px-3 py-2 text-xs font-bold text-white disabled:opacity-50"
+                  >
+                    Mastery Check
+                  </button>
+                )}
               </div>
 
               {fileHelpOpen && (
