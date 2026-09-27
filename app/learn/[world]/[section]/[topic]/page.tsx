@@ -370,7 +370,7 @@ export default function TopicOverviewPage() {
               {detail.requirementNote && (
                 <section className="rounded-2xl border border-[#CFE0F5] bg-[#F1F7FF] p-5">
                   <p className="text-xs font-bold uppercase tracking-[0.18em] text-[#1677FF]">
-                    Career requirement note
+                    Important note
                   </p>
                   <p className="mt-2 text-sm leading-6 text-[#40536D]">
                     {detail.requirementNote}
