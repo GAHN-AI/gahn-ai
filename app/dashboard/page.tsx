@@ -30,12 +30,8 @@ import {
 
 const navItems: { label: string; Icon: LucideIcon; href: string }[] = [
   { label: "Dashboard", Icon: LayoutDashboard, href: "/dashboard" },
-  { label: "AI Instructors", Icon: Bot, href: "/in-progress" },
-  { label: "My Notes", Icon: StickyNote, href: "/in-progress" },
-  { label: "Certificates", Icon: Award, href: "/in-progress" },
-  { label: "Portfolio", Icon: FolderKanban, href: "/in-progress" },
-  { label: "Progress", Icon: TrendingUp, href: "/in-progress" },
-  { label: "Community", Icon: Users, href: "/in-progress" },
+  { label: "My Notes", Icon: StickyNote, href: "/notes" },
+  { label: "Progress", Icon: TrendingUp, href: "/progress" },
 ];
 
 const worlds: { slug: string; Icon: LucideIcon; title: string; text: string }[] = [
@@ -98,6 +94,44 @@ function getInitialColor(name: string) {
   return colors[total % colors.length];
 }
 
+type ProgressRow = {
+  lesson_title: string | null;
+  topic: string;
+  status: string;
+  mastery_state: string | null;
+  attempts_count: number;
+  correct_count: number;
+  retry_count: number;
+  last_activity_at: string;
+};
+
+function localDateKey(value: Date) {
+  return [
+    value.getFullYear(),
+    String(value.getMonth() + 1).padStart(2, "0"),
+    String(value.getDate()).padStart(2, "0"),
+  ].join("-");
+}
+
+function calculateStreak(rows: ProgressRow[]) {
+  const activityDays = new Set(
+    rows.map((row) => localDateKey(new Date(row.last_activity_at)))
+  );
+
+  const cursor = new Date();
+  if (!activityDays.has(localDateKey(cursor))) {
+    cursor.setDate(cursor.getDate() - 1);
+  }
+
+  let streak = 0;
+  while (activityDays.has(localDateKey(cursor))) {
+    streak += 1;
+    cursor.setDate(cursor.getDate() - 1);
+  }
+
+  return streak;
+}
+
 export default function DashboardPage() {
   const router = useRouter();
   const [fullName, setFullName] = useState("Learner");
@@ -105,6 +139,8 @@ export default function DashboardPage() {
   const [avatarUrl, setAvatarUrl] = useState("");
   const [planId, setPlanId] = useState("explore");
   const [planName, setPlanName] = useState("Early Access");
+  const [progressRows, setProgressRows] = useState<ProgressRow[]>([]);
+  const [notesCount, setNotesCount] = useState(0);
   const avatarColor = useMemo(() => getInitialColor(fullName), [fullName]);
 
   useEffect(() => {
@@ -126,6 +162,23 @@ if (subscriptionResponse.ok) {
   setPlanId(subscription.planId || "explore");
   setPlanName(subscription.entitlements?.name || "Early Access");
 }
+
+      const [progressResult, notesResult] = await Promise.all([
+        supabase
+          .from("learning_progress")
+          .select(
+            "lesson_title, topic, status, mastery_state, attempts_count, correct_count, retry_count, last_activity_at"
+          )
+          .eq("user_id", user.id)
+          .order("last_activity_at", { ascending: false }),
+        supabase
+          .from("learner_notes")
+          .select("id", { count: "exact", head: true })
+          .eq("user_id", user.id),
+      ]);
+
+      setProgressRows((progressResult.data || []) as ProgressRow[]);
+      setNotesCount(notesResult.count || 0);
 
       const { data: profile } = await supabase
         .from("profiles")
@@ -163,6 +216,19 @@ if (subscriptionResponse.ok) {
 
     loadUserProfile();
   }, [router]);
+
+  const activeLessons = progressRows.filter(
+    (row) => row.status === "in_progress"
+  );
+  const masteredLessons = progressRows.filter(
+    (row) => row.mastery_state === "mastered"
+  );
+  const reviewLessons = progressRows.filter(
+    (row) => row.mastery_state === "needs_review"
+  );
+  const streak = calculateStreak(progressRows);
+  const recentLearning = progressRows[0] || null;
+  const nextRecommendation = reviewLessons[0] || activeLessons[0] || null;
 
   async function handleLogout() {
     await supabase.auth.signOut();
@@ -243,7 +309,7 @@ if (subscriptionResponse.ok) {
               <div className="flex flex-wrap items-center justify-end gap-3">
                 <span className="flex items-center gap-2 rounded-full border border-[#D7E3F2] bg-white px-4 py-3 text-xs font-bold shadow-sm sm:text-sm">
                   <Flame className="h-4 w-4 text-[#1677FF]" strokeWidth={1.75} />
-                  0 Day Streak
+                  {streak} Day Streak
                 </span>
 
                 <Link
@@ -305,16 +371,16 @@ if (subscriptionResponse.ok) {
                 Welcome back, {fullName}
               </h2>
               <p className="mt-1 text-sm text-[#53657D]">
-                Choose what you want to learn. Activity and progress will turn on after the live AI learning system is ready.
+                Choose what you want to learn. GAHN saves lesson activity, evidence, notes, and mastery state as you work.
               </p>
             </section>
 
             <section className="mt-6 grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
               {[
-                { Icon: Flame, number: "0", label: "Day Streak" },
-                { Icon: BookOpen, number: "0", label: "Active Lessons" },
-                { Icon: ListChecks, number: "0", label: "Assigned Work" },
-                { Icon: TrendingUp, number: "0%", label: "Overall Progress" },
+                { Icon: Flame, number: String(streak), label: "Day Streak" },
+                { Icon: BookOpen, number: String(activeLessons.length), label: "Active Lessons" },
+                { Icon: ListChecks, number: String(masteredLessons.length), label: "Mastered Lessons" },
+                { Icon: StickyNote, number: String(notesCount), label: "Saved Notes" },
               ].map(({ Icon, number, label }) => (
                 <div
                   key={label}
@@ -357,38 +423,57 @@ if (subscriptionResponse.ok) {
             </section>
 
             <section className="mt-6 grid gap-4 md:grid-cols-2">
-              <DashboardMiniCard title="Learning Overview" sideText="This Week">
-                <p className="text-base font-bold leading-6 text-[#0B1739]">No learning overview</p>
+              <DashboardMiniCard title="Learning Overview" sideText="Latest">
+                <p className="text-base font-bold leading-6 text-[#0B1739]">
+                  {recentLearning?.lesson_title || "No lesson started yet"}
+                </p>
                 <p className="mt-2 text-sm leading-6 text-[#53657D]">
-                  Learning activity will appear here after the live AI instructor system is enabled.
+                  {recentLearning
+                    ? `${recentLearning.topic} · ${recentLearning.mastery_state?.replace("_", " ") || "learning"} · ${recentLearning.correct_count}/${recentLearning.attempts_count} checked answers`
+                    : "Choose a learning world and start a lesson. Your real activity will appear here."}
                 </p>
               </DashboardMiniCard>
 
-              <DashboardMiniCard title="Instructor Recommendations" linkText="View All">
-                <p className="text-base font-bold leading-6 text-[#0B1739]">No recommendations yet</p>
+              <DashboardMiniCard title="What To Do Next">
+                <p className="text-base font-bold leading-6 text-[#0B1739]">
+                  {nextRecommendation?.lesson_title || "Start your first lesson"}
+                </p>
                 <p className="mt-2 text-sm leading-6 text-[#53657D]">
-                  Recommendations will appear when live AI lessons are available.
+                  {reviewLessons.length
+                    ? "This lesson has evidence that needs review. Revisit it before moving on."
+                    : activeLessons.length
+                      ? "Continue where you left off and build enough evidence to reach mastery."
+                      : "Pick one path and complete the first interactive lesson."}
                 </p>
               </DashboardMiniCard>
 
-              <DashboardMiniCard title="Recent Achievements" linkText="View All">
-                <p className="text-base font-bold leading-6 text-[#0B1739]">No achievements yet</p>
+              <DashboardMiniCard title="Mastery Evidence">
+                <p className="text-base font-bold leading-6 text-[#0B1739]">
+                  {masteredLessons.length} mastered · {reviewLessons.length} need review
+                </p>
                 <p className="mt-2 text-sm leading-6 text-[#53657D]">
-                  Achievements will appear after real lessons and mastery checks are enabled.
+                  GAHN uses saved answers, retries, activities, and mastery checks instead of inventing a progress percentage.
                 </p>
               </DashboardMiniCard>
 
-              <HomeworkGradesCard />
+              <DashboardMiniCard title="Saved Notes">
+                <p className="text-base font-bold leading-6 text-[#0B1739]">
+                  {notesCount} note{notesCount === 1 ? "" : "s"}
+                </p>
+                <p className="mt-2 text-sm leading-6 text-[#53657D]">
+                  Notes saved inside lessons are kept in your learning account.
+                </p>
+              </DashboardMiniCard>
             </section>
 
             <section className="mt-6 grid gap-4 xl:hidden">
-              <DashboardRightColumn />
+              <DashboardRightColumn progressRows={progressRows} />
             </section>
           </section>
         </div>
 
         <aside className="hidden space-y-4 border-l border-[#D7E3F2] bg-white p-5 xl:block">
-          <DashboardRightColumn />
+          <DashboardRightColumn progressRows={progressRows} />
         </aside>
       </div>
     </main>
@@ -432,77 +517,65 @@ function DashboardMiniCard({
   );
 }
 
-function HomeworkGradesCard() {
-  return (
-    <div className="rounded-2xl border border-[#D7E3F2] bg-white p-5 shadow-[0_8px_24px_rgba(11,23,57,0.04)]">
-      <div className="flex min-w-0 items-start justify-between gap-3">
-        <h3 className="min-w-0 text-base font-bold leading-6 text-[#0B1739]">Homework & Grades</h3>
-        <span className="shrink-0 rounded-full bg-[#EAF3FF] px-3 py-1 text-xs font-bold text-[#1677FF]">
-          0 assigned
-        </span>
-      </div>
+function DashboardRightColumn({
+  progressRows,
+}: {
+  progressRows: ProgressRow[];
+}) {
+  const mastered = progressRows.filter(
+    (row) => row.mastery_state === "mastered"
+  ).length;
+  const needsReview = progressRows.filter(
+    (row) => row.mastery_state === "needs_review"
+  ).length;
+  const active = progressRows.filter(
+    (row) => row.status === "in_progress"
+  ).length;
 
-      <div className="mt-5 min-h-36 rounded-xl border border-dashed border-[#D7E3F2] bg-[#F5F8FC] p-4">
-        <div className="grid grid-cols-3 gap-2 text-center">
-          <div className="rounded-lg bg-white p-3">
-            <p className="text-lg font-extrabold text-[#0B1739]">0</p>
-            <p className="mt-1 text-[11px] font-semibold text-[#53657D]">Due Soon</p>
-          </div>
-          <div className="rounded-lg bg-white p-3">
-            <p className="text-lg font-extrabold text-[#0B1739]">0</p>
-            <p className="mt-1 text-[11px] font-semibold text-[#53657D]">Overdue</p>
-          </div>
-          <div className="rounded-lg bg-white p-3">
-            <p className="text-lg font-extrabold text-[#0B1739]">—</p>
-            <p className="mt-1 text-[11px] font-semibold text-[#53657D]">Grade</p>
-          </div>
-        </div>
-        <p className="mt-4 text-center text-sm text-[#53657D]">
-          Homework and grades will appear after live instructor assignments are enabled.
-        </p>
-      </div>
-    </div>
-  );
-}
-
-function DashboardRightColumn() {
   return (
     <>
       <div className="rounded-2xl border border-[#D7E3F2] bg-white p-5 shadow-[0_8px_24px_rgba(11,23,57,0.04)]">
         <div className="grid h-11 w-11 place-items-center rounded-xl bg-[#EAF3FF] text-[#1677FF]">
           <Bot className="h-5 w-5" strokeWidth={1.75} />
         </div>
-        <h3 className="mt-4 text-base font-bold leading-5 text-[#0B1739]">Your AI Instructor</h3>
+        <h3 className="mt-4 text-base font-bold leading-5 text-[#0B1739]">GAHN Learning Studio</h3>
         <p className="mt-3 text-sm leading-6 text-[#53657D]">
-          Your instructor experience will activate when the live AI teaching system is connected.
+          Start a lesson to use the instructor, Magic Canvas, voice input, notes, and saved mastery evidence.
         </p>
-        <Link href="/in-progress" className="mt-4 inline-flex text-sm font-semibold text-[#1677FF]">
-          AI Instructor →
+        <Link href="/learn/career-skills" className="mt-4 inline-flex text-sm font-semibold text-[#1677FF]">
+          Start learning →
         </Link>
       </div>
 
       <div className="rounded-2xl border border-[#D7E3F2] bg-white p-5 shadow-[0_8px_24px_rgba(11,23,57,0.04)]">
-        <h3 className="font-bold text-[#0B1739]">Today&apos;s Schedule</h3>
-        <div className="mt-4 rounded-xl border border-dashed border-[#D7E3F2] bg-[#F5F8FC] p-5 text-center text-sm text-[#53657D]">
-          No lessons or assignments scheduled yet.
+        <h3 className="font-bold text-[#0B1739]">Learning Status</h3>
+        <div className="mt-4 grid grid-cols-3 gap-2 text-center">
+          <div className="rounded-xl bg-[#F5F8FC] p-3">
+            <p className="text-xl font-extrabold">{active}</p>
+            <p className="mt-1 text-[10px] font-bold uppercase tracking-[0.08em] text-[#53657D]">Active</p>
+          </div>
+          <div className="rounded-xl bg-[#F5F8FC] p-3">
+            <p className="text-xl font-extrabold">{mastered}</p>
+            <p className="mt-1 text-[10px] font-bold uppercase tracking-[0.08em] text-[#53657D]">Mastered</p>
+          </div>
+          <div className="rounded-xl bg-[#F5F8FC] p-3">
+            <p className="text-xl font-extrabold">{needsReview}</p>
+            <p className="mt-1 text-[10px] font-bold uppercase tracking-[0.08em] text-[#53657D]">Review</p>
+          </div>
         </div>
-      </div>
-
-      <div className="rounded-2xl border border-[#D7E3F2] bg-white p-5 shadow-[0_8px_24px_rgba(11,23,57,0.04)]">
-        <h3 className="font-bold text-[#0B1739]">Your Progress</h3>
-        <div className="mx-auto mt-5 grid h-28 w-28 place-items-center rounded-full border-[12px] border-[#EAF3FF] text-2xl font-bold text-[#0B1739]">
-          0%
-        </div>
-        <p className="mt-4 text-center text-xs font-semibold leading-5 text-[#53657D]">
-          Progress tracking will activate with live AI lessons.
+        <p className="mt-4 text-xs font-semibold leading-5 text-[#53657D]">
+          These counts come from saved lesson evidence, not a generated percentage.
         </p>
       </div>
 
       <div className="rounded-2xl border border-[#D7E3F2] bg-white p-5 shadow-[0_8px_24px_rgba(11,23,57,0.04)]">
-        <h3 className="font-bold text-[#0B1739]">Community Feed</h3>
-        <div className="mt-4 rounded-xl border border-dashed border-[#D7E3F2] bg-[#F5F8FC] p-5 text-center text-sm text-[#53657D]">
-          Community activity appears after launch.
-        </div>
+        <h3 className="font-bold text-[#0B1739]">Your Learning Data</h3>
+        <p className="mt-3 text-sm leading-6 text-[#53657D]">
+          GAHN keeps your lesson attempts, correct answers, retries, mastery state, and saved notes so the experience can adapt over time.
+        </p>
+        <Link href="/progress" className="mt-4 inline-flex text-sm font-semibold text-[#1677FF]">
+          View progress →
+        </Link>
       </div>
     </>
   );
