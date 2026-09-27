@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import {
   ArrowLeft,
@@ -9,6 +9,7 @@ import {
   Check,
   PencilLine,
   Save,
+  Search,
   StickyNote,
   Trash2,
 } from "lucide-react";
@@ -32,6 +33,7 @@ export default function NotesPage() {
   const [editingId, setEditingId] = useState<string | null>(null);
   const [draft, setDraft] = useState("");
   const [message, setMessage] = useState("");
+  const [search, setSearch] = useState("");
 
   async function loadNotes() {
     const {
@@ -97,6 +99,24 @@ export default function NotesPage() {
     await loadNotes();
   }
 
+  const filteredNotes = useMemo(() => {
+    const query = search.trim().toLowerCase();
+
+    if (!query) return notes;
+
+    return notes.filter((note) =>
+      [
+        note.title,
+        note.body,
+        note.lesson_title || "",
+        note.world_slug || "",
+      ]
+        .join(" ")
+        .toLowerCase()
+        .includes(query)
+    );
+  }, [notes, search]);
+
   return (
     <main className="min-h-screen bg-[#F8FBFF] px-5 py-8 font-sans text-[#0B1739] sm:px-8">
       <div className="mx-auto max-w-5xl">
@@ -120,6 +140,16 @@ export default function NotesPage() {
           </div>
 
           <div className="p-5 sm:p-7">
+            <div className="relative mb-5">
+              <Search className="pointer-events-none absolute left-3.5 top-3.5 h-4 w-4 text-[#7A8AA0]" />
+              <input
+                value={search}
+                onChange={(event) => setSearch(event.target.value)}
+                placeholder="Search your notes by lesson, topic, or words you wrote..."
+                className="h-11 w-full rounded-xl border border-[#D7E3F2] bg-white pl-10 pr-4 text-sm outline-none focus:border-[#1677FF] focus:ring-2 focus:ring-[#1677FF]/15"
+              />
+            </div>
+
             {message && (
               <div className="mb-5 rounded-xl border border-[#CFE0F5] bg-[#F1F7FF] px-4 py-3 text-sm text-[#40536D]">
                 {message}
@@ -146,9 +176,17 @@ export default function NotesPage() {
                   </Link>
                 </div>
               </div>
+            ) : filteredNotes.length === 0 ? (
+              <div className="rounded-2xl border border-dashed border-[#CFE0F5] bg-[#F8FBFF] px-6 py-12 text-center">
+                <Search className="mx-auto h-7 w-7 text-[#1677FF]" />
+                <h2 className="mt-3 font-extrabold">No matching notes</h2>
+                <p className="mt-2 text-sm text-[#53657D]">
+                  Try a different word, lesson title, or topic.
+                </p>
+              </div>
             ) : (
               <div className="grid gap-4">
-                {notes.map((note) => (
+                {filteredNotes.map((note) => (
                   <article
                     key={note.id}
                     className="rounded-2xl border border-[#D7E3F2] bg-white p-5"
