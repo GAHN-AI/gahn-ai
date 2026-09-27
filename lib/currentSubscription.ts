@@ -22,7 +22,11 @@ export async function getCurrentSubscription(userId: string) {
   const storedPlanId =
     (data?.plan_id as SubscriptionPlanId | undefined) ?? "explore";
 
+  const paidSubscriptionsEnabled =
+    process.env.STRIPE_CHECKOUT_ENABLED === "true";
+
   const hasPaidAccess =
+    paidSubscriptionsEnabled &&
     storedPlanId !== "explore" &&
     ACCESS_STATUSES.has(data?.status ?? "");
 
