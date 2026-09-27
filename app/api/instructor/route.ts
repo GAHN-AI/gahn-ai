@@ -257,6 +257,12 @@ async function callTeachingModel(
         },
       ],
       max_output_tokens: 1200,
+      store: false,
+      text: {
+        format: {
+          type: "json_object",
+        },
+      },
     }),
   });
 
