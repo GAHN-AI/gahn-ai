@@ -153,15 +153,43 @@ async function callTeachingModel(
     };
   }
 
-  const { data: memoryRows } = await supabaseAdmin
-    .from("learner_memory")
-    .select("concept, state, last_evidence")
-    .eq("user_id", userId)
-    .order("last_seen_at", { ascending: false })
-    .limit(8);
+  const [{ data: memoryRows }, { data: learnerProfile }] =
+    await Promise.all([
+      supabaseAdmin
+        .from("learner_memory")
+        .select("concept, state, last_evidence")
+        .eq("user_id", userId)
+        .order("last_seen_at", { ascending: false })
+        .limit(8),
+      supabaseAdmin
+        .from("profiles")
+        .select("learner_role, learning_pace, explanation_style")
+        .eq("id", userId)
+        .maybeSingle(),
+    ]);
 
   const prompt = buildInstructorPrompt({
-    learnerRole: "unknown",
+    learnerRole:
+      (learnerProfile?.learner_role as
+        | "student"
+        | "self_learner"
+        | "teacher"
+        | "professor"
+        | "other"
+        | undefined) || "unknown",
+    learningPace:
+      (learnerProfile?.learning_pace as
+        | "slower"
+        | "steady"
+        | "faster"
+        | undefined) || "steady",
+    explanationStyle:
+      (learnerProfile?.explanation_style as
+        | "balanced"
+        | "visual"
+        | "step_by_step"
+        | "examples_first"
+        | undefined) || "balanced",
     worldTitle: body.worldTitle,
     sectionTitle: body.sectionTitle || undefined,
     topic: body.topic,
