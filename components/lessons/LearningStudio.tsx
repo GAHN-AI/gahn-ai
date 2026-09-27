@@ -1,7 +1,8 @@
 "use client";
 
-import { FormEvent, useEffect, useMemo, useState } from "react";
+import { FormEvent, useEffect, useMemo, useRef, useState } from "react";
 import {
+  ArrowRight,
   BookOpenCheck,
   Bot,
   Check,
@@ -39,6 +40,9 @@ type Props = {
   lessonPoints: string[];
   instructorName: string;
   language: string;
+  nextLessonHref?: string | null;
+  nextLessonTitle?: string | null;
+  onMastered?: () => void;
 };
 
 type SpeechResult = {
@@ -81,6 +85,9 @@ export default function LearningStudio({
   lessonPoints,
   instructorName,
   language,
+  nextLessonHref,
+  nextLessonTitle,
+  onMastered,
 }: Props) {
   const lessonId = useMemo(
     () => lessonIdFromParts(worldSlug, topicSlug || undefined, lessonTitle),
@@ -105,6 +112,21 @@ export default function LearningStudio({
   const [uploadedFileName, setUploadedFileName] = useState("");
   const [fileQuestion, setFileQuestion] = useState("");
   const [fileAnalysis, setFileAnalysis] = useState("");
+  const masteryNotifiedRef = useRef(false);
+
+  useEffect(() => {
+    masteryNotifiedRef.current = false;
+  }, [lessonId]);
+
+  useEffect(() => {
+    if (
+      turn?.evaluation.state === "mastered" &&
+      !masteryNotifiedRef.current
+    ) {
+      masteryNotifiedRef.current = true;
+      onMastered?.();
+    }
+  }, [turn?.evaluation.state, onMastered]);
 
   useEffect(() => {
     let cancelled = false;
@@ -647,6 +669,30 @@ export default function LearningStudio({
                   <Send className="h-5 w-5" />
                 </button>
               </form>
+
+              {turn?.evaluation.state === "mastered" && (
+                <div className="mt-3 rounded-xl border border-[#BFD8F8] bg-[#F1F7FF] p-3">
+                  <p className="text-xs font-bold uppercase tracking-[0.12em] text-[#1677FF]">
+                    Lesson mastered
+                  </p>
+                  <p className="mt-1 text-sm leading-6 text-[#40536D]">
+                    GAHN recorded enough evidence to complete this lesson.
+                  </p>
+                  {nextLessonHref ? (
+                    <a
+                      href={nextLessonHref}
+                      className="mt-3 inline-flex items-center gap-2 rounded-lg bg-[#1677FF] px-4 py-2.5 text-sm font-bold text-white"
+                    >
+                      Next: {nextLessonTitle || "Next lesson"}
+                      <ArrowRight className="h-4 w-4" />
+                    </a>
+                  ) : (
+                    <p className="mt-2 text-sm font-bold text-[#0B1739]">
+                      You completed the final lesson in this path.
+                    </p>
+                  )}
+                </div>
+              )}
             </div>
           </>
         )}
