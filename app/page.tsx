@@ -4,7 +4,20 @@ import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import type { ReactNode } from "react";
 import { MotionConfig, motion } from "framer-motion";
-import { ArrowRight, Check, ChevronDown, Menu, X } from "lucide-react";
+import {
+  ArrowRight,
+  BookOpenCheck,
+  Brain,
+  BriefcaseBusiness,
+  Check,
+  ChevronDown,
+  CircleDot,
+  Globe2,
+  GraduationCap,
+  Menu,
+  Sparkles,
+  X,
+} from "lucide-react";
 
 const navLinks = [
   { href: "#top", label: "Home" },
@@ -17,27 +30,22 @@ const worlds = [
   {
     title: "Career Skills",
     text: "Business, leadership, entrepreneurship, communication, and job-ready skills.",
-    image: "/instructors/alexCareerSkills.png",
   },
   {
     title: "School Help",
     text: "Math, science, writing, reading, study support, and guided homework help.",
-    image: "/instructors/HenrySchoolHelp.jpg",
   },
   {
     title: "Brain Development",
     text: "Memory, focus, discipline, reasoning, habits, and learning performance.",
-    image: "/instructors/AanyaBrainDevelopment.png",
   },
   {
     title: "General Knowledge",
     text: "History, technology, communication, culture, life skills, current events, and real-world knowledge.",
-    image: "/instructors/sarahGeneralKnowledge.png",
   },
   {
     title: "Book Intelligence",
     text: "Turn books into summaries, lessons, quizzes, notes, and study paths.",
-    image: "/instructors/HannahBookIntelligence.jpg",
   },
 ];
 
@@ -309,35 +317,98 @@ function SiteHeader({ overHero }: { overHero: boolean }) {
   );
 }
 
-function WorldCard({ title, text, image }: { title: string; text: string; image: string }) {
+function WorldPreview({ title }: { title: string }) {
+  const configs = {
+    "Career Skills": {
+      Icon: BriefcaseBusiness,
+      eyebrow: "Entrepreneurship",
+      headline: "SaaS business model",
+      items: ["Customer problem", "Monthly subscription", "Working MVP"],
+    },
+    "School Help": {
+      Icon: GraduationCap,
+      eyebrow: "Grade 9 Math",
+      headline: "Linear functions",
+      items: ["Find the slope", "Graph the line", "Check your answer"],
+    },
+    "Brain Development": {
+      Icon: Brain,
+      eyebrow: "Memory",
+      headline: "Active recall",
+      items: ["Learn", "Close the notes", "Recall from memory"],
+    },
+    "General Knowledge": {
+      Icon: Globe2,
+      eyebrow: "Economics",
+      headline: "Supply & demand",
+      items: ["Price changes", "Buyer demand", "Market response"],
+    },
+    "Book Intelligence": {
+      Icon: BookOpenCheck,
+      eyebrow: "Critical Analysis",
+      headline: "Test the author’s claim",
+      items: ["Main claim", "Evidence", "Counterargument"],
+    },
+  } as const;
+
+  const config =
+    configs[title as keyof typeof configs] || configs["Career Skills"];
+  const Icon = config.Icon;
+
+  return (
+    <div className="rounded-2xl border border-[#D7E3F2] bg-[#F8FBFF] p-4">
+      <div className="flex items-center justify-between gap-3">
+        <div className="grid h-9 w-9 place-items-center rounded-xl bg-[#EAF3FF] text-[#1677FF]">
+          <Icon className="h-4.5 w-4.5" strokeWidth={1.8} />
+        </div>
+        <span className="rounded-full border border-[#CFE0F5] bg-white px-2.5 py-1 text-[10px] font-bold uppercase tracking-[0.12em] text-[#1677FF]">
+          Magic Canvas
+        </span>
+      </div>
+
+      <p className="mt-4 text-[10px] font-bold uppercase tracking-[0.14em] text-[#7A8AA0]">
+        {config.eyebrow}
+      </p>
+      <p className="mt-1 text-sm font-bold text-[#0B1739]">
+        {config.headline}
+      </p>
+
+      <div className="mt-3 grid gap-2">
+        {config.items.map((item, index) => (
+          <div
+            key={item}
+            className="flex items-center gap-2 rounded-lg border border-[#E1E8F1] bg-white px-3 py-2"
+          >
+            {index === config.items.length - 1 ? (
+              <CircleDot className="h-3.5 w-3.5 shrink-0 text-[#1677FF]" />
+            ) : (
+              <Check className="h-3.5 w-3.5 shrink-0 text-[#1677FF]" />
+            )}
+            <span className="text-xs font-semibold text-[#40536D]">{item}</span>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+function WorldCard({ title, text }: { title: string; text: string }) {
   return (
     <Link
       href="/signup"
-      className="group flex h-full min-h-[168px] flex-row overflow-hidden rounded-3xl border border-gahn-line bg-white transition-shadow duration-300 hover:shadow-[0_24px_48px_-24px_rgba(11,23,57,0.25)] sm:min-h-[184px] lg:min-h-[208px]"
+      className="group grid h-full overflow-hidden rounded-3xl border border-gahn-line bg-white p-5 transition-shadow duration-300 hover:shadow-[0_24px_48px_-24px_rgba(11,23,57,0.25)] sm:p-6 lg:grid-cols-[minmax(0,1fr)_220px] lg:gap-6"
     >
-      <div className="relative w-28 flex-none overflow-hidden bg-gahn-night-2 sm:w-32 md:w-36 lg:w-40">
-        <img
-          src={image}
-          alt={`${title} Instructor`}
-          className={`absolute inset-0 h-full w-full transition-transform duration-700 ease-out group-hover:scale-[1.03] ${
-            title === "Career Skills"
-              ? "object-cover object-top"
-              : "object-cover object-[center_15%]"
-          }`}
-        />
-        <div
-          aria-hidden="true"
-          className="absolute inset-x-0 bottom-0 h-12 bg-gradient-to-t from-gahn-night/20 to-transparent"
-        />
-      </div>
-
-      <div className="flex min-w-0 flex-1 flex-col p-4 sm:p-5 lg:p-6">
+      <div className="flex min-w-0 flex-col">
         <h3 className="text-xl font-semibold tracking-[-0.02em] text-gahn-navy">{title}</h3>
         <p className="mt-2 flex-1 text-[15px] leading-7 text-gahn-slate">{text}</p>
         <span className="mt-5 inline-flex items-center gap-1.5 text-sm font-semibold text-gahn-blue">
           Start learning
           <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" />
         </span>
+      </div>
+
+      <div className="mt-5 lg:mt-0">
+        <WorldPreview title={title} />
       </div>
     </Link>
   );
@@ -466,7 +537,7 @@ export default function Home() {
             <SectionHeading
               eyebrow="Learning Worlds"
               title="Five worlds. One way of learning."
-              text="Each world is designed around a different learning goal. Start with the area you care about most, then grow into new topics as your confidence builds."
+              text="Each world opens a structured path and an interactive Magic Canvas. The previews below show the product itself instead of stock instructor photos."
             />
 
             <div className="mt-14 grid gap-5 sm:grid-cols-2">
