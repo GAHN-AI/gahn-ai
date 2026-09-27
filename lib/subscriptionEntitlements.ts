@@ -86,7 +86,7 @@ export const SUBSCRIPTION_ENTITLEMENTS: Record<
 > = {
   explore: {
     planId: "explore",
-    name: "Explore",
+    name: "Early Access",
     monthlyPrice: 0,
 
     purchaseEnabled: true,
