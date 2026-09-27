@@ -151,6 +151,8 @@ export default function LearningStudio({
   const [uploadedFileName, setUploadedFileName] = useState("");
   const [fileQuestion, setFileQuestion] = useState("");
   const [fileAnalysis, setFileAnalysis] = useState("");
+  const [pendingResponseAction, setPendingResponseAction] =
+    useState<TeachingAction>("respond");
   const masteryNotifiedRef = useRef(false);
 
   useEffect(() => {
@@ -236,6 +238,18 @@ export default function LearningStudio({
       setSessionId(data.sessionId || null);
       setTurn(data.turn);
       setAiConnected(Boolean(data.aiConnected));
+
+      if (!learnerMessage) {
+        if (action === "mastery_check") {
+          setPendingResponseAction("mastery_check");
+        } else if (action === "review") {
+          setPendingResponseAction("review");
+        } else {
+          setPendingResponseAction("respond");
+        }
+      } else {
+        setPendingResponseAction("respond");
+      }
       setMessages((current) => [
         ...current,
         {
@@ -273,7 +287,9 @@ export default function LearningStudio({
     ]);
     setInput("");
 
-    await requestInstructor(clean, "respond");
+    const action = pendingResponseAction;
+    setPendingResponseAction("respond");
+    await requestInstructor(clean, action);
   }
 
   function submitMessage(event: FormEvent) {
