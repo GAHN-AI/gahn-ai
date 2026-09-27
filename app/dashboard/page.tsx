@@ -4,6 +4,11 @@ import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import { supabase } from "@/lib/supabaseClient";
+import { careerSections } from "@/lib/careerCatalog";
+import {
+  learningSectionsByWorld,
+  slugifyLearningTitle,
+} from "@/lib/learningCatalog";
 import type { LucideIcon } from "lucide-react";
 import {
   Award,
@@ -143,6 +148,7 @@ export default function DashboardPage() {
   const [planName, setPlanName] = useState("Early Access");
   const [progressRows, setProgressRows] = useState<ProgressRow[]>([]);
   const [notesCount, setNotesCount] = useState(0);
+  const [searchQuery, setSearchQuery] = useState("");
   const avatarColor = useMemo(() => getInitialColor(fullName), [fullName]);
 
   useEffect(() => {
@@ -218,6 +224,48 @@ if (subscriptionResponse.ok) {
 
     loadUserProfile();
   }, [router]);
+
+  const searchResults = useMemo(() => {
+    const query = searchQuery.trim().toLowerCase();
+    if (!query) return [];
+
+    const careerResults = careerSections.map((section) => ({
+      title: section.title,
+      subtitle: "Career Skills",
+      description: section.description,
+      href: `/learn/career-skills/${section.slug}/${slugifyLearningTitle(
+        section.title
+      )}`,
+    }));
+
+    const learningResults = Object.entries(learningSectionsByWorld).flatMap(
+      ([worldSlug, sections]) =>
+        sections.flatMap((section) =>
+          section.options.map((option) => ({
+            title:
+              option.title === section.title
+                ? section.title
+                : `${section.title} · ${option.title}`,
+            subtitle:
+              worlds.find((world) => world.slug === worldSlug)?.title ||
+              worldSlug,
+            description: option.description,
+            href: `/learn/${worldSlug}/${section.slug}/${slugifyLearningTitle(
+              option.title
+            )}`,
+          }))
+        )
+    );
+
+    return [...careerResults, ...learningResults]
+      .filter((item) =>
+        [item.title, item.subtitle, item.description]
+          .join(" ")
+          .toLowerCase()
+          .includes(query)
+      )
+      .slice(0, 8);
+  }, [searchQuery]);
 
   const activeLessons = progressRows.filter(
     (row) => row.status === "in_progress"
@@ -299,13 +347,51 @@ if (subscriptionResponse.ok) {
             <header className="flex flex-col gap-4 xl:flex-row xl:items-center xl:justify-between">
               <div className="relative w-full xl:max-w-xl">
                 <input
-                  placeholder="Search for skills, topics, careers..."
+                  value={searchQuery}
+                  onChange={(event) => setSearchQuery(event.target.value)}
+                  placeholder="Search skills, school subjects, books, or topics..."
                   className="h-12 w-full rounded-lg border border-[#D7E3F2] bg-white px-5 pr-12 text-sm text-[#0B1739] outline-none focus:border-[#1677FF] focus:ring-2 focus:ring-[#1677FF]/15"
                 />
                 <Search
                   className="pointer-events-none absolute right-4 top-3.5 h-5 w-5 text-[#53657D]"
                   strokeWidth={1.75}
                 />
+
+                {searchQuery.trim() && (
+                  <div className="absolute left-0 right-0 top-14 z-40 overflow-hidden rounded-2xl border border-[#D7E3F2] bg-white shadow-[0_20px_50px_rgba(11,23,57,0.14)]">
+                    {searchResults.length ? (
+                      searchResults.map((result) => (
+                        <Link
+                          key={result.href}
+                          href={result.href}
+                          onClick={() => setSearchQuery("")}
+                          className="block border-b border-[#EEF2F7] px-4 py-3 last:border-b-0 hover:bg-[#F8FBFF]"
+                        >
+                          <div className="flex items-center justify-between gap-3">
+                            <div className="min-w-0">
+                              <p className="truncate text-sm font-bold text-[#0B1739]">
+                                {result.title}
+                              </p>
+                              <p className="mt-0.5 text-xs font-semibold text-[#1677FF]">
+                                {result.subtitle}
+                              </p>
+                              <p className="mt-1 line-clamp-1 text-xs text-[#53657D]">
+                                {result.description}
+                              </p>
+                            </div>
+                            <span className="shrink-0 text-sm font-bold text-[#1677FF]">
+                              →
+                            </span>
+                          </div>
+                        </Link>
+                      ))
+                    ) : (
+                      <div className="px-4 py-5 text-center text-sm text-[#53657D]">
+                        No matching learning path yet.
+                      </div>
+                    )}
+                  </div>
+                )}
               </div>
 
               <div className="flex flex-wrap items-center justify-end gap-3">
