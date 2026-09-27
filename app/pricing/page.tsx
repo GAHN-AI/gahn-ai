@@ -13,7 +13,7 @@ const earlyAccessFeatures = [
   "Access all 5 learning worlds",
   "AI-guided lessons and structured learning paths",
   "Live AI instructor experiences as they become available",
-  "Real-time voice learning with supported AI instructors",
+  "Voice input and read-aloud learning in supported browsers",
   "Interactive visual explanations, examples, quizzes, and guided practice",
   "Adaptive reteaching when you make mistakes",
   "Homework photo, screenshot, PDF, and document support",
@@ -23,8 +23,8 @@ const earlyAccessFeatures = [
   "Searchable personal notes",
   "Generated study guides and review questions",
   "Multilingual instruction across supported languages",
-  "Mastery checks and guided practice",
-  "Learning history and progress tracking",
+  "Evidence-based mastery checks and guided practice",
+  "Learning history with real attempts, retries, and mastery states",
   "Access to new early-access learning features as they are released",
 ];
 
