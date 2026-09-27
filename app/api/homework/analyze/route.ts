@@ -5,6 +5,10 @@ import { cookies } from "next/headers";
 import { supabaseAdmin } from "@/lib/supabaseAdmin";
 import { requireEntitlement } from "@/lib/requireEntitlement";
 import { extractOpenAIText } from "@/lib/ai/lessonEngine";
+import {
+  checkAiUsageLimit,
+  recordAiUsage,
+} from "@/lib/ai/usageLimits";
 
 export const runtime = "nodejs";
 
@@ -114,6 +118,24 @@ export async function POST(req: Request) {
       );
     }
 
+    const usage = await checkAiUsageLimit({
+      userId: user.id,
+      planId: fileAccess.planId,
+      kind: "file_analysis",
+    });
+
+    if (!usage.allowed) {
+      return NextResponse.json(
+        {
+          error:
+            "You reached today’s adaptive file-analysis limit. The file is still saved to your learning account.",
+          uploaded: true,
+          limitReached: true,
+        },
+        { status: 429 }
+      );
+    }
+
     await supabaseAdmin
       .from("learning_files")
       .update({
@@ -211,6 +233,19 @@ export async function POST(req: Request) {
       })
       .eq("id", learningFile.id)
       .eq("user_id", user.id);
+
+    await recordAiUsage({
+      userId: user.id,
+      planId: fileAccess.planId,
+      kind: "file_analysis",
+      model: process.env.OPENAI_TEACHING_MODEL || "gpt-5.6-luna",
+      metadata: {
+        fileId: learningFile.id,
+        fileName: learningFile.file_name,
+        worldSlug: learningFile.world_slug,
+        topic: learningFile.topic,
+      },
+    });
 
     return NextResponse.json({
       fileId: learningFile.id,
