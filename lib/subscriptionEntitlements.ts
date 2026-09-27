@@ -92,12 +92,12 @@ export const SUBSCRIPTION_ENTITLEMENTS: Record<
     purchaseEnabled: true,
 
     allLearningWorlds: true,
-    multilingualLearning: false,
-    adaptiveLearning: false,
-    masteryAssessments: false,
+    multilingualLearning: true,
+    adaptiveLearning: true,
+    masteryAssessments: true,
 
-    liveInstructor: false,
-    liveInstructorMinutesPerMonth: 0,
+    liveInstructor: true,
+    liveInstructorMinutesPerMonth: null,
 
     learningCanvas: true,
     advancedLearningCanvas: false,
@@ -105,17 +105,17 @@ export const SUBSCRIPTION_ENTITLEMENTS: Record<
     browserLearning: false,
 
     homeworkHelp: true,
-    fileUploads: false,
+    fileUploads: true,
     advancedFileAnalysis: false,
 
-    learnerMemory: false,
+    learnerMemory: true,
     advancedLearnerMemory: false,
-    progressTracking: false,
+    progressTracking: true,
     advancedAnalytics: false,
 
     notes: true,
-    studyGuides: false,
-    reviewQuestions: false,
+    studyGuides: true,
+    reviewQuestions: true,
 
     careerPrograms: false,
     careerProjects: false,
