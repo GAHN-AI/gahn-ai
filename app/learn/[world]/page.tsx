@@ -35,7 +35,7 @@ const learningWorlds: Record<string, LearningWorld> = {
     title: "Career Skills",
     eyebrow: "Career Library",
     description:
-      "Choose a career field, explore the paths inside it, preview exactly what you will learn, then enter a private AI-guided learning experience.",
+      "Choose one of the ten core career skills for the MVP, preview what you will learn, then enter a private AI-guided learning experience.",
     placeholder:
       "Search a career or skill: web development, nursing, finance, electrician...",
     Icon: Briefcase,
@@ -44,7 +44,7 @@ const learningWorlds: Record<string, LearningWorld> = {
     title: "School Help",
     eyebrow: "School Learning",
     description:
-      "Learn by grade level like a complete academic library, get help across core subjects, and bring real homework when you need step-by-step support.",
+      "Choose one of four core subjects first, then select Grade 6 through College for a focused learning path.",
     placeholder:
       "Search a school topic: algebra, biology, essay writing, chemistry...",
     Icon: GraduationCap,
@@ -104,7 +104,7 @@ function SectionCard({
         </div>
 
         <span className="rounded-full bg-[#F1F7FF] px-3 py-1 text-xs font-bold text-[#1677FF]">
-          {count} options
+          {count} {count === 1 ? "option" : "options"}
         </span>
       </div>
 
@@ -190,41 +190,6 @@ export default function LearningWorldPage() {
   const sectionHref = (slug: string) =>
     `/learn/${world}/${slug}?language=${encodeURIComponent(language)}`;
 
-  const schoolGroups =
-    world === "school-help"
-      ? [
-          {
-            title: "Elementary School",
-            description: "Grades 1–5",
-            items: sections.filter((section) =>
-              ["grade-1", "grade-2", "grade-3", "grade-4", "grade-5"].includes(
-                section.slug
-              )
-            ),
-          },
-          {
-            title: "Middle School",
-            description: "Grades 6–8",
-            items: sections.filter((section) =>
-              ["grade-6", "grade-7", "grade-8"].includes(section.slug)
-            ),
-          },
-          {
-            title: "High School",
-            description: "Grades 9–12",
-            items: sections.filter((section) =>
-              ["grade-9", "grade-10", "grade-11", "grade-12"].includes(
-                section.slug
-              )
-            ),
-          },
-          {
-            title: "College",
-            description: "College-level support",
-            items: sections.filter((section) => section.slug === "college"),
-          },
-        ]
-      : [];
 
   return (
     <main className="min-h-screen bg-[#F8FBFF] px-5 py-8 font-sans text-[#0B1739] sm:px-8 lg:px-10">
@@ -334,117 +299,34 @@ export default function LearningWorldPage() {
         </section>
 
         {world === "school-help" && (
-          <>
-            <section className="mt-10 rounded-[1.6rem] border border-[#BFD7F7] bg-white p-6 shadow-[0_14px_38px_rgba(11,23,57,0.06)] sm:p-8">
-              <div className="grid gap-6 lg:grid-cols-[1.2fr_0.8fr] lg:items-center">
-                <div>
-                  <div className="flex items-center gap-3">
-                    <div className="grid h-12 w-12 place-items-center rounded-xl bg-[#EAF3FF] text-[#1677FF]">
-                      <FileUp className="h-5 w-5" strokeWidth={1.75} />
-                    </div>
-                    <div>
-                      <p className="text-xs font-bold uppercase tracking-[0.2em] text-[#1677FF]">
-                        Homework Help
-                      </p>
-                      <h2 className="mt-1 text-2xl font-extrabold tracking-[-0.02em]">
-                        Bring the assignment you actually received
-                      </h2>
-                    </div>
-                  </div>
+          <section className="mt-10">
+            <div>
+              <p className="text-xs font-bold uppercase tracking-[0.22em] text-[#1677FF]">
+                School Help
+              </p>
+              <h2 className="mt-2 text-3xl font-extrabold tracking-[-0.03em]">
+                Choose a subject
+              </h2>
+              <p className="mt-2 max-w-3xl text-sm leading-6 text-[#53657D]">
+                Start with one of the four MVP subjects. After choosing a subject,
+                select Grade 6 through Grade 12 or College.
+              </p>
+            </div>
 
-                  <p className="mt-4 max-w-3xl text-sm leading-7 text-[#53657D] sm:text-base">
-                    Upload a PDF, document, screenshot, or photo of a physical
-                    worksheet. GAHN is designed to teach the concepts, explain the
-                    instructions, check your work, and guide you step by step.
-                  </p>
-
-                  <Link
-                    href={`/learn/school-help/homework-help?language=${encodeURIComponent(
-                      language
-                    )}`}
-                    className="mt-5 inline-flex items-center gap-2 rounded-xl bg-[#1677FF] px-5 py-3 text-sm font-bold text-white hover:bg-[#0F65E8]"
-                  >
-                    Open Homework Help
-                    <ArrowRight className="h-4 w-4" />
-                  </Link>
-                </div>
-
-                <div className="grid grid-cols-2 gap-3">
-                  <div className="rounded-2xl border border-[#D7E3F2] bg-[#F8FBFF] p-5">
-                    <Camera className="h-5 w-5 text-[#1677FF]" strokeWidth={1.75} />
-                    <p className="mt-3 font-bold">Photo or screenshot</p>
-                    <p className="mt-1 text-xs leading-5 text-[#53657D]">
-                      Use a phone photo for physical worksheets and handwritten work.
-                    </p>
-                  </div>
-                  <div className="rounded-2xl border border-[#D7E3F2] bg-[#F8FBFF] p-5">
-                    <FileUp className="h-5 w-5 text-[#1677FF]" strokeWidth={1.75} />
-                    <p className="mt-3 font-bold">School file</p>
-                    <p className="mt-1 text-xs leading-5 text-[#53657D]">
-                      Select PDFs, documents, images, or text-based assignments.
-                    </p>
-                  </div>
-                </div>
-              </div>
-            </section>
-
-            <section className="mt-10">
-              <div>
-                <p className="text-xs font-bold uppercase tracking-[0.22em] text-[#1677FF]">
-                  Grade-Level Learning
-                </p>
-                <h2 className="mt-2 text-3xl font-extrabold tracking-[-0.03em]">
-                  Choose your grade level
-                </h2>
-                <p className="mt-2 max-w-3xl text-sm leading-6 text-[#53657D]">
-                  Each grade opens a subject library. Choose a subject to preview
-                  what you will learn before entering the AI lesson.
-                </p>
-              </div>
-
-              <div className="mt-7 space-y-8">
-                {schoolGroups.map((group) => (
-                  <div key={group.title}>
-                    <div className="flex items-end justify-between gap-4">
-                      <div>
-                        <h3 className="text-xl font-extrabold">{group.title}</h3>
-                        <p className="mt-1 text-sm text-[#53657D]">
-                          {group.description}
-                        </p>
-                      </div>
-                    </div>
-
-                    <div className="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-                      {group.items.map((section) => (
-                        <Link
-                          key={section.slug}
-                          href={sectionHref(section.slug)}
-                          className="rounded-2xl border border-[#D7E3F2] bg-white p-5 shadow-[0_10px_28px_rgba(11,23,57,0.04)] hover:border-[#1677FF]/45 hover:shadow-md"
-                        >
-                          <div className="flex items-center justify-between gap-3">
-                            <div className="grid h-10 w-10 place-items-center rounded-xl bg-[#EAF3FF] text-[#1677FF]">
-                              <GraduationCap className="h-4.5 w-4.5" strokeWidth={1.75} />
-                            </div>
-                            <span className="text-xs font-bold text-[#53657D]">
-                              {section.options.length} subjects
-                            </span>
-                          </div>
-                          <h4 className="mt-4 text-lg font-extrabold">{section.title}</h4>
-                          <p className="mt-2 text-sm leading-6 text-[#53657D]">
-                            {section.description}
-                          </p>
-                          <div className="mt-4 flex items-center gap-2 text-sm font-bold text-[#1677FF]">
-                            View subjects
-                            <ArrowRight className="h-4 w-4" />
-                          </div>
-                        </Link>
-                      ))}
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </section>
-          </>
+            <div className="mt-6 grid gap-5 md:grid-cols-2">
+              {sections.map((section) => (
+                <SectionCard
+                  key={section.slug}
+                  href={sectionHref(section.slug)}
+                  title={section.title}
+                  description={section.description}
+                  count={section.options.length}
+                  Icon={GraduationCap}
+                  label="Choose level"
+                />
+              ))}
+            </div>
+          </section>
         )}
 
         {world === "career-skills" && (
@@ -454,7 +336,7 @@ export default function LearningWorldPage() {
                 Career Library
               </p>
               <h2 className="mt-2 text-3xl font-extrabold tracking-[-0.03em]">
-                Choose a career field
+                Choose a career skill
               </h2>
               <p className="mt-2 max-w-3xl text-sm leading-6 text-[#53657D]">
                 Open a field, choose a career or professional skill, then preview
@@ -472,7 +354,7 @@ export default function LearningWorldPage() {
                   description={section.description}
                   count={section.lessons.length}
                   Icon={Briefcase}
-                  label="Explore careers"
+                  label="Open lesson"
                 />
               ))}
             </div>
