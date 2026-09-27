@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useEffect, useState } from "react";
-import { useParams, useSearchParams } from "next/navigation";
+import { useParams, useRouter, useSearchParams } from "next/navigation";
 import {
   ArrowLeft,
   BookOpen,
@@ -17,6 +17,8 @@ import LanguageSelector from "@/components/LanguageSelector";
 import { getCareerSection } from "@/lib/careerCatalog";
 import { getLearningSection } from "@/lib/learningCatalog";
 import { getMvpLearningPath } from "@/lib/mvpLearningPaths";
+import { lessonIdFromParts } from "@/lib/ai/lessonEngine";
+import { supabase } from "@/lib/supabaseClient";
 
 const worldInformation = {
   "career-skills": { title: "Career Skills", instructor: "Maya" },
@@ -36,6 +38,7 @@ function formatSlug(value: string) {
 }
 
 export default function LessonPage() {
+  const router = useRouter();
   const params = useParams<{ lessonId: string }>();
   const searchParams = useSearchParams();
   const lessonId = params.lessonId;
@@ -83,7 +86,125 @@ export default function LessonPage() {
       : null;
 
   const courseSections = learningPath?.sections ?? [];
-  const currentLesson = courseSections[0]?.lessons[0] || requestedTopic;
+  const requestedSectionIndex = Number(searchParams.get("sectionIndex") || "0");
+  const requestedLessonIndex = Number(searchParams.get("lessonIndex") || "0");
+
+  const flatLessons = courseSections.flatMap((courseSection, sectionIndex) =>
+    courseSection.lessons.map((lessonTitle, lessonIndex) => ({
+      sectionIndex,
+      lessonIndex,
+      lessonTitle,
+      sectionTitle: courseSection.title,
+      lessonId: lessonIdFromParts(
+        resolvedWorldSlug,
+        topicSlug || undefined,
+        lessonTitle
+      ),
+    }))
+  );
+
+  const selectedLesson =
+    flatLessons.find(
+      (lesson) =>
+        lesson.sectionIndex === requestedSectionIndex &&
+        lesson.lessonIndex === requestedLessonIndex
+    ) || flatLessons[0];
+
+  const currentLesson = selectedLesson?.lessonTitle || requestedTopic;
+  const currentFlatIndex = selectedLesson
+    ? flatLessons.findIndex((lesson) => lesson.lessonId === selectedLesson.lessonId)
+    : 0;
+  const nextLesson =
+    currentFlatIndex >= 0 ? flatLessons[currentFlatIndex + 1] : undefined;
+  const previousLesson =
+    currentFlatIndex > 0 ? flatLessons[currentFlatIndex - 1] : undefined;
+
+  const [masteredLessonIds, setMasteredLessonIds] = useState<Set<string>>(
+    new Set()
+  );
+  const [progressLoaded, setProgressLoaded] = useState(false);
+
+  useEffect(() => {
+    let cancelled = false;
+
+    async function loadMastery() {
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
+
+      if (!user || cancelled) {
+        setProgressLoaded(true);
+        return;
+      }
+
+      const { data } = await supabase
+        .from("learning_progress")
+        .select("lesson_id")
+        .eq("user_id", user.id)
+        .eq("world_slug", resolvedWorldSlug)
+        .eq("topic", requestedTopic)
+        .eq("mastery_state", "mastered");
+
+      if (!cancelled) {
+        setMasteredLessonIds(
+          new Set((data || []).map((row) => String(row.lesson_id)))
+        );
+        setProgressLoaded(true);
+      }
+    }
+
+    void loadMastery();
+
+    return () => {
+      cancelled = true;
+    };
+  }, [requestedTopic, resolvedWorldSlug]);
+
+  function lessonHref(sectionIndex: number, lessonIndex: number) {
+    return `/lesson/custom?world=${encodeURIComponent(
+      resolvedWorldSlug
+    )}&section=${encodeURIComponent(
+      learningSection || ""
+    )}&topic=${encodeURIComponent(
+      requestedTopic
+    )}&topicSlug=${encodeURIComponent(
+      topicSlug || ""
+    )}&language=${encodeURIComponent(
+      language
+    )}&sectionIndex=${sectionIndex}&lessonIndex=${lessonIndex}`;
+  }
+
+  useEffect(() => {
+    if (!progressLoaded || !previousLesson) return;
+
+    const previousMastered = masteredLessonIds.has(previousLesson.lessonId);
+
+    if (!previousMastered) {
+      const lastUnlockedIndex = flatLessons.reduce((last, lesson, index) => {
+        if (index === 0) return 0;
+        const prior = flatLessons[index - 1];
+        return masteredLessonIds.has(prior.lessonId) ? index : last;
+      }, 0);
+
+      const fallback = flatLessons[lastUnlockedIndex];
+      if (
+        fallback &&
+        (fallback.sectionIndex !== requestedSectionIndex ||
+          fallback.lessonIndex !== requestedLessonIndex)
+      ) {
+        router.replace(
+          lessonHref(fallback.sectionIndex, fallback.lessonIndex)
+        );
+      }
+    }
+  }, [
+    progressLoaded,
+    previousLesson?.lessonId,
+    requestedSectionIndex,
+    requestedLessonIndex,
+    masteredLessonIds,
+    router,
+  ]);
 
   const backHref =
     learningSection && topicSlug
@@ -169,9 +290,26 @@ export default function LessonPage() {
           topicSlug={topicSlug}
           topic={requestedTopic}
           lessonTitle={currentLesson}
-          lessonPoints={courseSections[0]?.lessons ?? [currentLesson]}
+          lessonPoints={
+            courseSections[selectedLesson?.sectionIndex ?? 0]?.lessons ??
+            [currentLesson]
+          }
           instructorName={world.instructor}
           language={language}
+          nextLessonHref={
+            nextLesson
+              ? lessonHref(nextLesson.sectionIndex, nextLesson.lessonIndex)
+              : null
+          }
+          nextLessonTitle={nextLesson?.lessonTitle || null}
+          onMastered={() => {
+            if (!selectedLesson) return;
+            setMasteredLessonIds((currentIds) => {
+              const nextIds = new Set(currentIds);
+              nextIds.add(selectedLesson.lessonId);
+              return nextIds;
+            });
+          }}
         />
 
         <section className="mt-6 rounded-[1.5rem] border border-[#D7E3F2] bg-white p-6 shadow-[0_12px_35px_rgba(11,23,57,0.05)]">
@@ -179,7 +317,7 @@ export default function LessonPage() {
             <div>
               <p className="text-xs font-bold uppercase tracking-[0.18em] text-[#1677FF]">Lesson Sequence</p>
               <h2 className="mt-1 text-xl font-extrabold">Your Learning Path</h2>
-              <p className="mt-1 text-sm text-[#53657D]">Later lessons remain locked until you demonstrate mastery.</p>
+              <p className="mt-1 text-sm text-[#53657D]">Master each lesson to unlock the next step in the path.</p>
             </div>
             <span className="w-fit rounded-full bg-[#EAF3FF] px-4 py-2 text-sm font-bold text-[#1677FF]">
               {courseSections.length
@@ -216,18 +354,37 @@ export default function LessonPage() {
 
                   <div className="border-t border-[#E7EDF5]">
                     {courseSection.lessons.map((lessonTitle, lessonIndex) => {
-                      const isCurrent = sectionIndex === 0 && lessonIndex === 0;
+                      const flatIndex = flatLessons.findIndex(
+                        (lesson) =>
+                          lesson.sectionIndex === sectionIndex &&
+                          lesson.lessonIndex === lessonIndex
+                      );
+                      const item = flatLessons[flatIndex];
+                      const isCurrent =
+                        selectedLesson?.sectionIndex === sectionIndex &&
+                        selectedLesson?.lessonIndex === lessonIndex;
+                      const isMastered = item
+                        ? masteredLessonIds.has(item.lessonId)
+                        : false;
+                      const priorItem =
+                        flatIndex > 0 ? flatLessons[flatIndex - 1] : undefined;
+                      const isUnlocked =
+                        flatIndex === 0 ||
+                        isMastered ||
+                        Boolean(
+                          priorItem && masteredLessonIds.has(priorItem.lessonId)
+                        );
 
-                      return (
-                        <div
-                          key={`${lessonTitle}-${lessonIndex}`}
-                          className={`flex items-start justify-between gap-4 border-b border-[#EEF2F7] px-5 py-4 last:border-b-0 sm:pl-8 ${
-                            isCurrent ? "bg-[#F1F7FF]" : "bg-white"
-                          }`}
-                        >
+                      const content = (
+                        <>
                           <div className="flex min-w-0 items-start gap-3">
                             {isCurrent ? (
                               <CirclePlay
+                                className="mt-0.5 h-4 w-4 shrink-0 text-[#1677FF]"
+                                strokeWidth={1.8}
+                              />
+                            ) : isMastered ? (
+                              <CheckCircle2
                                 className="mt-0.5 h-4 w-4 shrink-0 text-[#1677FF]"
                                 strokeWidth={1.8}
                               />
@@ -241,7 +398,9 @@ export default function LessonPage() {
                             <div className="min-w-0">
                               <p
                                 className={`text-sm font-semibold ${
-                                  isCurrent ? "text-[#0B1739]" : "text-[#40536D]"
+                                  isCurrent || isMastered
+                                    ? "text-[#0B1739]"
+                                    : "text-[#40536D]"
                                 }`}
                               >
                                 {lessonTitle}
@@ -249,14 +408,39 @@ export default function LessonPage() {
                               <p className="mt-1 text-xs text-[#7A8AA0]">
                                 {isCurrent
                                   ? "Current lesson"
-                                  : "Unlock after earlier mastery checks"}
+                                  : isMastered
+                                    ? "Mastered · review anytime"
+                                    : isUnlocked
+                                      ? "Ready to learn"
+                                      : "Unlock after the previous mastery check"}
                               </p>
                             </div>
                           </div>
 
                           <span className="shrink-0 text-xs font-semibold text-[#7A8AA0]">
-                            {lessonIndex + 1}
+                            {flatIndex + 1}
                           </span>
+                        </>
+                      );
+
+                      return isUnlocked ? (
+                        <Link
+                          key={`${lessonTitle}-${lessonIndex}`}
+                          href={lessonHref(sectionIndex, lessonIndex)}
+                          className={`flex items-start justify-between gap-4 border-b border-[#EEF2F7] px-5 py-4 last:border-b-0 sm:pl-8 ${
+                            isCurrent
+                              ? "bg-[#F1F7FF]"
+                              : "bg-white hover:bg-[#F8FBFF]"
+                          }`}
+                        >
+                          {content}
+                        </Link>
+                      ) : (
+                        <div
+                          key={`${lessonTitle}-${lessonIndex}`}
+                          className="flex items-start justify-between gap-4 border-b border-[#EEF2F7] bg-white px-5 py-4 last:border-b-0 sm:pl-8"
+                        >
+                          {content}
                         </div>
                       );
                     })}
@@ -274,7 +458,7 @@ export default function LessonPage() {
 
           <div className="mt-5 flex items-center gap-2 text-sm text-[#53657D]">
             <CheckCircle2 className="h-4 w-4 text-[#1677FF]" />
-            Your AI instructor will test your understanding before unlocking the next lesson.
+            GAHN saves mastery evidence for each lesson. Passing the mastery check unlocks the next lesson.
           </div>
         </section>
       </div>
