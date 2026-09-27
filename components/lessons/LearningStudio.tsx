@@ -5,10 +5,13 @@ import {
   BookOpenCheck,
   Bot,
   Check,
+  FileText,
   Mic,
+  Paperclip,
   Send,
   Sparkles,
   StickyNote,
+  Upload,
   Volume2,
 } from "lucide-react";
 
@@ -97,6 +100,11 @@ export default function LearningStudio({
   const [noteId, setNoteId] = useState<string | null>(null);
   const [notes, setNotes] = useState("");
   const [notesSaved, setNotesSaved] = useState(false);
+  const [fileHelpOpen, setFileHelpOpen] = useState(false);
+  const [uploadingFile, setUploadingFile] = useState(false);
+  const [uploadedFileName, setUploadedFileName] = useState("");
+  const [fileQuestion, setFileQuestion] = useState("");
+  const [fileAnalysis, setFileAnalysis] = useState("");
 
   useEffect(() => {
     let cancelled = false;
@@ -252,6 +260,99 @@ export default function LearningStudio({
 
     setListening(true);
     recognition.start();
+  }
+
+  async function uploadLearningFile(file: File) {
+    setUploadingFile(true);
+    setError("");
+    setFileAnalysis("");
+
+    try {
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
+
+      if (!user) {
+        setError("Sign in to upload learning files.");
+        return;
+      }
+
+      if (file.size > 10 * 1024 * 1024) {
+        setError("Files must be 10 MB or smaller.");
+        return;
+      }
+
+      const safeName = file.name.replace(/[^a-zA-Z0-9._-]+/g, "-");
+      const storagePath = `${user.id}/${Date.now()}-${safeName}`;
+
+      const { error: uploadError } = await supabase.storage
+        .from("learning-files")
+        .upload(storagePath, file, {
+          upsert: false,
+          contentType: file.type || undefined,
+        });
+
+      if (uploadError) {
+        setError(uploadError.message);
+        return;
+      }
+
+      const { data: record, error: recordError } = await supabase
+        .from("learning_files")
+        .insert({
+          user_id: user.id,
+          world_slug: worldSlug,
+          topic,
+          lesson_id: lessonId,
+          lesson_title: lessonTitle,
+          file_name: file.name,
+          mime_type: file.type || null,
+          storage_path: storagePath,
+          file_size: file.size,
+          analysis_status: "uploaded",
+        })
+        .select("id")
+        .single();
+
+      if (recordError) {
+        await supabase.storage.from("learning-files").remove([storagePath]);
+        setError(recordError.message);
+        return;
+      }
+
+      setUploadedFileName(file.name);
+
+      const analysisResponse = await fetch("/api/homework/analyze", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          fileId: record.id,
+          learnerQuestion: fileQuestion.trim() || undefined,
+        }),
+      });
+
+      const analysisData = await analysisResponse.json();
+
+      if (!analysisResponse.ok) {
+        if (analysisData.uploaded) {
+          setFileAnalysis(
+            "Your file is saved. Adaptive file analysis will activate when the teaching AI service is connected."
+          );
+        } else {
+          setError(analysisData.error || "The file could not be analyzed.");
+        }
+        return;
+      }
+
+      setFileAnalysis(
+        analysisData.analysis ||
+          "The file was analyzed, but no explanation was returned."
+      );
+    } catch {
+      setError("The file could not be uploaded right now.");
+    } finally {
+      setUploadingFile(false);
+    }
   }
 
   async function saveNotes() {
@@ -422,6 +523,14 @@ export default function LearningStudio({
                 </button>
                 <button
                   type="button"
+                  onClick={() => setFileHelpOpen((value) => !value)}
+                  className="inline-flex items-center gap-2 rounded-lg border border-[#D7E3F2] px-3 py-2 text-xs font-bold text-[#40536D] hover:bg-[#F5F8FC]"
+                >
+                  <Paperclip className="h-4 w-4 text-[#1677FF]" />
+                  File Help
+                </button>
+                <button
+                  type="button"
                   disabled={loading}
                   onClick={() => void requestInstructor(undefined, "summary")}
                   className="inline-flex items-center gap-2 rounded-lg border border-[#D7E3F2] px-3 py-2 text-xs font-bold text-[#40536D] hover:bg-[#F5F8FC] disabled:opacity-50"
@@ -453,6 +562,53 @@ export default function LearningStudio({
                   Mastery Check
                 </button>
               </div>
+
+              {fileHelpOpen && (
+                <div className="mb-3 rounded-xl border border-[#CFE0F5] bg-[#F8FBFF] p-3">
+                  <div className="flex items-center gap-2">
+                    <FileText className="h-4 w-4 text-[#1677FF]" />
+                    <p className="text-xs font-bold uppercase tracking-[0.12em] text-[#40536D]">
+                      Homework & File Help
+                    </p>
+                  </div>
+                  <p className="mt-2 text-xs leading-5 text-[#53657D]">
+                    Upload a photo, screenshot, PDF, text file, or Word document. GAHN uses it as lesson material and guides you through the reasoning.
+                  </p>
+                  <input
+                    value={fileQuestion}
+                    onChange={(event) => setFileQuestion(event.target.value)}
+                    placeholder="Optional: What do you want help understanding?"
+                    className="mt-3 h-10 w-full rounded-lg border border-[#D7E3F2] bg-white px-3 text-sm outline-none focus:border-[#1677FF]"
+                  />
+                  <label className="mt-3 flex cursor-pointer items-center justify-center gap-2 rounded-lg border border-dashed border-[#9DBCE3] bg-white px-4 py-3 text-sm font-bold text-[#1677FF] hover:bg-[#F1F7FF]">
+                    <Upload className="h-4 w-4" />
+                    {uploadingFile ? "Uploading & analyzing..." : "Choose learning file"}
+                    <input
+                      type="file"
+                      disabled={uploadingFile}
+                      accept=".jpg,.jpeg,.png,.webp,.pdf,.txt,.doc,.docx,image/*,application/pdf,text/plain"
+                      className="hidden"
+                      onChange={(event) => {
+                        const file = event.target.files?.[0];
+                        if (file) void uploadLearningFile(file);
+                        event.currentTarget.value = "";
+                      }}
+                    />
+                  </label>
+
+                  {uploadedFileName && (
+                    <p className="mt-2 text-xs font-semibold text-[#53657D]">
+                      Uploaded: {uploadedFileName}
+                    </p>
+                  )}
+
+                  {fileAnalysis && (
+                    <div className="mt-3 max-h-56 overflow-y-auto whitespace-pre-wrap rounded-lg border border-[#D7E3F2] bg-white p-3 text-sm leading-6 text-[#40536D]">
+                      {fileAnalysis}
+                    </div>
+                  )}
+                </div>
+              )}
 
               {notesOpen && (
                 <div className="mb-3 rounded-xl border border-[#CFE0F5] bg-[#F8FBFF] p-3">
