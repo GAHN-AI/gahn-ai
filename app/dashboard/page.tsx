@@ -103,7 +103,8 @@ export default function DashboardPage() {
   const [fullName, setFullName] = useState("Learner");
   const [initials, setInitials] = useState("AI");
   const [avatarUrl, setAvatarUrl] = useState("");
-  const [planName, setPlanName] = useState("Explore");
+  const [planId, setPlanId] = useState("explore");
+  const [planName, setPlanName] = useState("Early Access");
   const avatarColor = useMemo(() => getInitialColor(fullName), [fullName]);
 
   useEffect(() => {
@@ -122,17 +123,8 @@ export default function DashboardPage() {
 if (subscriptionResponse.ok) {
   const subscription = await subscriptionResponse.json();
 
-  const planNames: Record<string, string> = {
-    explore: "Explore",
-    learner_plus: "Learner Plus",
-    mastery: "Mastery",
-    career_pro: "Career Pro",
-    classroom_ai: "Classroom AI",
-    school_os: "School OS",
-    district_government: "District / Government",
-  };
-
-  setPlanName(planNames[subscription.planId] || "Explore");
+  setPlanId(subscription.planId || "explore");
+  setPlanName(subscription.entitlements?.name || "Early Access");
 }
 
       const { data: profile } = await supabase
@@ -215,21 +207,23 @@ if (subscriptionResponse.ok) {
             ))}
           </nav>
 
-          <div className="mt-6 rounded-2xl border border-[#D7E3F2] bg-[#F5F8FC] p-5 text-center">
-            <div className="mx-auto grid h-12 w-12 place-items-center rounded-full bg-[#EAF3FF]">
-              <Crown className="h-5 w-5 text-[#1677FF]" strokeWidth={1.75} />
+          {planId === "explore" && (
+            <div className="mt-6 rounded-2xl border border-[#D7E3F2] bg-[#F5F8FC] p-5 text-center">
+              <div className="mx-auto grid h-12 w-12 place-items-center rounded-full bg-[#EAF3FF]">
+                <Crown className="h-5 w-5 text-[#1677FF]" strokeWidth={1.75} />
+              </div>
+              <h3 className="mt-4 text-lg font-bold text-[#0B1739]">Early Access</h3>
+              <p className="mt-2 text-sm leading-6 text-[#53657D]">
+                You have the current GAHN AI early-access plan while the MVP is being tested and improved.
+              </p>
+              <Link
+                href="/pricing"
+                className="mt-5 block rounded-lg bg-[#1677FF] px-4 py-3 text-sm font-semibold text-white hover:bg-[#0F65E8]"
+              >
+                View Plan
+              </Link>
             </div>
-            <h3 className="mt-4 text-lg font-bold text-[#0B1739]">Mastery Plan</h3>
-            <p className="mt-2 text-sm leading-6 text-[#53657D]">
-              Unlock certificates, portfolio tools, instructor support, and career features.
-            </p>
-            <Link
-              href="/pricing"
-              className="mt-5 block rounded-lg bg-[#1677FF] px-4 py-3 text-sm font-semibold text-white hover:bg-[#0F65E8]"
-            >
-              Upgrade Now
-            </Link>
-          </div>
+          )}
         </aside>
 
         <div className="min-w-0">
