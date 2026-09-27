@@ -11,12 +11,13 @@ import {
   lessonIdFromParts,
   parseInstructorTurn,
   type InstructorTurn,
+  type TeachingAction,
 } from "@/lib/ai/lessonEngine";
 
 export const runtime = "nodejs";
 
 type InstructorRequest = {
-  action?: "start" | "respond" | "repeat" | "explain_differently";
+  action?: TeachingAction;
   sessionId?: string | null;
   worldSlug: string;
   worldTitle: string;
@@ -139,6 +140,7 @@ async function createOrTouchSession(
 }
 
 async function callTeachingModel(
+  userId: string,
   body: InstructorRequest,
   fallback: InstructorTurn
 ) {
@@ -151,6 +153,13 @@ async function callTeachingModel(
     };
   }
 
+  const { data: memoryRows } = await supabaseAdmin
+    .from("learner_memory")
+    .select("concept, state, last_evidence")
+    .eq("user_id", userId)
+    .order("last_seen_at", { ascending: false })
+    .limit(8);
+
   const prompt = buildInstructorPrompt({
     learnerRole: "unknown",
     worldTitle: body.worldTitle,
@@ -159,6 +168,11 @@ async function callTeachingModel(
     lessonTitle: body.lessonTitle,
     lessonPoints: body.lessonPoints || [],
     language: body.language || "English",
+    learnerMemory: (memoryRows || []).map((row) => ({
+      concept: row.concept,
+      state: row.state,
+      lastEvidence: row.last_evidence,
+    })),
   });
 
   const recentHistory = (body.history || []).slice(-8);
@@ -211,6 +225,86 @@ async function callTeachingModel(
     turn: parseInstructorTurn(raw, fallback),
     aiConnected: true,
   };
+}
+
+async function enforceEvidenceState(args: {
+  userId: string;
+  lessonId: string;
+  body: InstructorRequest;
+  turn: InstructorTurn;
+}) {
+  const { userId, lessonId, body } = args;
+  const turn = {
+    ...args.turn,
+    evaluation: { ...args.turn.evaluation },
+  };
+
+  if (!body.learnerMessage?.trim()) {
+    if (turn.evaluation.state === "mastered") {
+      turn.evaluation.state = "learning";
+      turn.evaluation.correct = null;
+      turn.evaluation.reason =
+        "Mastery cannot be awarded without a learner response.";
+    }
+    return turn;
+  }
+
+  const { data: current } = await supabaseAdmin
+    .from("learning_progress")
+    .select("attempts_count, correct_count, retry_count")
+    .eq("user_id", userId)
+    .eq("world_slug", body.worldSlug)
+    .eq("lesson_id", lessonId)
+    .maybeSingle();
+
+  const attempts = (current?.attempts_count || 0) + 1;
+  const correct =
+    (current?.correct_count || 0) +
+    (turn.evaluation.correct === true ? 1 : 0);
+  const retries =
+    (current?.retry_count || 0) +
+    (turn.evaluation.correct === false ? 1 : 0);
+
+  if (turn.evaluation.correct === false && retries >= 2) {
+    turn.evaluation.state = "needs_review";
+  }
+
+  if (turn.evaluation.state === "mastered") {
+    const enoughEvidence =
+      body.action === "mastery_check" &&
+      turn.evaluation.correct === true &&
+      attempts >= 3 &&
+      correct >= 3;
+
+    if (!enoughEvidence) {
+      turn.evaluation.state =
+        turn.evaluation.correct === true ? "proficient" : "practicing";
+      turn.evaluation.reason =
+        "The response may be strong, but GAHN requires at least three correct checked responses including a mastery check before marking this lesson mastered.";
+    }
+  }
+
+  return turn;
+}
+
+async function saveStudyGuide(args: {
+  userId: string;
+  lessonId: string;
+  body: InstructorRequest;
+  turn: InstructorTurn;
+}) {
+  if (args.body.action !== "study_guide") return;
+
+  const { error } = await supabaseAdmin.from("study_guides").insert({
+    user_id: args.userId,
+    world_slug: args.body.worldSlug,
+    topic: args.body.topic,
+    lesson_id: args.lessonId,
+    title: `${args.body.lessonTitle} Study Guide`,
+    content: args.turn.canvas,
+  });
+
+  if (error) throw error;
 }
 
 async function saveEvidence(args: {
@@ -383,16 +477,32 @@ export async function POST(req: Request) {
       lessonTitle: body.lessonTitle,
       lessonPoints: body.lessonPoints || [],
       learnerMessage: body.learnerMessage,
+      action: body.action,
     });
 
-    const { turn, aiConnected } = await callTeachingModel(
+    const modelResult = await callTeachingModel(
+      user.id,
       body,
       fallback
     );
 
+    const turn = await enforceEvidenceState({
+      userId: user.id,
+      lessonId,
+      body,
+      turn: modelResult.turn,
+    });
+
     await saveEvidence({
       userId: user.id,
       sessionId,
+      lessonId,
+      body,
+      turn,
+    });
+
+    await saveStudyGuide({
+      userId: user.id,
       lessonId,
       body,
       turn,
@@ -419,7 +529,7 @@ export async function POST(req: Request) {
       sessionId,
       lessonId,
       turn,
-      aiConnected,
+      aiConnected: modelResult.aiConnected,
     });
   } catch (error) {
     console.error("Instructor route failed:", error);
