@@ -31,6 +31,7 @@ import {
 const navItems: { label: string; Icon: LucideIcon; href: string }[] = [
   { label: "Dashboard", Icon: LayoutDashboard, href: "/dashboard" },
   { label: "My Notes", Icon: StickyNote, href: "/notes" },
+  { label: "Study Guides", Icon: BookOpen, href: "/study-guides" },
   { label: "Progress", Icon: TrendingUp, href: "/progress" },
 ];
 
