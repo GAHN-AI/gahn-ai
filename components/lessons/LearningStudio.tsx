@@ -17,6 +17,7 @@ import { supabase } from "@/lib/supabaseClient";
 import {
   lessonIdFromParts,
   type InstructorTurn,
+  type TeachingAction,
 } from "@/lib/ai/lessonEngine";
 
 type Message = {
@@ -131,7 +132,7 @@ export default function LearningStudio({
 
   async function requestInstructor(
     learnerMessage?: string,
-    action: "start" | "respond" | "repeat" | "explain_differently" = "respond"
+    action: TeachingAction = "respond"
   ) {
     setLoading(true);
     setError("");
@@ -418,6 +419,38 @@ export default function LearningStudio({
                 >
                   <StickyNote className="h-4 w-4 text-[#1677FF]" />
                   Notes
+                </button>
+                <button
+                  type="button"
+                  disabled={loading}
+                  onClick={() => void requestInstructor(undefined, "summary")}
+                  className="inline-flex items-center gap-2 rounded-lg border border-[#D7E3F2] px-3 py-2 text-xs font-bold text-[#40536D] hover:bg-[#F5F8FC] disabled:opacity-50"
+                >
+                  Summary
+                </button>
+                <button
+                  type="button"
+                  disabled={loading}
+                  onClick={() => void requestInstructor(undefined, "study_guide")}
+                  className="inline-flex items-center gap-2 rounded-lg border border-[#D7E3F2] px-3 py-2 text-xs font-bold text-[#40536D] hover:bg-[#F5F8FC] disabled:opacity-50"
+                >
+                  Study Guide
+                </button>
+                <button
+                  type="button"
+                  disabled={loading}
+                  onClick={() => void requestInstructor(undefined, "review")}
+                  className="inline-flex items-center gap-2 rounded-lg border border-[#D7E3F2] px-3 py-2 text-xs font-bold text-[#40536D] hover:bg-[#F5F8FC] disabled:opacity-50"
+                >
+                  Review Me
+                </button>
+                <button
+                  type="button"
+                  disabled={loading}
+                  onClick={() => void requestInstructor(undefined, "mastery_check")}
+                  className="inline-flex items-center gap-2 rounded-lg bg-[#0B1739] px-3 py-2 text-xs font-bold text-white disabled:opacity-50"
+                >
+                  Mastery Check
                 </button>
               </div>
 
