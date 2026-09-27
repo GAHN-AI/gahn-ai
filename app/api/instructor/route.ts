@@ -418,6 +418,8 @@ async function saveEvidence(args: {
 
   if (error) throw error;
 
+  const attemptIncrement =
+    turn.evaluation.correct === null ? 0 : 1;
   const correctIncrement = turn.evaluation.correct === true ? 1 : 0;
   const retryIncrement = turn.evaluation.correct === false ? 1 : 0;
 
@@ -429,7 +431,8 @@ async function saveEvidence(args: {
     .eq("lesson_id", lessonId)
     .maybeSingle();
 
-  const attempts = (current?.attempts_count || 0) + 1;
+  const attempts =
+    (current?.attempts_count || 0) + attemptIncrement;
   const correct = (current?.correct_count || 0) + correctIncrement;
   const retries = (current?.retry_count || 0) + retryIncrement;
   const completed = turn.evaluation.state === "mastered";
