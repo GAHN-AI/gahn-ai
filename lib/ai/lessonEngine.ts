@@ -25,7 +25,8 @@ export type TeachingAction =
   | "explain_differently"
   | "summary"
   | "study_guide"
-  | "review";
+  | "review"
+  | "mastery_check";
 
 export type InstructorTurn = {
   message: string;
@@ -219,6 +220,43 @@ export function buildFallbackTurn(args: {
         reason: "A summary does not count as mastery evidence.",
       },
       suggestedReply: "Close the guide and explain the lesson from memory.",
+    };
+  }
+
+  if (action === "mastery_check") {
+    return {
+      message:
+        "This is a mastery check. Answer from memory and explain your reasoning. GAHN will only mark mastery when enough saved evidence supports it.",
+      mode: "mastery",
+      canvas: {
+        title: "Mastery Check",
+        subtitle: args.lessonTitle,
+        blocks: [
+          {
+            type: "question",
+            title: "Prove what you know",
+            question: `Explain ${args.lessonTitle}, give a concrete example, and describe one mistake a beginner could make.`,
+            answerType: "text",
+            hint: "Use your own words. Do not copy the lesson.",
+          },
+          {
+            type: "mastery",
+            title: "Evidence GAHN looks for",
+            checks: [
+              "Accurate explanation",
+              "Concrete example",
+              "Reasoning that shows understanding",
+            ],
+          },
+        ],
+      },
+      evaluation: {
+        correct: null,
+        concept: args.lessonTitle,
+        state: "practicing",
+        reason: "A mastery response has not been evaluated yet.",
+      },
+      suggestedReply: "Complete the mastery check from memory.",
     };
   }
 
