@@ -402,11 +402,13 @@ async function saveEvidence(args: {
   if (!responseText) return;
 
   const evidenceType =
-    turn.mode === "mastery"
+    body.action === "mastery_check"
       ? "mastery_check"
-      : turn.mode === "activity"
-        ? "activity"
-        : "question";
+      : body.action === "review"
+        ? "review"
+        : turn.mode === "activity"
+          ? "activity"
+          : "question";
 
   const { error } = await supabaseAdmin.from("lesson_evidence").insert({
     user_id: userId,
