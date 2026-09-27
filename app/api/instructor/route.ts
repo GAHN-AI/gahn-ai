@@ -142,7 +142,8 @@ async function createOrTouchSession(
 async function callTeachingModel(
   userId: string,
   body: InstructorRequest,
-  fallback: InstructorTurn
+  fallback: InstructorTurn,
+  capabilities: string[]
 ) {
   const apiKey = process.env.OPENAI_API_KEY;
 
@@ -201,6 +202,7 @@ async function callTeachingModel(
       state: row.state,
       lastEvidence: row.last_evidence,
     })),
+    capabilities,
   });
 
   const recentHistory = (body.history || []).slice(-8);
@@ -489,6 +491,44 @@ export async function POST(req: Request) {
       );
     }
 
+    const entitlements = access.entitlements;
+    const capabilities = [
+      "Structured curriculum and guided lesson sequencing",
+      "Core Magic Canvas explanations, diagrams, questions, and activities",
+      entitlements.adaptiveLearning
+        ? "Adaptive reteaching based on learner answers and saved evidence"
+        : null,
+      entitlements.masteryAssessments
+        ? "Evidence-based mastery checks"
+        : null,
+      entitlements.homeworkHelp && entitlements.fileUploads
+        ? "Homework and uploaded-file learning support"
+        : null,
+      entitlements.learnerMemory
+        ? "Saved learner memory for strengths and review needs"
+        : null,
+      entitlements.studyGuides ? "Generated study guides" : null,
+      entitlements.reviewQuestions ? "Active-recall review questions" : null,
+      entitlements.multilingualLearning
+        ? "Teaching in the learner's selected supported language"
+        : null,
+      entitlements.advancedLearningCanvas
+        ? "Advanced Magic Canvas workspaces"
+        : null,
+      entitlements.codeWorkspace ? "Interactive code workspace" : null,
+      entitlements.browserLearning ? "Guided browser learning tools" : null,
+      entitlements.advancedFileAnalysis
+        ? "Advanced document and file analysis"
+        : null,
+      entitlements.advancedLearnerMemory
+        ? "Advanced learner memory across topics"
+        : null,
+      entitlements.careerProjects ? "Career project coaching" : null,
+      entitlements.careerSimulations ? "Career simulations" : null,
+      entitlements.interviewPractice ? "Interview practice" : null,
+      entitlements.portfolioTools ? "Portfolio-building tools" : null,
+    ].filter((item): item is string => Boolean(item));
+
     const lessonId = lessonIdFromParts(
       body.worldSlug,
       body.topicSlug || undefined,
@@ -511,7 +551,8 @@ export async function POST(req: Request) {
     const modelResult = await callTeachingModel(
       user.id,
       body,
-      fallback
+      fallback,
+      capabilities
     );
 
     const turn = await enforceEvidenceState({
