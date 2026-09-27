@@ -25,12 +25,12 @@ import {
 } from "lucide-react";
 import LanguageSelector from "@/components/LanguageSelector";
 import { getCareerSection } from "@/lib/careerCatalog";
-import { getCareerCourseSections, getCareerCurriculum } from "@/lib/careerCurriculum";
 import {
   getLearningOption,
   slugifyLearningTitle,
   type LearningOption,
 } from "@/lib/learningCatalog";
+import { getMvpLearningPath } from "@/lib/mvpLearningPaths";
 
 type WorldConfig = {
   title: string;
@@ -74,260 +74,42 @@ type LearningDetail = {
   requirementNote?: string;
 };
 
-const techCareerSkills = [
-  "Problem Solving",
-  "Technical Thinking",
-  "Debugging",
-  "Project Building",
-  "Professional Workflow",
-];
-
-function careerResources(sectionTitle: string) {
-  if (sectionTitle.includes("Technology")) {
-    return ["VS Code", "Git", "GitHub", "Browser DevTools", "Documentation"];
-  }
-  if (sectionTitle.includes("Finance")) {
-    return ["Financial Models", "Case Studies", "Spreadsheets", "Market Research"];
-  }
-  if (sectionTitle.includes("Healthcare")) {
-    return ["Clinical Scenarios", "Terminology Guides", "Case Studies", "Safety Checklists"];
-  }
-  if (sectionTitle.includes("Engineering")) {
-    return ["Design Problems", "Technical Diagrams", "Calculations", "Project Scenarios"];
-  }
-  return ["Interactive Examples", "Real-World Scenarios", "Reference Guides", "Practice Projects"];
-}
-
-function subjectModules(topic: string) {
-  const lower = topic.toLowerCase();
-
-  if (lower.includes("math") || lower.includes("algebra") || lower.includes("geometry") || lower.includes("calculus") || lower.includes("statistics")) {
-    return [
-      { title: "Foundations", description: "Review the prerequisite ideas and vocabulary you need before moving forward." },
-      { title: "Core Methods", description: "Learn the main rules, formulas, patterns, and problem-solving methods." },
-      { title: "Guided Examples", description: "Work through examples step by step with explanations for every decision." },
-      { title: "Independent Practice", description: "Solve new problems while the instructor checks reasoning and mistakes." },
-      { title: "Assessment Review", description: "Practice the types of questions that can appear on quizzes and tests." },
-      { title: "Mastery Check", description: "Explain and solve the topic independently before moving on." },
-    ];
-  }
-
-  if (lower.includes("english") || lower.includes("writing") || lower.includes("reading")) {
-    return [
-      { title: "Core Concepts", description: "Learn the vocabulary, structure, and ideas required for the topic." },
-      { title: "Read & Analyze", description: "Study examples and identify how strong reading or writing works." },
-      { title: "Build the Skill", description: "Practice one part at a time with immediate feedback." },
-      { title: "Apply It", description: "Use the skill in a complete paragraph, response, essay, or analysis." },
-      { title: "Revision & Feedback", description: "Correct mistakes and strengthen clarity, evidence, organization, and style." },
-      { title: "Mastery Check", description: "Demonstrate the skill without step-by-step support." },
-    ];
-  }
-
-  return [
-    { title: "Foundations", description: "Build the background knowledge and vocabulary needed for the topic." },
-    { title: "Core Concepts", description: "Learn the most important ideas and how they connect." },
-    { title: "Guided Examples", description: "See the ideas applied through clear examples, visuals, or demonstrations." },
-    { title: "Practice & Questions", description: "Answer questions and apply what you just learned." },
-    { title: "Review & Test Prep", description: "Review weak areas and prepare for quizzes, tests, or assignments." },
-    { title: "Mastery Check", description: "Show that you can explain and apply the topic independently." },
-  ];
-}
-
 function buildLearningDetail(
   world: string,
-  sectionSlug: string,
+  _sectionSlug: string,
   sectionTitle: string,
   title: string,
   description: string,
-  option?: LearningOption
+  _option?: LearningOption
 ): LearningDetail {
-  if (world === "career-skills") {
-    const career = getCareerCurriculum(sectionSlug, title);
+  const path = getMvpLearningPath(world, sectionTitle, title);
 
+  if (path) {
     return {
-      whatYouLearn: career.whatYouLearn,
-      skills: career.skills,
-      resources: career.tools,
-      modules: career.modules,
-      requirementNote: career.requirementNote,
-    };
-  }
-  if (title === "Web Developer") {
-    return {
-      whatYouLearn: [
-        "Build webpages with semantic HTML and modern CSS.",
-        "Use JavaScript to add logic, interaction, and dynamic behavior.",
-        "Create responsive layouts that work across phones, tablets, and desktops.",
-        "Use Git and GitHub to manage code and track changes.",
-        "Work with JSON, APIs, browser tools, and common web-development workflows.",
-        "Build, test, debug, and prepare a real web project for deployment.",
-      ],
-      skills: [
-        "HTML",
-        "CSS",
-        "JavaScript",
-        "Responsive Web Design",
-        "Front-End Development",
-        "Accessibility",
-        "Git",
-        "GitHub",
-        "JSON",
-        "Debugging",
-      ],
-      resources: ["VS Code", "Git", "GitHub", "Browser DevTools", "MDN-style Documentation"],
-      modules: [
-        { title: "How the Web Works", description: "Browsers, websites, files, URLs, servers, and the basic development workflow." },
-        { title: "HTML Foundations", description: "Structure pages correctly with semantic HTML, links, images, forms, and content." },
-        { title: "CSS & Responsive Design", description: "Layout, spacing, typography, Flexbox, Grid, responsive design, and accessibility." },
-        { title: "JavaScript Foundations", description: "Variables, functions, conditions, arrays, events, and interactive webpages." },
-        { title: "Git & GitHub", description: "Version control, commits, repositories, branches, and sharing code." },
-        { title: "APIs & JSON", description: "Understand data exchange and connect websites to external information." },
-        { title: "Debugging & Testing", description: "Use browser tools, read errors, test behavior, and fix problems methodically." },
-        { title: "Build & Deploy a Project", description: "Combine the skills into a complete project and prepare it for the web." },
-      ],
-    };
-  }
-
-  if (title === "Software Engineer") {
-    return {
-      whatYouLearn: [
-        "Understand how software is planned, built, tested, and maintained.",
-        "Write programs using variables, functions, logic, data structures, and reusable code.",
-        "Debug problems systematically instead of guessing.",
-        "Use Git and GitHub in a professional software workflow.",
-        "Understand APIs, databases, testing, and software architecture at a practical level.",
-        "Build projects that turn programming concepts into working software.",
-      ],
-      skills: ["Programming", "Debugging", "Git", "GitHub", "Algorithms", "Data Structures", "Testing", "APIs"],
-      resources: ["VS Code", "Git", "GitHub", "Terminal", "Documentation"],
-      modules: [
-        { title: "Software Engineering Foundations", description: "How software teams turn problems into reliable software." },
-        { title: "Programming Fundamentals", description: "Variables, logic, functions, data, and reusable code." },
-        { title: "Data Structures & Algorithms", description: "Organize information and solve problems efficiently." },
-        { title: "Git, GitHub & Team Workflow", description: "Track changes, collaborate, review work, and manage code." },
-        { title: "Debugging & Testing", description: "Find errors, verify behavior, and make software more reliable." },
-        { title: "APIs, Data & Architecture", description: "Understand how modern applications connect systems and organize code." },
-        { title: "Engineering Project", description: "Build a working project using the full development workflow." },
-      ],
-    };
-  }
-
-  if (world === "school-help") {
-    const baseSkills =
-      option?.skills && option.skills.length
-        ? option.skills
-        : ["Understanding", "Practice", "Problem Solving", "Test Preparation"];
-
-    return {
-      whatYouLearn: [
-        `Understand the essential ${sectionTitle} concepts for ${title}.`,
-        "See difficult ideas broken into clear, step-by-step explanations.",
-        "Practice with guided examples before working independently.",
-        "Learn how to recognize and correct common mistakes.",
-        "Prepare for homework, quizzes, tests, and class assignments.",
-        "Demonstrate understanding through a mastery check.",
-      ],
-      skills: baseSkills,
-      resources: option?.tools?.length
-        ? option.tools
-        : ["Guided Examples", "Practice Questions", "Study Guides", "Mastery Checks"],
-      modules: option?.modules?.length
-        ? option.modules.map((module) => ({ title: module, description: `Learn and practice ${module.toLowerCase()}.` }))
-        : subjectModules(sectionTitle),
-    };
-  }
-
-  if (world === "brain-development") {
-    return {
-      whatYouLearn: [
-        `Understand the mental processes behind ${title.toLowerCase()}.`,
-        "Practice the skill through short guided exercises instead of only reading about it.",
-        "Identify habits and environments that make the skill easier or harder.",
-        "Use feedback to adjust your approach when something is not working.",
-        "Build a repeatable routine you can use outside GAHN.",
-      ],
-      skills: option?.skills?.length
-        ? option.skills
-        : ["Self-Awareness", "Practice", "Mental Strategy", "Consistency"],
-      resources: ["Guided Exercises", "Practice Timers", "Reflection Prompts", "Progress Checks"],
-      modules: [
-        { title: "Understand the Skill", description: `Learn what ${title.toLowerCase()} is and what affects it.` },
-        { title: "Baseline Check", description: "See where you are starting and identify the biggest weakness." },
-        { title: "Guided Training", description: "Practice the skill with short, focused exercises and coaching." },
-        { title: "Real-Life Application", description: "Use the skill during studying, work, reading, or decision-making." },
-        { title: "Build Your System", description: "Create a routine that makes the skill easier to repeat consistently." },
-        { title: "Mastery & Reflection", description: "Test improvement, review what worked, and choose the next challenge." },
-      ],
-    };
-  }
-
-  if (world === "book-intelligence") {
-    return {
-      whatYouLearn: [
-        `Use ${title.toLowerCase()} as a structured way to learn from books instead of passively reading.`,
-        "Identify important ideas, themes, arguments, evidence, or creative techniques.",
-        "Ask better questions and examine what the author is actually doing.",
-        "Remember key information through recall and review.",
-        "Connect what you read to other books, real situations, or your own projects.",
-      ],
-      skills: option?.skills?.length
-        ? option.skills
-        : ["Close Reading", "Analysis", "Recall", "Interpretation", "Application"],
-      resources: ["Book Notes", "Discussion Questions", "Recall Prompts", "Concept Maps"],
-      modules: [
-        { title: "Preview & Context", description: "Understand what you are reading, why it matters, and what to watch for." },
-        { title: "Read With Purpose", description: "Identify the important details, ideas, evidence, or creative choices." },
-        { title: "Understand Deeply", description: "Explain difficult passages, themes, arguments, and concepts." },
-        { title: "Remember It", description: "Use recall questions, notes, and spaced review to keep the important ideas." },
-        { title: "Connect & Apply", description: "Relate the book to other ideas, real life, creativity, or decisions." },
-        { title: "Mastery Discussion", description: "Explain the book or concept in your own words and defend your understanding." },
-      ],
-    };
-  }
-
-  if (world === "career-skills") {
-    return {
-      whatYouLearn: [
-        `Understand what a ${title} actually does and how the work is performed.`,
-        `Learn the core knowledge and practical skills used in ${sectionTitle.toLowerCase()}.`,
-        "Practice realistic tasks instead of only memorizing definitions.",
-        "Learn the tools, terminology, workflows, and professional standards used in the field.",
-        "Build enough understanding to decide whether you want to pursue the path further.",
-        "Complete a guided project or scenario that combines the major skills.",
-      ],
-      skills: techCareerSkills,
-      resources: careerResources(sectionTitle),
-      modules: [
-        { title: "Career Foundations", description: `Understand the role, responsibilities, environment, and expectations of a ${title}.` },
-        { title: "Core Knowledge", description: "Learn the concepts and terminology professionals use every day." },
-        { title: "Essential Skills & Tools", description: "Practice the most important abilities and become familiar with the tools used in the field." },
-        { title: "Guided Real-World Tasks", description: "Work through realistic scenarios with step-by-step instructor guidance." },
-        { title: "Professional Workflow", description: "Learn how the work moves from an initial problem to a finished result." },
-        { title: "Career Project & Mastery", description: "Complete a practical challenge and explain your decisions independently." },
-      ],
+      whatYouLearn: path.whatYouLearn,
+      skills: path.skills,
+      resources: path.resources,
+      modules: path.sections.map((section) => ({
+        title: section.title,
+        description: section.description,
+      })),
+      requirementNote: path.requirementNote,
     };
   }
 
   return {
     whatYouLearn: [
-      `Build a clear foundation in ${title}.`,
-      "Understand the most important concepts and vocabulary.",
-      "See how the topic connects to real events, systems, or everyday life.",
-      "Practice explaining the topic in your own words.",
-      "Use questions and examples to correct misunderstandings.",
-      "Finish with a mastery check that tests real understanding.",
+      description,
+      `Learn ${title} through clear examples and guided practice.`,
+      "Apply what you learn through questions, tasks, and feedback.",
     ],
-    skills: option?.skills?.length
-      ? option.skills
-      : ["Understanding", "Analysis", "Reasoning", "Recall", "Application"],
-    resources: ["Visual Explanations", "Examples", "Reference Notes", "Practice Questions"],
+    skills: ["Understanding", "Practice", "Application"],
+    resources: ["Examples", "Practice Questions", "Notes"],
     modules: [
-      { title: "Foundations", description: `Learn the basic ideas and vocabulary behind ${title}.` },
-      { title: "Core Concepts", description: "Understand the most important relationships, systems, and explanations." },
-      { title: "Examples & Connections", description: "Connect the topic to real examples and related ideas." },
-      { title: "Questions & Practice", description: "Apply what you learned and correct weak understanding." },
-      { title: "Go Deeper", description: "Explore more advanced ideas, nuance, and important debates or limitations." },
-      { title: "Mastery Check", description: "Explain and apply the topic independently." },
+      {
+        title: title,
+        description: `Learn ${title} step by step and apply it in a practical task.`,
+      },
     ],
   };
 }
@@ -411,10 +193,17 @@ export default function TopicOverviewPage() {
     resolved.option
   );
   const { Icon } = world;
-  const careerCourseSections =
-    params.world === "career-skills"
-      ? getCareerCourseSections(params.section, resolved.title)
-      : [];
+  const learningPathSections =
+    getMvpLearningPath(
+      params.world,
+      resolved.sectionTitle,
+      resolved.title
+    )?.sections ??
+    detail.modules.map((module) => ({
+      title: module.title,
+      description: module.description,
+      lessons: [module.title],
+    }));
 
   const startHref = `/lesson/custom?world=${encodeURIComponent(
     params.world
@@ -602,68 +391,50 @@ export default function TopicOverviewPage() {
                   </div>
                 </div>
 
-                {params.world === "career-skills" ? (
-                  <div className="mt-5 overflow-hidden rounded-2xl border border-[#D7E3F2] bg-white">
-                    {careerCourseSections.map((courseSection, sectionIndex) => (
-                      <details
-                        key={`${courseSection.title}-${sectionIndex}`}
-                        open={sectionIndex === 0}
-                        className="group border-b border-[#E7EDF5] last:border-b-0"
-                      >
-                        <summary className="flex cursor-pointer list-none items-center justify-between gap-4 p-5 hover:bg-[#F8FBFF]">
-                          <div className="min-w-0">
-                            <p className="text-xs font-bold uppercase tracking-[0.14em] text-[#1677FF]">
-                              Section {sectionIndex + 1}
-                            </p>
-                            <h3 className="mt-1 font-bold text-[#0B1739]">
-                              {courseSection.title}
-                            </h3>
-                            <p className="mt-1 text-xs text-[#53657D]">
-                              {courseSection.lessons.length} built-in lessons
-                            </p>
-                          </div>
-                          <ChevronDown className="h-5 w-5 shrink-0 text-[#53657D] transition-transform group-open:rotate-180" />
-                        </summary>
-
-                        <div className="border-t border-[#E7EDF5] bg-[#FBFCFE]">
-                          {courseSection.lessons.map((lesson, lessonIndex) => (
-                            <div
-                              key={`${lesson}-${lessonIndex}`}
-                              className="flex items-center gap-3 border-b border-[#EEF2F7] px-5 py-3.5 last:border-b-0 sm:pl-8"
-                            >
-                              <CirclePlay
-                                className="h-4 w-4 shrink-0 text-[#1677FF]"
-                                strokeWidth={1.8}
-                              />
-                              <span className="text-sm font-medium text-[#24364D]">
-                                {lesson}
-                              </span>
-                            </div>
-                          ))}
-                        </div>
-                      </details>
-                    ))}
-                  </div>
-                ) : (
-                  <div className="mt-5 overflow-hidden rounded-2xl border border-[#D7E3F2] bg-white">
-                    {detail.modules.map((module, index) => (
-                      <div
-                        key={module.title}
-                        className="grid gap-4 border-b border-[#E7EDF5] p-5 last:border-b-0 sm:grid-cols-[52px_minmax(0,1fr)]"
-                      >
-                        <div className="grid h-10 w-10 place-items-center rounded-xl bg-[#EAF3FF] text-sm font-extrabold text-[#1677FF]">
-                          {index + 1}
-                        </div>
-                        <div>
-                          <h3 className="font-bold text-[#0B1739]">{module.title}</h3>
-                          <p className="mt-1 text-sm leading-6 text-[#53657D]">
-                            {module.description}
+                <div className="mt-5 overflow-hidden rounded-2xl border border-[#D7E3F2] bg-white">
+                  {learningPathSections.map((courseSection, sectionIndex) => (
+                    <details
+                      key={`${courseSection.title}-${sectionIndex}`}
+                      open={sectionIndex === 0}
+                      className="group border-b border-[#E7EDF5] last:border-b-0"
+                    >
+                      <summary className="flex cursor-pointer list-none items-center justify-between gap-4 p-5 hover:bg-[#F8FBFF]">
+                        <div className="min-w-0">
+                          <p className="text-xs font-bold uppercase tracking-[0.14em] text-[#1677FF]">
+                            Section {sectionIndex + 1}
+                          </p>
+                          <h3 className="mt-1 font-bold text-[#0B1739]">
+                            {courseSection.title}
+                          </h3>
+                          <p className="mt-1 max-w-3xl text-sm leading-6 text-[#53657D]">
+                            {courseSection.description}
+                          </p>
+                          <p className="mt-2 text-xs font-semibold text-[#1677FF]">
+                            {courseSection.lessons.length} built-in lessons
                           </p>
                         </div>
+                        <ChevronDown className="h-5 w-5 shrink-0 text-[#53657D] transition-transform group-open:rotate-180" />
+                      </summary>
+
+                      <div className="border-t border-[#E7EDF5] bg-[#FBFCFE]">
+                        {courseSection.lessons.map((lesson, lessonIndex) => (
+                          <div
+                            key={`${lesson}-${lessonIndex}`}
+                            className="flex items-center gap-3 border-b border-[#EEF2F7] px-5 py-3.5 last:border-b-0 sm:pl-8"
+                          >
+                            <CirclePlay
+                              className="h-4 w-4 shrink-0 text-[#1677FF]"
+                              strokeWidth={1.8}
+                            />
+                            <span className="text-sm font-medium text-[#24364D]">
+                              {lesson}
+                            </span>
+                          </div>
+                        ))}
                       </div>
-                    ))}
-                  </div>
-                )}
+                    </details>
+                  ))}
+                </div>
               </section>
 
               <section className="border-t border-[#E2EAF4] pt-8">
