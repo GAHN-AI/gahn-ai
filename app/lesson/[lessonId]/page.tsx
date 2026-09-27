@@ -20,7 +20,9 @@ import {
 
 import AIInstructor from "@/components/instructors/AIInstructor";
 import LanguageSelector from "@/components/LanguageSelector";
-import { getCareerCourseSections } from "@/lib/careerCurriculum";
+import { getCareerSection } from "@/lib/careerCatalog";
+import { getLearningSection } from "@/lib/learningCatalog";
+import { getMvpLearningPath } from "@/lib/mvpLearningPaths";
 
 const worldInformation = {
   "career-skills": { title: "Career Skills", instructor: "Maya" },
@@ -71,13 +73,23 @@ export default function LessonPage() {
     window.localStorage.setItem("gahn-language", nextLanguage);
   }
 
-  const careerCourseSections =
-    resolvedWorldSlug === "career-skills" && learningSection
-      ? getCareerCourseSections(learningSection, requestedTopic)
-      : [];
+  const learningSectionTitle = learningSection
+    ? resolvedWorldSlug === "career-skills"
+      ? getCareerSection(learningSection)?.title
+      : getLearningSection(resolvedWorldSlug, learningSection)?.title
+    : undefined;
 
-  const currentCareerLesson =
-    careerCourseSections[0]?.lessons[0] || requestedTopic;
+  const learningPath =
+    learningSectionTitle
+      ? getMvpLearningPath(
+          resolvedWorldSlug,
+          learningSectionTitle,
+          requestedTopic
+        )
+      : null;
+
+  const courseSections = learningPath?.sections ?? [];
+  const currentLesson = courseSections[0]?.lessons[0] || requestedTopic;
 
   const backHref =
     learningSection && topicSlug
@@ -149,7 +161,7 @@ export default function LessonPage() {
               </div>
 
               <div className="w-fit rounded-full border border-[#CFE0F5] bg-[#EAF3FF] px-4 py-2 text-sm font-bold text-[#1677FF]">
-                {resolvedWorldSlug === "career-skills" ? "Section 1 · Lesson 1" : "Lesson 1"}
+                {courseSections.length ? "Section 1 · Lesson 1" : "Lesson 1"}
               </div>
             </div>
           </div>
@@ -160,7 +172,7 @@ export default function LessonPage() {
             <AIInstructor
               instructorName={world.instructor}
               world={world.title}
-              lessonTitle={requestedTopic}
+              lessonTitle={currentLesson}
               language={language}
             />
           </div>
@@ -183,9 +195,9 @@ export default function LessonPage() {
                   <h3 className="font-bold">Lesson Objective</h3>
                 </div>
                 <p className="mt-3 text-sm leading-6 text-[#53657D]">
-                  {resolvedWorldSlug === "career-skills"
-                    ? `Learn ${currentCareerLesson} as part of the ${requestedTopic} path and demonstrate the skill through explanation or practice.`
-                    : `Understand the foundations of ${requestedTopic} and be able to explain the core idea in your own words.`}
+                  {courseSections.length
+                    ? `Learn ${currentLesson} as the first step in the ${requestedTopic} path, then complete the practice or action for this lesson.`
+                    : `Learn ${requestedTopic} through clear explanation, practice, and application.`}
                 </p>
               </div>
 
@@ -257,17 +269,15 @@ export default function LessonPage() {
               <p className="mt-1 text-sm text-[#53657D]">Later lessons remain locked until you demonstrate mastery.</p>
             </div>
             <span className="w-fit rounded-full bg-[#EAF3FF] px-4 py-2 text-sm font-bold text-[#1677FF]">
-              {resolvedWorldSlug === "career-skills"
-                ? careerCourseSections.length
-                  ? `${careerCourseSections.length} course sections`
-                  : "Career curriculum"
+              {courseSections.length
+                ? `${courseSections.length} course sections`
                 : "Lesson 1 in progress"}
             </span>
           </div>
 
-          {resolvedWorldSlug === "career-skills" ? (
+          {courseSections.length ? (
             <div className="mt-5 overflow-hidden rounded-2xl border border-[#D7E3F2] bg-white">
-              {careerCourseSections.map((courseSection, sectionIndex) => (
+              {courseSections.map((courseSection, sectionIndex) => (
                 <details
                   key={`${courseSection.title}-${sectionIndex}`}
                   open={sectionIndex === 0}
@@ -281,7 +291,10 @@ export default function LessonPage() {
                       <h3 className="mt-1 font-bold text-[#0B1739]">
                         {courseSection.title}
                       </h3>
-                      <p className="mt-1 text-xs text-[#53657D]">
+                      <p className="mt-1 max-w-3xl text-xs leading-5 text-[#53657D]">
+                        {courseSection.description}
+                      </p>
+                      <p className="mt-2 text-xs font-semibold text-[#1677FF]">
                         {courseSection.lessons.length} lessons
                       </p>
                     </div>
@@ -339,20 +352,10 @@ export default function LessonPage() {
               ))}
             </div>
           ) : (
-            <div className="mt-5 grid gap-3 md:grid-cols-4">
-              <div className="rounded-xl border border-[#CFE0F5] bg-[#F1F7FF] p-4">
-                <p className="text-xs font-bold text-[#1677FF]">LESSON 1</p>
-                <p className="mt-1 font-bold">Foundations</p>
-                <p className="mt-2 text-xs text-[#53657D]">Unlocked</p>
-              </div>
-
-              {[2, 3, 4].map((lesson) => (
-                <div key={lesson} className="rounded-xl border border-[#D7E3F2] bg-[#F8FBFF] p-4 opacity-75">
-                  <p className="text-xs font-bold text-[#7A8AA0]">LESSON {lesson}</p>
-                  <p className="mt-1 font-bold">Locked</p>
-                  <p className="mt-2 text-xs text-[#7A8AA0]">Pass the previous mastery check</p>
-                </div>
-              ))}
+            <div className="mt-5 rounded-xl border border-[#CFE0F5] bg-[#F1F7FF] p-4">
+              <p className="text-xs font-bold text-[#1677FF]">LESSON 1</p>
+              <p className="mt-1 font-bold">{requestedTopic}</p>
+              <p className="mt-2 text-xs text-[#53657D]">Unlocked</p>
             </div>
           )}
 
