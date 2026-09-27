@@ -6,19 +6,13 @@ import { useParams, useSearchParams } from "next/navigation";
 import {
   ArrowLeft,
   BookOpen,
-  Brain,
   CheckCircle2,
   ChevronDown,
-  ChevronRight,
   CirclePlay,
   LockKeyhole,
-  Lightbulb,
-  ListChecks,
-  PencilLine,
-  Target,
 } from "lucide-react";
 
-import AIInstructor from "@/components/instructors/AIInstructor";
+import LearningStudio from "@/components/lessons/LearningStudio";
 import LanguageSelector from "@/components/LanguageSelector";
 import { getCareerSection } from "@/lib/careerCatalog";
 import { getLearningSection } from "@/lib/learningCatalog";
@@ -152,7 +146,7 @@ export default function LessonPage() {
                 <div className="mt-3 flex flex-wrap items-center gap-4 text-xs font-semibold text-[#53657D]">
                   <span className="flex items-center gap-2">
                     <CheckCircle2 className="h-4 w-4 text-[#1677FF]" />
-                    Progress tracking is off until live AI lessons are enabled.
+                    Progress is saved from real lesson activity and mastery evidence.
                   </span>
                   <span className="rounded-full bg-[#F1F7FF] px-3 py-1.5 text-[#1677FF]">
                     Teaching in {language}
@@ -167,99 +161,18 @@ export default function LessonPage() {
           </div>
         </section>
 
-        <section className="grid gap-6 xl:grid-cols-[minmax(0,1.25fr)_minmax(420px,0.75fr)]">
-          <div className="min-w-0">
-            <AIInstructor
-              instructorName={world.instructor}
-              world={world.title}
-              lessonTitle={currentLesson}
-              language={language}
-            />
-          </div>
-
-          <aside className="overflow-hidden rounded-[1.5rem] border border-[#D7E3F2] bg-white shadow-[0_16px_45px_rgba(11,23,57,0.06)]">
-            <div className="border-b border-[#D7E3F2] bg-[linear-gradient(135deg,#FFFFFF_0%,#F8FBFF_65%,#EAF3FF_100%)] p-5 sm:p-6">
-              <p className="text-xs font-bold uppercase tracking-[0.18em] text-[#1677FF]">Live Learning Panel</p>
-              <h2 className="mt-2 text-xl font-extrabold tracking-[-0.02em]">What your instructor is teaching</h2>
-              <p className="mt-2 text-sm leading-6 text-[#53657D]">
-                Visual explanations, examples, notes, diagrams, questions, and activities will appear here as the instructor teaches.
-              </p>
-            </div>
-
-            <div className="max-h-[640px] space-y-4 overflow-y-auto p-5 sm:p-6">
-              <div className="rounded-xl border border-[#CFE0F5] bg-[#F1F7FF] p-5">
-                <div className="flex items-center gap-3">
-                  <div className="grid h-9 w-9 place-items-center rounded-lg bg-white text-[#1677FF]">
-                    <Target className="h-4.5 w-4.5" />
-                  </div>
-                  <h3 className="font-bold">Lesson Objective</h3>
-                </div>
-                <p className="mt-3 text-sm leading-6 text-[#53657D]">
-                  {courseSections.length
-                    ? `Learn ${currentLesson} as the first step in the ${requestedTopic} path, then complete the practice or action for this lesson.`
-                    : `Learn ${requestedTopic} through clear explanation, practice, and application.`}
-                </p>
-              </div>
-
-              <div className="rounded-xl border border-[#D7E3F2] bg-white p-5">
-                <div className="flex items-center gap-3">
-                  <div className="grid h-9 w-9 place-items-center rounded-lg bg-[#EAF3FF] text-[#1677FF]">
-                    <Brain className="h-4.5 w-4.5" />
-                  </div>
-                  <h3 className="font-bold">Current Explanation</h3>
-                </div>
-                <div className="mt-4 rounded-xl bg-[#F8FBFF] p-4">
-                  <p className="text-sm leading-7 text-[#53657D]">
-                    When the AI instructor begins speaking, the most important concepts will appear here in clear visual form and in your selected teaching language.
-                  </p>
-                </div>
-              </div>
-
-              <div className="rounded-xl border border-[#D7E3F2] bg-white p-5">
-                <div className="flex items-center gap-3">
-                  <div className="grid h-9 w-9 place-items-center rounded-lg bg-[#EAF3FF] text-[#1677FF]">
-                    <Lightbulb className="h-4.5 w-4.5" />
-                  </div>
-                  <h3 className="font-bold">Visual Example</h3>
-                </div>
-                <div className="mt-4 flex min-h-[170px] items-center justify-center rounded-xl border border-dashed border-[#CFE0F5] bg-[linear-gradient(135deg,#FFFFFF_0%,#F8FBFF_60%,#EAF3FF_100%)] p-6 text-center">
-                  <div>
-                    <p className="font-bold text-[#1677FF]">Interactive visual area</p>
-                    <p className="mt-2 max-w-sm text-sm leading-6 text-[#53657D]">
-                      Diagrams, equations, charts, code, timelines, whiteboard work, images, and demonstrations can appear here.
-                    </p>
-                  </div>
-                </div>
-              </div>
-
-              <div className="rounded-xl border border-[#D7E3F2] bg-white p-5">
-                <div className="flex items-center gap-3">
-                  <div className="grid h-9 w-9 place-items-center rounded-lg bg-[#EAF3FF] text-[#1677FF]">
-                    <PencilLine className="h-4.5 w-4.5" />
-                  </div>
-                  <h3 className="font-bold">Write This Down</h3>
-                </div>
-                <p className="mt-3 text-sm leading-6 text-[#53657D]">Important notes the instructor wants you to remember will appear here.</p>
-              </div>
-
-              <div className="rounded-xl border border-[#D7E3F2] bg-white p-5">
-                <div className="flex items-center gap-3">
-                  <div className="grid h-9 w-9 place-items-center rounded-lg bg-[#EAF3FF] text-[#1677FF]">
-                    <ListChecks className="h-4.5 w-4.5" />
-                  </div>
-                  <h3 className="font-bold">Your Turn</h3>
-                </div>
-                <p className="mt-3 text-sm leading-6 text-[#53657D]">
-                  Practice questions and activities will appear here when your instructor wants you to apply what you just learned.
-                </p>
-                <button type="button" disabled className="mt-4 inline-flex items-center gap-2 rounded-lg bg-[#E8EEF6] px-4 py-2.5 text-sm font-semibold text-[#8A98AA]">
-                  Waiting for instructor
-                  <ChevronRight className="h-4 w-4" />
-                </button>
-              </div>
-            </div>
-          </aside>
-        </section>
+        <LearningStudio
+          worldSlug={resolvedWorldSlug}
+          worldTitle={world.title}
+          sectionSlug={learningSection}
+          sectionTitle={learningSectionTitle}
+          topicSlug={topicSlug}
+          topic={requestedTopic}
+          lessonTitle={currentLesson}
+          lessonPoints={courseSections[0]?.lessons ?? [currentLesson]}
+          instructorName={world.instructor}
+          language={language}
+        />
 
         <section className="mt-6 rounded-[1.5rem] border border-[#D7E3F2] bg-white p-6 shadow-[0_12px_35px_rgba(11,23,57,0.05)]">
           <div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-center">
