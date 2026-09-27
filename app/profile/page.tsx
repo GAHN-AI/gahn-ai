@@ -42,6 +42,9 @@ export default function ProfilePage() {
   const [fullName, setFullName] = useState("Learner");
   const [email, setEmail] = useState("");
   const [avatarUrl, setAvatarUrl] = useState("");
+  const [learnerRole, setLearnerRole] = useState("student");
+  const [learningPace, setLearningPace] = useState("steady");
+  const [explanationStyle, setExplanationStyle] = useState("balanced");
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [billingLoading, setBillingLoading] = useState(false);
@@ -79,7 +82,7 @@ export default function ProfilePage() {
 
       const { data: profile } = await supabase
         .from("profiles")
-        .select("full_name, avatar_url, email")
+        .select("full_name, avatar_url, email, learner_role, learning_pace, explanation_style")
         .eq("id", user.id)
         .maybeSingle();
 
@@ -95,6 +98,9 @@ export default function ProfilePage() {
           full_name: fallbackName,
           avatar_url: "",
           email: user.email,
+          learner_role: "student",
+          learning_pace: "steady",
+          explanation_style: "balanced",
         });
 
         setFullName(fallbackName);
@@ -105,6 +111,9 @@ export default function ProfilePage() {
 
       setFullName(profile.full_name || fallbackName);
       setAvatarUrl(profile.avatar_url || "");
+      setLearnerRole(profile.learner_role || "student");
+      setLearningPace(profile.learning_pace || "steady");
+      setExplanationStyle(profile.explanation_style || "balanced");
       setLoading(false);
     }
 
@@ -126,7 +135,12 @@ export default function ProfilePage() {
 
     const { error: updateError } = await supabase
       .from("profiles")
-      .update({ full_name: cleanName })
+      .update({
+        full_name: cleanName,
+        learner_role: learnerRole,
+        learning_pace: learningPace,
+        explanation_style: explanationStyle,
+      })
       .eq("id", userId);
 
     setSaving(false);
@@ -223,7 +237,7 @@ export default function ProfilePage() {
 
         <h1 className="mt-10 text-5xl font-black">Edit Profile</h1>
         <p className="mt-4 text-xl text-slate-600">
-          Update your name and profile image.
+          Update your account and tell GAHN how you prefer to learn.
         </p>
 
         <section className="mt-12 rounded-3xl border border-slate-200 bg-white p-8 shadow-sm">
@@ -276,6 +290,68 @@ export default function ProfilePage() {
               onChange={(e) => setFullName(e.target.value)}
               className="mt-3 w-full rounded-2xl border border-slate-200 px-5 py-4 text-lg outline-none focus:border-blue-500"
             />
+          </div>
+
+          <div className="mt-8 rounded-2xl border border-slate-200 bg-[#F8FBFF] p-5">
+            <p className="text-sm font-black uppercase tracking-[0.14em] text-slate-500">
+              Learning Preferences
+            </p>
+            <h2 className="mt-2 text-xl font-black text-[#061633]">
+              How GAHN should teach you
+            </h2>
+            <p className="mt-2 text-sm leading-6 text-slate-600">
+              These preferences guide the instructor, while your real lesson evidence still decides when GAHN should slow down, review, or increase difficulty.
+            </p>
+
+            <div className="mt-5 grid gap-4 sm:grid-cols-3">
+              <label className="grid gap-2">
+                <span className="text-xs font-black uppercase tracking-[0.1em] text-slate-500">
+                  I am a
+                </span>
+                <select
+                  value={learnerRole}
+                  onChange={(event) => setLearnerRole(event.target.value)}
+                  className="h-12 rounded-xl border border-slate-200 bg-white px-3 text-sm font-bold outline-none focus:border-blue-500"
+                >
+                  <option value="student">Student</option>
+                  <option value="self_learner">Self-learner</option>
+                  <option value="teacher">Teacher</option>
+                  <option value="professor">Professor</option>
+                  <option value="other">Other learner</option>
+                </select>
+              </label>
+
+              <label className="grid gap-2">
+                <span className="text-xs font-black uppercase tracking-[0.1em] text-slate-500">
+                  Teaching pace
+                </span>
+                <select
+                  value={learningPace}
+                  onChange={(event) => setLearningPace(event.target.value)}
+                  className="h-12 rounded-xl border border-slate-200 bg-white px-3 text-sm font-bold outline-none focus:border-blue-500"
+                >
+                  <option value="slower">Slower & more checks</option>
+                  <option value="steady">Steady</option>
+                  <option value="faster">Faster</option>
+                </select>
+              </label>
+
+              <label className="grid gap-2">
+                <span className="text-xs font-black uppercase tracking-[0.1em] text-slate-500">
+                  Explain with
+                </span>
+                <select
+                  value={explanationStyle}
+                  onChange={(event) => setExplanationStyle(event.target.value)}
+                  className="h-12 rounded-xl border border-slate-200 bg-white px-3 text-sm font-bold outline-none focus:border-blue-500"
+                >
+                  <option value="balanced">Balanced teaching</option>
+                  <option value="visual">Visuals first</option>
+                  <option value="step_by_step">Step by step</option>
+                  <option value="examples_first">Examples first</option>
+                </select>
+              </label>
+            </div>
           </div>
 
           <div className="mt-8 rounded-2xl border border-slate-200 bg-slate-50 p-5">
