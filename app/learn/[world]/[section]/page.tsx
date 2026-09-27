@@ -29,7 +29,7 @@ const worldInformation: Record<
   "school-help": {
     title: "School Help",
     Icon: GraduationCap,
-    optionLabel: "subject",
+    optionLabel: "grade level",
   },
   "brain-development": {
     title: "Brain Development",
@@ -144,7 +144,7 @@ export default function LearningSectionPage() {
             <div>
               <p className="text-xs font-bold uppercase tracking-[0.22em] text-[#1677FF]">
                 {params.world === "school-help"
-                  ? "Grade-Level Subjects"
+                  ? "Choose Your Level"
                   : `${worldInfo.title} Section`}
               </p>
 
@@ -262,11 +262,11 @@ export default function LearningSectionPage() {
           <div className="flex flex-wrap items-end justify-between gap-3">
             <div>
               <p className="text-xs font-bold uppercase tracking-[0.22em] text-[#1677FF]">
-                {params.world === "school-help" ? "Subjects" : "Learning Options"}
+                {params.world === "school-help" ? "Grade Levels" : "Learning Options"}
               </p>
               <h2 className="mt-2 text-3xl font-extrabold tracking-[-0.03em]">
                 {params.world === "school-help"
-                  ? `Learn ${section.title} subjects`
+                  ? `Choose your ${section.title} level`
                   : "Pick what you want to master"}
               </h2>
             </div>
