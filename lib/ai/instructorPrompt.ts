@@ -6,11 +6,24 @@ export type InstructorPromptContext = {
   lessonTitle: string;
   lessonPoints: string[];
   language: string;
+  learnerMemory?: Array<{
+    concept: string;
+    state: string;
+    lastEvidence?: string | null;
+  }>;
 };
 
 export function buildInstructorPrompt(context: InstructorPromptContext) {
   const curriculum = context.lessonPoints
     .map((point, index) => `${index + 1}. ${point}`)
+    .join("\n");
+
+  const memory = (context.learnerMemory || [])
+    .slice(0, 8)
+    .map(
+      (item) =>
+        `- ${item.concept}: ${item.state}${item.lastEvidence ? ` — ${item.lastEvidence}` : ""}`
+    )
     .join("\n");
 
   return `
@@ -20,6 +33,8 @@ GAHN AI owns the curriculum and the Magic Canvas software. Your job is to teach 
 LEARNER
 Role: ${context.learnerRole ?? "unknown"}
 Teaching language: ${context.language}
+Saved learning evidence:
+${memory || "- No prior evidence yet."}
 
 COURSE
 Learning world: ${context.worldTitle}
