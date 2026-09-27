@@ -3,7 +3,6 @@
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import type { ReactNode } from "react";
-import { MotionConfig, motion } from "framer-motion";
 import {
   ArrowRight,
   BookOpenCheck,
@@ -127,24 +126,13 @@ const secondaryButton =
 
 function Reveal({
   children,
-  delay = 0,
   className,
 }: {
   children: ReactNode;
   delay?: number;
   className?: string;
 }) {
-  return (
-    <motion.div
-      className={className}
-      initial={{ opacity: 0, y: 18 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, margin: "-60px" }}
-      transition={{ duration: 0.6, delay, ease: [0.2, 0.7, 0.2, 1] }}
-    >
-      {children}
-    </motion.div>
-  );
+  return <div className={className}>{children}</div>;
 }
 
 function SectionHeading({
@@ -470,7 +458,6 @@ export default function Home() {
   }, []);
 
   return (
-    <MotionConfig reducedMotion="user">
       <main
         id="top"
         className="marketing min-h-screen scroll-smooth bg-white font-sans text-gahn-navy antialiased"
@@ -710,6 +697,5 @@ export default function Home() {
           </div>
         </footer>
       </main>
-    </MotionConfig>
   );
 }
