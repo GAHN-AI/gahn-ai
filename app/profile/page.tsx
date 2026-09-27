@@ -44,6 +44,10 @@ export default function ProfilePage() {
   const [avatarUrl, setAvatarUrl] = useState("");
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
+  const [billingLoading, setBillingLoading] = useState(false);
+  const [planId, setPlanId] = useState("explore");
+  const [planName, setPlanName] = useState("Early Access");
+  const [cancelAtPeriodEnd, setCancelAtPeriodEnd] = useState(false);
   const [message, setMessage] = useState("");
   const [error, setError] = useState("");
 
@@ -63,6 +67,15 @@ export default function ProfilePage() {
 
       setUserId(user.id);
       setEmail(user.email || "");
+
+      const subscriptionResponse = await fetch("/api/subscription/current");
+
+      if (subscriptionResponse.ok) {
+        const subscription = await subscriptionResponse.json();
+        setPlanId(subscription.planId || "explore");
+        setPlanName(subscription.entitlements?.name || "Early Access");
+        setCancelAtPeriodEnd(Boolean(subscription.cancelAtPeriodEnd));
+      }
 
       const { data: profile } = await supabase
         .from("profiles")
@@ -124,6 +137,30 @@ export default function ProfilePage() {
     }
 
     setMessage("Profile updated.");
+  }
+
+  async function handleManageSubscription() {
+    setBillingLoading(true);
+    setError("");
+
+    try {
+      const response = await fetch("/api/stripe/portal", {
+        method: "POST",
+      });
+
+      const data = await response.json();
+
+      if (!response.ok || !data.url) {
+        setError(data.error || "Could not open subscription management.");
+        setBillingLoading(false);
+        return;
+      }
+
+      window.location.href = data.url;
+    } catch {
+      setError("Could not open subscription management.");
+      setBillingLoading(false);
+    }
   }
 
   async function handleImageUpload(e: React.ChangeEvent<HTMLInputElement>) {
@@ -239,6 +276,42 @@ export default function ProfilePage() {
               onChange={(e) => setFullName(e.target.value)}
               className="mt-3 w-full rounded-2xl border border-slate-200 px-5 py-4 text-lg outline-none focus:border-blue-500"
             />
+          </div>
+
+          <div className="mt-8 rounded-2xl border border-slate-200 bg-slate-50 p-5">
+            <p className="text-sm font-black uppercase tracking-[0.14em] text-slate-500">
+              Current Plan
+            </p>
+            <div className="mt-2 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+              <div>
+                <p className="text-xl font-black text-[#061633]">{planName}</p>
+                <p className="mt-1 text-sm text-slate-600">
+                  {cancelAtPeriodEnd
+                    ? "Your paid plan remains active until the end of the current billing period."
+                    : planId === "explore"
+                      ? "Free during the GAHN AI early-access period."
+                      : "Your dashboard and feature access follow this subscription automatically."}
+                </p>
+              </div>
+
+              {planId !== "explore" ? (
+                <button
+                  type="button"
+                  onClick={handleManageSubscription}
+                  disabled={billingLoading}
+                  className="rounded-xl border border-slate-300 bg-white px-5 py-3 text-sm font-black text-[#061633] disabled:opacity-60"
+                >
+                  {billingLoading ? "Opening..." : "Manage Subscription"}
+                </button>
+              ) : (
+                <Link
+                  href="/pricing"
+                  className="rounded-xl border border-slate-300 bg-white px-5 py-3 text-center text-sm font-black text-[#061633]"
+                >
+                  View Plan
+                </Link>
+              )}
+            </div>
           </div>
 
           
