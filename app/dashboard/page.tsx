@@ -33,6 +33,7 @@ const navItems: { label: string; Icon: LucideIcon; href: string }[] = [
   { label: "My Notes", Icon: StickyNote, href: "/notes" },
   { label: "Study Guides", Icon: BookOpen, href: "/study-guides" },
   { label: "Progress", Icon: TrendingUp, href: "/progress" },
+  { label: "Feedback", Icon: MessageSquare, href: "/feedback" },
 ];
 
 const worlds: { slug: string; Icon: LucideIcon; title: string; text: string }[] = [
