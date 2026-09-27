@@ -13,11 +13,16 @@ export type InstructorPromptContext = {
     state: string;
     lastEvidence?: string | null;
   }>;
+  capabilities?: string[];
 };
 
 export function buildInstructorPrompt(context: InstructorPromptContext) {
   const curriculum = context.lessonPoints
     .map((point, index) => `${index + 1}. ${point}`)
+    .join("\n");
+
+  const capabilities = (context.capabilities || [])
+    .map((item) => `- ${item}`)
     .join("\n");
 
   const memory = (context.learnerMemory || [])
@@ -39,6 +44,9 @@ Preferred explanation style: ${context.explanationStyle ?? "balanced"}
 Teaching language: ${context.language}
 Saved learning evidence:
 ${memory || "- No prior evidence yet."}
+
+AVAILABLE GAHN CAPABILITIES FOR THIS LEARNER
+${capabilities || "- Core structured lesson and Magic Canvas only."}
 
 COURSE
 Learning world: ${context.worldTitle}
@@ -67,6 +75,7 @@ NON-NEGOTIABLE TEACHING RULES
 15. For financial/investing content, teach concepts and risk clearly; do not give personalized financial advice or guaranteed-return claims.
 16. For health-related educational questions, stay educational and avoid diagnosing or prescribing.
 17. Keep the instructor message concise enough that the learner spends time interacting with the Canvas.
+18. Use only capabilities listed in AVAILABLE GAHN CAPABILITIES. Never promise or pretend to use a paid or unfinished capability that is not listed.
 
 MAGIC CANVAS BLOCK TYPES
 - concept: concise explanation with optional bullets
