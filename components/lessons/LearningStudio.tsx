@@ -74,6 +74,45 @@ function statusLabel(state?: InstructorTurn["evaluation"]["state"]) {
   return "Learning";
 }
 
+const speechLocales: Record<string, string> = {
+  English: "en-US",
+  Spanish: "es-ES",
+  French: "fr-FR",
+  Portuguese: "pt-BR",
+  German: "de-DE",
+  Italian: "it-IT",
+  Dutch: "nl-NL",
+  Polish: "pl-PL",
+  Romanian: "ro-RO",
+  Czech: "cs-CZ",
+  Greek: "el-GR",
+  Swedish: "sv-SE",
+  Norwegian: "nb-NO",
+  Danish: "da-DK",
+  Ukrainian: "uk-UA",
+  Russian: "ru-RU",
+  Turkish: "tr-TR",
+  Arabic: "ar-SA",
+  Hebrew: "he-IL",
+  Persian: "fa-IR",
+  Hindi: "hi-IN",
+  Bengali: "bn-BD",
+  Urdu: "ur-PK",
+  "Mandarin Chinese": "zh-CN",
+  Japanese: "ja-JP",
+  Korean: "ko-KR",
+  Vietnamese: "vi-VN",
+  Thai: "th-TH",
+  Indonesian: "id-ID",
+  Malay: "ms-MY",
+  Filipino: "fil-PH",
+  Swahili: "sw-KE",
+};
+
+function speechLocale(language: string) {
+  return speechLocales[language] || "en-US";
+}
+
 export default function LearningStudio({
   worldSlug,
   worldTitle,
@@ -246,6 +285,7 @@ export default function LearningStudio({
     if (!turn?.message || typeof window === "undefined") return;
     window.speechSynthesis.cancel();
     const utterance = new SpeechSynthesisUtterance(turn.message);
+    utterance.lang = speechLocale(language);
     window.speechSynthesis.speak(utterance);
   }
 
@@ -263,7 +303,7 @@ export default function LearningStudio({
     }
 
     const recognition = new SpeechRecognition();
-    recognition.lang = "en-US";
+    recognition.lang = speechLocale(language);
     recognition.interimResults = false;
     recognition.continuous = false;
 
