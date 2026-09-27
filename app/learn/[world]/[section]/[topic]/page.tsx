@@ -220,7 +220,7 @@ function buildLearningDetail(
 
     return {
       whatYouLearn: [
-        `Understand the essential ${title} concepts expected in ${sectionTitle}.`,
+        `Understand the essential ${sectionTitle} concepts for ${title}.`,
         "See difficult ideas broken into clear, step-by-step explanations.",
         "Practice with guided examples before working independently.",
         "Learn how to recognize and correct common mistakes.",
@@ -233,7 +233,7 @@ function buildLearningDetail(
         : ["Guided Examples", "Practice Questions", "Study Guides", "Mastery Checks"],
       modules: option?.modules?.length
         ? option.modules.map((module) => ({ title: module, description: `Learn and practice ${module.toLowerCase()}.` }))
-        : subjectModules(title),
+        : subjectModules(sectionTitle),
     };
   }
 
