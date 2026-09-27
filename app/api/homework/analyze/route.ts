@@ -199,6 +199,7 @@ export async function POST(req: Request) {
           },
         ],
         max_output_tokens: 1200,
+        store: false,
       }),
     });
 
