@@ -555,6 +555,33 @@ export async function POST(req: Request) {
     }
 
     const entitlements = access.entitlements;
+
+    const actionEntitlement: Partial<
+      Record<TeachingAction, keyof typeof entitlements>
+    > = {
+      mastery_check: "masteryAssessments",
+      study_guide: "studyGuides",
+      review: "reviewQuestions",
+    };
+
+    const requiredEntitlement =
+      actionEntitlement[body.action || "respond"];
+
+    if (
+      requiredEntitlement &&
+      entitlements[requiredEntitlement] !== true
+    ) {
+      return NextResponse.json(
+        {
+          error:
+            "This learning capability is not included in your current plan.",
+          planId: access.planId,
+          requiredEntitlement,
+        },
+        { status: 403 }
+      );
+    }
+
     const capabilities = [
       "Structured curriculum and guided lesson sequencing",
       "Core Magic Canvas explanations, diagrams, questions, and activities",
