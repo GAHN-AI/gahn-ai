@@ -276,7 +276,9 @@ export default function LessonPage() {
               </div>
 
               <div className="w-fit rounded-full border border-[#CFE0F5] bg-[#EAF3FF] px-4 py-2 text-sm font-bold text-[#1677FF]">
-                {courseSections.length ? "Section 1 · Lesson 1" : "Lesson 1"}
+                {selectedLesson
+                  ? `Section ${selectedLesson.sectionIndex + 1} · Lesson ${selectedLesson.lessonIndex + 1}`
+                  : "Lesson 1"}
               </div>
             </div>
           </div>
@@ -331,7 +333,7 @@ export default function LessonPage() {
               {courseSections.map((courseSection, sectionIndex) => (
                 <details
                   key={`${courseSection.title}-${sectionIndex}`}
-                  open={sectionIndex === 0}
+                  open={sectionIndex === (selectedLesson?.sectionIndex ?? 0)}
                   className="group border-b border-[#E7EDF5] last:border-b-0"
                 >
                   <summary className="flex cursor-pointer list-none items-center justify-between gap-4 bg-[#FBFCFE] p-5 hover:bg-[#F5F8FC]">
