@@ -12,7 +12,6 @@ import {
 import type { LucideIcon } from "lucide-react";
 import {
   Award,
-  Bell,
   Bot,
   BookOpen,
   Brain,
@@ -26,7 +25,6 @@ import {
   LayoutDashboard,
   ListChecks,
   LogOut,
-  MessageSquare,
   Search,
   StickyNote,
   TrendingUp,
@@ -399,20 +397,6 @@ if (subscriptionResponse.ok) {
                   <Flame className="h-4 w-4 text-[#1677FF]" strokeWidth={1.75} />
                   {streak} Day Streak
                 </span>
-
-                <Link
-                  href="/in-progress"
-                  className="grid h-11 w-11 place-items-center rounded-full border border-[#D7E3F2] bg-white text-[#0B1739] shadow-sm hover:bg-[#F5F8FC]"
-                >
-                  <Bell className="h-4.5 w-4.5" strokeWidth={1.75} />
-                </Link>
-
-                <Link
-                  href="/in-progress"
-                  className="grid h-11 w-11 place-items-center rounded-full border border-[#D7E3F2] bg-white text-[#0B1739] shadow-sm hover:bg-[#F5F8FC]"
-                >
-                  <MessageSquare className="h-4.5 w-4.5" strokeWidth={1.75} />
-                </Link>
 
                 <Link
                   href="/profile"
