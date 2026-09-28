@@ -81,7 +81,7 @@ export default function ProgressPage() {
       <div className="mx-auto max-w-6xl">
         <Link
           href="/dashboard"
-          className="inline-flex items-center gap-2 text-sm font-bold text-[#53657D] hover:text-[#1677FF]"
+          className="inline-flex items-center gap-2 text-sm font-bold text-black hover:text-[#1677FF]"
         >
           <ArrowLeft className="h-4 w-4" />
           Back to Dashboard
@@ -94,7 +94,7 @@ export default function ProgressPage() {
           <h1 className="mt-2 text-3xl font-extrabold tracking-[-0.035em]">
             Your Progress
           </h1>
-          <p className="mt-2 max-w-3xl text-sm leading-7 text-[#53657D]">
+          <p className="mt-2 max-w-3xl text-sm leading-7 text-black">
             GAHN tracks what you actually attempted, answered correctly, retried, practiced, and mastered. It does not invent a progress percentage.
           </p>
 
@@ -107,14 +107,14 @@ export default function ProgressPage() {
               <div key={label} className="rounded-2xl border border-[#D7E3F2] bg-[#F8FBFF] p-4">
                 <Icon className="h-5 w-5 text-[#1677FF]" />
                 <p className="mt-3 text-2xl font-extrabold">{value}</p>
-                <p className="mt-1 text-xs font-bold uppercase tracking-[0.1em] text-[#53657D]">{label}</p>
+                <p className="mt-1 text-xs font-bold uppercase tracking-[0.1em] text-black">{label}</p>
               </div>
             ))}
           </div>
 
           <div className="mt-7">
             {loading ? (
-              <p className="py-14 text-center text-sm font-semibold text-[#53657D]">
+              <p className="py-14 text-center text-sm font-semibold text-black">
                 Loading progress...
               </p>
             ) : rows.length === 0 ? (
@@ -122,7 +122,7 @@ export default function ProgressPage() {
                 <div className="max-w-md">
                   <Target className="mx-auto h-8 w-8 text-[#1677FF]" />
                   <h2 className="mt-3 text-lg font-extrabold">No lesson evidence yet</h2>
-                  <p className="mt-2 text-sm leading-6 text-[#53657D]">
+                  <p className="mt-2 text-sm leading-6 text-black">
                     Start an interactive lesson. Your answers and mastery evidence will be recorded here.
                   </p>
                   <Link
@@ -147,10 +147,10 @@ export default function ProgressPage() {
                       <h2 className="mt-1 font-extrabold">
                         {row.lesson_title || row.lesson_id}
                       </h2>
-                      <p className="mt-2 text-sm leading-6 text-[#53657D]">
+                      <p className="mt-2 text-sm leading-6 text-black">
                         {row.correct_count} correct · {row.attempts_count} checked responses · {row.retry_count} retries
                       </p>
-                      <p className="mt-1 text-xs text-[#8A98AA]">
+                      <p className="mt-1 text-xs text-black">
                         Last activity {new Date(row.last_activity_at).toLocaleString()}
                       </p>
                     </div>
