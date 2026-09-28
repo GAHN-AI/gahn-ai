@@ -21,7 +21,7 @@
   --color-gahn-mist: #A7B3CC;
   --color-gahn-paper: #F6F8FB;
   --color-gahn-line: #E3E8EF;
-  --color-gahn-slate: #56627A;
+  --color-gahn-slate: #111111;
 }
 
 @media (prefers-color-scheme: dark) {
