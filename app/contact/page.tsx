@@ -98,7 +98,7 @@ export default function ContactPage() {
                 GAHN AI
               </p>
 
-              <p className="hidden text-[8px] font-bold uppercase tracking-[0.18em] text-[#53657D] sm:block">
+              <p className="hidden text-[8px] font-bold uppercase tracking-[0.18em] text-black sm:block">
                 Global AI Human Helper Network
               </p>
             </div>
@@ -106,7 +106,7 @@ export default function ContactPage() {
 
           <Link
             href="/"
-            className="inline-flex items-center gap-2 text-sm font-semibold text-[#53657D] hover:text-[#1677FF]"
+            className="inline-flex items-center gap-2 text-sm font-semibold text-black hover:text-[#1677FF]"
           >
             <ArrowLeft className="h-4 w-4" />
             Back Home
@@ -124,7 +124,7 @@ export default function ContactPage() {
               <span className="text-[#1677FF]">help?</span>
             </h1>
 
-            <p className="mt-6 max-w-xl text-base leading-8 text-[#53657D] sm:text-lg">
+            <p className="mt-6 max-w-xl text-base leading-8 text-black sm:text-lg">
               Send us a message about support, partnerships, schools, product
               feedback, or general questions. We&apos;ll review your message and
               respond through the email address you provide.
@@ -157,7 +157,7 @@ export default function ContactPage() {
                     <h2 className="text-base font-bold text-[#0B1739]">
                       {title}
                     </h2>
-                    <p className="mt-1 text-sm leading-6 text-[#53657D]">
+                    <p className="mt-1 text-sm leading-6 text-black">
                       {text}
                     </p>
                   </div>
@@ -182,7 +182,7 @@ export default function ContactPage() {
               Tell us what you need.
             </h2>
 
-            <p className="mt-3 text-sm leading-7 text-[#53657D]">
+            <p className="mt-3 text-sm leading-7 text-black">
               Complete the form below. Every field is required.
             </p>
 
@@ -205,7 +205,7 @@ export default function ContactPage() {
                   maxLength={100}
                   required
                   placeholder="Your name"
-                  className="w-full rounded-xl border border-[#D7E3F2] bg-white px-4 py-3.5 text-sm text-[#0B1739] outline-none placeholder:text-[#7A8AA0] focus:border-[#1677FF] focus:ring-2 focus:ring-[#1677FF]/15"
+                  className="w-full rounded-xl border border-[#D7E3F2] bg-white px-4 py-3.5 text-sm text-[#0B1739] outline-none placeholder:text-black focus:border-[#1677FF] focus:ring-2 focus:ring-[#1677FF]/15"
                 />
               </div>
 
@@ -226,7 +226,7 @@ export default function ContactPage() {
                   onChange={(e) => setEmail(e.target.value)}
                   required
                   placeholder="you@example.com"
-                  className="w-full rounded-xl border border-[#D7E3F2] bg-white px-4 py-3.5 text-sm text-[#0B1739] outline-none placeholder:text-[#7A8AA0] focus:border-[#1677FF] focus:ring-2 focus:ring-[#1677FF]/15"
+                  className="w-full rounded-xl border border-[#D7E3F2] bg-white px-4 py-3.5 text-sm text-[#0B1739] outline-none placeholder:text-black focus:border-[#1677FF] focus:ring-2 focus:ring-[#1677FF]/15"
                 />
               </div>
 
@@ -247,7 +247,7 @@ export default function ContactPage() {
                   maxLength={150}
                   required
                   placeholder="What is your message about?"
-                  className="w-full rounded-xl border border-[#D7E3F2] bg-white px-4 py-3.5 text-sm text-[#0B1739] outline-none placeholder:text-[#7A8AA0] focus:border-[#1677FF] focus:ring-2 focus:ring-[#1677FF]/15"
+                  className="w-full rounded-xl border border-[#D7E3F2] bg-white px-4 py-3.5 text-sm text-[#0B1739] outline-none placeholder:text-black focus:border-[#1677FF] focus:ring-2 focus:ring-[#1677FF]/15"
                 />
               </div>
 
@@ -260,7 +260,7 @@ export default function ContactPage() {
                     Message
                   </label>
 
-                  <span className="text-xs text-[#7A8AA0]">
+                  <span className="text-xs text-black">
                     {message.length}/5000
                   </span>
                 </div>
@@ -274,7 +274,7 @@ export default function ContactPage() {
                   required
                   rows={7}
                   placeholder="Write your message here..."
-                  className="w-full resize-y rounded-xl border border-[#D7E3F2] bg-white px-4 py-3.5 text-sm leading-7 text-[#0B1739] outline-none placeholder:text-[#7A8AA0] focus:border-[#1677FF] focus:ring-2 focus:ring-[#1677FF]/15"
+                  className="w-full resize-y rounded-xl border border-[#D7E3F2] bg-white px-4 py-3.5 text-sm leading-7 text-[#0B1739] outline-none placeholder:text-black focus:border-[#1677FF] focus:ring-2 focus:ring-[#1677FF]/15"
                 />
               </div>
 
@@ -308,7 +308,7 @@ export default function ContactPage() {
           </div>
         </section>
 
-        <footer className="flex flex-col items-center justify-between gap-4 border-t border-[#D7E3F2] py-8 text-xs text-[#53657D] sm:flex-row">
+        <footer className="flex flex-col items-center justify-between gap-4 border-t border-[#D7E3F2] py-8 text-xs text-black sm:flex-row">
           <p>© 2026 GAHN AI. All rights reserved.</p>
 
           <div className="flex flex-wrap items-center justify-center gap-5">
