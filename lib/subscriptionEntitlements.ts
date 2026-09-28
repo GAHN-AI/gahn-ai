@@ -86,15 +86,15 @@ export const SUBSCRIPTION_ENTITLEMENTS: Record<
 > = {
   explore: {
     planId: "explore",
-    name: "Early Access",
+    name: "Explore",
     monthlyPrice: 0,
 
     purchaseEnabled: true,
 
-    allLearningWorlds: true,
+    allLearningWorlds: false,
     multilingualLearning: true,
     adaptiveLearning: true,
-    masteryAssessments: true,
+    masteryAssessments: false,
 
     liveInstructor: true,
     liveInstructorMinutesPerMonth: null,
@@ -104,18 +104,18 @@ export const SUBSCRIPTION_ENTITLEMENTS: Record<
     codeWorkspace: false,
     browserLearning: false,
 
-    homeworkHelp: true,
-    fileUploads: true,
+    homeworkHelp: false,
+    fileUploads: false,
     advancedFileAnalysis: false,
 
-    learnerMemory: true,
+    learnerMemory: false,
     advancedLearnerMemory: false,
     progressTracking: true,
     advancedAnalytics: false,
 
     notes: true,
-    studyGuides: true,
-    reviewQuestions: true,
+    studyGuides: false,
+    reviewQuestions: false,
 
     careerPrograms: false,
     careerProjects: false,
@@ -150,15 +150,15 @@ export const SUBSCRIPTION_ENTITLEMENTS: Record<
     name: "Learner Plus",
     monthlyPrice: 29,
 
-    purchaseEnabled: false,
+    purchaseEnabled: true,
 
-    allLearningWorlds: true,
+    allLearningWorlds: false,
     multilingualLearning: true,
     adaptiveLearning: true,
-    masteryAssessments: false,
+    masteryAssessments: true,
 
     liveInstructor: true,
-    liveInstructorMinutesPerMonth: 30,
+    liveInstructorMinutesPerMonth: null,
 
     learningCanvas: true,
     advancedLearningCanvas: false,
