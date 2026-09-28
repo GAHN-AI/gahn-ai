@@ -74,7 +74,7 @@ export default function EarlyAccessAdminPage() {
       <div className="mx-auto max-w-7xl">
         <Link
           href="/dashboard"
-          className="inline-flex items-center gap-2 text-sm font-bold text-[#53657D] hover:text-[#1677FF]"
+          className="inline-flex items-center gap-2 text-sm font-bold text-black hover:text-[#1677FF]"
         >
           <ArrowLeft className="h-4 w-4" />
           Back to Dashboard
@@ -87,13 +87,13 @@ export default function EarlyAccessAdminPage() {
           <h1 className="mt-2 text-3xl font-extrabold tracking-[-0.035em]">
             Early Access Learning Signals
           </h1>
-          <p className="mt-2 max-w-3xl text-sm leading-7 text-[#53657D]">
+          <p className="mt-2 max-w-3xl text-sm leading-7 text-black">
             Watch what learners actually use, what they master, what they ask the AI to do, and what they report as confusing.
           </p>
         </div>
 
         {loading && (
-          <div className="mt-8 rounded-2xl border border-[#D7E3F2] bg-white p-12 text-center text-sm font-semibold text-[#53657D]">
+          <div className="mt-8 rounded-2xl border border-[#D7E3F2] bg-white p-12 text-center text-sm font-semibold text-black">
             Loading early-access signals...
           </div>
         )}
@@ -144,7 +144,7 @@ export default function EarlyAccessAdminPage() {
                 >
                   <Icon className="h-5 w-5 text-[#1677FF]" />
                   <p className="mt-4 text-3xl font-extrabold">{value}</p>
-                  <p className="mt-1 text-xs font-bold uppercase tracking-[0.1em] text-[#53657D]">
+                  <p className="mt-1 text-xs font-bold uppercase tracking-[0.1em] text-black">
                     {label}
                   </p>
                 </div>
@@ -157,7 +157,7 @@ export default function EarlyAccessAdminPage() {
                   <BrainCircuit className="h-5 w-5 text-[#1677FF]" />
                   <div>
                     <h2 className="font-extrabold">AI Usage</h2>
-                    <p className="text-xs text-[#53657D]">{data.period}</p>
+                    <p className="text-xs text-black">{data.period}</p>
                   </div>
                 </div>
 
@@ -166,7 +166,7 @@ export default function EarlyAccessAdminPage() {
                     <p className="text-2xl font-extrabold">
                       {data.usage.teachingTurns}
                     </p>
-                    <p className="mt-1 text-xs font-bold uppercase tracking-[0.08em] text-[#53657D]">
+                    <p className="mt-1 text-xs font-bold uppercase tracking-[0.08em] text-black">
                       Teaching turns
                     </p>
                   </div>
@@ -174,7 +174,7 @@ export default function EarlyAccessAdminPage() {
                     <p className="text-2xl font-extrabold">
                       {data.usage.fileAnalyses}
                     </p>
-                    <p className="mt-1 text-xs font-bold uppercase tracking-[0.08em] text-[#53657D]">
+                    <p className="mt-1 text-xs font-bold uppercase tracking-[0.08em] text-black">
                       File analyses
                     </p>
                   </div>
@@ -199,7 +199,7 @@ export default function EarlyAccessAdminPage() {
                       </div>
                     ))
                   ) : (
-                    <p className="text-sm text-[#53657D]">
+                    <p className="text-sm text-black">
                       No lesson activity yet.
                     </p>
                   )}
@@ -222,21 +222,21 @@ export default function EarlyAccessAdminPage() {
                             {item.category}
                           </span>
                           {item.rating && (
-                            <span className="text-xs font-bold text-[#53657D]">
+                            <span className="text-xs font-bold text-black">
                               {item.rating}/5
                             </span>
                           )}
                         </div>
-                        <p className="mt-3 whitespace-pre-wrap text-sm leading-6 text-[#40536D]">
+                        <p className="mt-3 whitespace-pre-wrap text-sm leading-6 text-black">
                           {item.message}
                         </p>
-                        <p className="mt-2 text-xs text-[#8A98AA]">
+                        <p className="mt-2 text-xs text-black">
                           {new Date(item.created_at).toLocaleString()}
                         </p>
                       </article>
                     ))
                   ) : (
-                    <p className="text-sm text-[#53657D]">
+                    <p className="text-sm text-black">
                       No feedback submitted yet.
                     </p>
                   )}
@@ -257,7 +257,7 @@ export default function EarlyAccessAdminPage() {
                       <p className="mt-1 text-sm font-semibold">
                         {session.lesson_title}
                       </p>
-                      <p className="mt-1 text-xs text-[#8A98AA]">
+                      <p className="mt-1 text-xs text-black">
                         {new Date(session.last_activity_at).toLocaleString()}
                       </p>
                     </div>
