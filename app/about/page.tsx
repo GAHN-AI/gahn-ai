@@ -26,7 +26,7 @@ export default function AboutPage() {
 
           <Link
             href="/"
-            className="flex items-center gap-2 text-sm font-semibold text-[#5B6472] transition hover:text-[#2952A3]"
+            className="flex items-center gap-2 text-sm font-semibold text-black transition hover:text-[#2952A3]"
           >
             <ArrowLeft className="h-4 w-4" strokeWidth={1.75} />
             Back to home
@@ -44,7 +44,7 @@ export default function AboutPage() {
             Learning that adapts to you, not the other way around.
           </h1>
 
-          <p className="mt-5 max-w-2xl text-lg leading-8 text-[#5B6472]">
+          <p className="mt-5 max-w-2xl text-lg leading-8 text-black">
             GAHN AI — Global AI Human Helper Network — is a structured learning
             platform built around one idea: an AI instructor should teach the
             way a good tutor does. It explains a concept, checks that you
@@ -58,7 +58,7 @@ export default function AboutPage() {
         <div>
           <h2 className="text-2xl font-bold">Why we built this</h2>
 
-          <p className="mt-4 text-base leading-7 text-[#5B6472]">
+          <p className="mt-4 text-base leading-7 text-black">
             Most AI tools answer whatever you ask, in whatever order you ask
             it. That&apos;s useful, but it isn&apos;t teaching — it&apos;s
             lookup. GAHN AI was built to do something different: run an actual
@@ -73,7 +73,7 @@ export default function AboutPage() {
             What &quot;adapts to you&quot; actually means
           </h2>
 
-          <p className="mt-4 text-base leading-7 text-[#5B6472]">
+          <p className="mt-4 text-base leading-7 text-black">
             An AI instructor on GAHN AI notices your current level, adjusts
             explanations when you&apos;re confused, remembers what you&apos;ve
             struggled with, and paces future lessons around that. It isn&apos;t
@@ -86,20 +86,20 @@ export default function AboutPage() {
         <div>
           <h2 className="text-2xl font-bold">Who it&apos;s for</h2>
 
-          <p className="mt-4 text-base leading-7 text-[#5B6472]">
+          <p className="mt-4 text-base leading-7 text-black">
             Students working through school subjects, self-learners building
             career and life skills, and anyone who wants to actually understand
-            something instead of just getting an answer. GAHN AI is designed to
-            work across five learning worlds — Career Skills, School Help, Brain
-            Development, General Knowledge, and Book Intelligence — with more
-            built as the platform grows.
+            something instead of just getting an answer. GAHN AI is designed around five learning worlds. The current MVP only
+            opens Career Skills and School Help so the private tutor experience
+            can be tested before Brain Development, General Knowledge, and Book
+            Intelligence are released.
           </p>
         </div>
 
         <div>
           <h2 className="text-2xl font-bold">Where we are</h2>
 
-          <p className="mt-4 text-base leading-7 text-[#5B6472]">
+          <p className="mt-4 text-base leading-7 text-black">
             GAHN AI is early. We&apos;re building in public, taking feedback
             seriously, and shipping improvements constantly. If something on
             the platform doesn&apos;t work the way you&apos;d expect, we want
