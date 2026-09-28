@@ -359,7 +359,7 @@ function WorldPreview({ title }: { title: string }) {
         </span>
       </div>
 
-      <p className="mt-4 text-[10px] font-bold uppercase tracking-[0.14em] text-[#7A8AA0]">
+      <p className="mt-4 text-[10px] font-bold uppercase tracking-[0.14em] text-black">
         {config.eyebrow}
       </p>
       <p className="mt-1 text-sm font-bold text-[#0B1739]">
@@ -377,7 +377,7 @@ function WorldPreview({ title }: { title: string }) {
             ) : (
               <Check className="h-3.5 w-3.5 shrink-0 text-[#1677FF]" />
             )}
-            <span className="text-xs font-semibold text-[#40536D]">{item}</span>
+            <span className="text-xs font-semibold text-black">{item}</span>
           </div>
         ))}
       </div>
