@@ -3,32 +3,38 @@
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { useParams, useSearchParams } from "next/navigation";
-import {
-  ArrowLeft,
-  BookOpen,
-  Brain,
-  CheckCircle2,
-  ChevronDown,
-  ChevronRight,
-  CirclePlay,
-  LockKeyhole,
-  Lightbulb,
-  ListChecks,
-  PencilLine,
-  Target,
-} from "lucide-react";
+import { ArrowLeft, MonitorUp, Sparkles } from "lucide-react";
 
-import AIInstructor from "@/components/instructors/AIInstructor";
 import LanguageSelector from "@/components/LanguageSelector";
-import { getCareerCourseSections } from "@/lib/careerCurriculum";
+import MayaLiveAvatar from "@/components/lessons/MayaLiveAvatar";
 
 const worldInformation = {
-  "career-skills": { title: "Career Skills", instructor: "Maya" },
-  "school-help": { title: "School Help", instructor: "AI Instructor" },
-  "brain-development": { title: "Brain Development", instructor: "AI Instructor" },
-  "general-knowledge": { title: "General Knowledge", instructor: "AI Instructor" },
-  "book-intelligence": { title: "Book Intelligence", instructor: "AI Instructor" },
-};
+  "career-skills": {
+    title: "Career Skills",
+    instructor: "Maya",
+    available: true,
+  },
+  "school-help": {
+    title: "School Help",
+    instructor: "AI Instructor",
+    available: true,
+  },
+  "brain-development": {
+    title: "Brain Development",
+    instructor: "AI Instructor",
+    available: false,
+  },
+  "general-knowledge": {
+    title: "General Knowledge",
+    instructor: "AI Instructor",
+    available: false,
+  },
+  "book-intelligence": {
+    title: "Book Intelligence",
+    instructor: "AI Instructor",
+    available: false,
+  },
+} as const;
 
 type WorldKey = keyof typeof worldInformation;
 
@@ -42,77 +48,124 @@ function formatSlug(value: string) {
 export default function LessonPage() {
   const params = useParams<{ lessonId: string }>();
   const searchParams = useSearchParams();
+
   const lessonId = params.lessonId;
-  const requestedWorldSlug = searchParams.get("world") || "general-knowledge";
+
+  const requestedWorldSlug =
+    searchParams.get("world") || "career-skills";
+
   const learningSection = searchParams.get("section");
   const topicSlug = searchParams.get("topicSlug");
 
   const resolvedWorldSlug: WorldKey =
     requestedWorldSlug in worldInformation
       ? (requestedWorldSlug as WorldKey)
-      : "general-knowledge";
+      : "career-skills";
 
   const requestedTopic =
     searchParams.get("topic") ||
-    (lessonId !== "custom" ? formatSlug(lessonId) : "New Learning Topic");
+    (lessonId !== "custom"
+      ? formatSlug(lessonId)
+      : "Private Lesson");
 
   const world = worldInformation[resolvedWorldSlug];
+
   const [language, setLanguage] = useState(
     searchParams.get("language") || "English"
   );
 
   useEffect(() => {
     const stored = window.localStorage.getItem("gahn-language");
-    if (!searchParams.get("language") && stored) setLanguage(stored);
+
+    if (!searchParams.get("language") && stored) {
+      setLanguage(stored);
+    }
   }, [searchParams]);
 
   function changeLanguage(nextLanguage: string) {
     setLanguage(nextLanguage);
-    window.localStorage.setItem("gahn-language", nextLanguage);
+    window.localStorage.setItem(
+      "gahn-language",
+      nextLanguage
+    );
   }
-
-  const careerCourseSections =
-    resolvedWorldSlug === "career-skills" && learningSection
-      ? getCareerCourseSections(learningSection, requestedTopic)
-      : [];
-
-  const currentCareerLesson =
-    careerCourseSections[0]?.lessons[0] || requestedTopic;
 
   const backHref =
     learningSection && topicSlug
       ? `/learn/${resolvedWorldSlug}/${encodeURIComponent(
           learningSection
-        )}/${encodeURIComponent(topicSlug)}?language=${encodeURIComponent(language)}`
+        )}/${encodeURIComponent(
+          topicSlug
+        )}?language=${encodeURIComponent(language)}`
       : learningSection
         ? `/learn/${resolvedWorldSlug}/${encodeURIComponent(
             learningSection
           )}?language=${encodeURIComponent(language)}`
-        : `/learn/${resolvedWorldSlug}?language=${encodeURIComponent(language)}`;
+        : `/learn/${resolvedWorldSlug}?language=${encodeURIComponent(
+            language
+          )}`;
+
+  if (!world.available) {
+    return (
+      <main className="min-h-screen bg-[#F4F7FB] px-5 py-10 text-black sm:px-8">
+        <div className="mx-auto max-w-5xl">
+          <Link
+            href="/dashboard"
+            className="font-black text-[#0B1739]"
+          >
+            ← Back to Dashboard
+          </Link>
+
+          <div className="mt-10 rounded-2xl border border-[#D8E0EA] bg-white p-10 text-center">
+            <h1 className="text-3xl font-black text-[#0B1739]">
+              This learning world is not available yet.
+            </h1>
+
+            <p className="mt-3 text-sm font-medium text-black">
+              GAHN is currently focused on Career Skills and
+              School Help.
+            </p>
+          </div>
+        </div>
+      </main>
+    );
+  }
 
   return (
-    <main className="min-h-screen bg-[#F8FBFF] font-sans text-[#0B1739]">
-      <header className="border-b border-[#D7E3F2] bg-white">
-        <div className="mx-auto flex max-w-[1600px] flex-wrap items-center justify-between gap-3 px-5 py-4 sm:px-8">
+    <main className="min-h-screen bg-[#F4F7FB] font-sans text-black">
+      <header className="border-b border-[#D8E0EA] bg-white">
+        <div className="mx-auto flex max-w-[1600px] flex-wrap items-center justify-between gap-4 px-5 py-4 sm:px-8">
           <Link
             href={backHref}
-            className="inline-flex items-center gap-2 text-sm font-semibold text-[#53657D] hover:text-[#1677FF]"
+            className="inline-flex items-center gap-2 text-sm font-black text-[#0B1739]"
           >
             <ArrowLeft className="h-4 w-4" />
-            Back to {topicSlug ? "learning path" : learningSection ? "section options" : world.title}
+            Back to course
           </Link>
 
           <div className="flex items-center gap-3">
-            <LanguageSelector value={language} onChange={changeLanguage} compact />
-            <Link href="/" className="flex items-center gap-3">
+            <LanguageSelector
+              value={language}
+              onChange={changeLanguage}
+              compact
+            />
+
+            <Link
+              href="/"
+              className="flex items-center gap-3"
+            >
               <img
                 src="/logo/favicon.png"
                 alt="GAHN AI"
                 className="h-10 w-10 rounded-full object-cover"
               />
+
               <div className="hidden sm:block">
-                <span className="block font-extrabold tracking-[-0.02em]">GAHN AI</span>
-                <span className="block text-[7px] font-bold uppercase tracking-[0.16em] text-[#53657D]">
+                <span className="block font-extrabold tracking-[-0.02em] text-[#0B1739]">
+                  GAHN AI
+                </span>
+
+                <span className="block text-[7px] font-bold uppercase tracking-[0.16em] text-black">
                   Global AI Human Helper Network
                 </span>
               </div>
@@ -121,244 +174,127 @@ export default function LessonPage() {
         </div>
       </header>
 
-      <div className="mx-auto max-w-[1600px] px-5 py-7 sm:px-8">
-        <section className="relative mb-6 overflow-hidden rounded-[1.5rem] border border-[#D7E3F2] bg-white px-6 py-6 shadow-[0_12px_35px_rgba(11,23,57,0.05)] sm:px-8">
-          <div aria-hidden="true" className="pointer-events-none absolute -right-20 -top-24 h-64 w-64 rounded-full bg-[#EAF3FF]" />
+      <div className="mx-auto max-w-[1600px] px-5 py-6 sm:px-8 lg:py-8">
+        <section className="mb-6 rounded-[1.4rem] border border-[#BFD3ED] bg-white p-5 shadow-[0_10px_28px_rgba(11,23,57,0.04)] sm:p-6">
+          <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
+            <div>
+              <p className="text-xs font-black uppercase tracking-[0.16em] text-[#1677FF]">
+                {world.title}
+              </p>
 
-          <div className="relative">
-            <div className="flex items-center gap-2 text-sm font-bold text-[#1677FF]">
-              <BookOpen className="h-4 w-4" />
-              {world.title}
-            </div>
+              <h1 className="mt-1 text-3xl font-black tracking-[-0.035em] text-[#0B1739]">
+                {requestedTopic}
+              </h1>
 
-            <div className="mt-3 flex flex-col justify-between gap-4 lg:flex-row lg:items-end">
-              <div>
-                <h1 className="text-3xl font-extrabold tracking-[-0.03em] sm:text-4xl">{requestedTopic}</h1>
-                <p className="mt-2 max-w-3xl text-sm leading-7 text-[#53657D]">
-                  Your AI instructor will build this learning path around your current knowledge, responses, mistakes, and progress.
-                </p>
-                <div className="mt-3 flex flex-wrap items-center gap-4 text-xs font-semibold text-[#53657D]">
-                  <span className="flex items-center gap-2">
-                    <CheckCircle2 className="h-4 w-4 text-[#1677FF]" />
-                    Progress tracking is off until live AI lessons are enabled.
-                  </span>
-                  <span className="rounded-full bg-[#F1F7FF] px-3 py-1.5 text-[#1677FF]">
-                    Teaching in {language}
-                  </span>
-                </div>
-              </div>
-
-              <div className="w-fit rounded-full border border-[#CFE0F5] bg-[#EAF3FF] px-4 py-2 text-sm font-bold text-[#1677FF]">
-                {resolvedWorldSlug === "career-skills" ? "Section 1 · Lesson 1" : "Lesson 1"}
-              </div>
-            </div>
-          </div>
-        </section>
-
-        <section className="grid gap-6 xl:grid-cols-[minmax(0,1.25fr)_minmax(420px,0.75fr)]">
-          <div className="min-w-0">
-            <AIInstructor
-              instructorName={world.instructor}
-              world={world.title}
-              lessonTitle={requestedTopic}
-              language={language}
-            />
-          </div>
-
-          <aside className="overflow-hidden rounded-[1.5rem] border border-[#D7E3F2] bg-white shadow-[0_16px_45px_rgba(11,23,57,0.06)]">
-            <div className="border-b border-[#D7E3F2] bg-[linear-gradient(135deg,#FFFFFF_0%,#F8FBFF_65%,#EAF3FF_100%)] p-5 sm:p-6">
-              <p className="text-xs font-bold uppercase tracking-[0.18em] text-[#1677FF]">Live Learning Panel</p>
-              <h2 className="mt-2 text-xl font-extrabold tracking-[-0.02em]">What your instructor is teaching</h2>
-              <p className="mt-2 text-sm leading-6 text-[#53657D]">
-                Visual explanations, examples, notes, diagrams, questions, and activities will appear here as the instructor teaches.
+              <p className="mt-2 text-sm font-medium leading-6 text-black">
+                Learn through a live private AI instructor and an
+                interactive learning panel.
               </p>
             </div>
 
-            <div className="max-h-[640px] space-y-4 overflow-y-auto p-5 sm:p-6">
-              <div className="rounded-xl border border-[#CFE0F5] bg-[#F1F7FF] p-5">
-                <div className="flex items-center gap-3">
-                  <div className="grid h-9 w-9 place-items-center rounded-lg bg-white text-[#1677FF]">
-                    <Target className="h-4.5 w-4.5" />
-                  </div>
-                  <h3 className="font-bold">Lesson Objective</h3>
-                </div>
-                <p className="mt-3 text-sm leading-6 text-[#53657D]">
+            <div className="rounded-full bg-[#EAF3FF] px-4 py-2 text-sm font-black text-[#0B1739]">
+              Teaching in {language}
+            </div>
+          </div>
+        </section>
+
+        <section className="grid min-h-[680px] gap-5 xl:grid-cols-[0.88fr_1.12fr]">
+          <div className="overflow-hidden rounded-[1.6rem] border border-[#07162F] bg-[#07162F] shadow-[0_18px_48px_rgba(7,22,47,0.16)]">
+            <div className="flex items-center justify-between border-b border-white/15 px-5 py-4">
+              <div>
+                <p className="text-xs font-black uppercase tracking-[0.16em] text-[#8DB8FF]">
+                  AI Instructor
+                </p>
+
+                <p className="mt-1 text-sm font-black text-white">
                   {resolvedWorldSlug === "career-skills"
-                    ? `Learn ${currentCareerLesson} as part of the ${requestedTopic} path and demonstrate the skill through explanation or practice.`
-                    : `Understand the foundations of ${requestedTopic} and be able to explain the core idea in your own words.`}
+                    ? "Maya — Live AI Instructor"
+                    : "School Help AI Instructor"}
                 </p>
               </div>
 
-              <div className="rounded-xl border border-[#D7E3F2] bg-white p-5">
-                <div className="flex items-center gap-3">
-                  <div className="grid h-9 w-9 place-items-center rounded-lg bg-[#EAF3FF] text-[#1677FF]">
-                    <Brain className="h-4.5 w-4.5" />
-                  </div>
-                  <h3 className="font-bold">Current Explanation</h3>
-                </div>
-                <div className="mt-4 rounded-xl bg-[#F8FBFF] p-4">
-                  <p className="text-sm leading-7 text-[#53657D]">
-                    When the AI instructor begins speaking, the most important concepts will appear here in clear visual form and in your selected teaching language.
+              <span className="rounded-full border border-white/20 bg-white/10 px-3 py-1 text-[10px] font-black uppercase tracking-[0.08em] text-white">
+                {resolvedWorldSlug === "career-skills"
+                  ? "Live"
+                  : "Coming Next"}
+              </span>
+            </div>
+
+            {resolvedWorldSlug === "career-skills" ? (
+              <MayaLiveAvatar />
+            ) : (
+              <div className="flex min-h-[540px] items-center justify-center px-6 text-center text-white">
+                <div>
+                  <h2 className="text-2xl font-black">
+                    School Help instructor
+                  </h2>
+
+                  <p className="mt-3 max-w-md text-sm font-medium leading-7 text-white">
+                    The Career Skills Maya integration is being
+                    tested first. School Help will receive its own
+                    instructor configuration.
                   </p>
                 </div>
               </div>
-
-              <div className="rounded-xl border border-[#D7E3F2] bg-white p-5">
-                <div className="flex items-center gap-3">
-                  <div className="grid h-9 w-9 place-items-center rounded-lg bg-[#EAF3FF] text-[#1677FF]">
-                    <Lightbulb className="h-4.5 w-4.5" />
-                  </div>
-                  <h3 className="font-bold">Visual Example</h3>
-                </div>
-                <div className="mt-4 flex min-h-[170px] items-center justify-center rounded-xl border border-dashed border-[#CFE0F5] bg-[linear-gradient(135deg,#FFFFFF_0%,#F8FBFF_60%,#EAF3FF_100%)] p-6 text-center">
-                  <div>
-                    <p className="font-bold text-[#1677FF]">Interactive visual area</p>
-                    <p className="mt-2 max-w-sm text-sm leading-6 text-[#53657D]">
-                      Diagrams, equations, charts, code, timelines, whiteboard work, images, and demonstrations can appear here.
-                    </p>
-                  </div>
-                </div>
-              </div>
-
-              <div className="rounded-xl border border-[#D7E3F2] bg-white p-5">
-                <div className="flex items-center gap-3">
-                  <div className="grid h-9 w-9 place-items-center rounded-lg bg-[#EAF3FF] text-[#1677FF]">
-                    <PencilLine className="h-4.5 w-4.5" />
-                  </div>
-                  <h3 className="font-bold">Write This Down</h3>
-                </div>
-                <p className="mt-3 text-sm leading-6 text-[#53657D]">Important notes the instructor wants you to remember will appear here.</p>
-              </div>
-
-              <div className="rounded-xl border border-[#D7E3F2] bg-white p-5">
-                <div className="flex items-center gap-3">
-                  <div className="grid h-9 w-9 place-items-center rounded-lg bg-[#EAF3FF] text-[#1677FF]">
-                    <ListChecks className="h-4.5 w-4.5" />
-                  </div>
-                  <h3 className="font-bold">Your Turn</h3>
-                </div>
-                <p className="mt-3 text-sm leading-6 text-[#53657D]">
-                  Practice questions and activities will appear here when your instructor wants you to apply what you just learned.
-                </p>
-                <button type="button" disabled className="mt-4 inline-flex items-center gap-2 rounded-lg bg-[#E8EEF6] px-4 py-2.5 text-sm font-semibold text-[#8A98AA]">
-                  Waiting for instructor
-                  <ChevronRight className="h-4 w-4" />
-                </button>
-              </div>
-            </div>
-          </aside>
-        </section>
-
-        <section className="mt-6 rounded-[1.5rem] border border-[#D7E3F2] bg-white p-6 shadow-[0_12px_35px_rgba(11,23,57,0.05)]">
-          <div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-center">
-            <div>
-              <p className="text-xs font-bold uppercase tracking-[0.18em] text-[#1677FF]">Lesson Sequence</p>
-              <h2 className="mt-1 text-xl font-extrabold">Your Learning Path</h2>
-              <p className="mt-1 text-sm text-[#53657D]">Later lessons remain locked until you demonstrate mastery.</p>
-            </div>
-            <span className="w-fit rounded-full bg-[#EAF3FF] px-4 py-2 text-sm font-bold text-[#1677FF]">
-              {resolvedWorldSlug === "career-skills"
-                ? careerCourseSections.length
-                  ? `${careerCourseSections.length} course sections`
-                  : "Career curriculum"
-                : "Lesson 1 in progress"}
-            </span>
+            )}
           </div>
 
-          {resolvedWorldSlug === "career-skills" ? (
-            <div className="mt-5 overflow-hidden rounded-2xl border border-[#D7E3F2] bg-white">
-              {careerCourseSections.map((courseSection, sectionIndex) => (
-                <details
-                  key={`${courseSection.title}-${sectionIndex}`}
-                  open={sectionIndex === 0}
-                  className="group border-b border-[#E7EDF5] last:border-b-0"
-                >
-                  <summary className="flex cursor-pointer list-none items-center justify-between gap-4 bg-[#FBFCFE] p-5 hover:bg-[#F5F8FC]">
-                    <div className="min-w-0">
-                      <p className="text-xs font-bold uppercase tracking-[0.14em] text-[#1677FF]">
-                        Section {sectionIndex + 1}
-                      </p>
-                      <h3 className="mt-1 font-bold text-[#0B1739]">
-                        {courseSection.title}
-                      </h3>
-                      <p className="mt-1 text-xs text-[#53657D]">
-                        {courseSection.lessons.length} lessons
-                      </p>
-                    </div>
-                    <ChevronDown className="h-5 w-5 shrink-0 text-[#53657D] transition-transform group-open:rotate-180" />
-                  </summary>
+          <div className="overflow-hidden rounded-[1.6rem] border border-[#BFD3ED] bg-white shadow-[0_18px_48px_rgba(11,23,57,0.06)]">
+            <div className="flex items-center justify-between border-b border-[#D8E0EA] bg-white px-5 py-4">
+              <div>
+                <p className="text-xs font-black uppercase tracking-[0.16em] text-[#1677FF]">
+                  Interactive Learning Panel
+                </p>
 
-                  <div className="border-t border-[#E7EDF5]">
-                    {courseSection.lessons.map((lessonTitle, lessonIndex) => {
-                      const isCurrent = sectionIndex === 0 && lessonIndex === 0;
-
-                      return (
-                        <div
-                          key={`${lessonTitle}-${lessonIndex}`}
-                          className={`flex items-start justify-between gap-4 border-b border-[#EEF2F7] px-5 py-4 last:border-b-0 sm:pl-8 ${
-                            isCurrent ? "bg-[#F1F7FF]" : "bg-white"
-                          }`}
-                        >
-                          <div className="flex min-w-0 items-start gap-3">
-                            {isCurrent ? (
-                              <CirclePlay
-                                className="mt-0.5 h-4 w-4 shrink-0 text-[#1677FF]"
-                                strokeWidth={1.8}
-                              />
-                            ) : (
-                              <LockKeyhole
-                                className="mt-0.5 h-4 w-4 shrink-0 text-[#93A1B3]"
-                                strokeWidth={1.8}
-                              />
-                            )}
-
-                            <div className="min-w-0">
-                              <p
-                                className={`text-sm font-semibold ${
-                                  isCurrent ? "text-[#0B1739]" : "text-[#40536D]"
-                                }`}
-                              >
-                                {lessonTitle}
-                              </p>
-                              <p className="mt-1 text-xs text-[#7A8AA0]">
-                                {isCurrent
-                                  ? "Current lesson"
-                                  : "Unlock after earlier mastery checks"}
-                              </p>
-                            </div>
-                          </div>
-
-                          <span className="shrink-0 text-xs font-semibold text-[#7A8AA0]">
-                            {lessonIndex + 1}
-                          </span>
-                        </div>
-                      );
-                    })}
-                  </div>
-                </details>
-              ))}
-            </div>
-          ) : (
-            <div className="mt-5 grid gap-3 md:grid-cols-4">
-              <div className="rounded-xl border border-[#CFE0F5] bg-[#F1F7FF] p-4">
-                <p className="text-xs font-bold text-[#1677FF]">LESSON 1</p>
-                <p className="mt-1 font-bold">Foundations</p>
-                <p className="mt-2 text-xs text-[#53657D]">Unlocked</p>
+                <p className="mt-1 text-sm font-black text-[#0B1739]">
+                  Live teaching workspace
+                </p>
               </div>
 
-              {[2, 3, 4].map((lesson) => (
-                <div key={lesson} className="rounded-xl border border-[#D7E3F2] bg-[#F8FBFF] p-4 opacity-75">
-                  <p className="text-xs font-bold text-[#7A8AA0]">LESSON {lesson}</p>
-                  <p className="mt-1 font-bold">Locked</p>
-                  <p className="mt-2 text-xs text-[#7A8AA0]">Pass the previous mastery check</p>
-                </div>
-              ))}
+              <span className="rounded-full bg-[#EAF3FF] px-3 py-1 text-[10px] font-black uppercase tracking-[0.08em] text-[#0B1739]">
+                Next Integration
+              </span>
             </div>
-          )}
 
-          <div className="mt-5 flex items-center gap-2 text-sm text-[#53657D]">
-            <CheckCircle2 className="h-4 w-4 text-[#1677FF]" />
-            Your AI instructor will test your understanding before unlocking the next lesson.
+            <div className="min-h-[540px] bg-[#F8FAFD] p-5 sm:p-7">
+              <div className="grid min-h-[490px] place-items-center rounded-[1.35rem] border-2 border-dashed border-[#BFD3ED] bg-white p-6 text-center">
+                <div className="max-w-lg">
+                  <div className="mx-auto grid h-16 w-16 place-items-center rounded-2xl bg-[#EAF3FF] text-[#1677FF]">
+                    <MonitorUp className="h-7 w-7" />
+                  </div>
+
+                  <h2 className="mt-5 text-2xl font-black text-[#0B1739]">
+                    Interactive learning UI will appear here
+                  </h2>
+
+                  <p className="mt-3 text-sm font-medium leading-7 text-black">
+                    After Maya is working correctly, this panel
+                    will automatically show explanations,
+                    questions, visuals, examples, and activities
+                    while she teaches.
+                  </p>
+
+                  <div className="mt-6 grid gap-3 sm:grid-cols-3">
+                    {[
+                      "Visual",
+                      "Question",
+                      "Activity",
+                    ].map((label) => (
+                      <div
+                        key={label}
+                        className="rounded-xl border border-[#D8E0EA] bg-[#F4F7FB] p-4"
+                      >
+                        <Sparkles className="mx-auto h-4 w-4 text-[#1677FF]" />
+
+                        <p className="mt-2 text-xs font-black text-black">
+                          {label}
+                        </p>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
         </section>
       </div>
