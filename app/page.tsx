@@ -29,29 +29,34 @@ const worlds = [
   {
     title: "Career Skills",
     text: "Business, leadership, entrepreneurship, communication, and job-ready skills.",
+    available: true,
   },
   {
     title: "School Help",
     text: "Math, science, writing, reading, study support, and guided homework help.",
+    available: true,
   },
   {
     title: "Brain Development",
     text: "Memory, focus, discipline, reasoning, habits, and learning performance.",
+    available: false,
   },
   {
     title: "General Knowledge",
     text: "History, technology, communication, culture, life skills, current events, and real-world knowledge.",
+    available: false,
   },
   {
     title: "Book Intelligence",
     text: "Turn books into summaries, lessons, quizzes, notes, and study paths.",
+    available: false,
   },
 ];
 
 const heroPoints = [
   ["Structured lessons", "Not random chats"],
   ["Active practice", "You think and respond"],
-  ["Five learning worlds", "Career, school, and more"],
+  ["Two worlds live now", "Career Skills and School Help"],
   ["Your language", "Learn the way you speak"],
 ];
 
@@ -92,7 +97,7 @@ const faqs = [
   },
   {
     q: "What are the learning worlds?",
-    a: "GAHN AI is organized into five learning worlds: Career Skills, School Help, Brain Development, General Knowledge, and Book Intelligence. You choose the one you want to start with and can explore the others anytime.",
+    a: "GAHN AI is designed around five learning worlds. During the current MVP test, Career Skills and School Help are available. Brain Development, General Knowledge, and Book Intelligence are marked Not available until the core tutor experience is proven.",
   },
   {
     q: "Is my data and progress private?",
@@ -380,25 +385,61 @@ function WorldPreview({ title }: { title: string }) {
   );
 }
 
-function WorldCard({ title, text }: { title: string; text: string }) {
-  return (
-    <Link
-      href="/signup"
-      className="group grid h-full overflow-hidden rounded-3xl border border-gahn-line bg-white p-5 transition-shadow duration-300 hover:shadow-[0_24px_48px_-24px_rgba(11,23,57,0.25)] sm:p-6 lg:grid-cols-[minmax(0,1fr)_220px] lg:gap-6"
+function WorldCard({
+  title,
+  text,
+  available,
+}: {
+  title: string;
+  text: string;
+  available: boolean;
+}) {
+  const card = (
+    <div
+      className={`group grid h-full overflow-hidden rounded-3xl border p-5 sm:p-6 lg:grid-cols-[minmax(0,1fr)_220px] lg:gap-6 ${
+        available
+          ? "border-gahn-line bg-white transition-shadow duration-300 hover:shadow-[0_24px_48px_-24px_rgba(11,23,57,0.25)]"
+          : "border-[#D8E0EA] bg-[#EEF2F7]"
+      }`}
     >
       <div className="flex min-w-0 flex-col">
-        <h3 className="text-xl font-semibold tracking-[-0.02em] text-gahn-navy">{title}</h3>
-        <p className="mt-2 flex-1 text-[15px] leading-7 text-gahn-slate">{text}</p>
-        <span className="mt-5 inline-flex items-center gap-1.5 text-sm font-semibold text-gahn-blue">
-          Start learning
-          <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" />
+        <div className="flex items-center justify-between gap-3">
+          <h3 className="text-xl font-semibold tracking-[-0.02em] text-gahn-navy">
+            {title}
+          </h3>
+          {!available && (
+            <span className="rounded-full bg-[#07162F] px-3 py-1 text-[10px] font-black uppercase tracking-[0.08em] text-white">
+              Not available
+            </span>
+          )}
+        </div>
+        <p className="mt-2 flex-1 text-[15px] leading-7 text-black">{text}</p>
+        <span
+          className={`mt-5 inline-flex items-center gap-1.5 text-sm font-semibold ${
+            available ? "text-gahn-blue" : "text-[#0B1739]"
+          }`}
+        >
+          {available ? "Start learning" : "Coming after MVP testing"}
+          {available && (
+            <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" />
+          )}
         </span>
       </div>
 
       <div className="mt-5 lg:mt-0">
         <WorldPreview title={title} />
       </div>
+    </div>
+  );
+
+  return available ? (
+    <Link href="/signup" className="block h-full">
+      {card}
     </Link>
+  ) : (
+    <div aria-disabled="true" className="h-full">
+      {card}
+    </div>
   );
 }
 
@@ -484,8 +525,8 @@ export default function Home() {
               </h1>
 
               <p className="mx-auto mt-7 max-w-[600px] text-base leading-7 text-gahn-mist sm:text-lg sm:leading-8">
-                Explore careers, school subjects, brain development, general
-                knowledge, and books in one AI learning platform.
+                Start with Career Skills and School Help while GAHN tests the
+                private AI tutor experience before opening the other worlds.
               </p>
 
               <div className="mt-9 flex flex-col justify-center gap-3 sm:flex-row">
@@ -524,7 +565,7 @@ export default function Home() {
             <SectionHeading
               eyebrow="Learning Worlds"
               title="Five worlds. One way of learning."
-              text="Each world opens a structured path and an interactive Magic Canvas. The previews below show the product itself instead of stock instructor photos."
+              text="Career Skills and School Help are available now. The other three worlds stay visible but disabled until the private tutor software is proven."
             />
 
             <div className="mt-14 grid gap-5 sm:grid-cols-2">
