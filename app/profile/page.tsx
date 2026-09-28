@@ -49,7 +49,7 @@ export default function ProfilePage() {
   const [saving, setSaving] = useState(false);
   const [billingLoading, setBillingLoading] = useState(false);
   const [planId, setPlanId] = useState("explore");
-  const [planName, setPlanName] = useState("Early Access");
+  const [planName, setPlanName] = useState("Explore");
   const [cancelAtPeriodEnd, setCancelAtPeriodEnd] = useState(false);
   const [message, setMessage] = useState("");
   const [error, setError] = useState("");
@@ -76,7 +76,7 @@ export default function ProfilePage() {
       if (subscriptionResponse.ok) {
         const subscription = await subscriptionResponse.json();
         setPlanId(subscription.planId || "explore");
-        setPlanName(subscription.entitlements?.name || "Early Access");
+        setPlanName(subscription.entitlements?.name || "Explore");
         setCancelAtPeriodEnd(Boolean(subscription.cancelAtPeriodEnd));
       }
 
@@ -236,7 +236,7 @@ export default function ProfilePage() {
         </Link>
 
         <h1 className="mt-10 text-5xl font-black">Edit Profile</h1>
-        <p className="mt-4 text-xl text-slate-600">
+        <p className="mt-4 text-xl text-black">
           Update your account and tell GAHN how you prefer to learn.
         </p>
 
@@ -274,14 +274,14 @@ export default function ProfilePage() {
                 className="hidden"
               />
 
-              <p className="mt-3 text-sm text-slate-500">
+              <p className="mt-3 text-sm text-black">
                 If no image is uploaded, your initials will show automatically.
               </p>
             </div>
           </div>
 
           <div className="mt-10">
-            <label className="text-sm font-black uppercase tracking-[0.14em] text-slate-500">
+            <label className="text-sm font-black uppercase tracking-[0.14em] text-black">
               Full Name
             </label>
 
@@ -293,19 +293,19 @@ export default function ProfilePage() {
           </div>
 
           <div className="mt-8 rounded-2xl border border-slate-200 bg-[#F8FBFF] p-5">
-            <p className="text-sm font-black uppercase tracking-[0.14em] text-slate-500">
+            <p className="text-sm font-black uppercase tracking-[0.14em] text-black">
               Learning Preferences
             </p>
             <h2 className="mt-2 text-xl font-black text-[#061633]">
               How GAHN should teach you
             </h2>
-            <p className="mt-2 text-sm leading-6 text-slate-600">
+            <p className="mt-2 text-sm leading-6 text-black">
               These preferences guide the instructor, while your real lesson evidence still decides when GAHN should slow down, review, or increase difficulty.
             </p>
 
             <div className="mt-5 grid gap-4 sm:grid-cols-3">
               <label className="grid gap-2">
-                <span className="text-xs font-black uppercase tracking-[0.1em] text-slate-500">
+                <span className="text-xs font-black uppercase tracking-[0.1em] text-black">
                   I am a
                 </span>
                 <select
@@ -322,7 +322,7 @@ export default function ProfilePage() {
               </label>
 
               <label className="grid gap-2">
-                <span className="text-xs font-black uppercase tracking-[0.1em] text-slate-500">
+                <span className="text-xs font-black uppercase tracking-[0.1em] text-black">
                   Teaching pace
                 </span>
                 <select
@@ -337,7 +337,7 @@ export default function ProfilePage() {
               </label>
 
               <label className="grid gap-2">
-                <span className="text-xs font-black uppercase tracking-[0.1em] text-slate-500">
+                <span className="text-xs font-black uppercase tracking-[0.1em] text-black">
                   Explain with
                 </span>
                 <select
@@ -355,17 +355,17 @@ export default function ProfilePage() {
           </div>
 
           <div className="mt-8 rounded-2xl border border-slate-200 bg-slate-50 p-5">
-            <p className="text-sm font-black uppercase tracking-[0.14em] text-slate-500">
+            <p className="text-sm font-black uppercase tracking-[0.14em] text-black">
               Current Plan
             </p>
             <div className="mt-2 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
               <div>
                 <p className="text-xl font-black text-[#061633]">{planName}</p>
-                <p className="mt-1 text-sm text-slate-600">
+                <p className="mt-1 text-sm text-black">
                   {cancelAtPeriodEnd
                     ? "Your paid plan remains active until the end of the current billing period."
                     : planId === "explore"
-                      ? "Free during the GAHN AI early-access period."
+                      ? "Explore is the free GAHN AI plan."
                       : "Your dashboard and feature access follow this subscription automatically."}
                 </p>
               </div>
