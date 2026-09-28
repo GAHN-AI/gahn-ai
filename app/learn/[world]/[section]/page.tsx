@@ -1,68 +1,38 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import { useParams, useSearchParams } from "next/navigation";
-import type { LucideIcon } from "lucide-react";
 import {
   ArrowLeft,
   ArrowRight,
-  BookOpen,
-  Brain,
-  Globe2,
   GraduationCap,
-  FileUp,
-  Search,
-  Sparkles,
-  X,
+  LockKeyhole,
 } from "lucide-react";
+
 import LanguageSelector from "@/components/LanguageSelector";
 import {
   getLearningSection,
   slugifyLearningTitle,
 } from "@/lib/learningCatalog";
-
-const worldInformation: Record<
-  string,
-  { title: string; Icon: LucideIcon; optionLabel: string }
-> = {
-  "school-help": {
-    title: "School Help",
-    Icon: GraduationCap,
-    optionLabel: "grade level",
-  },
-  "brain-development": {
-    title: "Brain Development",
-    Icon: Brain,
-    optionLabel: "skill",
-  },
-  "general-knowledge": {
-    title: "General Knowledge",
-    Icon: Globe2,
-    optionLabel: "topic",
-  },
-  "book-intelligence": {
-    title: "Book Intelligence",
-    Icon: BookOpen,
-    optionLabel: "learning path",
-  },
-};
+import { isLearningWorldAvailable } from "@/lib/learningWorldAvailability";
 
 export default function LearningSectionPage() {
   const params = useParams<{ world: string; section: string }>();
   const searchParams = useSearchParams();
-  const worldInfo = worldInformation[params.world];
-  const section = getLearningSection(params.world, params.section);
 
-  const [search, setSearch] = useState("");
-  const [homeworkFile, setHomeworkFile] = useState<File | null>(null);
+  const section = getLearningSection(params.world, params.section);
+  const available = isLearningWorldAvailable(params.world);
+
   const [language, setLanguage] = useState(
     searchParams.get("language") || "English"
   );
 
   useEffect(() => {
     const stored = window.localStorage.getItem("gahn-language");
-    if (!searchParams.get("language") && stored) setLanguage(stored);
+    if (!searchParams.get("language") && stored) {
+      setLanguage(stored);
+    }
   }, [searchParams]);
 
   function changeLanguage(nextLanguage: string) {
@@ -70,264 +40,126 @@ export default function LearningSectionPage() {
     window.localStorage.setItem("gahn-language", nextLanguage);
   }
 
-  const filteredOptions = useMemo(() => {
-    if (!section) return [];
-    const query = search.trim().toLowerCase();
-    if (!query) return section.options;
-
-    return section.options.filter(
-      (option) =>
-        option.title.toLowerCase().includes(query) ||
-        option.description.toLowerCase().includes(query) ||
-        option.skills?.some((skill) => skill.toLowerCase().includes(query))
-    );
-  }, [section, search]);
-
-  if (!worldInfo || !section) {
+  if (!available) {
     return (
-      <main className="min-h-screen bg-[#F8FBFF] px-5 py-10 font-sans text-[#0B1739] sm:px-8">
+      <main className="min-h-screen bg-[#F4F7FB] px-5 py-8 text-black sm:px-8">
+        <div className="mx-auto max-w-5xl">
+          <Link
+            href="/dashboard"
+            className="inline-flex items-center gap-2 text-sm font-black text-[#0B1739]"
+          >
+            <ArrowLeft className="h-4 w-4" />
+            Back to Dashboard
+          </Link>
+
+          <section className="mt-10 rounded-[1.6rem] border border-[#D8E0EA] bg-white p-10 text-center">
+            <div className="mx-auto grid h-14 w-14 place-items-center rounded-xl bg-[#07162F] text-white">
+              <LockKeyhole className="h-5 w-5" />
+            </div>
+            <h1 className="mt-5 text-3xl font-black text-[#0B1739]">
+              Not available
+            </h1>
+            <p className="mt-3 text-sm font-medium leading-6 text-black">
+              This learning world is disabled during the current MVP test.
+            </p>
+          </section>
+        </div>
+      </main>
+    );
+  }
+
+  if (params.world !== "school-help" || !section) {
+    return (
+      <main className="min-h-screen bg-[#F4F7FB] px-5 py-8 text-black sm:px-8">
         <div className="mx-auto max-w-5xl">
           <Link
             href={`/learn/${params.world}`}
-            className="inline-flex items-center gap-2 text-sm font-semibold text-[#1677FF]"
+            className="inline-flex items-center gap-2 text-sm font-black text-[#0B1739]"
           >
             <ArrowLeft className="h-4 w-4" />
             Back to Learning World
           </Link>
-
-          <div className="mt-10 rounded-[1.5rem] border border-[#D7E3F2] bg-white p-10 text-center">
-            <h1 className="text-3xl font-extrabold">Learning section not found</h1>
+          <div className="mt-8 rounded-2xl border border-[#D8E0EA] bg-white p-10 text-center">
+            <h1 className="text-3xl font-black text-[#0B1739]">
+              Section not found
+            </h1>
           </div>
         </div>
       </main>
     );
   }
 
-  const { Icon } = worldInfo;
-
   return (
-    <main className="min-h-screen bg-[#F8FBFF] px-5 py-8 font-sans text-[#0B1739] sm:px-8 lg:px-10">
-      <div className="mx-auto max-w-7xl">
+    <main className="min-h-screen bg-[#F4F7FB] px-5 py-8 font-sans text-black sm:px-8 lg:px-10">
+      <div className="mx-auto max-w-6xl">
         <div className="flex flex-wrap items-center justify-between gap-4">
           <Link
-            href={`/learn/${params.world}?language=${encodeURIComponent(language)}`}
-            className="inline-flex items-center gap-2 text-sm font-semibold text-[#53657D] hover:text-[#1677FF]"
+            href={`/learn/school-help?language=${encodeURIComponent(language)}`}
+            className="inline-flex items-center gap-2 text-sm font-black text-[#0B1739]"
           >
             <ArrowLeft className="h-4 w-4" />
-            Back to {worldInfo.title}
+            Back to School Help
           </Link>
 
           <div className="flex items-center gap-3">
             <LanguageSelector value={language} onChange={changeLanguage} compact />
-            <Link href="/" className="flex items-center gap-2">
-              <img
-                src="/logo/favicon.png"
-                alt="GAHN AI"
-                className="h-9 w-9 rounded-full object-cover"
-              />
-              <span className="hidden text-sm font-extrabold sm:block">GAHN AI</span>
+            <Link href="/" className="font-black text-[#0B1739]">
+              GAHN AI
             </Link>
           </div>
         </div>
 
-        <section className="relative mt-8 overflow-hidden rounded-[1.75rem] border border-[#D7E3F2] bg-white p-6 shadow-[0_18px_55px_rgba(11,23,57,0.07)] sm:p-8 lg:p-10">
-          <div
-            aria-hidden="true"
-            className="pointer-events-none absolute -right-24 -top-28 h-72 w-72 rounded-full bg-[#EAF3FF]"
-          />
-
-          <div className="relative flex flex-col gap-5 sm:flex-row sm:items-center">
-            <div className="grid h-16 w-16 shrink-0 place-items-center rounded-2xl bg-[#EAF3FF] text-[#1677FF]">
-              <Icon className="h-7 w-7" strokeWidth={1.75} />
+        <section className="mt-8 overflow-hidden rounded-[1.75rem] border border-[#BFD3ED] bg-white shadow-[0_18px_48px_rgba(11,23,57,0.06)]">
+          <div className="bg-[#07162F] p-7 text-white sm:p-9">
+            <div className="grid h-14 w-14 place-items-center rounded-2xl bg-white text-[#07162F]">
+              <GraduationCap className="h-6 w-6" />
             </div>
-
-            <div>
-              <p className="text-xs font-bold uppercase tracking-[0.22em] text-[#1677FF]">
-                {params.world === "school-help"
-                  ? "Choose Your Level"
-                  : `${worldInfo.title} Section`}
-              </p>
-
-              <h1 className="mt-2 text-3xl font-extrabold tracking-[-0.03em] sm:text-4xl lg:text-5xl">
-                {section.title}
-              </h1>
-
-              <p className="mt-3 max-w-3xl text-sm leading-7 text-[#53657D] sm:text-base">
-                {section.description}
-              </p>
-
-              <p className="mt-3 text-sm font-semibold text-[#1677FF]">
-                Teaching language: {language}
-              </p>
-            </div>
-          </div>
-        </section>
-
-        {params.world === "school-help" && params.section === "homework-help" && (
-          <section className="mt-6 rounded-[1.5rem] border border-[#BFD7F7] bg-white p-6 shadow-[0_12px_35px_rgba(11,23,57,0.05)] sm:p-8">
-            <div className="flex items-start gap-3">
-              <div className="grid h-11 w-11 shrink-0 place-items-center rounded-xl bg-[#EAF3FF] text-[#1677FF]">
-                <FileUp className="h-5 w-5" strokeWidth={1.75} />
-              </div>
-              <div>
-                <p className="text-xs font-bold uppercase tracking-[0.2em] text-[#1677FF]">
-                  Upload Your Assignment
-                </p>
-                <h2 className="mt-1 text-2xl font-extrabold tracking-[-0.02em]">
-                  Bring a file, screenshot, or photo of your homework
-                </h2>
-                <p className="mt-2 max-w-3xl text-sm leading-6 text-[#53657D]">
-                  Choose a PDF, document, image, screenshot, or phone photo. The
-                  live AI file-analysis connection will use this area when the
-                  instructor software is connected.
-                </p>
-              </div>
-            </div>
-
-            {!homeworkFile ? (
-              <label className="mt-6 flex cursor-pointer flex-col items-center justify-center rounded-2xl border border-dashed border-[#BFD7F7] bg-[#F8FBFF] px-6 py-10 text-center hover:border-[#1677FF]">
-                <FileUp className="h-7 w-7 text-[#1677FF]" strokeWidth={1.75} />
-                <p className="mt-3 font-bold text-[#0B1739]">Choose homework file</p>
-                <p className="mt-2 text-xs leading-5 text-[#53657D]">
-                  PDF, DOC, DOCX, TXT, PNG, JPG, or WEBP
-                </p>
-                <input
-                  type="file"
-                  accept=".pdf,.doc,.docx,.txt,image/png,image/jpeg,image/webp"
-                  onChange={(event) =>
-                    setHomeworkFile(event.target.files?.[0] ?? null)
-                  }
-                  className="sr-only"
-                />
-              </label>
-            ) : (
-              <div className="mt-6 flex flex-col gap-4 rounded-2xl border border-[#CFE0F5] bg-[#F8FBFF] p-5 sm:flex-row sm:items-center sm:justify-between">
-                <div className="min-w-0">
-                  <p className="truncate font-bold text-[#0B1739]">
-                    {homeworkFile.name}
-                  </p>
-                  <p className="mt-1 text-xs text-[#53657D]">
-                    {(homeworkFile.size / 1024 / 1024).toFixed(2)} MB selected
-                  </p>
-                </div>
-                <button
-                  type="button"
-                  onClick={() => setHomeworkFile(null)}
-                  className="inline-flex items-center justify-center gap-2 rounded-xl border border-[#D7E3F2] bg-white px-4 py-2.5 text-sm font-semibold text-[#53657D]"
-                >
-                  <X className="h-4 w-4" />
-                  Remove file
-                </button>
-              </div>
-            )}
-          </section>
-        )}
-
-        <section className="mt-6 rounded-[1.5rem] border border-[#CFE0F5] bg-[linear-gradient(135deg,#FFFFFF_0%,#F8FBFF_58%,#EAF3FF_100%)] p-6 sm:p-8">
-          <div className="flex items-start gap-3">
-            <div className="grid h-11 w-11 shrink-0 place-items-center rounded-xl bg-white text-[#1677FF] shadow-sm">
-              <Sparkles className="h-5 w-5" strokeWidth={1.75} />
-            </div>
-
-            <div>
-              <p className="text-xs font-bold uppercase tracking-[0.2em] text-[#1677FF]">
-                Browse the section
-              </p>
-              <h2 className="mt-1 text-2xl font-extrabold tracking-[-0.02em]">
-                Choose a {worldInfo.optionLabel}
-              </h2>
-              <p className="mt-2 text-sm leading-6 text-[#53657D]">
-                Open an option to see exactly what you will learn, the skills you
-                will build, useful tools or resources, and the learning sequence
-                before you enter the AI instructor panel.
-              </p>
-            </div>
-          </div>
-
-          <div className="relative mt-6">
-            <Search
-              className="pointer-events-none absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-[#7A8AA0]"
-              strokeWidth={1.75}
-            />
-            <input
-              value={search}
-              onChange={(event) => setSearch(event.target.value)}
-              placeholder={`Search ${section.title.toLowerCase()}...`}
-              className="h-14 w-full rounded-xl border border-[#D7E3F2] bg-white pl-12 pr-4 text-sm text-[#0B1739] outline-none placeholder:text-[#7A8AA0] focus:border-[#1677FF] focus:ring-2 focus:ring-[#1677FF]/15"
-            />
-          </div>
-        </section>
-
-        <section className="mt-8">
-          <div className="flex flex-wrap items-end justify-between gap-3">
-            <div>
-              <p className="text-xs font-bold uppercase tracking-[0.22em] text-[#1677FF]">
-                {params.world === "school-help" ? "Grade Levels" : "Learning Options"}
-              </p>
-              <h2 className="mt-2 text-3xl font-extrabold tracking-[-0.03em]">
-                {params.world === "school-help"
-                  ? `Choose your ${section.title} level`
-                  : "Pick what you want to master"}
-              </h2>
-            </div>
-
-            <p className="text-sm font-semibold text-[#53657D]">
-              {filteredOptions.length} option
-              {filteredOptions.length === 1 ? "" : "s"}
+            <p className="mt-5 text-xs font-black uppercase tracking-[0.18em] text-[#8DB8FF]">
+              School Help
+            </p>
+            <h1 className="mt-2 text-4xl font-black tracking-[-0.04em] text-white">
+              {section.title}
+            </h1>
+            <p className="mt-3 max-w-3xl text-sm font-medium leading-7 text-white">
+              {section.description}
             </p>
           </div>
 
-          <div className="mt-6 grid gap-4 md:grid-cols-2 xl:grid-cols-3">
-            {filteredOptions.map((option) => {
-              const topicSlug = slugifyLearningTitle(option.title);
+          <div className="p-6 sm:p-8">
+            <p className="text-xs font-black uppercase tracking-[0.16em] text-[#1677FF]">
+              Choose your level
+            </p>
+            <h2 className="mt-2 text-2xl font-black text-[#0B1739]">
+              Pick the level you want the private tutor to teach
+            </h2>
+            <p className="mt-2 text-sm font-medium leading-6 text-black">
+              No search box and no long lesson preview. Choose a level and move
+              straight to the course page.
+            </p>
 
-              return (
+            <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+              {section.options.map((option) => (
                 <Link
                   key={option.title}
-                  href={`/learn/${params.world}/${section.slug}/${topicSlug}?language=${encodeURIComponent(
-                    language
-                  )}`}
-                  className="group flex min-h-56 flex-col rounded-[1.4rem] border border-[#D7E3F2] bg-white p-5 shadow-[0_10px_30px_rgba(11,23,57,0.05)] hover:border-[#1677FF]/45 hover:shadow-md"
+                  href={`/learn/school-help/${section.slug}/${slugifyLearningTitle(
+                    option.title
+                  )}?language=${encodeURIComponent(language)}`}
+                  className="group rounded-[1.3rem] border border-[#D8E0EA] bg-white p-5 hover:border-[#1677FF]"
                 >
-                  <div className="grid h-10 w-10 place-items-center rounded-xl bg-[#EAF3FF] text-[#1677FF]">
-                    <Icon className="h-4.5 w-4.5" strokeWidth={1.75} />
-                  </div>
-
-                  <h3 className="mt-4 text-lg font-bold text-[#0B1739]">
+                  <p className="text-lg font-black text-[#0B1739]">
                     {option.title}
-                  </h3>
-
-                  <p className="mt-2 flex-1 text-sm leading-6 text-[#53657D]">
+                  </p>
+                  <p className="mt-2 text-sm font-medium leading-6 text-black">
                     {option.description}
                   </p>
-
-                  {option.skills && option.skills.length > 0 && (
-                    <div className="mt-4 flex flex-wrap gap-2">
-                      {option.skills.slice(0, 3).map((skill) => (
-                        <span
-                          key={skill}
-                          className="rounded-full bg-[#F1F7FF] px-3 py-1 text-[11px] font-semibold text-[#53657D]"
-                        >
-                          {skill}
-                        </span>
-                      ))}
-                    </div>
-                  )}
-
-                  <div className="mt-5 inline-flex items-center gap-2 text-sm font-bold text-[#1677FF]">
-                    View what you&apos;ll learn
-                    <ArrowRight className="h-4 w-4" />
+                  <div className="mt-4 inline-flex items-center gap-2 text-sm font-black text-[#1677FF]">
+                    Open level
+                    <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
                   </div>
                 </Link>
-              );
-            })}
-          </div>
-
-          {!filteredOptions.length && (
-            <div className="mt-6 rounded-[1.5rem] border border-dashed border-[#D7E3F2] bg-white p-8 text-center text-sm text-[#53657D]">
-              No matching options. Try another search.
+              ))}
             </div>
-          )}
+          </div>
         </section>
       </div>
     </main>
