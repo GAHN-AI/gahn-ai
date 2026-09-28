@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import type { ReactNode } from "react";
 import { useState } from "react";
 import {
   ArrowLeft,
@@ -37,7 +38,7 @@ type PlanCardProps = {
   description: string;
   features: string[];
   featured?: boolean;
-  action: React.ReactNode;
+  action: ReactNode;
   note?: string;
 };
 
@@ -183,7 +184,7 @@ export default function PricingPage() {
       </header>
 
       <section className="border-b border-[#D8E0EA] bg-white">
-        <div className="mx-auto max-w-7xl px-5 py-14 text-center sm:px-8 sm:py-18">
+        <div className="mx-auto max-w-7xl px-5 py-14 text-center sm:px-8 sm:py-16">
           <p className="text-xs font-black uppercase tracking-[0.2em] text-[#1677FF]">
             Simple MVP pricing
           </p>
