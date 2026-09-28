@@ -3,74 +3,87 @@
 import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
-import { supabase } from "@/lib/supabaseClient";
-import { careerSections } from "@/lib/careerCatalog";
-import {
-  learningSectionsByWorld,
-  slugifyLearningTitle,
-} from "@/lib/learningCatalog";
 import type { LucideIcon } from "lucide-react";
 import {
-  Award,
-  Bot,
   BookOpen,
   Brain,
   Briefcase,
-  ChevronDown,
+  CheckCircle2,
   Crown,
   Flame,
-  FolderKanban,
   Globe2,
   GraduationCap,
   LayoutDashboard,
   ListChecks,
   LogOut,
-  Search,
+  MessageSquareText,
   StickyNote,
   TrendingUp,
-  Users,
 } from "lucide-react";
+
+import { supabase } from "@/lib/supabaseClient";
+import { LEARNING_WORLD_AVAILABILITY } from "@/lib/learningWorldAvailability";
 
 const navItems: { label: string; Icon: LucideIcon; href: string }[] = [
   { label: "Dashboard", Icon: LayoutDashboard, href: "/dashboard" },
   { label: "My Notes", Icon: StickyNote, href: "/notes" },
   { label: "Study Guides", Icon: BookOpen, href: "/study-guides" },
   { label: "Progress", Icon: TrendingUp, href: "/progress" },
-  { label: "Feedback", Icon: MessageSquare, href: "/feedback" },
+  { label: "Feedback", Icon: MessageSquareText, href: "/feedback" },
 ];
 
-const worlds: { slug: string; Icon: LucideIcon; title: string; text: string }[] = [
+const worlds: {
+  slug: string;
+  Icon: LucideIcon;
+  title: string;
+  text: string;
+}[] = [
   {
     slug: "career-skills",
     Icon: Briefcase,
     title: "Career Skills",
-    text: "Explore careers, job skills, and professional paths.",
+    text: "Business, leadership, communication, finance, interviews, and other practical career skills.",
   },
   {
     slug: "school-help",
     Icon: GraduationCap,
     title: "School Help",
-    text: "Master subjects, homework, quizzes, and tests.",
+    text: "Math, science, English, reading, study skills, homework, quizzes, and tests.",
   },
   {
     slug: "brain-development",
     Icon: Brain,
     title: "Brain Development",
-    text: "Train focus, memory, reasoning, and learning ability.",
+    text: "Memory, focus, discipline, reasoning, and learning performance.",
   },
   {
     slug: "general-knowledge",
     Icon: Globe2,
     title: "General Knowledge",
-    text: "Learn useful knowledge about the world and everyday life.",
+    text: "History, technology, economics, geography, culture, and life knowledge.",
   },
   {
     slug: "book-intelligence",
     Icon: BookOpen,
     title: "Book Intelligence",
-    text: "Understand books, remember ideas, and apply what you read.",
+    text: "Book summaries, chapter breakdowns, vocabulary, quizzes, and analysis.",
   },
 ];
+
+type ProgressRow = {
+  world_slug: string;
+  section_slug: string | null;
+  topic_slug: string | null;
+  lesson_id: string;
+  lesson_title: string | null;
+  topic: string;
+  status: string;
+  mastery_state: string | null;
+  attempts_count: number;
+  correct_count: number;
+  retry_count: number;
+  last_activity_at: string;
+};
 
 function getInitials(name: string) {
   return (
@@ -83,32 +96,6 @@ function getInitials(name: string) {
       .toUpperCase() || "AI"
   );
 }
-
-function getInitialColor(name: string) {
-  const colors = [
-    "bg-[#1677FF]",
-    "bg-[#0F65E8]",
-    "bg-[#3B8CFF]",
-    "bg-[#0B5FCC]",
-  ];
-
-  const total = String(name)
-    .split("")
-    .reduce((sum, char) => sum + char.charCodeAt(0), 0);
-
-  return colors[total % colors.length];
-}
-
-type ProgressRow = {
-  lesson_title: string | null;
-  topic: string;
-  status: string;
-  mastery_state: string | null;
-  attempts_count: number;
-  correct_count: number;
-  retry_count: number;
-  last_activity_at: string;
-};
 
 function localDateKey(value: Date) {
   return [
@@ -124,11 +111,13 @@ function calculateStreak(rows: ProgressRow[]) {
   );
 
   const cursor = new Date();
+
   if (!activityDays.has(localDateKey(cursor))) {
     cursor.setDate(cursor.getDate() - 1);
   }
 
   let streak = 0;
+
   while (activityDays.has(localDateKey(cursor))) {
     streak += 1;
     cursor.setDate(cursor.getDate() - 1);
@@ -137,20 +126,37 @@ function calculateStreak(rows: ProgressRow[]) {
   return streak;
 }
 
+function resumeHref(row: ProgressRow | null) {
+  if (!row) return "/learn/career-skills";
+
+  if (!row.section_slug || !row.topic_slug) {
+    return `/learn/${row.world_slug}`;
+  }
+
+  return `/lesson/custom?world=${encodeURIComponent(
+    row.world_slug
+  )}&section=${encodeURIComponent(
+    row.section_slug
+  )}&topic=${encodeURIComponent(
+    row.topic
+  )}&topicSlug=${encodeURIComponent(row.topic_slug)}`;
+}
+
 export default function DashboardPage() {
   const router = useRouter();
+
   const [fullName, setFullName] = useState("Learner");
-  const [initials, setInitials] = useState("AI");
   const [avatarUrl, setAvatarUrl] = useState("");
+  const [planName, setPlanName] = useState("Explore");
   const [planId, setPlanId] = useState("explore");
-  const [planName, setPlanName] = useState("Early Access");
   const [progressRows, setProgressRows] = useState<ProgressRow[]>([]);
   const [notesCount, setNotesCount] = useState(0);
-  const [searchQuery, setSearchQuery] = useState("");
-  const avatarColor = useMemo(() => getInitialColor(fullName), [fullName]);
+  const [studyGuidesCount, setStudyGuidesCount] = useState(0);
+
+  const initials = useMemo(() => getInitials(fullName), [fullName]);
 
   useEffect(() => {
-    async function loadUserProfile() {
+    async function loadDashboard() {
       const {
         data: { user },
       } = await supabase.auth.getUser();
@@ -160,31 +166,35 @@ export default function DashboardPage() {
         return;
       }
 
-      const subscriptionResponse = await fetch("/api/subscription/current");
+      const [subscriptionResponse, progressResult, notesResult, guidesResult] =
+        await Promise.all([
+          fetch("/api/subscription/current"),
+          supabase
+            .from("learning_progress")
+            .select(
+              "world_slug, section_slug, topic_slug, lesson_id, lesson_title, topic, status, mastery_state, attempts_count, correct_count, retry_count, last_activity_at"
+            )
+            .eq("user_id", user.id)
+            .order("last_activity_at", { ascending: false }),
+          supabase
+            .from("learner_notes")
+            .select("id", { count: "exact", head: true })
+            .eq("user_id", user.id),
+          supabase
+            .from("study_guides")
+            .select("id", { count: "exact", head: true })
+            .eq("user_id", user.id),
+        ]);
 
-if (subscriptionResponse.ok) {
-  const subscription = await subscriptionResponse.json();
-
-  setPlanId(subscription.planId || "explore");
-  setPlanName(subscription.entitlements?.name || "Early Access");
-}
-
-      const [progressResult, notesResult] = await Promise.all([
-        supabase
-          .from("learning_progress")
-          .select(
-            "lesson_title, topic, status, mastery_state, attempts_count, correct_count, retry_count, last_activity_at"
-          )
-          .eq("user_id", user.id)
-          .order("last_activity_at", { ascending: false }),
-        supabase
-          .from("learner_notes")
-          .select("id", { count: "exact", head: true })
-          .eq("user_id", user.id),
-      ]);
+      if (subscriptionResponse.ok) {
+        const subscription = await subscriptionResponse.json();
+        setPlanId(subscription.planId || "explore");
+        setPlanName(subscription.entitlements?.name || "Explore");
+      }
 
       setProgressRows((progressResult.data || []) as ProgressRow[]);
       setNotesCount(notesResult.count || 0);
+      setStudyGuidesCount(guidesResult.count || 0);
 
       const { data: profile } = await supabase
         .from("profiles")
@@ -207,63 +217,15 @@ if (subscriptionResponse.ok) {
         });
 
         setFullName(fallbackName);
-        setInitials(getInitials(fallbackName));
-        setAvatarUrl("");
         return;
       }
 
-      const savedName = profile.full_name || fallbackName;
-      const savedAvatar = profile.avatar_url || "";
-
-      setFullName(savedName);
-      setInitials(getInitials(savedName));
-      setAvatarUrl(savedAvatar);
+      setFullName(profile.full_name || fallbackName);
+      setAvatarUrl(profile.avatar_url || "");
     }
 
-    loadUserProfile();
+    void loadDashboard();
   }, [router]);
-
-  const searchResults = useMemo(() => {
-    const query = searchQuery.trim().toLowerCase();
-    if (!query) return [];
-
-    const careerResults = careerSections.map((section) => ({
-      title: section.title,
-      subtitle: "Career Skills",
-      description: section.description,
-      href: `/learn/career-skills/${section.slug}/${slugifyLearningTitle(
-        section.title
-      )}`,
-    }));
-
-    const learningResults = Object.entries(learningSectionsByWorld).flatMap(
-      ([worldSlug, sections]) =>
-        sections.flatMap((section) =>
-          section.options.map((option) => ({
-            title:
-              option.title === section.title
-                ? section.title
-                : `${section.title} · ${option.title}`,
-            subtitle:
-              worlds.find((world) => world.slug === worldSlug)?.title ||
-              worldSlug,
-            description: option.description,
-            href: `/learn/${worldSlug}/${section.slug}/${slugifyLearningTitle(
-              option.title
-            )}`,
-          }))
-        )
-    );
-
-    return [...careerResults, ...learningResults]
-      .filter((item) =>
-        [item.title, item.subtitle, item.description]
-          .join(" ")
-          .toLowerCase()
-          .includes(query)
-      )
-      .slice(0, 8);
-  }, [searchQuery]);
 
   const activeLessons = progressRows.filter(
     (row) => row.status === "in_progress"
@@ -274,9 +236,23 @@ if (subscriptionResponse.ok) {
   const reviewLessons = progressRows.filter(
     (row) => row.mastery_state === "needs_review"
   );
-  const streak = calculateStreak(progressRows);
+
   const recentLearning = progressRows[0] || null;
-  const nextRecommendation = reviewLessons[0] || activeLessons[0] || null;
+  const nextLearning = reviewLessons[0] || activeLessons[0] || null;
+
+  const totalAttempts = progressRows.reduce(
+    (sum, row) => sum + (row.attempts_count || 0),
+    0
+  );
+  const totalCorrect = progressRows.reduce(
+    (sum, row) => sum + (row.correct_count || 0),
+    0
+  );
+  const totalRetries = progressRows.reduce(
+    (sum, row) => sum + (row.retry_count || 0),
+    0
+  );
+  const streak = calculateStreak(progressRows);
 
   async function handleLogout() {
     await supabase.auth.signOut();
@@ -285,370 +261,365 @@ if (subscriptionResponse.ok) {
   }
 
   return (
-    <main className="min-h-screen bg-[#F8FBFF] font-sans text-[#0B1739]">
-      <div className="grid min-h-screen w-full grid-cols-1 lg:grid-cols-[220px_minmax(0,1fr)] xl:grid-cols-[220px_minmax(0,1fr)_260px]">
-        <aside className="border-r border-[#D7E3F2] bg-white p-4 sm:p-5 lg:sticky lg:top-0 lg:h-screen lg:overflow-y-auto">
+    <main className="min-h-screen bg-[#F4F7FB] font-sans text-black">
+      <div className="grid min-h-screen lg:grid-cols-[250px_minmax(0,1fr)]">
+        <aside className="bg-[#07162F] px-5 py-6 text-white lg:sticky lg:top-0 lg:h-screen lg:overflow-y-auto">
           <Link href="/" className="flex items-center gap-3">
             <img
               src="/logo/favicon.png"
               alt="GAHN AI"
-              className="h-12 w-12 rounded-full object-cover sm:h-14 sm:w-14"
+              className="h-12 w-12 rounded-full object-cover"
             />
             <div className="min-w-0">
-              <h1 className="truncate text-xl font-extrabold tracking-[-0.02em] text-[#0B1739] sm:text-lg">
-                GAHN AI
-              </h1>
-              <p className="text-[8px] font-bold uppercase tracking-[0.16em] text-[#53657D]">
+              <h1 className="truncate text-xl font-black text-white">GAHN AI</h1>
+              <p className="text-[8px] font-bold uppercase tracking-[0.16em] text-white/80">
                 Global AI Human Helper Network
               </p>
             </div>
           </Link>
 
-          <nav className="mt-6 grid grid-cols-2 gap-2 sm:grid-cols-3 lg:block lg:space-y-1.5">
+          <nav className="mt-8 grid gap-2">
             {navItems.map(({ label, Icon, href }, index) => (
               <Link
                 key={label}
                 href={href}
-                className={`flex min-w-0 items-center gap-2 rounded-lg px-3 py-3 text-xs font-semibold sm:text-sm lg:gap-3 lg:px-4 ${
+                className={`flex items-center gap-3 rounded-xl px-4 py-3 text-sm font-bold ${
                   index === 0
-                    ? "bg-[#EAF3FF] text-[#1677FF]"
-                    : "text-[#53657D] hover:bg-[#F5F8FC] hover:text-[#1677FF]"
+                    ? "bg-white text-[#07162F]"
+                    : "text-white hover:bg-white/10"
                 }`}
               >
-                <Icon className="h-4 w-4 flex-none" strokeWidth={1.75} />
-                <span className="truncate">{label}</span>
+                <Icon className="h-4 w-4 shrink-0" />
+                {label}
               </Link>
             ))}
           </nav>
 
-          {planId === "explore" && (
-            <div className="mt-6 rounded-2xl border border-[#D7E3F2] bg-[#F5F8FC] p-5 text-center">
-              <div className="mx-auto grid h-12 w-12 place-items-center rounded-full bg-[#EAF3FF]">
-                <Crown className="h-5 w-5 text-[#1677FF]" strokeWidth={1.75} />
-              </div>
-              <h3 className="mt-4 text-lg font-bold text-[#0B1739]">Early Access</h3>
-              <p className="mt-2 text-sm leading-6 text-[#53657D]">
-                You have the current GAHN AI early-access plan while the MVP is being tested and improved.
-              </p>
-              <Link
-                href="/pricing"
-                className="mt-5 block rounded-lg bg-[#1677FF] px-4 py-3 text-sm font-semibold text-white hover:bg-[#0F65E8]"
-              >
-                View Plan
-              </Link>
+          <div className="mt-8 rounded-2xl border border-white/15 bg-white/10 p-5">
+            <div className="grid h-10 w-10 place-items-center rounded-xl bg-white text-[#07162F]">
+              <Crown className="h-4 w-4" />
             </div>
-          )}
+            <p className="mt-4 text-xs font-black uppercase tracking-[0.14em] text-white/80">
+              Current plan
+            </p>
+            <h2 className="mt-1 text-xl font-black text-white">{planName}</h2>
+            <p className="mt-2 text-sm leading-6 text-white">
+              {planId === "explore"
+                ? "Use the free Explore plan while GAHN tests the core learning experience."
+                : "Your paid plan controls the learning tools and usage available to your account."}
+            </p>
+            <Link
+              href="/pricing"
+              className="mt-5 block rounded-xl bg-white px-4 py-3 text-center text-sm font-black text-[#07162F]"
+            >
+              View Plan
+            </Link>
+          </div>
+
+          <button
+            type="button"
+            onClick={handleLogout}
+            className="mt-6 flex w-full items-center justify-center gap-2 rounded-xl border border-white/20 px-4 py-3 text-sm font-bold text-white hover:bg-white/10"
+          >
+            <LogOut className="h-4 w-4" />
+            Log out
+          </button>
         </aside>
 
-        <div className="min-w-0">
-          <section className="min-w-0 p-4 sm:p-6 xl:p-8">
-            <header className="flex flex-col gap-4 xl:flex-row xl:items-center xl:justify-between">
-              <div className="relative w-full xl:max-w-xl">
-                <input
-                  value={searchQuery}
-                  onChange={(event) => setSearchQuery(event.target.value)}
-                  placeholder="Search skills, school subjects, books, or topics..."
-                  className="h-12 w-full rounded-lg border border-[#D7E3F2] bg-white px-5 pr-12 text-sm text-[#0B1739] outline-none focus:border-[#1677FF] focus:ring-2 focus:ring-[#1677FF]/15"
-                />
-                <Search
-                  className="pointer-events-none absolute right-4 top-3.5 h-5 w-5 text-[#53657D]"
-                  strokeWidth={1.75}
-                />
+        <section className="min-w-0 px-5 py-6 sm:px-8 lg:px-10 lg:py-8">
+          <header className="rounded-[1.6rem] border border-[#D8E0EA] bg-white p-5 shadow-[0_12px_32px_rgba(11,23,57,0.05)] sm:p-6">
+            <div className="flex flex-col gap-5 sm:flex-row sm:items-center sm:justify-between">
+              <div>
+                <p className="text-xs font-black uppercase tracking-[0.18em] text-[#1677FF]">
+                  Learning Dashboard
+                </p>
+                <h2 className="mt-2 text-3xl font-black tracking-[-0.04em] text-[#0B1739]">
+                  Welcome back, {fullName}
+                </h2>
+                <p className="mt-2 text-sm font-medium leading-6 text-black">
+                  Your dashboard uses real saved lesson activity, notes, study
+                  guides, attempts, retries, and mastery states.
+                </p>
+              </div>
 
-                {searchQuery.trim() && (
-                  <div className="absolute left-0 right-0 top-14 z-40 overflow-hidden rounded-2xl border border-[#D7E3F2] bg-white shadow-[0_20px_50px_rgba(11,23,57,0.14)]">
-                    {searchResults.length ? (
-                      searchResults.map((result) => (
-                        <Link
-                          key={result.href}
-                          href={result.href}
-                          onClick={() => setSearchQuery("")}
-                          className="block border-b border-[#EEF2F7] px-4 py-3 last:border-b-0 hover:bg-[#F8FBFF]"
-                        >
-                          <div className="flex items-center justify-between gap-3">
-                            <div className="min-w-0">
-                              <p className="truncate text-sm font-bold text-[#0B1739]">
-                                {result.title}
-                              </p>
-                              <p className="mt-0.5 text-xs font-semibold text-[#1677FF]">
-                                {result.subtitle}
-                              </p>
-                              <p className="mt-1 line-clamp-1 text-xs text-[#53657D]">
-                                {result.description}
-                              </p>
-                            </div>
-                            <span className="shrink-0 text-sm font-bold text-[#1677FF]">
-                              →
-                            </span>
-                          </div>
-                        </Link>
-                      ))
-                    ) : (
-                      <div className="px-4 py-5 text-center text-sm text-[#53657D]">
-                        No matching learning path yet.
-                      </div>
-                    )}
+              <Link
+                href="/profile"
+                className="flex items-center gap-3 rounded-2xl border border-[#D8E0EA] bg-[#F4F7FB] p-3"
+              >
+                {avatarUrl ? (
+                  <img
+                    src={avatarUrl}
+                    alt={fullName}
+                    className="h-12 w-12 rounded-full object-cover"
+                  />
+                ) : (
+                  <div className="grid h-12 w-12 place-items-center rounded-full bg-[#1677FF] text-sm font-black text-white">
+                    {initials}
                   </div>
                 )}
-              </div>
-
-              <div className="flex flex-wrap items-center justify-end gap-3">
-                <span className="flex items-center gap-2 rounded-full border border-[#D7E3F2] bg-white px-4 py-3 text-xs font-bold shadow-sm sm:text-sm">
-                  <Flame className="h-4 w-4 text-[#1677FF]" strokeWidth={1.75} />
-                  {streak} Day Streak
-                </span>
-
-                <Link
-                  href="/profile"
-                  className="flex min-w-0 items-center gap-3 rounded-full border border-[#D7E3F2] bg-white px-3 py-2 shadow-sm"
-                >
-                  {avatarUrl ? (
-                    <img
-                      src={avatarUrl}
-                      alt={fullName}
-                      className="h-10 w-10 rounded-full object-cover"
-                      onError={() => setAvatarUrl("")}
-                    />
-                  ) : (
-                    <div
-                      className={`grid h-10 w-10 place-items-center rounded-full ${avatarColor} text-sm font-bold text-white`}
-                    >
-                      {initials}
-                    </div>
-                  )}
-
-                  <div className="max-w-[130px] min-w-0">
-                    <p className="truncate text-sm font-bold text-[#0B1739]">{fullName}</p>
-                    <p className="text-xs text-[#53657D]">{planName}</p>
-                  </div>
-
-                  <ChevronDown className="h-4 w-4 flex-none text-[#53657D]" strokeWidth={1.75} />
-                </Link>
-
-                <button
-                  onClick={handleLogout}
-                  className="flex items-center gap-2 rounded-lg border border-[#D7E3F2] bg-white px-4 py-3 text-sm font-semibold text-[#0B1739] hover:border-[#1677FF]/40 hover:bg-[#F5F8FC] sm:px-5"
-                >
-                  <LogOut className="h-4 w-4" strokeWidth={1.75} />
-                  Logout
-                </button>
-              </div>
-            </header>
-
-            <section className="mt-8">
-              <p className="text-xs font-bold uppercase tracking-[0.2em] text-[#1677FF]">
-                Learning Dashboard
-              </p>
-              <h2 className="mt-2 text-2xl font-extrabold tracking-[-0.02em] text-[#0B1739] sm:text-3xl">
-                Welcome back, {fullName}
-              </h2>
-              <p className="mt-1 text-sm text-[#53657D]">
-                Choose what you want to learn. GAHN saves lesson activity, evidence, notes, and mastery state as you work.
-              </p>
-            </section>
-
-            <section className="mt-6 grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
-              {[
-                { Icon: Flame, number: String(streak), label: "Day Streak" },
-                { Icon: BookOpen, number: String(activeLessons.length), label: "Active Lessons" },
-                { Icon: ListChecks, number: String(masteredLessons.length), label: "Mastered Lessons" },
-                { Icon: StickyNote, number: String(notesCount), label: "Saved Notes" },
-              ].map(({ Icon, number, label }) => (
-                <div
-                  key={label}
-                  className="min-w-0 rounded-2xl border border-[#D7E3F2] bg-white px-3 py-3 shadow-[0_8px_24px_rgba(11,23,57,0.04)]"
-                >
-                  <div className="grid grid-cols-[52px_minmax(0,1fr)] items-center gap-3">
-                    <div className="grid h-12 w-12 place-items-center rounded-xl bg-[#EAF3FF] text-[#1677FF]">
-                      <Icon className="h-5 w-5" strokeWidth={1.75} />
-                    </div>
-                    <div className="min-w-0">
-                      <p className="text-xl font-bold leading-none text-[#0B1739]">{number}</p>
-                      <p className="mt-1 whitespace-normal text-xs font-semibold leading-4 text-[#53657D]">{label}</p>
-                    </div>
-                  </div>
+                <div>
+                  <p className="text-sm font-black text-black">{fullName}</p>
+                  <p className="text-xs font-bold text-black">{planName}</p>
                 </div>
-              ))}
-            </section>
+              </Link>
+            </div>
+          </header>
 
-            <section className="mt-6">
-              <h3 className="text-xl font-bold text-[#0B1739]">Choose Your Learning World</h3>
+          <section className="mt-6 grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+            {[
+              { Icon: Flame, value: streak, label: "Day streak" },
+              {
+                Icon: BookOpen,
+                value: activeLessons.length,
+                label: "Active lessons",
+              },
+              {
+                Icon: CheckCircle2,
+                value: masteredLessons.length,
+                label: "Mastered",
+              },
+              { Icon: StickyNote, value: notesCount, label: "Saved notes" },
+            ].map(({ Icon, value, label }) => (
+              <div
+                key={label}
+                className="rounded-2xl border border-[#D8E0EA] bg-white p-5 shadow-[0_10px_28px_rgba(11,23,57,0.04)]"
+              >
+                <div className="grid h-10 w-10 place-items-center rounded-xl bg-[#EAF3FF] text-[#1677FF]">
+                  <Icon className="h-4 w-4" />
+                </div>
+                <p className="mt-4 text-3xl font-black text-[#0B1739]">
+                  {value}
+                </p>
+                <p className="mt-1 text-sm font-bold text-black">{label}</p>
+              </div>
+            ))}
+          </section>
 
-              <div className="mt-4 grid gap-4 sm:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-5">
-                {worlds.map(({ slug, Icon, title, text }) => (
-                  <Link
-                    href={`/learn/${slug}`}
-                    key={title}
-                    className="rounded-2xl border border-[#D7E3F2] bg-white p-4 shadow-[0_8px_24px_rgba(11,23,57,0.04)] hover:border-[#1677FF]/40 hover:shadow-md"
+          <section className="mt-8">
+            <div>
+              <p className="text-xs font-black uppercase tracking-[0.18em] text-[#1677FF]">
+                Learning Worlds
+              </p>
+              <h3 className="mt-2 text-2xl font-black tracking-[-0.03em] text-[#0B1739]">
+                Choose where you want to learn
+              </h3>
+              <p className="mt-2 text-sm font-medium leading-6 text-black">
+                Career Skills and School Help are the only learning worlds being
+                tested in this MVP.
+              </p>
+            </div>
+
+            <div className="mt-5 grid gap-4 md:grid-cols-2 xl:grid-cols-3">
+              {worlds.map(({ slug, Icon, title, text }) => {
+                const availability = LEARNING_WORLD_AVAILABILITY[slug];
+                const available = availability?.available;
+
+                const card = (
+                  <div
+                    className={`h-full rounded-[1.4rem] border p-5 ${
+                      available
+                        ? "border-[#BFD3ED] bg-white shadow-[0_10px_28px_rgba(11,23,57,0.05)]"
+                        : "border-[#D8E0EA] bg-[#EEF2F7]"
+                    }`}
                   >
-                    <div className="grid h-12 w-12 place-items-center rounded-xl bg-[#EAF3FF] text-[#1677FF]">
-                      <Icon className="h-5 w-5" strokeWidth={1.75} />
+                    <div className="flex items-start justify-between gap-3">
+                      <div
+                        className={`grid h-11 w-11 place-items-center rounded-xl ${
+                          available
+                            ? "bg-[#EAF3FF] text-[#1677FF]"
+                            : "bg-white text-[#07162F]"
+                        }`}
+                      >
+                        <Icon className="h-5 w-5" />
+                      </div>
+
+                      <span
+                        className={`rounded-full px-3 py-1 text-[10px] font-black uppercase tracking-[0.1em] ${
+                          available
+                            ? "bg-[#EAF3FF] text-[#1677FF]"
+                            : "bg-[#07162F] text-white"
+                        }`}
+                      >
+                        {available ? "Available" : "Not available"}
+                      </span>
                     </div>
-                    <h4 className="mt-4 text-sm font-bold uppercase leading-tight text-[#0B1739]">{title}</h4>
-                    <p className="mt-3 text-xs leading-5 text-[#53657D]">{text}</p>
-                    <div className="mt-5 inline-block rounded-lg bg-[#1677FF] px-4 py-2 text-xs font-semibold text-white">
-                      Explore →
+
+                    <h4 className="mt-5 text-xl font-black text-[#0B1739]">
+                      {title}
+                    </h4>
+                    <p className="mt-2 text-sm font-medium leading-6 text-black">
+                      {text}
+                    </p>
+
+                    <div className="mt-5 text-sm font-black text-[#1677FF]">
+                      {available ? "Open learning world →" : "Coming after MVP testing"}
                     </div>
+                  </div>
+                );
+
+                return available ? (
+                  <Link key={slug} href={`/learn/${slug}`}>
+                    {card}
                   </Link>
+                ) : (
+                  <div key={slug} aria-disabled="true">
+                    {card}
+                  </div>
+                );
+              })}
+            </div>
+          </section>
+
+          <section className="mt-8 grid gap-4 xl:grid-cols-2">
+            <Link
+              href={resumeHref(recentLearning)}
+              className="rounded-[1.4rem] border border-[#BFD3ED] bg-white p-6 shadow-[0_10px_28px_rgba(11,23,57,0.04)]"
+            >
+              <p className="text-xs font-black uppercase tracking-[0.16em] text-[#1677FF]">
+                Learning Overview
+              </p>
+              <h3 className="mt-3 text-xl font-black text-[#0B1739]">
+                {recentLearning?.lesson_title || "No lesson started yet"}
+              </h3>
+              <p className="mt-2 text-sm font-medium leading-6 text-black">
+                {recentLearning
+                  ? `${recentLearning.topic} · ${recentLearning.mastery_state?.replace(
+                      "_",
+                      " "
+                    ) || "learning"} · ${recentLearning.correct_count}/${recentLearning.attempts_count} checked answers`
+                  : "Open Career Skills or School Help and start your first private lesson."}
+              </p>
+              <p className="mt-4 text-sm font-black text-[#1677FF]">
+                {recentLearning ? "Continue learning →" : "Start learning →"}
+              </p>
+            </Link>
+
+            <Link
+              href={resumeHref(nextLearning)}
+              className="rounded-[1.4rem] border border-[#D8E0EA] bg-[#0B1739] p-6 text-white shadow-[0_10px_28px_rgba(11,23,57,0.08)]"
+            >
+              <p className="text-xs font-black uppercase tracking-[0.16em] text-[#8DB8FF]">
+                What To Do Next
+              </p>
+              <h3 className="mt-3 text-xl font-black text-white">
+                {nextLearning?.lesson_title || "Choose your first learning world"}
+              </h3>
+              <p className="mt-2 text-sm font-medium leading-6 text-white">
+                {reviewLessons.length
+                  ? "This lesson has saved evidence that needs review."
+                  : activeLessons.length
+                    ? "Continue the lesson you already started."
+                    : "Start with Career Skills or School Help."}
+              </p>
+              <p className="mt-4 text-sm font-black text-[#8DB8FF]">
+                Open next step →
+              </p>
+            </Link>
+
+            <Link
+              href="/progress"
+              className="rounded-[1.4rem] border border-[#D8E0EA] bg-white p-6"
+            >
+              <p className="text-xs font-black uppercase tracking-[0.16em] text-[#1677FF]">
+                Mastery Evidence
+              </p>
+              <h3 className="mt-3 text-xl font-black text-[#0B1739]">
+                {masteredLessons.length} mastered · {reviewLessons.length} need review
+              </h3>
+              <p className="mt-2 text-sm font-medium leading-6 text-black">
+                These numbers come from saved lesson states and checked learning
+                activity. GAHN does not invent a progress percentage.
+              </p>
+              <p className="mt-4 text-sm font-black text-[#1677FF]">
+                View progress →
+              </p>
+            </Link>
+
+            <Link
+              href="/notes"
+              className="rounded-[1.4rem] border border-[#D8E0EA] bg-white p-6"
+            >
+              <p className="text-xs font-black uppercase tracking-[0.16em] text-[#1677FF]">
+                Saved Notes
+              </p>
+              <h3 className="mt-3 text-xl font-black text-[#0B1739]">
+                {notesCount} note{notesCount === 1 ? "" : "s"}
+              </h3>
+              <p className="mt-2 text-sm font-medium leading-6 text-black">
+                Notes are saved to your account and stay connected to your
+                learning history.
+              </p>
+              <p className="mt-4 text-sm font-black text-[#1677FF]">
+                Open notes →
+              </p>
+            </Link>
+          </section>
+
+          <section className="mt-8 grid gap-4 lg:grid-cols-[0.9fr_1.1fr]">
+            <div className="rounded-[1.4rem] border border-[#D8E0EA] bg-white p-6">
+              <p className="text-xs font-black uppercase tracking-[0.16em] text-[#1677FF]">
+                Learning Status
+              </p>
+              <div className="mt-5 grid grid-cols-3 gap-3 text-center">
+                {[
+                  ["Active", activeLessons.length],
+                  ["Mastered", masteredLessons.length],
+                  ["Review", reviewLessons.length],
+                ].map(([label, value]) => (
+                  <div
+                    key={String(label)}
+                    className="rounded-xl bg-[#F4F7FB] p-4"
+                  >
+                    <p className="text-2xl font-black text-[#0B1739]">
+                      {value}
+                    </p>
+                    <p className="mt-1 text-xs font-black uppercase tracking-[0.08em] text-black">
+                      {label}
+                    </p>
+                  </div>
                 ))}
               </div>
-            </section>
+              <p className="mt-4 text-sm font-medium leading-6 text-black">
+                Status changes only when GAHN saves real lesson activity.
+              </p>
+            </div>
 
-            <section className="mt-6 grid gap-4 md:grid-cols-2">
-              <DashboardMiniCard title="Learning Overview" sideText="Latest">
-                <p className="text-base font-bold leading-6 text-[#0B1739]">
-                  {recentLearning?.lesson_title || "No lesson started yet"}
-                </p>
-                <p className="mt-2 text-sm leading-6 text-[#53657D]">
-                  {recentLearning
-                    ? `${recentLearning.topic} · ${recentLearning.mastery_state?.replace("_", " ") || "learning"} · ${recentLearning.correct_count}/${recentLearning.attempts_count} checked answers`
-                    : "Choose a learning world and start a lesson. Your real activity will appear here."}
-                </p>
-              </DashboardMiniCard>
-
-              <DashboardMiniCard title="What To Do Next">
-                <p className="text-base font-bold leading-6 text-[#0B1739]">
-                  {nextRecommendation?.lesson_title || "Start your first lesson"}
-                </p>
-                <p className="mt-2 text-sm leading-6 text-[#53657D]">
-                  {reviewLessons.length
-                    ? "This lesson has evidence that needs review. Revisit it before moving on."
-                    : activeLessons.length
-                      ? "Continue where you left off and build enough evidence to reach mastery."
-                      : "Pick one path and complete the first interactive lesson."}
-                </p>
-              </DashboardMiniCard>
-
-              <DashboardMiniCard title="Mastery Evidence">
-                <p className="text-base font-bold leading-6 text-[#0B1739]">
-                  {masteredLessons.length} mastered · {reviewLessons.length} need review
-                </p>
-                <p className="mt-2 text-sm leading-6 text-[#53657D]">
-                  GAHN uses saved answers, retries, activities, and mastery checks instead of inventing a progress percentage.
-                </p>
-              </DashboardMiniCard>
-
-              <DashboardMiniCard title="Saved Notes">
-                <p className="text-base font-bold leading-6 text-[#0B1739]">
-                  {notesCount} note{notesCount === 1 ? "" : "s"}
-                </p>
-                <p className="mt-2 text-sm leading-6 text-[#53657D]">
-                  Notes saved inside lessons are kept in your learning account.
-                </p>
-              </DashboardMiniCard>
-            </section>
-
-            <section className="mt-6 grid gap-4 xl:hidden">
-              <DashboardRightColumn progressRows={progressRows} />
-            </section>
+            <div className="rounded-[1.4rem] border border-[#BFD3ED] bg-[#EAF3FF] p-6">
+              <p className="text-xs font-black uppercase tracking-[0.16em] text-[#1677FF]">
+                Your Learning Data
+              </p>
+              <div className="mt-5 grid gap-3 sm:grid-cols-4">
+                {[
+                  ["Attempts", totalAttempts],
+                  ["Correct", totalCorrect],
+                  ["Retries", totalRetries],
+                  ["Study guides", studyGuidesCount],
+                ].map(([label, value]) => (
+                  <div key={String(label)} className="rounded-xl bg-white p-4">
+                    <p className="text-2xl font-black text-[#0B1739]">
+                      {value}
+                    </p>
+                    <p className="mt-1 text-xs font-black uppercase tracking-[0.08em] text-black">
+                      {label}
+                    </p>
+                  </div>
+                ))}
+              </div>
+              <p className="mt-4 text-sm font-medium leading-6 text-black">
+                This data comes from your account records in Supabase, not from
+                placeholder dashboard numbers.
+              </p>
+              <Link
+                href="/progress"
+                className="mt-4 inline-flex items-center gap-2 text-sm font-black text-[#0B1739]"
+              >
+                <ListChecks className="h-4 w-4" />
+                View full progress
+              </Link>
+            </div>
           </section>
-        </div>
-
-        <aside className="hidden space-y-4 border-l border-[#D7E3F2] bg-white p-5 xl:block">
-          <DashboardRightColumn progressRows={progressRows} />
-        </aside>
+        </section>
       </div>
     </main>
-  );
-}
-
-function DashboardMiniCard({
-  title,
-  sideText,
-  linkText,
-  children,
-}: {
-  title: string;
-  sideText?: string;
-  linkText?: string;
-  children: React.ReactNode;
-}) {
-  return (
-    <div className="rounded-2xl border border-[#D7E3F2] bg-white p-5 shadow-[0_8px_24px_rgba(11,23,57,0.04)]">
-      <div className="flex min-w-0 items-start justify-between gap-3">
-        <h3 className="min-w-0 text-base font-bold leading-6 text-[#0B1739]">{title}</h3>
-
-        {sideText && (
-          <span className="shrink-0 pt-0.5 text-xs font-semibold text-[#53657D]">{sideText}</span>
-        )}
-
-        {linkText && (
-          <Link
-            href="/in-progress"
-            className="shrink-0 pt-0.5 text-sm font-semibold text-[#1677FF]"
-          >
-            {linkText}
-          </Link>
-        )}
-      </div>
-
-      <div className="mt-5 grid min-h-36 w-full place-items-center rounded-xl border border-dashed border-[#D7E3F2] bg-[#F5F8FC] px-5 py-7 text-center sm:px-6">
-        <div className="mx-auto w-full max-w-[340px] text-center">{children}</div>
-      </div>
-    </div>
-  );
-}
-
-function DashboardRightColumn({
-  progressRows,
-}: {
-  progressRows: ProgressRow[];
-}) {
-  const mastered = progressRows.filter(
-    (row) => row.mastery_state === "mastered"
-  ).length;
-  const needsReview = progressRows.filter(
-    (row) => row.mastery_state === "needs_review"
-  ).length;
-  const active = progressRows.filter(
-    (row) => row.status === "in_progress"
-  ).length;
-
-  return (
-    <>
-      <div className="rounded-2xl border border-[#D7E3F2] bg-white p-5 shadow-[0_8px_24px_rgba(11,23,57,0.04)]">
-        <div className="grid h-11 w-11 place-items-center rounded-xl bg-[#EAF3FF] text-[#1677FF]">
-          <Bot className="h-5 w-5" strokeWidth={1.75} />
-        </div>
-        <h3 className="mt-4 text-base font-bold leading-5 text-[#0B1739]">GAHN Learning Studio</h3>
-        <p className="mt-3 text-sm leading-6 text-[#53657D]">
-          Start a lesson to use the instructor, Magic Canvas, voice input, notes, and saved mastery evidence.
-        </p>
-        <Link href="/learn/career-skills" className="mt-4 inline-flex text-sm font-semibold text-[#1677FF]">
-          Start learning →
-        </Link>
-      </div>
-
-      <div className="rounded-2xl border border-[#D7E3F2] bg-white p-5 shadow-[0_8px_24px_rgba(11,23,57,0.04)]">
-        <h3 className="font-bold text-[#0B1739]">Learning Status</h3>
-        <div className="mt-4 grid grid-cols-3 gap-2 text-center">
-          <div className="rounded-xl bg-[#F5F8FC] p-3">
-            <p className="text-xl font-extrabold">{active}</p>
-            <p className="mt-1 text-[10px] font-bold uppercase tracking-[0.08em] text-[#53657D]">Active</p>
-          </div>
-          <div className="rounded-xl bg-[#F5F8FC] p-3">
-            <p className="text-xl font-extrabold">{mastered}</p>
-            <p className="mt-1 text-[10px] font-bold uppercase tracking-[0.08em] text-[#53657D]">Mastered</p>
-          </div>
-          <div className="rounded-xl bg-[#F5F8FC] p-3">
-            <p className="text-xl font-extrabold">{needsReview}</p>
-            <p className="mt-1 text-[10px] font-bold uppercase tracking-[0.08em] text-[#53657D]">Review</p>
-          </div>
-        </div>
-        <p className="mt-4 text-xs font-semibold leading-5 text-[#53657D]">
-          These counts come from saved lesson evidence, not a generated percentage.
-        </p>
-      </div>
-
-      <div className="rounded-2xl border border-[#D7E3F2] bg-white p-5 shadow-[0_8px_24px_rgba(11,23,57,0.04)]">
-        <h3 className="font-bold text-[#0B1739]">Your Learning Data</h3>
-        <p className="mt-3 text-sm leading-6 text-[#53657D]">
-          GAHN keeps your lesson attempts, correct answers, retries, mastery state, and saved notes so the experience can adapt over time.
-        </p>
-        <Link href="/progress" className="mt-4 inline-flex text-sm font-semibold text-[#1677FF]">
-          View progress →
-        </Link>
-      </div>
-    </>
   );
 }
