@@ -89,7 +89,7 @@ export default function FeedbackPage() {
       <div className="mx-auto max-w-3xl">
         <Link
           href="/dashboard"
-          className="inline-flex items-center gap-2 text-sm font-bold text-[#53657D] hover:text-[#1677FF]"
+          className="inline-flex items-center gap-2 text-sm font-bold text-black hover:text-[#1677FF]"
         >
           <ArrowLeft className="h-4 w-4" />
           Back to Dashboard
@@ -103,7 +103,7 @@ export default function FeedbackPage() {
             <h1 className="mt-2 text-3xl font-extrabold tracking-[-0.035em]">
               Tell us what happened
             </h1>
-            <p className="mt-3 max-w-2xl text-sm leading-7 text-[#53657D]">
+            <p className="mt-3 max-w-2xl text-sm leading-7 text-black">
               Early access is for finding what learners actually use, where they get stuck, and what should be improved next.
             </p>
           </div>
@@ -119,7 +119,7 @@ export default function FeedbackPage() {
                   className={`flex items-center gap-3 rounded-xl border px-4 py-3 text-left text-sm font-semibold ${
                     category === value
                       ? "border-[#1677FF] bg-[#EAF3FF] text-[#0B1739]"
-                      : "border-[#D7E3F2] bg-white text-[#40536D]"
+                      : "border-[#D7E3F2] bg-white text-black"
                   }`}
                 >
                   <Icon className="h-4 w-4 shrink-0 text-[#1677FF]" />
@@ -138,7 +138,7 @@ export default function FeedbackPage() {
                   className={`grid h-10 w-10 place-items-center rounded-lg border text-sm font-bold ${
                     rating === value
                       ? "border-[#1677FF] bg-[#1677FF] text-white"
-                      : "border-[#D7E3F2] bg-white text-[#53657D]"
+                      : "border-[#D7E3F2] bg-white text-black"
                   }`}
                 >
                   {value}
@@ -166,7 +166,7 @@ export default function FeedbackPage() {
             )}
 
             {sent && (
-              <p className="mt-4 rounded-xl border border-[#BFD8F8] bg-[#F1F7FF] px-4 py-3 text-sm font-semibold text-[#40536D]">
+              <p className="mt-4 rounded-xl border border-[#BFD8F8] bg-[#F1F7FF] px-4 py-3 text-sm font-semibold text-black">
                 Feedback saved. This is the kind of information GAHN needs during early access.
               </p>
             )}
