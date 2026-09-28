@@ -122,7 +122,7 @@ export default function NotesPage() {
       <div className="mx-auto max-w-5xl">
         <Link
           href="/dashboard"
-          className="inline-flex items-center gap-2 text-sm font-bold text-[#53657D] hover:text-[#1677FF]"
+          className="inline-flex items-center gap-2 text-sm font-bold text-black hover:text-[#1677FF]"
         >
           <ArrowLeft className="h-4 w-4" />
           Back to Dashboard
@@ -134,14 +134,14 @@ export default function NotesPage() {
               <StickyNote className="h-5 w-5" />
             </div>
             <h1 className="mt-4 text-3xl font-extrabold tracking-[-0.035em]">My Notes</h1>
-            <p className="mt-2 max-w-2xl text-sm leading-7 text-[#53657D]">
+            <p className="mt-2 max-w-2xl text-sm leading-7 text-black">
               Notes you save inside lessons stay attached to your learning account and can be edited here.
             </p>
           </div>
 
           <div className="p-5 sm:p-7">
             <div className="relative mb-5">
-              <Search className="pointer-events-none absolute left-3.5 top-3.5 h-4 w-4 text-[#7A8AA0]" />
+              <Search className="pointer-events-none absolute left-3.5 top-3.5 h-4 w-4 text-black" />
               <input
                 value={search}
                 onChange={(event) => setSearch(event.target.value)}
@@ -151,13 +151,13 @@ export default function NotesPage() {
             </div>
 
             {message && (
-              <div className="mb-5 rounded-xl border border-[#CFE0F5] bg-[#F1F7FF] px-4 py-3 text-sm text-[#40536D]">
+              <div className="mb-5 rounded-xl border border-[#CFE0F5] bg-[#F1F7FF] px-4 py-3 text-sm text-black">
                 {message}
               </div>
             )}
 
             {loading ? (
-              <div className="py-16 text-center text-sm font-semibold text-[#53657D]">
+              <div className="py-16 text-center text-sm font-semibold text-black">
                 Loading notes...
               </div>
             ) : notes.length === 0 ? (
@@ -165,7 +165,7 @@ export default function NotesPage() {
                 <div className="max-w-md">
                   <BookOpen className="mx-auto h-8 w-8 text-[#1677FF]" />
                   <h2 className="mt-3 text-lg font-extrabold">No saved notes yet</h2>
-                  <p className="mt-2 text-sm leading-6 text-[#53657D]">
+                  <p className="mt-2 text-sm leading-6 text-black">
                     Start a lesson, open Notes in the Learning Studio, and save what you want to remember.
                   </p>
                   <Link
@@ -180,7 +180,7 @@ export default function NotesPage() {
               <div className="rounded-2xl border border-dashed border-[#CFE0F5] bg-[#F8FBFF] px-6 py-12 text-center">
                 <Search className="mx-auto h-7 w-7 text-[#1677FF]" />
                 <h2 className="mt-3 font-extrabold">No matching notes</h2>
-                <p className="mt-2 text-sm text-[#53657D]">
+                <p className="mt-2 text-sm text-black">
                   Try a different word, lesson title, or topic.
                 </p>
               </div>
@@ -197,7 +197,7 @@ export default function NotesPage() {
                           {note.lesson_title || "Learning note"}
                         </p>
                         <h2 className="mt-1 text-lg font-extrabold">{note.title}</h2>
-                        <p className="mt-1 text-xs text-[#7A8AA0]">
+                        <p className="mt-1 text-xs text-black">
                           Updated {new Date(note.updated_at).toLocaleString()}
                         </p>
                       </div>
@@ -205,7 +205,7 @@ export default function NotesPage() {
                         <button
                           type="button"
                           onClick={() => startEditing(note)}
-                          className="inline-flex items-center gap-2 rounded-lg border border-[#D7E3F2] px-3 py-2 text-xs font-bold text-[#40536D]"
+                          className="inline-flex items-center gap-2 rounded-lg border border-[#D7E3F2] px-3 py-2 text-xs font-bold text-black"
                         >
                           <PencilLine className="h-3.5 w-3.5" />
                           Edit
@@ -239,7 +239,7 @@ export default function NotesPage() {
                         </button>
                       </div>
                     ) : (
-                      <p className="mt-4 whitespace-pre-wrap text-sm leading-7 text-[#40536D]">
+                      <p className="mt-4 whitespace-pre-wrap text-sm leading-7 text-black">
                         {note.body || "Empty note"}
                       </p>
                     )}
