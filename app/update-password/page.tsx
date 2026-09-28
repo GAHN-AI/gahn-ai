@@ -69,7 +69,7 @@ setTimeout(() => {
 
         <h1 className="text-5xl font-black text-[#061633]">GAHN AI</h1>
 
-        <p className="mt-1 text-sm font-bold uppercase tracking-[0.2em] text-slate-500">
+        <p className="mt-1 text-sm font-bold uppercase tracking-[0.2em] text-black">
           Global AI Human Helper Network
         </p>
       </div>
@@ -77,7 +77,7 @@ setTimeout(() => {
       <div className="mx-auto max-w-xl overflow-hidden rounded-[2rem] bg-white p-12 shadow-2xl">
         <h2 className="text-center text-4xl font-black">Create New Password</h2>
 
-        <p className="mt-3 text-center text-slate-500">
+        <p className="mt-3 text-center text-black">
           Enter and confirm your new password.
         </p>
 
