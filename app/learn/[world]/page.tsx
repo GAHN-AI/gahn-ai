@@ -1,8 +1,8 @@
 "use client";
 
-import { FormEvent, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
-import { useParams, useRouter, useSearchParams } from "next/navigation";
+import { useParams, useSearchParams } from "next/navigation";
 import type { LucideIcon } from "lucide-react";
 import {
   ArrowLeft,
@@ -10,115 +10,94 @@ import {
   BookOpen,
   Brain,
   Briefcase,
-  Camera,
-  FileUp,
   Globe2,
   GraduationCap,
-  Library,
-  Search,
-  Sparkles,
+  LockKeyhole,
 } from "lucide-react";
+
 import LanguageSelector from "@/components/LanguageSelector";
 import { careerSections } from "@/lib/careerCatalog";
-import { getLearningSections } from "@/lib/learningCatalog";
+import {
+  getLearningSections,
+  slugifyLearningTitle,
+} from "@/lib/learningCatalog";
+import { isLearningWorldAvailable } from "@/lib/learningWorldAvailability";
 
 type LearningWorld = {
   title: string;
   eyebrow: string;
   description: string;
-  placeholder: string;
   Icon: LucideIcon;
 };
 
 const learningWorlds: Record<string, LearningWorld> = {
   "career-skills": {
     title: "Career Skills",
-    eyebrow: "Career Library",
+    eyebrow: "Career Skills",
     description:
-      "Choose one of the ten core career skills for the MVP, preview what you will learn, then enter a private AI-guided learning experience.",
-    placeholder:
-      "Search a career or skill: web development, nursing, finance, electrician...",
+      "Choose a skill or career topic, then open a private lesson workspace built for the AI instructor integration.",
     Icon: Briefcase,
   },
   "school-help": {
     title: "School Help",
-    eyebrow: "School Learning",
+    eyebrow: "School Help",
     description:
-      "Choose one of four core subjects first, then select Grade 6 through College for a focused learning path.",
-    placeholder:
-      "Search a school topic: algebra, biology, essay writing, chemistry...",
+      "Choose a school subject and level, then open a private lesson workspace for one-on-one AI teaching.",
     Icon: GraduationCap,
   },
   "brain-development": {
     title: "Brain Development",
-    eyebrow: "Cognitive Training",
+    eyebrow: "Learning World",
     description:
-      "Build focus, memory, reasoning, study ability, discipline, problem solving, and mental flexibility through structured skill paths.",
-    placeholder:
-      "Search a mental skill: focus, active recall, critical thinking...",
+      "Memory, focus, reasoning, discipline, and learning performance.",
     Icon: Brain,
   },
   "general-knowledge": {
     title: "General Knowledge",
-    eyebrow: "Knowledge Library",
+    eyebrow: "Learning World",
     description:
-      "Explore major areas of human knowledge, then choose the exact topic you want explained clearly and taught step by step.",
-    placeholder:
-      "Search anything: space, economics, history, technology, psychology...",
+      "History, technology, economics, geography, culture, and life knowledge.",
     Icon: Globe2,
   },
   "book-intelligence": {
     title: "Book Intelligence",
-    eyebrow: "Book Library",
+    eyebrow: "Learning World",
     description:
-      "Explore fiction for imagination and creativity, nonfiction for real facts and documented ideas, plus tools for analysis, recall, and application.",
-    placeholder:
-      "Search a book, genre, author, idea, or reading skill...",
+      "Book summaries, chapter breakdowns, vocabulary, quizzes, and analysis.",
     Icon: BookOpen,
   },
 };
 
-function SectionCard({
+function OptionCard({
   href,
   title,
   description,
-  count,
   Icon,
-  label = "Explore section",
+  buttonText,
 }: {
   href: string;
   title: string;
   description: string;
-  count: number;
   Icon: LucideIcon;
-  label?: string;
+  buttonText: string;
 }) {
   return (
     <Link
       href={href}
-      className="group flex h-full flex-col rounded-[1.5rem] border border-[#D7E3F2] bg-white p-6 shadow-[0_12px_35px_rgba(11,23,57,0.045)] hover:border-[#1677FF]/45 hover:shadow-[0_16px_40px_rgba(11,23,57,0.08)]"
+      className="group flex min-h-60 flex-col rounded-[1.4rem] border border-[#BFD3ED] bg-white p-6 shadow-[0_12px_32px_rgba(11,23,57,0.05)] hover:border-[#1677FF]"
     >
-      <div className="flex items-start justify-between gap-4">
-        <div className="grid h-11 w-11 shrink-0 place-items-center rounded-xl bg-[#EAF3FF] text-[#1677FF]">
-          <Icon className="h-5 w-5" strokeWidth={1.75} />
-        </div>
-
-        <span className="rounded-full bg-[#F1F7FF] px-3 py-1 text-xs font-bold text-[#1677FF]">
-          {count} {count === 1 ? "option" : "options"}
-        </span>
+      <div className="grid h-11 w-11 place-items-center rounded-xl bg-[#EAF3FF] text-[#1677FF]">
+        <Icon className="h-5 w-5" />
       </div>
 
-      <h3 className="mt-5 text-xl font-bold tracking-[-0.02em] text-[#0B1739]">
-        {title}
-      </h3>
-
-      <p className="mt-2 flex-1 text-sm leading-6 text-[#53657D]">
+      <h2 className="mt-5 text-xl font-black text-[#0B1739]">{title}</h2>
+      <p className="mt-2 flex-1 text-sm font-medium leading-6 text-black">
         {description}
       </p>
 
-      <div className="mt-5 inline-flex items-center gap-2 text-sm font-bold text-[#1677FF]">
-        {label}
-        <ArrowRight className="h-4 w-4" />
+      <div className="mt-5 inline-flex items-center gap-2 text-sm font-black text-[#1677FF]">
+        {buttonText}
+        <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
       </div>
     </Link>
   );
@@ -126,19 +105,19 @@ function SectionCard({
 
 export default function LearningWorldPage() {
   const params = useParams<{ world: string }>();
-  const router = useRouter();
   const searchParams = useSearchParams();
-
   const world = params.world;
   const learningWorld = learningWorlds[world];
-  const [learningRequest, setLearningRequest] = useState("");
+
   const [language, setLanguage] = useState(
     searchParams.get("language") || "English"
   );
 
   useEffect(() => {
     const stored = window.localStorage.getItem("gahn-language");
-    if (!searchParams.get("language") && stored) setLanguage(stored);
+    if (!searchParams.get("language") && stored) {
+      setLanguage(stored);
+    }
   }, [searchParams]);
 
   function changeLanguage(nextLanguage: string) {
@@ -148,56 +127,73 @@ export default function LearningWorldPage() {
 
   if (!learningWorld) {
     return (
-      <main className="min-h-screen bg-[#F8FBFF] px-6 py-12 text-[#0B1739]">
-        <div className="mx-auto max-w-4xl">
-          <Link
-            href="/dashboard"
-            className="inline-flex items-center gap-2 text-sm font-semibold text-[#1677FF]"
-          >
-            <ArrowLeft className="h-4 w-4" />
-            Back to Dashboard
+      <main className="min-h-screen bg-[#F4F7FB] px-5 py-10 text-black">
+        <div className="mx-auto max-w-5xl">
+          <Link href="/dashboard" className="font-bold text-[#1677FF]">
+            ← Back to Dashboard
           </Link>
-
-          <div className="mt-12 rounded-[1.5rem] border border-[#D7E3F2] bg-white p-10 text-center">
-            <h1 className="text-3xl font-extrabold">Learning world not found</h1>
+          <div className="mt-8 rounded-2xl border border-[#D8E0EA] bg-white p-10 text-center">
+            <h1 className="text-3xl font-black text-[#0B1739]">
+              Learning world not found
+            </h1>
           </div>
         </div>
       </main>
     );
   }
 
-  const { title, eyebrow, description, placeholder, Icon } = learningWorld;
-  const sections = getLearningSections(world);
+  const available = isLearningWorldAvailable(world);
+  const { title, eyebrow, description, Icon } = learningWorld;
 
-  function startLearning(topic: string) {
-    const cleanTopic = topic.trim();
-    if (!cleanTopic) return;
+  if (!available) {
+    return (
+      <main className="min-h-screen bg-[#F4F7FB] px-5 py-8 font-sans text-black sm:px-8">
+        <div className="mx-auto max-w-5xl">
+          <div className="flex items-center justify-between gap-4">
+            <Link
+              href="/dashboard"
+              className="inline-flex items-center gap-2 text-sm font-black text-[#0B1739]"
+            >
+              <ArrowLeft className="h-4 w-4" />
+              Back to Dashboard
+            </Link>
+            <Link href="/" className="font-black text-[#0B1739]">
+              GAHN AI
+            </Link>
+          </div>
 
-    router.push(
-      `/lesson/custom?world=${encodeURIComponent(
-        world
-      )}&topic=${encodeURIComponent(cleanTopic)}&language=${encodeURIComponent(
-        language
-      )}`
+          <section className="mt-12 rounded-[1.75rem] border border-[#D8E0EA] bg-white p-8 text-center shadow-[0_16px_40px_rgba(11,23,57,0.05)] sm:p-12">
+            <div className="mx-auto grid h-16 w-16 place-items-center rounded-2xl bg-[#07162F] text-white">
+              <LockKeyhole className="h-7 w-7" />
+            </div>
+            <p className="mt-6 text-xs font-black uppercase tracking-[0.18em] text-[#1677FF]">
+              Not available
+            </p>
+            <h1 className="mt-2 text-4xl font-black tracking-[-0.04em] text-[#0B1739]">
+              {title}
+            </h1>
+            <p className="mx-auto mt-4 max-w-xl text-sm font-medium leading-7 text-black">
+              {description}
+            </p>
+            <p className="mx-auto mt-3 max-w-xl text-sm font-bold leading-6 text-black">
+              This learning world is intentionally disabled while GAHN tests
+              Career Skills and School Help first.
+            </p>
+          </section>
+        </div>
+      </main>
     );
   }
 
-  function handleSubmit(event: FormEvent<HTMLFormElement>) {
-    event.preventDefault();
-    startLearning(learningRequest);
-  }
-
-  const sectionHref = (slug: string) =>
-    `/learn/${world}/${slug}?language=${encodeURIComponent(language)}`;
-
+  const schoolSections = world === "school-help" ? getLearningSections(world) : [];
 
   return (
-    <main className="min-h-screen bg-[#F8FBFF] px-5 py-8 font-sans text-[#0B1739] sm:px-8 lg:px-10">
+    <main className="min-h-screen bg-[#F4F7FB] px-5 py-8 font-sans text-black sm:px-8 lg:px-10">
       <div className="mx-auto max-w-7xl">
         <div className="flex flex-wrap items-center justify-between gap-4">
           <Link
             href="/dashboard"
-            className="inline-flex items-center gap-2 text-sm font-semibold text-[#53657D] hover:text-[#1677FF]"
+            className="inline-flex items-center gap-2 text-sm font-black text-[#0B1739]"
           >
             <ArrowLeft className="h-4 w-4" />
             Back to Dashboard
@@ -205,256 +201,79 @@ export default function LearningWorldPage() {
 
           <div className="flex items-center gap-3">
             <LanguageSelector value={language} onChange={changeLanguage} compact />
-
-            <Link href="/" className="flex items-center gap-2">
-              <img
-                src="/logo/favicon.png"
-                alt="GAHN AI"
-                className="h-9 w-9 rounded-full object-cover"
-              />
-              <span className="hidden text-sm font-extrabold sm:block">GAHN AI</span>
+            <Link href="/" className="font-black text-[#0B1739]">
+              GAHN AI
             </Link>
           </div>
         </div>
 
-        <section className="relative mt-8 overflow-hidden rounded-[1.75rem] border border-[#D7E3F2] bg-white p-6 shadow-[0_18px_55px_rgba(11,23,57,0.07)] sm:p-8 lg:p-10">
-          <div
-            aria-hidden="true"
-            className="pointer-events-none absolute -right-24 -top-28 h-72 w-72 rounded-full bg-[#EAF3FF]"
-          />
-          <div
-            aria-hidden="true"
-            className="pointer-events-none absolute -bottom-24 left-[35%] h-44 w-96 rotate-[-8deg] rounded-[999px] bg-[#F5F8FC]"
-          />
-
-          <div className="relative flex flex-col gap-5 sm:flex-row sm:items-center">
-            <div className="grid h-16 w-16 shrink-0 place-items-center rounded-2xl bg-[#EAF3FF] text-[#1677FF]">
-              <Icon className="h-7 w-7" strokeWidth={1.75} />
+        <section className="mt-8 overflow-hidden rounded-[1.75rem] border border-[#BFD3ED] bg-white shadow-[0_18px_48px_rgba(11,23,57,0.06)]">
+          <div className="grid gap-6 bg-[#07162F] p-7 text-white sm:p-9 lg:grid-cols-[auto_1fr] lg:items-center">
+            <div className="grid h-16 w-16 place-items-center rounded-2xl bg-white text-[#07162F]">
+              <Icon className="h-7 w-7" />
             </div>
-
             <div>
-              <p className="text-xs font-bold uppercase tracking-[0.22em] text-[#1677FF]">
+              <p className="text-xs font-black uppercase tracking-[0.2em] text-[#8DB8FF]">
                 {eyebrow}
               </p>
-
-              <h1 className="mt-2 text-3xl font-extrabold tracking-[-0.03em] sm:text-4xl lg:text-5xl">
+              <h1 className="mt-2 text-4xl font-black tracking-[-0.04em] text-white">
                 {title}
               </h1>
-
-              <p className="mt-3 max-w-3xl text-sm leading-7 text-[#53657D] sm:text-base">
+              <p className="mt-3 max-w-3xl text-sm font-medium leading-7 text-white">
                 {description}
               </p>
-
-              <p className="mt-3 text-sm font-semibold text-[#1677FF]">
+              <p className="mt-3 text-sm font-black text-[#8DB8FF]">
                 Teaching language: {language}
               </p>
             </div>
           </div>
         </section>
 
-        <section className="mt-6 rounded-[1.5rem] border border-[#CFE0F5] bg-[linear-gradient(135deg,#FFFFFF_0%,#F8FBFF_58%,#EAF3FF_100%)] p-6 sm:p-8">
-          <div className="flex items-start gap-3">
-            <div className="grid h-11 w-11 shrink-0 place-items-center rounded-xl bg-white text-[#1677FF] shadow-sm">
-              <Search className="h-5 w-5" strokeWidth={1.75} />
-            </div>
-
-            <div>
-              <p className="text-xs font-bold uppercase tracking-[0.2em] text-[#1677FF]">
-                Learn your way
-              </p>
-              <h2 className="mt-1 text-2xl font-extrabold tracking-[-0.02em]">
-                Search anything or browse the structured library
-              </h2>
-              <p className="mt-2 text-sm leading-6 text-[#53657D]">
-                Use the library when you want a guided path. Search directly when
-                you already know exactly what you want your private instructor to
-                teach.
-              </p>
-            </div>
+        <section className="mt-8">
+          <div>
+            <p className="text-xs font-black uppercase tracking-[0.18em] text-[#1677FF]">
+              Choose a course
+            </p>
+            <h2 className="mt-2 text-3xl font-black tracking-[-0.035em] text-[#0B1739]">
+              {world === "career-skills"
+                ? "Choose a career skill"
+                : "Choose a school subject"}
+            </h2>
+            <p className="mt-2 text-sm font-medium leading-6 text-black">
+              No search box and no long curriculum preview. Pick one option and
+              move toward the private lesson experience.
+            </p>
           </div>
 
-          <form onSubmit={handleSubmit} className="mt-6 flex flex-col gap-3 sm:flex-row">
-            <div className="relative flex-1">
-              <Search
-                className="pointer-events-none absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-[#7A8AA0]"
-                strokeWidth={1.75}
-              />
-              <input
-                value={learningRequest}
-                onChange={(event) => setLearningRequest(event.target.value)}
-                placeholder={placeholder}
-                className="h-14 w-full rounded-xl border border-[#D7E3F2] bg-white pl-12 pr-4 text-sm text-[#0B1739] outline-none placeholder:text-[#7A8AA0] focus:border-[#1677FF] focus:ring-2 focus:ring-[#1677FF]/15"
-              />
-            </div>
-
-            <button
-              type="submit"
-              disabled={!learningRequest.trim()}
-              className="inline-flex h-14 items-center justify-center gap-2 rounded-xl bg-[#1677FF] px-6 text-sm font-bold text-white hover:bg-[#0F65E8] disabled:cursor-not-allowed disabled:bg-[#B8C7DA]"
-            >
-              Start Learning
-              <ArrowRight className="h-4 w-4" />
-            </button>
-          </form>
-        </section>
-
-        {world === "school-help" && (
-          <section className="mt-10">
-            <div>
-              <p className="text-xs font-bold uppercase tracking-[0.22em] text-[#1677FF]">
-                School Help
-              </p>
-              <h2 className="mt-2 text-3xl font-extrabold tracking-[-0.03em]">
-                Choose a subject
-              </h2>
-              <p className="mt-2 max-w-3xl text-sm leading-6 text-[#53657D]">
-                Start with one of the four MVP subjects. After choosing a subject,
-                select Grade 6 through Grade 12 or College.
-              </p>
-            </div>
-
-            <div className="mt-6 grid gap-5 md:grid-cols-2">
-              {sections.map((section) => (
-                <SectionCard
+          <div className="mt-6 grid gap-5 md:grid-cols-2 xl:grid-cols-3">
+            {world === "career-skills" &&
+              careerSections.map((section) => (
+                <OptionCard
                   key={section.slug}
-                  href={sectionHref(section.slug)}
+                  href={`/learn/career-skills/${section.slug}/${slugifyLearningTitle(
+                    section.title
+                  )}?language=${encodeURIComponent(language)}`}
                   title={section.title}
                   description={section.description}
-                  count={section.options.length}
-                  Icon={GraduationCap}
-                  label="Choose level"
-                />
-              ))}
-            </div>
-          </section>
-        )}
-
-        {world === "career-skills" && (
-          <section className="mt-10">
-            <div>
-              <p className="text-xs font-bold uppercase tracking-[0.22em] text-[#1677FF]">
-                Career Library
-              </p>
-              <h2 className="mt-2 text-3xl font-extrabold tracking-[-0.03em]">
-                Choose a career skill
-              </h2>
-              <p className="mt-2 max-w-3xl text-sm leading-6 text-[#53657D]">
-                Open a field, choose a career or professional skill, then preview
-                the skills, tools, and learning path before starting your private
-                AI lesson.
-              </p>
-            </div>
-
-            <div className="mt-6 grid gap-5 md:grid-cols-2 xl:grid-cols-3">
-              {careerSections.map((section) => (
-                <SectionCard
-                  key={section.slug}
-                  href={sectionHref(section.slug)}
-                  title={section.title}
-                  description={section.description}
-                  count={section.lessons.length}
                   Icon={Briefcase}
-                  label="Open lesson"
+                  buttonText="Open course"
                 />
               ))}
-            </div>
-          </section>
-        )}
 
-        {world === "book-intelligence" && (
-          <section className="mt-10">
-            <div className="flex items-start gap-3">
-              <div className="grid h-11 w-11 place-items-center rounded-xl bg-[#EAF3FF] text-[#1677FF]">
-                <Library className="h-5 w-5" strokeWidth={1.75} />
-              </div>
-              <div>
-                <p className="text-xs font-bold uppercase tracking-[0.22em] text-[#1677FF]">
-                  Book Library
-                </p>
-                <h2 className="mt-1 text-3xl font-extrabold tracking-[-0.03em]">
-                  Fiction, nonfiction, and deeper book learning
-                </h2>
-                <p className="mt-2 max-w-3xl text-sm leading-6 text-[#53657D]">
-                  Fiction develops imagination and literary thinking. Nonfiction
-                  focuses on real facts, people, research, ideas, and documented
-                  events. Use the other shelves to analyze, remember, and apply
-                  what you read.
-                </p>
-              </div>
-            </div>
-
-            <div className="mt-6 grid gap-5 md:grid-cols-2">
-              {sections.slice(0, 2).map((section) => (
-                <SectionCard
+            {world === "school-help" &&
+              schoolSections.map((section) => (
+                <OptionCard
                   key={section.slug}
-                  href={sectionHref(section.slug)}
+                  href={`/learn/school-help/${section.slug}?language=${encodeURIComponent(
+                    language
+                  )}`}
                   title={section.title}
                   description={section.description}
-                  count={section.options.length}
-                  Icon={BookOpen}
-                  label="Open shelf"
+                  Icon={GraduationCap}
+                  buttonText="Choose level"
                 />
               ))}
-            </div>
-
-            <div className="mt-5 grid gap-5 md:grid-cols-2 xl:grid-cols-3">
-              {sections.slice(2).map((section) => (
-                <SectionCard
-                  key={section.slug}
-                  href={sectionHref(section.slug)}
-                  title={section.title}
-                  description={section.description}
-                  count={section.options.length}
-                  Icon={BookOpen}
-                />
-              ))}
-            </div>
-          </section>
-        )}
-
-        {world !== "school-help" &&
-          world !== "career-skills" &&
-          world !== "book-intelligence" && (
-            <section className="mt-10">
-              <div>
-                <p className="text-xs font-bold uppercase tracking-[0.22em] text-[#1677FF]">
-                  Structured Library
-                </p>
-                <h2 className="mt-2 text-3xl font-extrabold tracking-[-0.03em]">
-                  Choose a section
-                </h2>
-                <p className="mt-2 max-w-3xl text-sm leading-6 text-[#53657D]">
-                  Open a broad section first, then choose the exact skill or topic
-                  you want to learn. Every option includes a course-style preview
-                  before the AI lesson begins.
-                </p>
-              </div>
-
-              <div className="mt-6 grid gap-5 md:grid-cols-2 xl:grid-cols-3">
-                {sections.map((section) => (
-                  <SectionCard
-                    key={section.slug}
-                    href={sectionHref(section.slug)}
-                    title={section.title}
-                    description={section.description}
-                    count={section.options.length}
-                    Icon={Icon}
-                  />
-                ))}
-              </div>
-            </section>
-          )}
-
-        <section className="mt-10 rounded-[1.5rem] border border-[#D7E3F2] bg-white p-6 text-center shadow-[0_12px_35px_rgba(11,23,57,0.05)] sm:p-8">
-          <Sparkles className="mx-auto h-5 w-5 text-[#1677FF]" strokeWidth={1.75} />
-          <h2 className="mt-3 text-xl font-extrabold">
-            Can&apos;t find exactly what you need?
-          </h2>
-          <p className="mx-auto mt-2 max-w-2xl text-sm leading-6 text-[#53657D]">
-            Use the search box above. GAHN AI is designed to create a private
-            learning path around the exact subject, career, book, or skill you
-            want to understand.
-          </p>
+          </div>
         </section>
       </div>
     </main>
