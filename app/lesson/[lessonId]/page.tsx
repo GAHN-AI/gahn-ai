@@ -5,15 +5,13 @@ import { useEffect, useMemo, useState } from "react";
 import { useParams, useSearchParams } from "next/navigation";
 import {
   ArrowLeft,
-  Bot,
   GraduationCap,
-  Mic,
   MonitorUp,
-  Send,
   Sparkles,
 } from "lucide-react";
 
 import LanguageSelector from "@/components/LanguageSelector";
+import MayaLiveAvatar from "@/components/lessons/MayaLiveAvatar";
 import { lessonIdFromParts } from "@/lib/ai/lessonEngine";
 import { isLearningWorldAvailable } from "@/lib/learningWorldAvailability";
 import { supabase } from "@/lib/supabaseClient";
@@ -33,24 +31,37 @@ export default function LessonPage() {
   const worldSlug = searchParams.get("world") || "career-skills";
   const sectionSlug = searchParams.get("section");
   const topicSlug = searchParams.get("topicSlug");
+
   const topic =
     searchParams.get("topic") ||
-    (params.lessonId !== "custom" ? params.lessonId : "Private Lesson");
+    (params.lessonId !== "custom"
+      ? params.lessonId
+      : "Private Lesson");
 
   const [language, setLanguage] = useState(
     searchParams.get("language") || "English"
   );
 
-  const worldTitle = worldNames[worldSlug] || "Learning World";
-  const available = isLearningWorldAvailable(worldSlug);
+  const worldTitle =
+    worldNames[worldSlug] || "Learning World";
+
+  const available =
+    isLearningWorldAvailable(worldSlug);
 
   const progressLessonId = useMemo(
-    () => lessonIdFromParts(worldSlug, topicSlug || undefined, topic),
+    () =>
+      lessonIdFromParts(
+        worldSlug,
+        topicSlug || undefined,
+        topic
+      ),
     [topic, topicSlug, worldSlug]
   );
 
   useEffect(() => {
-    const stored = window.localStorage.getItem("gahn-language");
+    const stored =
+      window.localStorage.getItem("gahn-language");
+
     if (!searchParams.get("language") && stored) {
       setLanguage(stored);
     }
@@ -66,23 +77,27 @@ export default function LessonPage() {
 
       if (!user) return;
 
-      await supabase.from("learning_progress").upsert(
-        {
-          user_id: user.id,
-          world_slug: worldSlug,
-          section_slug: sectionSlug || null,
-          topic_slug: topicSlug || null,
-          topic,
-          lesson_id: progressLessonId,
-          lesson_title: topic,
-          status: "in_progress",
-          mastery_state: "learning",
-          last_activity_at: new Date().toISOString(),
-        },
-        {
-          onConflict: "user_id,world_slug,lesson_id",
-        }
-      );
+      await supabase
+        .from("learning_progress")
+        .upsert(
+          {
+            user_id: user.id,
+            world_slug: worldSlug,
+            section_slug: sectionSlug || null,
+            topic_slug: topicSlug || null,
+            topic,
+            lesson_id: progressLessonId,
+            lesson_title: topic,
+            status: "in_progress",
+            mastery_state: "learning",
+            last_activity_at:
+              new Date().toISOString(),
+          },
+          {
+            onConflict:
+              "user_id,world_slug,lesson_id",
+          }
+        );
     }
 
     void recordStart();
@@ -95,9 +110,15 @@ export default function LessonPage() {
     worldSlug,
   ]);
 
-  function changeLanguage(nextLanguage: string) {
+  function changeLanguage(
+    nextLanguage: string
+  ) {
     setLanguage(nextLanguage);
-    window.localStorage.setItem("gahn-language", nextLanguage);
+
+    window.localStorage.setItem(
+      "gahn-language",
+      nextLanguage
+    );
   }
 
   const backHref =
@@ -105,18 +126,25 @@ export default function LessonPage() {
       ? `/learn/${worldSlug}/${sectionSlug}/${topicSlug}?language=${encodeURIComponent(
           language
         )}`
-      : `/learn/${worldSlug}?language=${encodeURIComponent(language)}`;
+      : `/learn/${worldSlug}?language=${encodeURIComponent(
+          language
+        )}`;
 
   if (!available) {
     return (
       <main className="min-h-screen bg-[#F4F7FB] px-5 py-10 text-black sm:px-8">
         <div className="mx-auto max-w-5xl">
-          <Link href="/dashboard" className="font-black text-[#0B1739]">
+          <Link
+            href="/dashboard"
+            className="font-black text-[#0B1739]"
+          >
             ← Back to Dashboard
           </Link>
+
           <div className="mt-10 rounded-2xl border border-[#D8E0EA] bg-white p-10 text-center">
             <h1 className="text-3xl font-black text-[#0B1739]">
-              This learning world is not available yet.
+              This learning world is not
+              available yet.
             </h1>
           </div>
         </div>
@@ -137,8 +165,16 @@ export default function LessonPage() {
           </Link>
 
           <div className="flex items-center gap-3">
-            <LanguageSelector value={language} onChange={changeLanguage} compact />
-            <Link href="/" className="font-black text-[#0B1739]">
+            <LanguageSelector
+              value={language}
+              onChange={changeLanguage}
+              compact
+            />
+
+            <Link
+              href="/"
+              className="font-black text-[#0B1739]"
+            >
               GAHN AI
             </Link>
           </div>
@@ -152,12 +188,15 @@ export default function LessonPage() {
               <p className="text-xs font-black uppercase tracking-[0.16em] text-[#1677FF]">
                 {worldTitle}
               </p>
+
               <h1 className="mt-1 text-3xl font-black tracking-[-0.035em] text-[#0B1739]">
                 {topic}
               </h1>
+
               <p className="mt-2 text-sm font-medium leading-6 text-black">
-                This page is now reserved for the real-time AI instructor and the
-                external interactive learning-panel integration.
+                Learn with a real-time AI
+                instructor and an interactive
+                learning workspace.
               </p>
             </div>
 
@@ -174,39 +213,42 @@ export default function LessonPage() {
                 <p className="text-xs font-black uppercase tracking-[0.16em] text-[#8DB8FF]">
                   AI Instructor
                 </p>
+
                 <p className="mt-1 text-sm font-black text-white">
-                  HeyGen LiveAvatar integration area
+                  {worldSlug ===
+                  "career-skills"
+                    ? "Maya — Live AI Instructor"
+                    : "School Help AI Instructor"}
                 </p>
               </div>
+
               <span className="rounded-full border border-white/20 bg-white/10 px-3 py-1 text-[10px] font-black uppercase tracking-[0.08em] text-white">
-                Placeholder
+                {worldSlug ===
+                "career-skills"
+                  ? "Live"
+                  : "Coming Next"}
               </span>
             </div>
 
-            <div className="flex min-h-[540px] flex-col items-center justify-center px-6 text-center text-white">
-              <div className="grid h-24 w-24 place-items-center rounded-full border border-white/20 bg-white/10">
-                <Bot className="h-10 w-10 text-white" />
-              </div>
-              <h2 className="mt-6 text-2xl font-black text-white">
-                Your private AI instructor will appear here
-              </h2>
-              <p className="mt-3 max-w-md text-sm font-medium leading-7 text-white">
-                This area is intentionally empty until the real HeyGen
-                LiveAvatar stream is connected. No fake talking-head demo is
-                being shown.
-              </p>
+            {worldSlug ===
+            "career-skills" ? (
+              <MayaLiveAvatar />
+            ) : (
+              <div className="flex min-h-[540px] items-center justify-center px-6 text-center text-white">
+                <div>
+                  <h2 className="text-2xl font-black text-white">
+                    School Help instructor
+                  </h2>
 
-              <div className="mt-7 flex flex-wrap justify-center gap-3">
-                <div className="inline-flex items-center gap-2 rounded-xl border border-white/20 bg-white/10 px-4 py-3 text-sm font-bold text-white">
-                  <Mic className="h-4 w-4" />
-                  Voice
-                </div>
-                <div className="inline-flex items-center gap-2 rounded-xl border border-white/20 bg-white/10 px-4 py-3 text-sm font-bold text-white">
-                  <Send className="h-4 w-4" />
-                  Type
+                  <p className="mt-3 max-w-md text-sm font-medium leading-7 text-white">
+                    Maya is being tested with
+                    Career Skills first. The
+                    School Help instructor will
+                    be connected separately.
+                  </p>
                 </div>
               </div>
-            </div>
+            )}
           </div>
 
           <div className="overflow-hidden rounded-[1.6rem] border border-[#BFD3ED] bg-white shadow-[0_18px_48px_rgba(11,23,57,0.06)]">
@@ -215,12 +257,14 @@ export default function LessonPage() {
                 <p className="text-xs font-black uppercase tracking-[0.16em] text-[#1677FF]">
                   Interactive Learning Panel
                 </p>
+
                 <p className="mt-1 text-sm font-black text-[#0B1739]">
-                  External UI integration area
+                  Live teaching workspace
                 </p>
               </div>
+
               <span className="rounded-full bg-[#EAF3FF] px-3 py-1 text-[10px] font-black uppercase tracking-[0.08em] text-[#0B1739]">
-                Placeholder
+                Next Integration
               </span>
             </div>
 
@@ -230,14 +274,19 @@ export default function LessonPage() {
                   <div className="mx-auto grid h-16 w-16 place-items-center rounded-2xl bg-[#EAF3FF] text-[#1677FF]">
                     <MonitorUp className="h-7 w-7" />
                   </div>
+
                   <h2 className="mt-5 text-2xl font-black text-[#0B1739]">
-                    Interactive learning UI will load here
+                    Interactive learning UI
+                    will appear here
                   </h2>
+
                   <p className="mt-3 text-sm font-medium leading-7 text-black">
-                    The final panel will react to the instructor session and
-                    display the teaching UI supplied by the integration we
-                    choose. This placeholder is only reserving the correct
-                    product layout.
+                    This panel will react to
+                    the AI instructor and show
+                    explanations, questions,
+                    visuals, examples, and
+                    activities while the
+                    learner is being taught.
                   </p>
 
                   <div className="mt-6 grid gap-3 sm:grid-cols-3">
@@ -251,17 +300,13 @@ export default function LessonPage() {
                         className="rounded-xl border border-[#D8E0EA] bg-[#F4F7FB] p-4"
                       >
                         <Sparkles className="mx-auto h-4 w-4 text-[#1677FF]" />
+
                         <p className="mt-2 text-xs font-black text-black">
                           {label}
                         </p>
                       </div>
                     ))}
                   </div>
-
-                  <p className="mt-6 text-xs font-bold leading-5 text-black">
-                    No lesson sequence or fake locked-module list is shown on
-                    this screen anymore.
-                  </p>
                 </div>
               </div>
             </div>
@@ -270,9 +315,12 @@ export default function LessonPage() {
 
         <div className="mt-5 flex items-center gap-2 rounded-xl border border-[#D8E0EA] bg-white px-4 py-3">
           <GraduationCap className="h-4 w-4 text-[#1677FF]" />
+
           <p className="text-sm font-bold text-black">
-            Opening this page records the lesson as started. Mastery is not
-            awarded until the real teaching integration can produce evidence.
+            Opening this page records the
+            lesson as started. Mastery is not
+            awarded until the real teaching
+            system produces learning evidence.
           </p>
         </div>
       </div>
