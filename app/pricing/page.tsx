@@ -1,51 +1,172 @@
 "use client";
 
 import Link from "next/link";
+import { useState } from "react";
 import {
   ArrowLeft,
   ArrowRight,
   Check,
-  CheckCircle2,
-  Sparkles,
+  ShieldCheck,
 } from "lucide-react";
 
-const earlyAccessFeatures = [
-  "Access all 5 learning worlds",
-  "AI-guided lessons and structured learning paths",
-  "Live AI instructor experiences as they become available",
-  "Voice input and read-aloud learning in supported browsers",
-  "Interactive visual explanations, examples, quizzes, and guided practice",
-  "Adaptive reteaching when you make mistakes",
-  "Homework photo, screenshot, PDF, and document support",
-  "Saved learner memory for strengths, weaknesses, and preferences",
-  "Personalized lesson difficulty and pacing",
-  "Detailed lesson summaries",
-  "Searchable personal notes",
-  "Generated study guides and review questions",
-  "Multilingual instruction across supported languages",
-  "Evidence-based mastery checks and guided practice",
-  "Learning history with real attempts, retries, and mastery states",
-  "Access to new early-access learning features as they are released",
+const exploreFeatures = [
+  "Career Skills and School Help",
+  "Core private lesson workspace",
+  "Basic AI teaching when the AI service is connected",
+  "Practice questions and corrections",
+  "Saved lesson notes and history",
+  "Real progress tracking",
+  "Voice input and read-aloud in supported browsers",
+  "Multiple teaching languages",
 ];
 
-export default function PricingPage() {
+const learnerPlusFeatures = [
+  "Everything in Explore",
+  "More AI teacher use each day",
+  "Mastery checks and retries",
+  "Homework and file help",
+  "Learner memory for strong and weak areas",
+  "Saved study guides",
+  "Review questions",
+  "More file analysis each day",
+];
+
+type PlanCardProps = {
+  name: string;
+  price: string;
+  description: string;
+  features: string[];
+  featured?: boolean;
+  action: React.ReactNode;
+  note?: string;
+};
+
+function PlanCard({
+  name,
+  price,
+  description,
+  features,
+  featured = false,
+  action,
+  note,
+}: PlanCardProps) {
   return (
-    <main className="min-h-screen bg-[#F8FBFF] font-sans text-[#0B1739]">
-      <header className="sticky top-0 z-50 border-b border-[#D7E3F2] bg-white/95 backdrop-blur-xl">
-        <nav className="mx-auto flex min-h-[78px] max-w-7xl items-center justify-between gap-5 px-5 py-3 sm:px-8">
-          <Link href="/" className="flex min-w-0 items-center gap-3">
+    <article
+      className={`flex min-h-[660px] flex-col overflow-hidden rounded-[1.4rem] border-2 bg-white shadow-[0_18px_45px_rgba(11,23,57,0.07)] ${
+        featured ? "border-[#0B1739]" : "border-[#D8E0EA]"
+      }`}
+    >
+      <div
+        className={`px-6 py-4 text-sm font-extrabold ${
+          featured
+            ? "bg-[#0B1739] text-white"
+            : "bg-[#F4F7FB] text-[#0B1739]"
+        }`}
+      >
+        {featured ? "Most useful for active learners" : "Start here"}
+      </div>
+
+      <div className="flex flex-1 flex-col p-6 sm:p-7">
+        <div>
+          <h2 className="text-2xl font-black tracking-[-0.03em] text-black">
+            {name}
+          </h2>
+          <p className="mt-2 min-h-14 text-sm leading-6 text-black">
+            {description}
+          </p>
+
+          <div className="mt-6 flex items-end gap-2">
+            <span className="text-5xl font-black tracking-[-0.05em] text-black">
+              {price}
+            </span>
+            <span className="pb-1 text-sm font-bold text-black">/month</span>
+          </div>
+        </div>
+
+        <div className="mt-7">{action}</div>
+
+        <div className="my-7 h-px bg-[#D8E0EA]" />
+
+        <p className="text-sm font-black text-black">
+          {featured ? "Everything in Explore, plus:" : "What’s included:"}
+        </p>
+
+        <ul className="mt-5 grid gap-4">
+          {features.map((feature) => (
+            <li key={feature} className="flex items-start gap-3">
+              <span className="mt-0.5 grid h-5 w-5 shrink-0 place-items-center border-2 border-[#0B1739]">
+                <Check className="h-3 w-3 text-[#0B1739]" strokeWidth={3} />
+              </span>
+              <span className="text-sm font-medium leading-6 text-black">
+                {feature}
+              </span>
+            </li>
+          ))}
+        </ul>
+
+        {note && (
+          <div className="mt-auto pt-7">
+            <div className="rounded-xl border border-[#BFD3ED] bg-[#F2F7FD] p-4">
+              <p className="text-xs font-bold leading-5 text-black">{note}</p>
+            </div>
+          </div>
+        )}
+      </div>
+    </article>
+  );
+}
+
+export default function PricingPage() {
+  const [checkoutError, setCheckoutError] = useState("");
+  const [checkoutLoading, setCheckoutLoading] = useState(false);
+
+  async function startLearnerPlusCheckout() {
+    setCheckoutLoading(true);
+    setCheckoutError("");
+
+    try {
+      const response = await fetch("/api/stripe/checkout", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ plan: "learner_plus" }),
+      });
+
+      const data = await response.json();
+
+      if (response.status === 401) {
+        window.location.href = "/login?next=/pricing";
+        return;
+      }
+
+      if (!response.ok || !data.url) {
+        setCheckoutError(
+          data.error ||
+            "Learner Plus checkout is not available yet."
+        );
+        return;
+      }
+
+      window.location.href = data.url;
+    } catch {
+      setCheckoutError("Learner Plus checkout is not available yet.");
+    } finally {
+      setCheckoutLoading(false);
+    }
+  }
+
+  return (
+    <main className="min-h-screen bg-[#F4F7FB] font-sans text-black">
+      <header className="border-b border-[#D8E0EA] bg-white">
+        <nav className="mx-auto flex min-h-[76px] max-w-7xl items-center justify-between gap-4 px-5 sm:px-8">
+          <Link href="/" className="flex items-center gap-3">
             <img
               src="/logo/favicon.png"
               alt="GAHN AI"
-              className="h-11 w-11 flex-none rounded-full object-cover"
+              className="h-10 w-10 rounded-full object-cover"
             />
-
-            <div className="min-w-0">
-              <p className="truncate text-xl font-extrabold tracking-[-0.025em]">
-                GAHN AI
-              </p>
-
-              <p className="hidden text-[8px] font-bold uppercase tracking-[0.17em] text-[#53657D] sm:block">
+            <div>
+              <p className="text-lg font-black text-[#0B1739]">GAHN AI</p>
+              <p className="text-[8px] font-black uppercase tracking-[0.16em] text-black">
                 Global AI Human Helper Network
               </p>
             </div>
@@ -53,7 +174,7 @@ export default function PricingPage() {
 
           <Link
             href="/"
-            className="inline-flex items-center gap-2 rounded-lg border border-[#D7E3F2] bg-white px-4 py-2.5 text-sm font-semibold text-[#0B1739] hover:border-[#1677FF]/40 hover:bg-[#F8FBFF] sm:px-5"
+            className="inline-flex items-center gap-2 rounded-lg border border-[#C9D4E2] bg-white px-4 py-2.5 text-sm font-bold text-black"
           >
             <ArrowLeft className="h-4 w-4" />
             Go Back
@@ -61,172 +182,71 @@ export default function PricingPage() {
         </nav>
       </header>
 
-      <section className="relative overflow-hidden border-b border-[#D7E3F2] bg-white">
-        <div
-          aria-hidden="true"
-          className="pointer-events-none absolute inset-0 bg-[linear-gradient(135deg,#FFFFFF_0%,#FFFFFF_46%,#F5F8FC_46%,#F5F8FC_72%,#EAF3FF_100%)]"
-        />
-
-        <div
-          aria-hidden="true"
-          className="pointer-events-none absolute -right-40 -top-56 h-[680px] w-[680px] rounded-full bg-[#EAF3FF]/85"
-        />
-
-        <div
-          aria-hidden="true"
-          className="pointer-events-none absolute -bottom-32 left-[30%] h-64 w-[620px] rotate-[-8deg] rounded-[999px] bg-white/90"
-        />
-
-        <div className="relative mx-auto max-w-7xl px-5 py-20 text-center sm:px-8 sm:py-24 lg:py-28">
-          <div className="mx-auto inline-flex items-center gap-2 rounded-full border border-[#CFE0F5] bg-white/90 px-4 py-2 text-xs font-bold uppercase tracking-[0.16em] text-[#1677FF] shadow-sm">
-            <Sparkles className="h-3.5 w-3.5" />
-            Early Access
-          </div>
-
-          <h1 className="mx-auto mt-7 max-w-4xl text-5xl font-extrabold leading-[1.02] tracking-[-0.05em] text-[#0B1739] sm:text-6xl lg:text-7xl">
-            Start learning with
-            <span className="block text-[#1677FF]">
-              full access at no cost.
-            </span>
+      <section className="border-b border-[#D8E0EA] bg-white">
+        <div className="mx-auto max-w-7xl px-5 py-14 text-center sm:px-8 sm:py-18">
+          <p className="text-xs font-black uppercase tracking-[0.2em] text-[#1677FF]">
+            Simple MVP pricing
+          </p>
+          <h1 className="mx-auto mt-3 max-w-4xl text-4xl font-black tracking-[-0.045em] text-[#0B1739] sm:text-5xl">
+            Start free. Pay only when you need more learning power.
           </h1>
-
-          <p className="mx-auto mt-6 max-w-3xl text-base leading-8 text-[#53657D] sm:text-lg">
-            During early access, GAHN AI is open for learners to explore the
-            complete learning experience, test new tools, and help shape what
-            comes next.
+          <p className="mx-auto mt-4 max-w-2xl text-base font-medium leading-7 text-black">
+            GAHN is testing two plans only. The free plan is for trying the
+            product. Learner Plus is the first paid plan and stays behind the
+            payment safety switch until checkout and the AI teacher integration
+            are ready.
           </p>
+        </div>
+      </section>
 
-          <div className="mt-8 flex flex-wrap items-center justify-center gap-x-6 gap-y-3">
-            {[
-              "No credit card required",
-              "Full early-access learning experience",
-              "New features added as they are ready",
-            ].map((item) => (
-              <p
-                key={item}
-                className="flex items-center gap-2 text-sm font-semibold text-[#53657D]"
+      <section className="px-5 py-12 sm:px-8 sm:py-16">
+        <div className="mx-auto grid max-w-5xl gap-6 lg:grid-cols-2">
+          <PlanCard
+            name="Explore"
+            price="$0"
+            description="A simple way to test GAHN and experience the core learning system."
+            features={exploreFeatures}
+            action={
+              <Link
+                href="/signup"
+                className="flex w-full items-center justify-center gap-2 rounded-xl border-2 border-[#0B1739] bg-white px-5 py-3.5 text-sm font-black text-[#0B1739]"
               >
-                <CheckCircle2
-                  className="h-4 w-4 text-[#1677FF]"
-                  strokeWidth={1.8}
-                />
-                {item}
-              </p>
-            ))}
-          </div>
-        </div>
-      </section>
+                Start Free
+                <ArrowRight className="h-4 w-4" />
+              </Link>
+            }
+            note="No card needed. Brain Development, General Knowledge, and Book Intelligence are intentionally not available during this MVP test."
+          />
 
-      <section className="px-5 py-16 sm:px-8 sm:py-20 lg:py-24">
-        <div className="mx-auto max-w-5xl">
-          <div className="mx-auto mb-10 max-w-3xl text-center">
-            <p className="text-xs font-bold uppercase tracking-[0.22em] text-[#1677FF]">
-              Early Access
+          <PlanCard
+            name="Learner Plus"
+            price="$29"
+            description="For learners who use GAHN more often and want the stronger learning tools already prepared in the product."
+            features={learnerPlusFeatures}
+            featured
+            action={
+              <button
+                type="button"
+                onClick={startLearnerPlusCheckout}
+                disabled={checkoutLoading}
+                className="flex w-full items-center justify-center gap-2 rounded-xl bg-[#0B1739] px-5 py-3.5 text-sm font-black text-white disabled:opacity-60"
+              >
+                {checkoutLoading ? "Opening checkout..." : "Get Learner Plus"}
+                <ArrowRight className="h-4 w-4" />
+              </button>
+            }
+            note="Stripe checkout is already wired behind a safety switch. It will only accept real payments after the payment account, price, webhook, and final paid features are tested."
+          />
+        </div>
+
+        {checkoutError && (
+          <div className="mx-auto mt-6 max-w-5xl rounded-xl border border-[#BFD3ED] bg-white p-4">
+            <p className="flex items-start gap-2 text-sm font-bold leading-6 text-black">
+              <ShieldCheck className="mt-0.5 h-4 w-4 shrink-0 text-[#1677FF]" />
+              {checkoutError}
             </p>
-
-            <h2 className="mt-3 text-3xl font-extrabold tracking-[-0.035em] sm:text-4xl">
-              One plan. Everything available to early learners.
-            </h2>
-
-            <p className="mx-auto mt-4 max-w-2xl text-base leading-7 text-[#53657D]">
-              Explore GAHN AI without choosing between subscriptions while the
-              platform is being tested, improved, and expanded with real learner
-              feedback.
-            </p>
           </div>
-
-          <div className="mx-auto max-w-3xl overflow-hidden rounded-[1.6rem] border border-[#0B356F] bg-white shadow-[0_22px_60px_rgba(11,53,111,0.11)]">
-            <div className="bg-[#0B356F] px-6 py-3 text-center text-xs font-bold uppercase tracking-[0.16em] text-white">
-              Full Early Access
-            </div>
-
-            <div className="p-7 sm:p-9 lg:p-10">
-              <div className="text-center">
-                <h3 className="text-3xl font-extrabold tracking-[-0.035em] text-[#0B1739]">
-                  GAHN AI Early Access
-                </h3>
-
-                <p className="mx-auto mt-3 max-w-2xl text-base leading-7 text-[#53657D]">
-                  Built for students, self-learners, and anyone who wants a
-                  structured way to learn with AI.
-                </p>
-
-                <div className="mt-7 flex items-end justify-center gap-2">
-                  <span className="text-6xl font-extrabold tracking-[-0.05em] text-[#0B1739]">
-                    $0
-                  </span>
-                </div>
-
-                <p className="mt-3 text-sm font-semibold text-[#1677FF]">
-                  Free during early access
-                </p>
-
-                <Link
-                  href="/signup"
-                  className="mx-auto mt-7 inline-flex w-full max-w-md items-center justify-center gap-2 rounded-xl bg-[#1677FF] px-6 py-4 text-sm font-bold text-white shadow-[0_10px_28px_rgba(22,119,255,0.22)] hover:bg-[#0F65E8]"
-                >
-                  Start Learning Free
-                  <ArrowRight className="h-4 w-4" />
-                </Link>
-              </div>
-
-              <div className="my-9 h-px bg-[#E1E7EF]" />
-
-              <p className="text-sm font-bold text-[#0B1739]">
-                Included during early access:
-              </p>
-
-              <ul className="mt-5 grid gap-x-8 gap-y-4 md:grid-cols-2">
-                {earlyAccessFeatures.map((feature) => (
-                  <li key={feature} className="flex items-start gap-3">
-                    <Check
-                      className="mt-0.5 h-[18px] w-[18px] flex-none text-[#1267D6]"
-                      strokeWidth={2.2}
-                    />
-
-                    <span className="text-sm leading-6 text-[#24364D]">
-                      {feature}
-                    </span>
-                  </li>
-                ))}
-              </ul>
-
-              <div className="mt-9 rounded-xl border border-[#CFE0F5] bg-[#F8FBFF] px-5 py-4">
-                <p className="text-sm leading-6 text-[#53657D]">
-                  Early access is the testing and improvement stage of GAHN AI.
-                  Features, limits, and plan structure may evolve as the platform
-                  grows. Learners will be notified before any future pricing
-                  changes take effect.
-                </p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <section className="px-5 pb-16 sm:px-8 sm:pb-20">
-        <div className="mx-auto max-w-5xl rounded-[1.75rem] border border-[#CFE0F5] bg-[linear-gradient(135deg,#FFFFFF_0%,#F8FBFF_58%,#EAF3FF_100%)] px-6 py-9 text-center shadow-[0_18px_50px_rgba(11,23,57,0.06)] sm:px-10 sm:py-12">
-          <p className="text-xs font-bold uppercase tracking-[0.22em] text-[#1677FF]">
-            Start Today
-          </p>
-
-          <h2 className="mx-auto mt-3 max-w-3xl text-3xl font-extrabold tracking-[-0.035em] sm:text-4xl">
-            Learn first. Help shape what GAHN AI becomes.
-          </h2>
-
-          <p className="mx-auto mt-4 max-w-2xl text-base leading-7 text-[#53657D]">
-            Join early, explore the platform, and use the learning tools available
-            while GAHN AI continues improving around real learners.
-          </p>
-
-          <Link
-            href="/signup"
-            className="mt-7 inline-flex items-center justify-center gap-2 rounded-xl bg-[#1677FF] px-8 py-4 text-sm font-bold text-white shadow-[0_10px_28px_rgba(22,119,255,0.22)] hover:bg-[#0F65E8]"
-          >
-            Create Free Account
-            <ArrowRight className="h-4 w-4" />
-          </Link>
-        </div>
+        )}
       </section>
     </main>
   );
