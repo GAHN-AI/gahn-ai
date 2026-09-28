@@ -188,7 +188,7 @@ export default function SignupPage() {
             />
             <div>
               <p className="text-xl font-extrabold tracking-[-0.025em]">GAHN AI</p>
-              <p className="hidden text-[8px] font-bold uppercase tracking-[0.18em] text-[#53657D] sm:block">
+              <p className="hidden text-[8px] font-bold uppercase tracking-[0.18em] text-black sm:block">
                 Global AI Human Helper Network
               </p>
             </div>
@@ -196,7 +196,7 @@ export default function SignupPage() {
 
           <Link
             href="/"
-            className="inline-flex items-center gap-2 text-sm font-semibold text-[#53657D] hover:text-[#1677FF]"
+            className="inline-flex items-center gap-2 text-sm font-semibold text-black hover:text-[#1677FF]"
           >
             <ArrowLeft className="h-4 w-4" />
             Back Home
@@ -212,9 +212,9 @@ export default function SignupPage() {
               Build your own path with{" "}
               <span className="text-[#1677FF]">GAHN AI.</span>
             </h1>
-            <p className="mt-6 max-w-xl text-lg leading-8 text-[#53657D]">
-              Create one account for structured AI lessons across school,
-              careers, brain development, general knowledge, and books.
+            <p className="mt-6 max-w-xl text-lg leading-8 text-black">
+              Create one account to test Career Skills and School Help first.
+              The other learning worlds will open after the core tutor experience is proven.
             </p>
 
             <div className="mt-10 space-y-6">
@@ -225,13 +225,13 @@ export default function SignupPage() {
                   </div>
                   <div>
                     <h2 className="font-bold">{title}</h2>
-                    <p className="mt-1 text-sm leading-6 text-[#53657D]">{text}</p>
+                    <p className="mt-1 text-sm leading-6 text-black">{text}</p>
                   </div>
                 </div>
               ))}
             </div>
 
-            <div className="mt-10 flex items-center gap-2 text-sm font-semibold text-[#53657D]">
+            <div className="mt-10 flex items-center gap-2 text-sm font-semibold text-black">
               <ShieldCheck className="h-4 w-4 text-[#1677FF]" />
               Secure signup with email verification and Google authentication.
             </div>
@@ -241,8 +241,8 @@ export default function SignupPage() {
             <h2 className="text-3xl font-extrabold tracking-[-0.03em] sm:text-4xl">
               Create your account
             </h2>
-            <p className="mt-3 text-sm leading-6 text-[#53657D] sm:text-base">
-              Join the GAHN AI MVP and begin with full early access.
+            <p className="mt-3 text-sm leading-6 text-black sm:text-base">
+              Join the GAHN AI MVP with the free Explore plan.
             </p>
 
             <button
@@ -255,7 +255,7 @@ export default function SignupPage() {
               {googleLoading ? "Connecting..." : "Continue with Google"}
             </button>
 
-            <div className="my-6 flex items-center gap-4 text-xs font-bold uppercase tracking-[0.12em] text-[#7A8AA0]">
+            <div className="my-6 flex items-center gap-4 text-xs font-bold uppercase tracking-[0.12em] text-black">
               <div className="h-px flex-1 bg-[#D7E3F2]" />
               Or
               <div className="h-px flex-1 bg-[#D7E3F2]" />
@@ -355,12 +355,12 @@ export default function SignupPage() {
               </button>
             </form>
 
-            <div className="mt-6 flex items-center justify-center gap-2 text-sm text-[#53657D]">
+            <div className="mt-6 flex items-center justify-center gap-2 text-sm text-black">
               <CheckCircle2 className="h-4 w-4 text-[#1677FF]" />
               <span>No credit card required for the MVP.</span>
             </div>
 
-            <p className="mt-6 text-center text-sm text-[#53657D]">
+            <p className="mt-6 text-center text-sm text-black">
               Already have an account?{" "}
               <Link href="/login" className="font-semibold text-[#1677FF]">
                 Log in
