@@ -1,15 +1,10 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import { useParams, useSearchParams } from "next/navigation";
-import {
-  ArrowLeft,
-  ArrowRight,
-  Briefcase,
-  Search,
-  Sparkles,
-} from "lucide-react";
+import { ArrowLeft, ArrowRight, Briefcase } from "lucide-react";
+
 import LanguageSelector from "@/components/LanguageSelector";
 import { getCareerSection } from "@/lib/careerCatalog";
 import { slugifyLearningTitle } from "@/lib/learningCatalog";
@@ -18,14 +13,16 @@ export default function CareerSectionPage() {
   const params = useParams<{ section: string }>();
   const searchParams = useSearchParams();
   const careerSection = getCareerSection(params.section);
-  const [search, setSearch] = useState("");
+
   const [language, setLanguage] = useState(
     searchParams.get("language") || "English"
   );
 
   useEffect(() => {
     const stored = window.localStorage.getItem("gahn-language");
-    if (!searchParams.get("language") && stored) setLanguage(stored);
+    if (!searchParams.get("language") && stored) {
+      setLanguage(stored);
+    }
   }, [searchParams]);
 
   function changeLanguage(nextLanguage: string) {
@@ -33,31 +30,21 @@ export default function CareerSectionPage() {
     window.localStorage.setItem("gahn-language", nextLanguage);
   }
 
-  const filteredLessons = useMemo(() => {
-    if (!careerSection) return [];
-    const query = search.trim().toLowerCase();
-    if (!query) return careerSection.lessons;
-
-    return careerSection.lessons.filter(
-      (lesson) =>
-        lesson.title.toLowerCase().includes(query) ||
-        lesson.description.toLowerCase().includes(query)
-    );
-  }, [careerSection, search]);
-
   if (!careerSection) {
     return (
-      <main className="min-h-screen bg-[#F8FBFF] px-5 py-10 font-sans text-[#0B1739] sm:px-8">
+      <main className="min-h-screen bg-[#F4F7FB] px-5 py-10 text-black sm:px-8">
         <div className="mx-auto max-w-5xl">
           <Link
             href="/learn/career-skills"
-            className="inline-flex items-center gap-2 text-sm font-semibold text-[#1677FF]"
+            className="inline-flex items-center gap-2 text-sm font-black text-[#0B1739]"
           >
             <ArrowLeft className="h-4 w-4" />
             Back to Career Skills
           </Link>
-          <div className="mt-10 rounded-[1.5rem] border border-[#D7E3F2] bg-white p-10 text-center">
-            <h1 className="text-3xl font-extrabold">Career section not found</h1>
+          <div className="mt-8 rounded-2xl border border-[#D8E0EA] bg-white p-10 text-center">
+            <h1 className="text-3xl font-black text-[#0B1739]">
+              Career section not found
+            </h1>
           </div>
         </div>
       </main>
@@ -65,12 +52,12 @@ export default function CareerSectionPage() {
   }
 
   return (
-    <main className="min-h-screen bg-[#F8FBFF] px-5 py-8 font-sans text-[#0B1739] sm:px-8 lg:px-10">
-      <div className="mx-auto max-w-7xl">
+    <main className="min-h-screen bg-[#F4F7FB] px-5 py-8 font-sans text-black sm:px-8 lg:px-10">
+      <div className="mx-auto max-w-6xl">
         <div className="flex flex-wrap items-center justify-between gap-4">
           <Link
             href={`/learn/career-skills?language=${encodeURIComponent(language)}`}
-            className="inline-flex items-center gap-2 text-sm font-semibold text-[#53657D] hover:text-[#1677FF]"
+            className="inline-flex items-center gap-2 text-sm font-black text-[#0B1739]"
           >
             <ArrowLeft className="h-4 w-4" />
             Back to Career Skills
@@ -78,105 +65,58 @@ export default function CareerSectionPage() {
 
           <div className="flex items-center gap-3">
             <LanguageSelector value={language} onChange={changeLanguage} compact />
-            <Link href="/" className="flex items-center gap-2">
-              <img
-                src="/logo/favicon.png"
-                alt="GAHN AI"
-                className="h-9 w-9 rounded-full object-cover"
-              />
-              <span className="hidden text-sm font-extrabold sm:block">GAHN AI</span>
+            <Link href="/" className="font-black text-[#0B1739]">
+              GAHN AI
             </Link>
           </div>
         </div>
 
-        <section className="relative mt-8 overflow-hidden rounded-[1.75rem] border border-[#D7E3F2] bg-white p-6 shadow-[0_18px_55px_rgba(11,23,57,0.07)] sm:p-8 lg:p-10">
-          <div aria-hidden="true" className="pointer-events-none absolute -right-24 -top-28 h-72 w-72 rounded-full bg-[#EAF3FF]" />
-
-          <div className="relative flex flex-col gap-5 sm:flex-row sm:items-center">
-            <div className="grid h-16 w-16 shrink-0 place-items-center rounded-2xl bg-[#EAF3FF] text-[#1677FF]">
-              <Briefcase className="h-7 w-7" strokeWidth={1.75} />
+        <section className="mt-8 overflow-hidden rounded-[1.75rem] border border-[#BFD3ED] bg-white shadow-[0_18px_48px_rgba(11,23,57,0.06)]">
+          <div className="bg-[#07162F] p-7 text-white sm:p-9">
+            <div className="grid h-14 w-14 place-items-center rounded-2xl bg-white text-[#07162F]">
+              <Briefcase className="h-6 w-6" />
             </div>
-            <div>
-              <p className="text-xs font-bold uppercase tracking-[0.22em] text-[#1677FF]">Career Section</p>
-              <h1 className="mt-2 text-3xl font-extrabold tracking-[-0.03em] sm:text-4xl lg:text-5xl">
-                {careerSection.title}
-              </h1>
-              <p className="mt-3 max-w-3xl text-sm leading-7 text-[#53657D] sm:text-base">
-                {careerSection.description}
-              </p>
-              <p className="mt-3 text-sm font-semibold text-[#1677FF]">Teaching language: {language}</p>
-            </div>
-          </div>
-        </section>
-
-        <section className="mt-6 rounded-[1.5rem] border border-[#CFE0F5] bg-[linear-gradient(135deg,#FFFFFF_0%,#F8FBFF_58%,#EAF3FF_100%)] p-6 sm:p-8">
-          <div className="flex items-start gap-3">
-            <div className="grid h-11 w-11 shrink-0 place-items-center rounded-xl bg-white text-[#1677FF] shadow-sm">
-              <Sparkles className="h-5 w-5" strokeWidth={1.75} />
-            </div>
-            <div>
-              <p className="text-xs font-bold uppercase tracking-[0.2em] text-[#1677FF]">Choose your path</p>
-              <h2 className="mt-1 text-2xl font-extrabold tracking-[-0.02em]">Choose the career you want to learn</h2>
-              <p className="mt-2 text-sm leading-6 text-[#53657D]">
-                Pick a career below. First you will see exactly what the path covers, the skills and tools involved, and the learning sequence. Then you can start the private AI lesson in {language}.
-              </p>
-            </div>
-          </div>
-
-          <div className="relative mt-6">
-            <Search
-              className="pointer-events-none absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-[#7A8AA0]"
-              strokeWidth={1.75}
-            />
-            <input
-              value={search}
-              onChange={(event) => setSearch(event.target.value)}
-              placeholder={`Search ${careerSection.title.toLowerCase()} careers...`}
-              className="h-14 w-full rounded-xl border border-[#D7E3F2] bg-white pl-12 pr-4 text-sm text-[#0B1739] outline-none placeholder:text-[#7A8AA0] focus:border-[#1677FF] focus:ring-2 focus:ring-[#1677FF]/15"
-            />
-          </div>
-        </section>
-
-        <section className="mt-8">
-          <div className="flex flex-wrap items-end justify-between gap-3">
-            <div>
-              <p className="text-xs font-bold uppercase tracking-[0.22em] text-[#1677FF]">Career Options</p>
-              <h2 className="mt-2 text-3xl font-extrabold tracking-[-0.03em]">
-                Pick what you want to become or learn
-              </h2>
-            </div>
-            <p className="text-sm font-semibold text-[#53657D]">
-              {filteredLessons.length} option{filteredLessons.length === 1 ? "" : "s"}
+            <p className="mt-5 text-xs font-black uppercase tracking-[0.18em] text-[#8DB8FF]">
+              Career Skills
+            </p>
+            <h1 className="mt-2 text-4xl font-black tracking-[-0.04em] text-white">
+              {careerSection.title}
+            </h1>
+            <p className="mt-3 max-w-3xl text-sm font-medium leading-7 text-white">
+              {careerSection.description}
             </p>
           </div>
 
-          <div className="mt-6 grid gap-4 md:grid-cols-2 xl:grid-cols-3">
-            {filteredLessons.map((lesson) => (
-              <Link
-                key={lesson.title}
-                href={`/learn/career-skills/${careerSection.slug}/${slugifyLearningTitle(
-                  lesson.title
-                )}?language=${encodeURIComponent(language)}`}
-                className="group flex min-h-48 flex-col rounded-[1.4rem] border border-[#D7E3F2] bg-white p-5 shadow-[0_10px_30px_rgba(11,23,57,0.05)] hover:border-[#1677FF]/45 hover:shadow-md"
-              >
-                <div className="grid h-10 w-10 place-items-center rounded-xl bg-[#EAF3FF] text-[#1677FF]">
-                  <Briefcase className="h-4.5 w-4.5" strokeWidth={1.75} />
-                </div>
-                <h3 className="mt-4 text-lg font-bold text-[#0B1739]">{lesson.title}</h3>
-                <p className="mt-2 flex-1 text-sm leading-6 text-[#53657D]">{lesson.description}</p>
-                <div className="mt-4 inline-flex items-center gap-2 text-sm font-bold text-[#1677FF]">
-                  View what you&apos;ll learn
-                  <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
-                </div>
-              </Link>
-            ))}
-          </div>
+          <div className="p-6 sm:p-8">
+            <p className="text-xs font-black uppercase tracking-[0.16em] text-[#1677FF]">
+              Available course
+            </p>
 
-          {!filteredLessons.length && (
-            <div className="mt-6 rounded-[1.5rem] border border-dashed border-[#D7E3F2] bg-white p-8 text-center text-sm text-[#53657D]">
-              No matching career options. Try another search.
+            <div className="mt-4 grid gap-4">
+              {careerSection.lessons.map((lesson) => (
+                <Link
+                  key={lesson.title}
+                  href={`/learn/career-skills/${careerSection.slug}/${slugifyLearningTitle(
+                    lesson.title
+                  )}?language=${encodeURIComponent(language)}`}
+                  className="group flex flex-col justify-between gap-5 rounded-[1.35rem] border border-[#D8E0EA] bg-white p-5 sm:flex-row sm:items-center"
+                >
+                  <div>
+                    <h2 className="text-xl font-black text-[#0B1739]">
+                      {lesson.title}
+                    </h2>
+                    <p className="mt-2 max-w-3xl text-sm font-medium leading-6 text-black">
+                      {lesson.description}
+                    </p>
+                  </div>
+                  <div className="inline-flex shrink-0 items-center gap-2 text-sm font-black text-[#1677FF]">
+                    Open course
+                    <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
+                  </div>
+                </Link>
+              ))}
             </div>
-          )}
+          </div>
         </section>
       </div>
     </main>
