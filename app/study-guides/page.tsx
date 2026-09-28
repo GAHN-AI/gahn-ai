@@ -86,7 +86,7 @@ export default function StudyGuidesPage() {
       <div className="mx-auto max-w-5xl">
         <Link
           href="/dashboard"
-          className="inline-flex items-center gap-2 text-sm font-bold text-[#53657D] hover:text-[#1677FF]"
+          className="inline-flex items-center gap-2 text-sm font-bold text-black hover:text-[#1677FF]"
         >
           <ArrowLeft className="h-4 w-4" />
           Back to Dashboard
@@ -100,14 +100,14 @@ export default function StudyGuidesPage() {
             <h1 className="mt-4 text-3xl font-extrabold tracking-[-0.035em]">
               Study Guides & Summaries
             </h1>
-            <p className="mt-2 max-w-2xl text-sm leading-7 text-[#53657D]">
+            <p className="mt-2 max-w-2xl text-sm leading-7 text-black">
               Lesson summaries and study guides are built from the material you are actually studying and saved for review.
             </p>
           </div>
 
           <div className="p-5 sm:p-7">
             <div className="relative mb-5">
-              <Search className="pointer-events-none absolute left-3.5 top-3.5 h-4 w-4 text-[#7A8AA0]" />
+              <Search className="pointer-events-none absolute left-3.5 top-3.5 h-4 w-4 text-black" />
               <input
                 value={search}
                 onChange={(event) => setSearch(event.target.value)}
@@ -117,7 +117,7 @@ export default function StudyGuidesPage() {
             </div>
 
             {loading ? (
-              <p className="py-16 text-center text-sm font-semibold text-[#53657D]">
+              <p className="py-16 text-center text-sm font-semibold text-black">
                 Loading study guides...
               </p>
             ) : guides.length === 0 ? (
@@ -127,7 +127,7 @@ export default function StudyGuidesPage() {
                   <h2 className="mt-3 text-lg font-extrabold">
                     No saved study materials yet
                   </h2>
-                  <p className="mt-2 text-sm leading-6 text-[#53657D]">
+                  <p className="mt-2 text-sm leading-6 text-black">
                     Start a lesson and use Summary or Study Guide in the Learning Studio. GAHN will save the result here.
                   </p>
                   <Link
@@ -161,7 +161,7 @@ export default function StudyGuidesPage() {
                     <h2 className="mt-1 text-xl font-extrabold">
                       {guide.title}
                     </h2>
-                    <p className="mt-1 text-xs text-[#8A98AA]">
+                    <p className="mt-1 text-xs text-black">
                       Saved {new Date(guide.updated_at).toLocaleString()}
                     </p>
 
@@ -175,7 +175,7 @@ export default function StudyGuidesPage() {
                             {block.title || "Review"}
                           </h3>
                           {block.body && (
-                            <p className="mt-2 text-sm leading-6 text-[#40536D]">
+                            <p className="mt-2 text-sm leading-6 text-black">
                               {block.body}
                             </p>
                           )}
@@ -184,7 +184,7 @@ export default function StudyGuidesPage() {
                               {(block.bullets || block.checks || []).map((item) => (
                                 <li
                                   key={item}
-                                  className="flex items-start gap-2 text-sm leading-6 text-[#40536D]"
+                                  className="flex items-start gap-2 text-sm leading-6 text-black"
                                 >
                                   <CheckCircle2 className="mt-1 h-4 w-4 shrink-0 text-[#1677FF]" />
                                   {item}
