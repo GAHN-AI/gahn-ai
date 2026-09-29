@@ -34,9 +34,9 @@ type LearningWorld = {
 const learningWorlds: Record<string, LearningWorld> = {
   "career-skills": {
     title: "Career Skills",
-    eyebrow: "Career exploration + practical skills",
+    eyebrow: "Technology careers",
     description:
-      "Explore real career directions, understand what the work involves, and build the practical skills used in each field with one private AI career instructor.",
+      "Explore technology roles and the concrete skills used in each career. Career Skills is intentionally focused on technology for this MVP.",
     Icon: Briefcase,
   },
   "school-help": {
@@ -127,7 +127,7 @@ function CareerCard({
           </p>
 
           <div className="mt-3 flex flex-wrap gap-2">
-            {skills.slice(0, 4).map((skill) => (
+            {skills.map((skill) => (
               <span
                 key={skill}
                 className="rounded-full bg-[#F1F5FA] px-2.5 py-1 text-xs font-bold text-[#25364F]"
@@ -339,15 +339,16 @@ export default function LearningWorldPage() {
             <section className="flex flex-col gap-5 lg:flex-row lg:items-end lg:justify-between">
               <div className="max-w-3xl">
                 <p className="text-xs font-black uppercase tracking-[0.16em] text-[#1677FF]">
-                  Career library
+                  Technology
                 </p>
                 <h2 className="mt-2 text-3xl font-black tracking-[-0.035em] text-[#0B1739]">
-                  Explore a career direction
+                  Choose a technology role
                 </h2>
                 <p className="mt-3 text-sm font-medium leading-7 text-[#33455F]">
-                  Start with the field that interests you. Each path explains
-                  the work, the skills behind it, and gives Maya the context she
-                  needs to teach that career inside the same private classroom.
+                  Career Skills contains one section for this MVP: Technology.
+                  Each role uses a role-specific skill list aligned with
+                  Coursera Career Academy, while Maya remains the single Career
+                  Skills instructor across the whole section.
                 </p>
               </div>
 
@@ -356,7 +357,7 @@ export default function LearningWorldPage() {
                 <input
                   value={careerSearch}
                   onChange={(event) => setCareerSearch(event.target.value)}
-                  placeholder="Search careers or skills"
+                  placeholder="Search technology roles or skills"
                   className="w-full rounded-xl border border-[#C9D6E5] bg-white py-3 pl-11 pr-4 text-sm font-semibold text-[#0B1739] outline-none focus:border-[#1677FF] focus:ring-2 focus:ring-[#1677FF]/10"
                 />
               </label>
@@ -386,8 +387,8 @@ export default function LearningWorldPage() {
                   No career matched that search
                 </h3>
                 <p className="mt-2 text-sm font-medium text-[#52647C]">
-                  Try a field such as technology, healthcare, finance, law, or
-                  design.
+                  Try a role or skill such as software development, Python,
+                  cybersecurity, cloud, data, machine learning, or UX.
                 </p>
               </div>
             )}
