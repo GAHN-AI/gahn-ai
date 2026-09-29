@@ -31,6 +31,7 @@ export default function FeedbackPage() {
   const [message, setMessage] = useState("");
   const [sending, setSending] = useState(false);
   const [sent, setSent] = useState(false);
+  const [notificationSent, setNotificationSent] = useState(true);
   const [error, setError] = useState("");
 
   useEffect(() => {
@@ -60,28 +61,40 @@ export default function FeedbackPage() {
     setError("");
     setSent(false);
 
-    const { error: insertError } = await supabase
-      .from("learner_feedback")
-      .insert({
-        user_id: userId,
-        category,
-        rating,
-        message: clean,
-        context_path:
-          typeof window !== "undefined" ? document.referrer || "/feedback" : "/feedback",
+    try {
+      const response = await fetch("/api/feedback", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          category,
+          rating,
+          message: clean,
+          contextPath:
+            typeof window !== "undefined"
+              ? document.referrer || "/feedback"
+              : "/feedback",
+        }),
       });
 
-    setSending(false);
+      const data = await response.json();
 
-    if (insertError) {
-      setError(insertError.message);
-      return;
+      if (!response.ok) {
+        setError(data.error || "Feedback could not be sent.");
+        return;
+      }
+
+      setMessage("");
+      setRating(null);
+      setCategory("feedback");
+      setNotificationSent(data.notificationSent !== false);
+      setSent(true);
+    } catch {
+      setError("Feedback could not be sent. Please try again.");
+    } finally {
+      setSending(false);
     }
-
-    setMessage("");
-    setRating(null);
-    setCategory("feedback");
-    setSent(true);
   }
 
   return (
@@ -167,7 +180,9 @@ export default function FeedbackPage() {
 
             {sent && (
               <p className="mt-4 rounded-xl border border-[#BFD8F8] bg-[#F1F7FF] px-4 py-3 text-sm font-semibold text-black">
-                Feedback saved. This is the kind of information GAHN needs during early access.
+                {notificationSent
+                  ? "Feedback saved and sent to the GAHN support inbox."
+                  : "Feedback was saved, but the email notification could not be delivered."}
               </p>
             )}
 
