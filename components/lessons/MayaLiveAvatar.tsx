@@ -51,6 +51,7 @@ export default function MayaLiveAvatar({
   const usageEventIdRef = useRef<string | null>(null);
   const sessionTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const finalizingRef = useRef(false);
+  const activityRecordedRef = useRef(false);
 
   const [status, setStatus] = useState("Checking access...");
   const [error, setError] = useState<string | null>(null);
@@ -163,12 +164,51 @@ export default function MayaLiveAvatar({
 
       await finalizeUsage();
       setSessionLimitSeconds(0);
+      activityRecordedRef.current = false;
       setStatus("Session ended");
     } catch (err) {
       console.error(err);
       setError("Maya stopped, but the session cleanup needs to retry.");
     } finally {
       setIsEnding(false);
+    }
+  }
+
+  async function recordConnectedLesson(
+    usageEventId: string,
+    providerSessionId: string | null
+  ) {
+    if (activityRecordedRef.current) return;
+
+    activityRecordedRef.current = true;
+
+    try {
+      const response = await fetch("/api/liveavatar/session/started", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          usageEventId,
+          providerSessionId,
+          lessonContext: {
+            worldSlug,
+            sectionSlug: sectionSlug || null,
+            topicSlug: topicSlug || null,
+            topic,
+            lessonId,
+            lessonTitle,
+            language,
+          },
+        }),
+      });
+
+      if (!response.ok) {
+        activityRecordedRef.current = false;
+      }
+    } catch (err) {
+      activityRecordedRef.current = false;
+      console.error("Could not record Maya lesson activity:", err);
     }
   }
 
@@ -227,6 +267,7 @@ export default function MayaLiveAvatar({
       }
 
       usageEventIdRef.current = data.usageEventId;
+      activityRecordedRef.current = false;
       setSessionLimitSeconds(data.sessionLimitSeconds || 0);
 
       const session = new LiveAvatarSession(data.sessionToken, {
@@ -244,6 +285,10 @@ export default function MayaLiveAvatar({
       session.on(SessionEvent.SESSION_STATE_CHANGED, (state) => {
         if (state === SessionState.CONNECTED) {
           setStatus("Maya is live");
+          void recordConnectedLesson(
+            data.usageEventId,
+            data.sessionId || null
+          );
         }
 
         if (state === SessionState.CONNECTING) {
