@@ -149,6 +149,8 @@ export default function DashboardPage() {
   const [avatarUrl, setAvatarUrl] = useState("");
   const [planName, setPlanName] = useState("Explore");
   const [planId, setPlanId] = useState("explore");
+  const [mayaRemainingMinutes, setMayaRemainingMinutes] = useState<number | null>(null);
+  const [mayaLimitMinutes, setMayaLimitMinutes] = useState<number | null>(null);
   const [progressRows, setProgressRows] = useState<ProgressRow[]>([]);
   const [notesCount, setNotesCount] = useState(0);
   const [studyGuidesCount, setStudyGuidesCount] = useState(0);
@@ -166,9 +168,15 @@ export default function DashboardPage() {
         return;
       }
 
-      const [subscriptionResponse, progressResult, notesResult, guidesResult] =
-        await Promise.all([
+      const [
+        subscriptionResponse,
+        mayaUsageResponse,
+        progressResult,
+        notesResult,
+        guidesResult,
+      ] = await Promise.all([
           fetch("/api/subscription/current"),
+          fetch("/api/liveavatar/usage"),
           supabase
             .from("learning_progress")
             .select(
@@ -190,6 +198,20 @@ export default function DashboardPage() {
         const subscription = await subscriptionResponse.json();
         setPlanId(subscription.planId || "explore");
         setPlanName(subscription.entitlements?.name || "Explore");
+      }
+
+      if (mayaUsageResponse.ok) {
+        const mayaUsage = await mayaUsageResponse.json();
+        setMayaRemainingMinutes(
+          typeof mayaUsage.remainingSeconds === "number"
+            ? Math.ceil(mayaUsage.remainingSeconds / 60)
+            : null
+        );
+        setMayaLimitMinutes(
+          typeof mayaUsage.limitSeconds === "number"
+            ? Math.ceil(mayaUsage.limitSeconds / 60)
+            : null
+        );
       }
 
       setProgressRows((progressResult.data || []) as ProgressRow[]);
@@ -305,9 +327,22 @@ export default function DashboardPage() {
             <h2 className="mt-1 text-xl font-black text-white">{planName}</h2>
             <p className="mt-2 text-sm leading-6 text-white">
               {planId === "explore"
-                ? "Use the free Explore plan while GAHN tests the core learning experience."
-                : "Your paid plan controls the learning tools and usage available to your account."}
+                ? "Explore keeps the low-cost parts of GAHN free. Maya Live AI Instructor is unlocked with Learner Plus."
+                : "Your paid plan controls the learning tools and AI usage available to your account."}
             </p>
+
+            {planId !== "explore" &&
+              mayaRemainingMinutes !== null &&
+              mayaLimitMinutes !== null && (
+                <div className="mt-4 rounded-xl border border-white/20 bg-white/10 px-3 py-2">
+                  <p className="text-xs font-bold text-white/80">
+                    Maya time
+                  </p>
+                  <p className="mt-1 text-sm font-black text-white">
+                    {mayaRemainingMinutes} of {mayaLimitMinutes} minutes remaining
+                  </p>
+                </div>
+              )}
             <Link
               href="/pricing"
               className="mt-5 block rounded-xl bg-white px-4 py-3 text-center text-sm font-black text-[#07162F]"
