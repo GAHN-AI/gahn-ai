@@ -18,10 +18,7 @@ import {
 
 import LanguageSelector from "@/components/LanguageSelector";
 import { careerSections } from "@/lib/careerCatalog";
-import {
-  getLearningSections,
-  slugifyLearningTitle,
-} from "@/lib/learningCatalog";
+import { getLearningSections } from "@/lib/learningCatalog";
 import { isLearningWorldAvailable } from "@/lib/learningWorldAvailability";
 
 type LearningWorld = {
@@ -367,9 +364,7 @@ export default function LearningWorldPage() {
               {filteredCareers.map((section) => (
                 <CareerCard
                   key={section.slug}
-                  href={`/learn/career-skills/${section.slug}/${slugifyLearningTitle(
-                    section.title
-                  )}?language=${encodeURIComponent(language)}`}
+                  href={`/learn/career-skills/${section.slug}?language=${encodeURIComponent(language)}`}
                   title={section.title}
                   category={section.category}
                   description={section.description}
