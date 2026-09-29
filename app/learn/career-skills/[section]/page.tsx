@@ -12,7 +12,6 @@ import {
 
 import LanguageSelector from "@/components/LanguageSelector";
 import { getCareerSection } from "@/lib/careerCatalog";
-import { slugifyLearningTitle } from "@/lib/learningCatalog";
 
 export default function CareerSectionPage() {
   const params = useParams<{ section: string }>();
@@ -56,10 +55,11 @@ export default function CareerSectionPage() {
     );
   }
 
-  const lesson = careerSection.lessons[0];
-  const lessonHref = `/learn/career-skills/${careerSection.slug}/${slugifyLearningTitle(
-    lesson.title
-  )}?language=${encodeURIComponent(language)}`;
+  const lessonHref = `/lesson/custom?world=career-skills&section=${encodeURIComponent(
+    careerSection.slug
+  )}&topic=${encodeURIComponent(careerSection.title)}&topicSlug=${encodeURIComponent(
+    careerSection.slug
+  )}&language=${encodeURIComponent(language)}`;
 
   return (
     <main className="min-h-screen bg-[#F4F7FB] font-sans text-black">
@@ -117,7 +117,7 @@ export default function CareerSectionPage() {
                 href={lessonHref}
                 className="inline-flex items-center gap-2 rounded-xl bg-white px-5 py-3.5 text-sm font-black text-[#07162F]"
               >
-                Start this career path
+                Start with Maya
                 <ArrowRight className="h-4 w-4" />
               </Link>
 
