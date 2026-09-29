@@ -15,9 +15,10 @@ export type CareerSection = {
   lessons: CareerLesson[];
 };
 
-function career(args: Omit<CareerSection, "lessons">): CareerSection {
+function techRole(args: Omit<CareerSection, "category" | "lessons">): CareerSection {
   return {
     ...args,
+    category: "Technology",
     lessons: [
       {
         title: args.title,
@@ -27,126 +28,231 @@ function career(args: Omit<CareerSection, "lessons">): CareerSection {
   };
 }
 
+/**
+ * Phase 1 Career Skills is intentionally narrowed to one Technology section.
+ * The skill lists below mirror the "Skills you'll need" lists published on
+ * Coursera Career Academy role pages as checked on 2026-09-29.
+ */
 export const careerSections: CareerSection[] = [
-  career({
-    slug: "software-development",
-    title: "Software Development",
-    category: "Technology",
+  techRole({
+    slug: "software-developer-engineer",
+    title: "Software Developer / Engineer",
     description:
-      "Learn how software is planned, coded, tested, shipped, and improved while building the foundations used by real developers.",
+      "Design, build, test, and maintain software systems across web, applications, and services.",
     imageUrl:
       "https://images.unsplash.com/photo-1515879218367-8466d910aaa4?auto=format&fit=crop&w=1200&q=80",
-    level: "Beginner friendly",
-    pathLabel: "Career foundation",
-    skills: ["Programming", "Git & GitHub", "Web apps", "APIs"],
+    level: "Beginner path",
+    pathLabel: "Technology career",
+    skills: [
+      "Full-Stack Web Development",
+      "Computer Science",
+      "Problem Solving",
+      "Agile Methodology",
+      "DevOps",
+      "CI/CD",
+      "Java",
+      "Python Programming",
+    ],
   }),
-  career({
-    slug: "nursing-healthcare",
-    title: "Nursing & Healthcare",
-    category: "Healthcare",
+  techRole({
+    slug: "front-end-developer",
+    title: "Front End Developer",
     description:
-      "Explore patient care, healthcare teamwork, medical communication, safety, terminology, and the skills used across clinical careers.",
+      "Build the visual and interactive parts of websites and applications with modern front-end tools.",
     imageUrl:
-      "https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?auto=format&fit=crop&w=1200&q=80",
-    level: "Beginner friendly",
-    pathLabel: "Career exploration",
-    skills: ["Patient care", "Terminology", "Safety", "Communication"],
+      "https://images.unsplash.com/photo-1498050108023-c5249f4df085?auto=format&fit=crop&w=1200&q=80",
+    level: "Beginner path",
+    pathLabel: "Technology career",
+    skills: [
+      "Javascript",
+      "Front-End Web Development",
+      "Cascading Style Sheets (CSS)",
+      "Hypertext Markup Language (HTML)",
+      "React.js",
+      "User Interface (UI)",
+      "Agile Methodology",
+      "Responsive Web Design",
+    ],
   }),
-  career({
-    slug: "teaching-education",
-    title: "Teaching & Education",
-    category: "Education",
+  techRole({
+    slug: "python-developer",
+    title: "Python Developer",
     description:
-      "Learn how teachers plan instruction, explain difficult ideas, support learners, assess understanding, and manage learning environments.",
+      "Use Python to build software, web applications, automation, and data-backed services.",
     imageUrl:
-      "https://images.unsplash.com/photo-1509062522246-3755977927d7?auto=format&fit=crop&w=1200&q=80",
-    level: "Beginner friendly",
-    pathLabel: "Career exploration",
-    skills: ["Instruction", "Lesson planning", "Assessment", "Communication"],
+      "https://images.unsplash.com/photo-1526379095098-d400fd0bf935?auto=format&fit=crop&w=1200&q=80",
+    level: "Beginner path",
+    pathLabel: "Technology career",
+    skills: [
+      "Python Programming",
+      "Software Engineering",
+      "Django (Web Framework)",
+      "Flask (Web Framework)",
+      "SQL",
+      "Git (Version Control System)",
+      "Agile Methodology",
+      "CI/CD",
+    ],
   }),
-  career({
-    slug: "engineering",
-    title: "Engineering",
-    category: "Engineering",
+  techRole({
+    slug: "cyber-security-analyst",
+    title: "Cyber Security Analyst",
     description:
-      "Understand how engineers solve real problems using math, science, design, testing, tradeoffs, and disciplined project thinking.",
+      "Protect systems and data by finding vulnerabilities, monitoring threats, and responding to security incidents.",
     imageUrl:
-      "https://images.unsplash.com/photo-1581094794329-c8112a89af12?auto=format&fit=crop&w=1200&q=80",
-    level: "Beginner friendly",
-    pathLabel: "Career foundation",
-    skills: ["Problem solving", "Design", "Systems", "Testing"],
+      "https://images.unsplash.com/photo-1563013544-824ae1b704d3?auto=format&fit=crop&w=1200&q=80",
+    level: "Beginner path",
+    pathLabel: "Technology career",
+    skills: [
+      "Cybersecurity",
+      "Information Systems Security",
+      "Vulnerability Management",
+      "Risk Management",
+      "Network Security",
+      "Security Information and Event Management (SIEM)",
+      "Incident Management",
+      "Penetration Testing",
+    ],
   }),
-  career({
-    slug: "skilled-trades",
-    title: "Skilled Trades",
-    category: "Trades",
+  techRole({
+    slug: "devops-engineer",
+    title: "DevOps Engineer",
     description:
-      "Explore hands-on careers such as electrical, HVAC, plumbing, welding, and automotive work while learning safety and technical fundamentals.",
+      "Automate software delivery, improve reliability, and connect development work with production infrastructure.",
     imageUrl:
-      "https://images.unsplash.com/photo-1621905252507-b35492cc74b4?auto=format&fit=crop&w=1200&q=80",
-    level: "Beginner friendly",
-    pathLabel: "Career exploration",
-    skills: ["Safety", "Tools", "Diagnostics", "Technical systems"],
+      "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?auto=format&fit=crop&w=1200&q=80",
+    level: "Intermediate path",
+    pathLabel: "Technology career",
+    skills: [
+      "DevOps",
+      "Automation",
+      "CI/CD",
+      "Kubernetes",
+      "Docker (Software)",
+      "Terraform",
+      "Git (Version Control System)",
+      "Linux",
+    ],
   }),
-  career({
-    slug: "business-entrepreneurship",
-    title: "Business & Entrepreneurship",
-    category: "Business",
+  techRole({
+    slug: "cloud-architect",
+    title: "Cloud Architect",
     description:
-      "Learn customers, business models, pricing, operations, leadership, and how ideas become products and organizations.",
+      "Design secure, scalable cloud systems and infrastructure for modern applications and organizations.",
     imageUrl:
-      "https://images.unsplash.com/photo-1556761175-b413da4baf72?auto=format&fit=crop&w=1200&q=80",
-    level: "Beginner friendly",
-    pathLabel: "Career foundation",
-    skills: ["Customers", "Business models", "Leadership", "Operations"],
+      "https://images.unsplash.com/photo-1451187580459-43490279c0fa?auto=format&fit=crop&w=1200&q=80",
+    level: "Intermediate path",
+    pathLabel: "Technology career",
+    skills: [
+      "Google Cloud Platform",
+      "Infrastructure as Code (IaC)",
+      "DevOps",
+      "Cloud Security",
+      "Cloud Services",
+      "Automation",
+      "Kubernetes",
+      "Terraform",
+    ],
   }),
-  career({
-    slug: "finance-accounting",
-    title: "Finance & Accounting",
-    category: "Finance",
+  techRole({
+    slug: "data-analyst",
+    title: "Data Analyst",
     description:
-      "Build foundations in money, financial statements, budgeting, analysis, investing concepts, and responsible financial decision-making.",
+      "Collect, clean, analyze, and visualize data so organizations can make better decisions.",
     imageUrl:
-      "https://images.unsplash.com/photo-1554224155-8d04cb21cd6c?auto=format&fit=crop&w=1200&q=80",
-    level: "Beginner friendly",
-    pathLabel: "Career foundation",
-    skills: ["Financial statements", "Budgeting", "Analysis", "Investing"],
+      "https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=1200&q=80",
+    level: "Beginner path",
+    pathLabel: "Technology career",
+    skills: [
+      "Data Analysis",
+      "SQL",
+      "Python Programming",
+      "Data Visualization",
+      "Microsoft Excel",
+      "Statistics",
+      "Problem Solving",
+      "Data Quality",
+    ],
   }),
-  career({
-    slug: "marketing-sales",
-    title: "Marketing & Sales",
-    category: "Growth",
+  techRole({
+    slug: "data-scientist",
+    title: "Data Scientist",
     description:
-      "Learn customer research, positioning, communication, campaigns, selling, negotiation, and how organizations create demand.",
+      "Use statistics, programming, machine learning, and data visualization to solve complex data problems.",
     imageUrl:
-      "https://images.unsplash.com/photo-1552664730-d307ca884978?auto=format&fit=crop&w=1200&q=80",
-    level: "Beginner friendly",
-    pathLabel: "Career foundation",
-    skills: ["Research", "Positioning", "Sales", "Negotiation"],
+      "https://images.unsplash.com/photo-1555949963-aa79dcee981c?auto=format&fit=crop&w=1200&q=80",
+    level: "Beginner to advanced",
+    pathLabel: "Technology career",
+    skills: [
+      "Data Science",
+      "Machine Learning",
+      "Python Programming",
+      "SQL",
+      "Data Analysis",
+      "Statistics",
+      "Algorithms",
+      "Data Visualization",
+    ],
   }),
-  career({
-    slug: "law-legal-services",
-    title: "Law & Legal Services",
-    category: "Law",
+  techRole({
+    slug: "machine-learning-engineer",
+    title: "Machine Learning Engineer",
     description:
-      "Explore legal reasoning, research, professional writing, advocacy, ethics, and the different roles found in legal careers.",
+      "Build, train, evaluate, and improve machine learning systems that learn from data.",
     imageUrl:
-      "https://images.unsplash.com/photo-1589829545856-d10d557cf95f?auto=format&fit=crop&w=1200&q=80",
-    level: "Beginner friendly",
-    pathLabel: "Career exploration",
-    skills: ["Reasoning", "Research", "Writing", "Advocacy"],
+      "https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=1200&q=80",
+    level: "Intermediate path",
+    pathLabel: "Technology career",
+    skills: [
+      "Machine Learning",
+      "Python Programming",
+      "Artificial Intelligence",
+      "Algorithms",
+      "Tensorflow",
+      "PyTorch (Machine Learning Library)",
+      "Communication",
+      "Research",
+    ],
   }),
-  career({
-    slug: "creative-design-media",
-    title: "Creative Design & Media",
-    category: "Creative",
+  techRole({
+    slug: "ui-ux-designer",
+    title: "UI / UX Designer",
     description:
-      "Explore design, digital media, storytelling, visual communication, creative tools, and how creative work becomes a profession.",
+      "Research users and design clear, usable digital products through interfaces, prototypes, and testing.",
     imageUrl:
       "https://images.unsplash.com/photo-1561070791-2526d30994b5?auto=format&fit=crop&w=1200&q=80",
-    level: "Beginner friendly",
-    pathLabel: "Career exploration",
-    skills: ["Design", "Storytelling", "Visual systems", "Creative tools"],
+    level: "Beginner path",
+    pathLabel: "Technology career",
+    skills: [
+      "User Experience Design",
+      "User Research",
+      "Prototyping",
+      "Interaction Design",
+      "Usability Testing",
+      "Figma (Design Software)",
+      "Wireframing",
+      "User Interface (UI) Design",
+    ],
+  }),
+  techRole({
+    slug: "technical-support-engineer-analyst",
+    title: "Technical Support Engineer / Analyst",
+    description:
+      "Troubleshoot hardware and software problems, support users, and keep technical systems working reliably.",
+    imageUrl:
+      "https://images.unsplash.com/photo-1581092918056-0c4c3acd3789?auto=format&fit=crop&w=1200&q=80",
+    level: "Beginner path",
+    pathLabel: "Technology career",
+    skills: [
+      "Technical Support",
+      "Problem Solving",
+      "Customer Service",
+      "Operating Systems",
+      "Help Desk Support",
+      "Networking Hardware",
+      "Communication",
+      "Detail Oriented",
+    ],
   }),
 ];
 
