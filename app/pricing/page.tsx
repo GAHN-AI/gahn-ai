@@ -12,24 +12,22 @@ import {
 
 const exploreFeatures = [
   "Career Skills and School Help",
-  "Core private lesson workspace",
-  "Basic AI teaching when the AI service is connected",
-  "Practice questions and corrections",
-  "Saved lesson notes and history",
-  "Real progress tracking",
-  "Voice input and read-aloud in supported browsers",
+  "Dashboard and basic progress",
+  "Browse learning paths and lesson topics",
+  "Basic lesson notes",
   "Multiple teaching languages",
+  "No regular paid LiveAvatar usage",
 ];
 
 const learnerPlusFeatures = [
   "Everything in Explore",
-  "More AI teacher use each day",
+  "Maya Live AI Instructor — 60 minutes per billing period",
+  "Interactive AI learning workspace",
   "Mastery checks and retries",
   "Homework and file help",
   "Learner memory for strong and weak areas",
   "Saved study guides",
-  "Review questions",
-  "More file analysis each day",
+  "Active-recall review questions",
 ];
 
 type PlanCardProps = {
@@ -192,10 +190,10 @@ export default function PricingPage() {
             Start free. Pay only when you need more learning power.
           </h1>
           <p className="mx-auto mt-4 max-w-2xl text-base font-medium leading-7 text-black">
-            GAHN is testing two plans only. The free plan is for trying the
-            product. Learner Plus is the first paid plan and stays behind the
-            payment safety switch until checkout and the AI teacher integration
-            are ready.
+            GAHN is testing two plans only. Explore keeps the low-cost parts of
+            the product free. Learner Plus unlocks the paid real-time AI
+            instructor and stronger learning tools. Live checkout stays behind
+            the payment safety switch until the payment account is ready.
           </p>
         </div>
       </section>
@@ -205,7 +203,7 @@ export default function PricingPage() {
           <PlanCard
             name="Explore"
             price="$0"
-            description="A simple way to test GAHN and experience the core learning system."
+            description="Explore GAHN without creating ongoing paid avatar costs."
             features={exploreFeatures}
             action={
               <Link
@@ -216,13 +214,13 @@ export default function PricingPage() {
                 <ArrowRight className="h-4 w-4" />
               </Link>
             }
-            note="No card needed. Brain Development, General Knowledge, and Book Intelligence are intentionally not available during this MVP test."
+            note="No card needed. Maya Live AI Instructor is not included in Explore. Brain Development, General Knowledge, and Book Intelligence are also intentionally unavailable during this MVP test."
           />
 
           <PlanCard
             name="Learner Plus"
             price="$29"
-            description="For learners who use GAHN more often and want the stronger learning tools already prepared in the product."
+            description="For learners who want the real-time Maya instructor and the stronger learning tools."
             features={learnerPlusFeatures}
             featured
             action={
@@ -236,7 +234,7 @@ export default function PricingPage() {
                 <ArrowRight className="h-4 w-4" />
               </button>
             }
-            note="Stripe checkout is already wired behind a safety switch. It will only accept real payments after the payment account, price, webhook, and final paid features are tested."
+            note="The 60-minute Maya allowance is enforced in the backend. Stripe checkout remains behind a safety switch until the payment account and final paid flow are ready."
           />
         </div>
 

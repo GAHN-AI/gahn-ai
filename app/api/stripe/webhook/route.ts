@@ -77,9 +77,16 @@ async function saveSubscription(
   const customerId =
     getStripeId(subscription.customer);
 
-  const priceId =
-    subscription.items.data[0]?.price.id ??
-    null;
+  const primaryItem = subscription.items.data[0];
+  const priceId = primaryItem?.price.id ?? null;
+
+  const currentPeriodStart = primaryItem?.current_period_start
+    ? new Date(primaryItem.current_period_start * 1000).toISOString()
+    : null;
+
+  const currentPeriodEnd = primaryItem?.current_period_end
+    ? new Date(primaryItem.current_period_end * 1000).toISOString()
+    : null;
 
   const subscriptionData = {
     plan_id: planId,
@@ -88,6 +95,8 @@ async function saveSubscription(
     stripe_subscription_id:
       subscription.id,
     stripe_price_id: priceId,
+    current_period_start: currentPeriodStart,
+    current_period_end: currentPeriodEnd,
     cancel_at_period_end:
       subscription.cancel_at_period_end,
     updated_at: new Date().toISOString(),
