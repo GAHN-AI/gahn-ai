@@ -16,7 +16,6 @@ import LanguageSelector from "@/components/LanguageSelector";
 import { getCareerSection } from "@/lib/careerCatalog";
 import {
   getLearningOption,
-  slugifyLearningTitle,
   type LearningOption,
 } from "@/lib/learningCatalog";
 import { isLearningWorldAvailable } from "@/lib/learningWorldAvailability";
@@ -46,16 +45,10 @@ export default function TopicOverviewPage() {
       const section = getCareerSection(params.section);
       if (!section) return null;
 
-      const topic = section.lessons.find(
-        (lesson) => slugifyLearningTitle(lesson.title) === params.topic
-      );
-
-      if (!topic) return null;
-
       return {
-        sectionTitle: section.title,
-        title: topic.title,
-        description: topic.description,
+        sectionTitle: "Technology",
+        title: section.title,
+        description: section.description,
         option: undefined as LearningOption | undefined,
       };
     }
@@ -176,22 +169,22 @@ export default function TopicOverviewPage() {
 
             <div className="p-6 sm:p-8">
               <p className="text-xs font-black uppercase tracking-[0.16em] text-[#1677FF]">
-                MVP lesson setup
+                How your lesson works
               </p>
               <h2 className="mt-2 text-2xl font-black text-[#0B1739]">
-                Private instructor + interactive learning panel
+                Learn this topic with a private AI instructor
               </h2>
-              <p className="mt-3 text-sm font-medium leading-7 text-black">
-                The long curriculum preview has been removed. This MVP now
-                focuses on testing the actual one-on-one instructor software and
-                the live learning panel beside it.
+              <p className="mt-3 text-sm font-medium leading-7 text-[#33455F]">
+                Your instructor uses the topic you selected as the lesson context,
+                teaches it in conversation, asks questions, and builds practice
+                around what you are learning.
               </p>
 
               <div className="mt-6 grid gap-3 sm:grid-cols-3">
                 {[
-                  ["1", "Start the private session"],
-                  ["2", "AI instructor teaches"],
-                  ["3", "Learning panel reacts"],
+                  ["1", "Meet your instructor"],
+                  ["2", "Learn through conversation"],
+                  ["3", "Practice and check understanding"],
                 ].map(([step, label]) => (
                   <div
                     key={step}

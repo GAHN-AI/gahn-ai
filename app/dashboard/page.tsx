@@ -37,18 +37,23 @@ const worlds: {
   Icon: LucideIcon;
   title: string;
   text: string;
+  imageUrl?: string;
 }[] = [
   {
     slug: "career-skills",
     Icon: Briefcase,
     title: "Career Skills",
-    text: "Business, leadership, communication, finance, interviews, and other practical career skills.",
+    text: "Explore real career paths across technology, healthcare, engineering, trades, business, finance, law, and creative work.",
+    imageUrl:
+      "https://images.unsplash.com/photo-1521737711867-e3b97375f902?auto=format&fit=crop&w=1400&q=80",
   },
   {
     slug: "school-help",
     Icon: GraduationCap,
     title: "School Help",
-    text: "Math, science, English, reading, study skills, homework, quizzes, and tests.",
+    text: "Get one-on-one help with math, science, English, reading, homework, study skills, quizzes, and tests.",
+    imageUrl:
+      "https://images.unsplash.com/photo-1503676260728-1c00da094a0b?auto=format&fit=crop&w=1400&q=80",
   },
   {
     slug: "brain-development",
@@ -82,7 +87,13 @@ type ProgressRow = {
   attempts_count: number;
   correct_count: number;
   retry_count: number;
+  evidence: Record<string, unknown> | null;
   last_activity_at: string;
+};
+
+type EvidenceRow = {
+  created_at: string;
+  correct: boolean | null;
 };
 
 function getInitials(name: string) {
@@ -105,9 +116,9 @@ function localDateKey(value: Date) {
   ].join("-");
 }
 
-function calculateStreak(rows: ProgressRow[]) {
+function calculateStreak(activityTimes: string[]) {
   const activityDays = new Set(
-    rows.map((row) => localDateKey(new Date(row.last_activity_at)))
+    activityTimes.map((value) => localDateKey(new Date(value)))
   );
 
   const cursor = new Date();
@@ -152,6 +163,7 @@ export default function DashboardPage() {
   const [mayaRemainingMinutes, setMayaRemainingMinutes] = useState<number | null>(null);
   const [mayaLimitMinutes, setMayaLimitMinutes] = useState<number | null>(null);
   const [progressRows, setProgressRows] = useState<ProgressRow[]>([]);
+  const [evidenceRows, setEvidenceRows] = useState<EvidenceRow[]>([]);
   const [notesCount, setNotesCount] = useState(0);
   const [studyGuidesCount, setStudyGuidesCount] = useState(0);
 
@@ -172,6 +184,7 @@ export default function DashboardPage() {
         subscriptionResponse,
         mayaUsageResponse,
         progressResult,
+        evidenceResult,
         notesResult,
         guidesResult,
       ] = await Promise.all([
@@ -180,10 +193,16 @@ export default function DashboardPage() {
           supabase
             .from("learning_progress")
             .select(
-              "world_slug, section_slug, topic_slug, lesson_id, lesson_title, topic, status, mastery_state, attempts_count, correct_count, retry_count, last_activity_at"
+              "world_slug, section_slug, topic_slug, lesson_id, lesson_title, topic, status, mastery_state, attempts_count, correct_count, retry_count, evidence, last_activity_at"
             )
             .eq("user_id", user.id)
             .order("last_activity_at", { ascending: false }),
+          supabase
+            .from("lesson_evidence")
+            .select("created_at, correct")
+            .eq("user_id", user.id)
+            .order("created_at", { ascending: false })
+            .limit(1000),
           supabase
             .from("learner_notes")
             .select("id", { count: "exact", head: true })
@@ -215,6 +234,7 @@ export default function DashboardPage() {
       }
 
       setProgressRows((progressResult.data || []) as ProgressRow[]);
+      setEvidenceRows((evidenceResult.data || []) as EvidenceRow[]);
       setNotesCount(notesResult.count || 0);
       setStudyGuidesCount(guidesResult.count || 0);
 
@@ -249,32 +269,52 @@ export default function DashboardPage() {
     void loadDashboard();
   }, [router]);
 
-  const activeLessons = progressRows.filter(
+  const meaningfulProgressRows = progressRows.filter((row) => {
+    const evidence = row.evidence || {};
+    const hasConnectedLearning =
+      evidence.meaningfulStart === true ||
+      evidence.lastActivitySource === "live_instructor" ||
+      evidence.lastActivitySource === "adaptive_instructor";
+
+    return (
+      hasConnectedLearning ||
+      (row.attempts_count || 0) > 0 ||
+      ["practicing", "proficient", "mastered", "needs_review"].includes(
+        row.mastery_state || ""
+      )
+    );
+  });
+
+  const activeLessons = meaningfulProgressRows.filter(
     (row) => row.status === "in_progress"
   );
-  const masteredLessons = progressRows.filter(
+  const masteredLessons = meaningfulProgressRows.filter(
     (row) => row.mastery_state === "mastered"
   );
-  const reviewLessons = progressRows.filter(
+  const reviewLessons = meaningfulProgressRows.filter(
     (row) => row.mastery_state === "needs_review"
   );
 
-  const recentLearning = progressRows[0] || null;
+  const recentLearning = meaningfulProgressRows[0] || null;
   const nextLearning = reviewLessons[0] || activeLessons[0] || null;
 
-  const totalAttempts = progressRows.reduce(
+  const totalAttempts = meaningfulProgressRows.reduce(
     (sum, row) => sum + (row.attempts_count || 0),
     0
   );
-  const totalCorrect = progressRows.reduce(
+  const totalCorrect = meaningfulProgressRows.reduce(
     (sum, row) => sum + (row.correct_count || 0),
     0
   );
-  const totalRetries = progressRows.reduce(
+  const totalRetries = meaningfulProgressRows.reduce(
     (sum, row) => sum + (row.retry_count || 0),
     0
   );
-  const streak = calculateStreak(progressRows);
+  const accuracy =
+    totalAttempts > 0 ? Math.round((totalCorrect / totalAttempts) * 100) : 0;
+  const streak = calculateStreak(
+    evidenceRows.map((row) => row.created_at)
+  );
 
   async function handleLogout() {
     await supabase.auth.signOut();
@@ -372,8 +412,9 @@ export default function DashboardPage() {
                   Welcome back, {fullName}
                 </h2>
                 <p className="mt-2 text-sm font-medium leading-6 text-black">
-                  Your dashboard uses real saved lesson activity, notes, study
-                  guides, attempts, retries, and mastery states.
+                  Dashboard numbers now come from connected learning activity:
+                  checked responses, mastery evidence, saved materials, and real
+                  instructor sessions — not from simply opening a page.
                 </p>
               </div>
 
@@ -400,108 +441,142 @@ export default function DashboardPage() {
             </div>
           </header>
 
-          <section className="mt-6 grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
-            {[
-              { Icon: Flame, value: streak, label: "Day streak" },
-              {
-                Icon: BookOpen,
-                value: activeLessons.length,
-                label: "Active lessons",
-              },
-              {
-                Icon: CheckCircle2,
-                value: masteredLessons.length,
-                label: "Mastered",
-              },
-              { Icon: StickyNote, value: notesCount, label: "Saved notes" },
-            ].map(({ Icon, value, label }) => (
-              <div
-                key={label}
-                className="rounded-2xl border border-[#D8E0EA] bg-white p-5 shadow-[0_10px_28px_rgba(11,23,57,0.04)]"
-              >
-                <div className="grid h-10 w-10 place-items-center rounded-xl bg-[#EAF3FF] text-[#1677FF]">
-                  <Icon className="h-4 w-4" />
+          <section className="mt-6 overflow-hidden rounded-[1.5rem] bg-[#07162F] text-white shadow-[0_14px_34px_rgba(7,22,47,0.12)]">
+            <div className="grid sm:grid-cols-2 xl:grid-cols-4">
+              {[
+                {
+                  Icon: Flame,
+                  value: streak,
+                  label: "Learning streak",
+                  detail: streak === 1 ? "day with learning evidence" : "days with learning evidence",
+                },
+                {
+                  Icon: ListChecks,
+                  value: totalAttempts,
+                  label: "Questions answered",
+                  detail: "checked learning responses",
+                },
+                {
+                  Icon: TrendingUp,
+                  value: `${accuracy}%`,
+                  label: "Answer accuracy",
+                  detail: totalAttempts ? `${totalCorrect} correct of ${totalAttempts}` : "waiting for checked answers",
+                },
+                {
+                  Icon: CheckCircle2,
+                  value: masteredLessons.length,
+                  label: "Skills mastered",
+                  detail: "requires mastery evidence",
+                },
+              ].map(({ Icon, value, label, detail }, index) => (
+                <div
+                  key={label}
+                  className={`p-5 sm:p-6 ${
+                    index > 0 ? "border-t border-white/10 sm:border-t-0 sm:border-l" : ""
+                  } ${
+                    index === 2 ? "sm:border-t sm:border-l-0 xl:border-t-0 xl:border-l" : ""
+                  } ${
+                    index === 3 ? "sm:border-t sm:border-l xl:border-t-0" : ""
+                  }`}
+                >
+                  <div className="flex items-center gap-2 text-[#8DB8FF]">
+                    <Icon className="h-4 w-4" />
+                    <p className="text-xs font-black uppercase tracking-[0.12em]">
+                      {label}
+                    </p>
+                  </div>
+                  <p className="mt-4 text-3xl font-black text-white">{value}</p>
+                  <p className="mt-1 text-xs font-medium leading-5 text-white/70">
+                    {detail}
+                  </p>
                 </div>
-                <p className="mt-4 text-3xl font-black text-[#0B1739]">
-                  {value}
-                </p>
-                <p className="mt-1 text-sm font-bold text-black">{label}</p>
-              </div>
-            ))}
+              ))}
+            </div>
           </section>
 
-          <section className="mt-8">
-            <div>
-              <p className="text-xs font-black uppercase tracking-[0.18em] text-[#1677FF]">
-                Learning Worlds
-              </p>
-              <h3 className="mt-2 text-2xl font-black tracking-[-0.03em] text-[#0B1739]">
-                Choose where you want to learn
-              </h3>
-              <p className="mt-2 text-sm font-medium leading-6 text-black">
-                Career Skills and School Help are the only learning worlds being
-                tested in this MVP.
-              </p>
+          <section className="mt-9">
+            <div className="flex flex-col gap-3 lg:flex-row lg:items-end lg:justify-between">
+              <div>
+                <p className="text-xs font-black uppercase tracking-[0.18em] text-[#1677FF]">
+                  Learning Worlds
+                </p>
+                <h3 className="mt-2 text-2xl font-black tracking-[-0.03em] text-[#0B1739]">
+                  Choose where you want to learn
+                </h3>
+                <p className="mt-2 max-w-2xl text-sm font-medium leading-6 text-[#52647C]">
+                  Career Skills and School Help are the two live MVP worlds.
+                  The others stay visible so learners can see what GAHN is
+                  building next without pretending those products are ready.
+                </p>
+              </div>
             </div>
 
-            <div className="mt-5 grid gap-4 md:grid-cols-2 xl:grid-cols-3">
-              {worlds.map(({ slug, Icon, title, text }) => {
-                const availability = LEARNING_WORLD_AVAILABILITY[slug];
-                const available = availability?.available;
-
-                const card = (
-                  <div
-                    className={`h-full rounded-[1.4rem] border p-5 ${
-                      available
-                        ? "border-[#BFD3ED] bg-white shadow-[0_10px_28px_rgba(11,23,57,0.05)]"
-                        : "border-[#D8E0EA] bg-[#EEF2F7]"
-                    }`}
+            <div className="mt-6 grid gap-5 xl:grid-cols-2">
+              {worlds
+                .filter(({ slug }) => LEARNING_WORLD_AVAILABILITY[slug]?.available)
+                .map(({ slug, Icon, title, text, imageUrl }) => (
+                  <Link
+                    key={slug}
+                    href={`/learn/${slug}`}
+                    className="group overflow-hidden rounded-[1.5rem] border border-[#D8E0EA] bg-white shadow-[0_14px_34px_rgba(11,23,57,0.06)]"
                   >
-                    <div className="flex items-start justify-between gap-3">
-                      <div
-                        className={`grid h-11 w-11 place-items-center rounded-xl ${
-                          available
-                            ? "bg-[#EAF3FF] text-[#1677FF]"
-                            : "bg-white text-[#07162F]"
-                        }`}
-                      >
-                        <Icon className="h-5 w-5" />
+                    <div className="relative h-44 overflow-hidden bg-[#DDE8F7]">
+                      {imageUrl && (
+                        <img
+                          src={imageUrl}
+                          alt=""
+                          className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-[1.02]"
+                        />
+                      )}
+                      <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(7,22,47,0.04)_10%,rgba(7,22,47,0.68)_100%)]" />
+                      <div className="absolute bottom-4 left-5 right-5 flex items-center justify-between gap-3">
+                        <div className="grid h-10 w-10 place-items-center rounded-xl bg-white text-[#07162F]">
+                          <Icon className="h-4 w-4" />
+                        </div>
+                        <span className="rounded-full bg-white/95 px-3 py-1 text-[10px] font-black uppercase tracking-[0.1em] text-[#07162F]">
+                          Available
+                        </span>
                       </div>
+                    </div>
 
-                      <span
-                        className={`rounded-full px-3 py-1 text-[10px] font-black uppercase tracking-[0.1em] ${
-                          available
-                            ? "bg-[#EAF3FF] text-[#1677FF]"
-                            : "bg-[#07162F] text-white"
-                        }`}
-                      >
-                        {available ? "Available" : "Not available"}
+                    <div className="p-5">
+                      <h4 className="text-xl font-black text-[#0B1739]">
+                        {title}
+                      </h4>
+                      <p className="mt-2 text-sm font-medium leading-6 text-[#52647C]">
+                        {text}
+                      </p>
+                      <div className="mt-5 flex items-center justify-between text-sm font-black text-[#1677FF]">
+                        <span>Enter learning world</span>
+                        <span>→</span>
+                      </div>
+                    </div>
+                  </Link>
+                ))}
+            </div>
+
+            <div className="mt-6 border-t border-[#D8E0EA] pt-5">
+              <p className="text-[11px] font-black uppercase tracking-[0.14em] text-[#65758A]">
+                Planned after core MVP validation
+              </p>
+              <div className="mt-3 flex flex-wrap gap-3">
+                {worlds
+                  .filter(({ slug }) => !LEARNING_WORLD_AVAILABILITY[slug]?.available)
+                  .map(({ slug, Icon, title }) => (
+                    <div
+                      key={slug}
+                      className="flex items-center gap-3 rounded-full border border-[#D8E0EA] bg-[#EEF2F7] px-4 py-2.5"
+                    >
+                      <Icon className="h-4 w-4 text-[#52647C]" />
+                      <span className="text-sm font-black text-[#33455F]">
+                        {title}
+                      </span>
+                      <span className="text-[10px] font-black uppercase tracking-[0.08em] text-[#7C8A9D]">
+                        Not available
                       </span>
                     </div>
-
-                    <h4 className="mt-5 text-xl font-black text-[#0B1739]">
-                      {title}
-                    </h4>
-                    <p className="mt-2 text-sm font-medium leading-6 text-black">
-                      {text}
-                    </p>
-
-                    <div className="mt-5 text-sm font-black text-[#1677FF]">
-                      {available ? "Open learning world →" : "Coming after MVP testing"}
-                    </div>
-                  </div>
-                );
-
-                return available ? (
-                  <Link key={slug} href={`/learn/${slug}`}>
-                    {card}
-                  </Link>
-                ) : (
-                  <div key={slug} aria-disabled="true">
-                    {card}
-                  </div>
-                );
-              })}
+                  ))}
+              </div>
             </div>
           </section>
 
