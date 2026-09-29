@@ -82,7 +82,13 @@ type ProgressRow = {
   attempts_count: number;
   correct_count: number;
   retry_count: number;
+  evidence: Record<string, unknown> | null;
   last_activity_at: string;
+};
+
+type EvidenceRow = {
+  created_at: string;
+  correct: boolean | null;
 };
 
 function getInitials(name: string) {
@@ -105,9 +111,9 @@ function localDateKey(value: Date) {
   ].join("-");
 }
 
-function calculateStreak(rows: ProgressRow[]) {
+function calculateStreak(activityTimes: string[]) {
   const activityDays = new Set(
-    rows.map((row) => localDateKey(new Date(row.last_activity_at)))
+    activityTimes.map((value) => localDateKey(new Date(value)))
   );
 
   const cursor = new Date();
@@ -152,6 +158,7 @@ export default function DashboardPage() {
   const [mayaRemainingMinutes, setMayaRemainingMinutes] = useState<number | null>(null);
   const [mayaLimitMinutes, setMayaLimitMinutes] = useState<number | null>(null);
   const [progressRows, setProgressRows] = useState<ProgressRow[]>([]);
+  const [evidenceRows, setEvidenceRows] = useState<EvidenceRow[]>([]);
   const [notesCount, setNotesCount] = useState(0);
   const [studyGuidesCount, setStudyGuidesCount] = useState(0);
 
@@ -172,6 +179,7 @@ export default function DashboardPage() {
         subscriptionResponse,
         mayaUsageResponse,
         progressResult,
+        evidenceResult,
         notesResult,
         guidesResult,
       ] = await Promise.all([
@@ -180,10 +188,16 @@ export default function DashboardPage() {
           supabase
             .from("learning_progress")
             .select(
-              "world_slug, section_slug, topic_slug, lesson_id, lesson_title, topic, status, mastery_state, attempts_count, correct_count, retry_count, last_activity_at"
+              "world_slug, section_slug, topic_slug, lesson_id, lesson_title, topic, status, mastery_state, attempts_count, correct_count, retry_count, evidence, last_activity_at"
             )
             .eq("user_id", user.id)
             .order("last_activity_at", { ascending: false }),
+          supabase
+            .from("lesson_evidence")
+            .select("created_at, correct")
+            .eq("user_id", user.id)
+            .order("created_at", { ascending: false })
+            .limit(1000),
           supabase
             .from("learner_notes")
             .select("id", { count: "exact", head: true })
@@ -215,6 +229,7 @@ export default function DashboardPage() {
       }
 
       setProgressRows((progressResult.data || []) as ProgressRow[]);
+      setEvidenceRows((evidenceResult.data || []) as EvidenceRow[]);
       setNotesCount(notesResult.count || 0);
       setStudyGuidesCount(guidesResult.count || 0);
 
@@ -249,32 +264,52 @@ export default function DashboardPage() {
     void loadDashboard();
   }, [router]);
 
-  const activeLessons = progressRows.filter(
+  const meaningfulProgressRows = progressRows.filter((row) => {
+    const evidence = row.evidence || {};
+    const hasConnectedLearning =
+      evidence.meaningfulStart === true ||
+      evidence.lastActivitySource === "live_instructor" ||
+      evidence.lastActivitySource === "adaptive_instructor";
+
+    return (
+      hasConnectedLearning ||
+      (row.attempts_count || 0) > 0 ||
+      ["practicing", "proficient", "mastered", "needs_review"].includes(
+        row.mastery_state || ""
+      )
+    );
+  });
+
+  const activeLessons = meaningfulProgressRows.filter(
     (row) => row.status === "in_progress"
   );
-  const masteredLessons = progressRows.filter(
+  const masteredLessons = meaningfulProgressRows.filter(
     (row) => row.mastery_state === "mastered"
   );
-  const reviewLessons = progressRows.filter(
+  const reviewLessons = meaningfulProgressRows.filter(
     (row) => row.mastery_state === "needs_review"
   );
 
-  const recentLearning = progressRows[0] || null;
+  const recentLearning = meaningfulProgressRows[0] || null;
   const nextLearning = reviewLessons[0] || activeLessons[0] || null;
 
-  const totalAttempts = progressRows.reduce(
+  const totalAttempts = meaningfulProgressRows.reduce(
     (sum, row) => sum + (row.attempts_count || 0),
     0
   );
-  const totalCorrect = progressRows.reduce(
+  const totalCorrect = meaningfulProgressRows.reduce(
     (sum, row) => sum + (row.correct_count || 0),
     0
   );
-  const totalRetries = progressRows.reduce(
+  const totalRetries = meaningfulProgressRows.reduce(
     (sum, row) => sum + (row.retry_count || 0),
     0
   );
-  const streak = calculateStreak(progressRows);
+  const accuracy =
+    totalAttempts > 0 ? Math.round((totalCorrect / totalAttempts) * 100) : 0;
+  const streak = calculateStreak(
+    evidenceRows.map((row) => row.created_at)
+  );
 
   async function handleLogout() {
     await supabase.auth.signOut();
@@ -372,8 +407,9 @@ export default function DashboardPage() {
                   Welcome back, {fullName}
                 </h2>
                 <p className="mt-2 text-sm font-medium leading-6 text-black">
-                  Your dashboard uses real saved lesson activity, notes, study
-                  guides, attempts, retries, and mastery states.
+                  Dashboard numbers now come from connected learning activity:
+                  checked responses, mastery evidence, saved materials, and real
+                  instructor sessions — not from simply opening a page.
                 </p>
               </div>
 
@@ -400,34 +436,57 @@ export default function DashboardPage() {
             </div>
           </header>
 
-          <section className="mt-6 grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
-            {[
-              { Icon: Flame, value: streak, label: "Day streak" },
-              {
-                Icon: BookOpen,
-                value: activeLessons.length,
-                label: "Active lessons",
-              },
-              {
-                Icon: CheckCircle2,
-                value: masteredLessons.length,
-                label: "Mastered",
-              },
-              { Icon: StickyNote, value: notesCount, label: "Saved notes" },
-            ].map(({ Icon, value, label }) => (
-              <div
-                key={label}
-                className="rounded-2xl border border-[#D8E0EA] bg-white p-5 shadow-[0_10px_28px_rgba(11,23,57,0.04)]"
-              >
-                <div className="grid h-10 w-10 place-items-center rounded-xl bg-[#EAF3FF] text-[#1677FF]">
-                  <Icon className="h-4 w-4" />
+          <section className="mt-6 overflow-hidden rounded-[1.5rem] bg-[#07162F] text-white shadow-[0_14px_34px_rgba(7,22,47,0.12)]">
+            <div className="grid sm:grid-cols-2 xl:grid-cols-4">
+              {[
+                {
+                  Icon: Flame,
+                  value: streak,
+                  label: "Learning streak",
+                  detail: streak === 1 ? "day with learning evidence" : "days with learning evidence",
+                },
+                {
+                  Icon: ListChecks,
+                  value: totalAttempts,
+                  label: "Questions answered",
+                  detail: "checked learning responses",
+                },
+                {
+                  Icon: TrendingUp,
+                  value: `${accuracy}%`,
+                  label: "Answer accuracy",
+                  detail: totalAttempts ? `${totalCorrect} correct of ${totalAttempts}` : "waiting for checked answers",
+                },
+                {
+                  Icon: CheckCircle2,
+                  value: masteredLessons.length,
+                  label: "Skills mastered",
+                  detail: "requires mastery evidence",
+                },
+              ].map(({ Icon, value, label, detail }, index) => (
+                <div
+                  key={label}
+                  className={`p-5 sm:p-6 ${
+                    index > 0 ? "border-t border-white/10 sm:border-t-0 sm:border-l" : ""
+                  } ${
+                    index === 2 ? "sm:border-t sm:border-l-0 xl:border-t-0 xl:border-l" : ""
+                  } ${
+                    index === 3 ? "sm:border-t sm:border-l xl:border-t-0" : ""
+                  }`}
+                >
+                  <div className="flex items-center gap-2 text-[#8DB8FF]">
+                    <Icon className="h-4 w-4" />
+                    <p className="text-xs font-black uppercase tracking-[0.12em]">
+                      {label}
+                    </p>
+                  </div>
+                  <p className="mt-4 text-3xl font-black text-white">{value}</p>
+                  <p className="mt-1 text-xs font-medium leading-5 text-white/70">
+                    {detail}
+                  </p>
                 </div>
-                <p className="mt-4 text-3xl font-black text-[#0B1739]">
-                  {value}
-                </p>
-                <p className="mt-1 text-sm font-bold text-black">{label}</p>
-              </div>
-            ))}
+              ))}
+            </div>
           </section>
 
           <section className="mt-8">
