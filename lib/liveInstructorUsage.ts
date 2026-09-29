@@ -167,12 +167,12 @@ export async function finalizeLiveInstructorSession(
   return getLiveInstructorUsage(userId);
 }
 
-export async function finalizePreviousLiveInstructorSession(
+export async function hasActiveLiveInstructorSession(
   userId: string
 ) {
   const { data, error } = await supabaseAdmin
     .from("ai_usage_events")
-    .select("id")
+    .select("id, created_at, session_limit_seconds")
     .eq("user_id", userId)
     .eq("usage_kind", "live_instructor")
     .is("ended_at", null)
@@ -185,19 +185,40 @@ export async function finalizePreviousLiveInstructorSession(
   }
 
   if (!data?.id) {
-    return;
+    return false;
+  }
+
+  const startedAt = new Date(data.created_at).getTime();
+  const cap =
+    data.session_limit_seconds ?? LIVE_INSTRUCTOR_SESSION_CAP_SECONDS;
+  const elapsedSeconds = Number.isNaN(startedAt)
+    ? cap
+    : Math.max(0, Math.ceil((Date.now() - startedAt) / 1000));
+
+  if (elapsedSeconds < cap) {
+    return true;
   }
 
   await finalizeLiveInstructorSession(userId, data.id);
+
+  return false;
 }
 
 export async function reserveLiveInstructorSession(
   userId: string,
   subscription: CurrentSubscription
 ) {
-  await finalizePreviousLiveInstructorSession(userId);
+  const activeSession = await hasActiveLiveInstructorSession(userId);
 
   const usage = await getLiveInstructorUsage(userId, subscription);
+
+  if (activeSession) {
+    return {
+      ok: false as const,
+      reason: "session_already_active" as const,
+      usage,
+    };
+  }
 
   if (!subscription.entitlements.liveInstructor) {
     return {
