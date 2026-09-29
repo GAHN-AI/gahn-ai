@@ -13,8 +13,8 @@ import {
 import LanguageSelector from "@/components/LanguageSelector";
 import MayaLiveAvatar from "@/components/lessons/MayaLiveAvatar";
 import { lessonIdFromParts } from "@/lib/ai/lessonEngine";
+import { getLearningWorldInstructor } from "@/lib/ai/worldInstructors";
 import { isLearningWorldAvailable } from "@/lib/learningWorldAvailability";
-import { supabase } from "@/lib/supabaseClient";
 
 const worldNames: Record<string, string> = {
   "career-skills": "Career Skills",
@@ -48,6 +48,8 @@ export default function LessonPage() {
   const available =
     isLearningWorldAvailable(worldSlug);
 
+  const instructor = getLearningWorldInstructor(worldSlug);
+
   const progressLessonId = useMemo(
     () =>
       lessonIdFromParts(
@@ -66,49 +68,6 @@ export default function LessonPage() {
       setLanguage(stored);
     }
   }, [searchParams]);
-
-  useEffect(() => {
-    async function recordStart() {
-      if (!available) return;
-
-      const {
-        data: { user },
-      } = await supabase.auth.getUser();
-
-      if (!user) return;
-
-      await supabase
-        .from("learning_progress")
-        .upsert(
-          {
-            user_id: user.id,
-            world_slug: worldSlug,
-            section_slug: sectionSlug || null,
-            topic_slug: topicSlug || null,
-            topic,
-            lesson_id: progressLessonId,
-            lesson_title: topic,
-            status: "in_progress",
-            mastery_state: "learning",
-            last_activity_at:
-              new Date().toISOString(),
-          },
-          {
-            onConflict:
-              "user_id,world_slug,lesson_id",
-          }
-        );
-    }
-
-    void recordStart();
-  }, [
-    available,
-    progressLessonId,
-    sectionSlug,
-    topic,
-    topicSlug,
-    worldSlug,
-  ]);
 
   function changeLanguage(
     nextLanguage: string
@@ -215,24 +174,28 @@ export default function LessonPage() {
                 </p>
 
                 <p className="mt-1 text-sm font-black text-white">
-                  {worldSlug ===
-                  "career-skills"
-                    ? "Maya — Live AI Instructor"
-                    : "School Help AI Instructor"}
+                  {instructor?.enabled
+                    ? `${instructor.name} — ${instructor.role}`
+                    : instructor?.role || "AI Instructor"}
                 </p>
               </div>
 
               <span className="rounded-full border border-white/20 bg-white/10 px-3 py-1 text-[10px] font-black uppercase tracking-[0.08em] text-white">
-                {worldSlug ===
-                "career-skills"
-                  ? "Live"
-                  : "Coming Next"}
+                {instructor?.enabled ? "Live" : "Coming Next"}
               </span>
             </div>
 
-            {worldSlug ===
-            "career-skills" ? (
-              <MayaLiveAvatar />
+            {instructor?.enabled &&
+            instructor.provider === "heygen" ? (
+              <MayaLiveAvatar
+                worldSlug={worldSlug}
+                sectionSlug={sectionSlug}
+                topicSlug={topicSlug}
+                topic={topic}
+                lessonId={progressLessonId}
+                lessonTitle={topic}
+                language={language}
+              />
             ) : (
               <div className="flex min-h-[540px] items-center justify-center px-6 text-center text-white">
                 <div>
@@ -241,10 +204,8 @@ export default function LessonPage() {
                   </h2>
 
                   <p className="mt-3 max-w-md text-sm font-medium leading-7 text-white">
-                    Maya is being tested with
-                    Career Skills first. The
-                    School Help instructor will
-                    be connected separately.
+                    Each learning world will use one dedicated AI instructor.
+                    The instructor for this world has not been connected yet.
                   </p>
                 </div>
               </div>
@@ -317,10 +278,9 @@ export default function LessonPage() {
           <GraduationCap className="h-4 w-4 text-[#1677FF]" />
 
           <p className="text-sm font-bold text-black">
-            Opening this page records the
-            lesson as started. Mastery is not
-            awarded until the real teaching
-            system produces learning evidence.
+            Opening a lesson does not count as learning. GAHN records the
+            lesson only after the instructor actually connects or the learner
+            produces real learning activity. Mastery still requires evidence.
           </p>
         </div>
       </div>
