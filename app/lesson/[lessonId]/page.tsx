@@ -11,7 +11,7 @@ import {
 } from "lucide-react";
 
 import LanguageSelector from "@/components/LanguageSelector";
-import MayaLiveAvatar from "@/components/lessons/MayaLiveAvatar";
+import WorldInstructorSession from "@/components/lessons/WorldInstructorSession";
 import { lessonIdFromParts } from "@/lib/ai/lessonEngine";
 import { getLearningWorldInstructor } from "@/lib/ai/worldInstructors";
 import { getCareerSection } from "@/lib/careerCatalog";
@@ -197,31 +197,15 @@ export default function LessonPage() {
               </span>
             </div>
 
-            {instructor?.enabled &&
-            instructor.provider === "heygen" ? (
-              <MayaLiveAvatar
-                worldSlug={worldSlug}
-                sectionSlug={sectionSlug}
-                topicSlug={topicSlug}
-                topic={topic}
-                lessonId={progressLessonId}
-                lessonTitle={topic}
-                language={language}
-              />
-            ) : (
-              <div className="flex min-h-[540px] items-center justify-center px-6 text-center text-white">
-                <div>
-                  <h2 className="text-2xl font-black text-white">
-                    School Help instructor
-                  </h2>
-
-                  <p className="mt-3 max-w-md text-sm font-medium leading-7 text-white">
-                    Each learning world will use one dedicated AI instructor.
-                    The instructor for this world has not been connected yet.
-                  </p>
-                </div>
-              </div>
-            )}
+            <WorldInstructorSession
+              worldSlug={worldSlug}
+              sectionSlug={sectionSlug}
+              topicSlug={topicSlug}
+              topic={topic}
+              lessonId={progressLessonId}
+              lessonTitle={topic}
+              language={language}
+            />
           </div>
 
           <div className="overflow-hidden rounded-[1.6rem] border border-[#BFD3ED] bg-white shadow-[0_18px_48px_rgba(11,23,57,0.06)]">
