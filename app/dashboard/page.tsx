@@ -15,6 +15,7 @@ import {
   GraduationCap,
   LayoutDashboard,
   ListChecks,
+  LockKeyhole,
   LogOut,
   MessageSquareText,
   StickyNote,
@@ -60,18 +61,24 @@ const worlds: {
     Icon: Brain,
     title: "Brain Development",
     text: "Memory, focus, discipline, reasoning, and learning performance.",
+    imageUrl:
+      "https://images.unsplash.com/photo-1559757148-5c350d0d3c56?auto=format&fit=crop&w=1400&q=80",
   },
   {
     slug: "general-knowledge",
     Icon: Globe2,
     title: "General Knowledge",
     text: "History, technology, economics, geography, culture, and life knowledge.",
+    imageUrl:
+      "https://images.unsplash.com/photo-1526778548025-fa2f459cd5c1?auto=format&fit=crop&w=1400&q=80",
   },
   {
     slug: "book-intelligence",
     Icon: BookOpen,
     title: "Book Intelligence",
     text: "Book summaries, chapter breakdowns, vocabulary, quizzes, and analysis.",
+    imageUrl:
+      "https://images.unsplash.com/photo-1495446815901-a7297e633e8d?auto=format&fit=crop&w=1400&q=80",
   },
 ];
 
@@ -504,37 +511,40 @@ export default function DashboardPage() {
                   Choose where you want to learn
                 </h3>
                 <p className="mt-2 max-w-2xl text-sm font-medium leading-6 text-[#52647C]">
-                  Career Skills and School Help are the two live MVP worlds.
-                  The others stay visible so learners can see what GAHN is
-                  building next without pretending those products are ready.
+                  Every learning world uses the same visual system. Career Skills
+                  and School Help are available now; the remaining worlds stay
+                  visible but locked until they are ready.
                 </p>
               </div>
             </div>
 
-            <div className="mt-6 grid gap-5 xl:grid-cols-2">
-              {worlds
-                .filter(({ slug }) => LEARNING_WORLD_AVAILABILITY[slug]?.available)
-                .map(({ slug, Icon, title, text, imageUrl }) => (
-                  <Link
-                    key={slug}
-                    href={`/learn/${slug}`}
-                    className="group overflow-hidden rounded-[1.5rem] border border-[#D8E0EA] bg-white shadow-[0_14px_34px_rgba(11,23,57,0.06)]"
-                  >
+            <div className="mt-6 grid gap-5 md:grid-cols-2 xl:grid-cols-3">
+              {worlds.map(({ slug, Icon, title, text, imageUrl }) => {
+                const available =
+                  LEARNING_WORLD_AVAILABILITY[slug]?.available === true;
+
+                const card = (
+                  <>
                     <div className="relative h-44 overflow-hidden bg-[#DDE8F7]">
                       {imageUrl && (
                         <img
                           src={imageUrl}
                           alt=""
-                          className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-[1.02]"
+                          className={`h-full w-full object-cover ${
+                            available
+                              ? "transition-transform duration-300 group-hover:scale-[1.02]"
+                              : "brightness-[0.72]"
+                          }`}
                         />
                       )}
-                      <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(7,22,47,0.04)_10%,rgba(7,22,47,0.68)_100%)]" />
+                      <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(7,22,47,0.04)_10%,rgba(7,22,47,0.72)_100%)]" />
                       <div className="absolute bottom-4 left-5 right-5 flex items-center justify-between gap-3">
                         <div className="grid h-10 w-10 place-items-center rounded-xl bg-white text-[#07162F]">
                           <Icon className="h-4 w-4" />
                         </div>
-                        <span className="rounded-full bg-white/95 px-3 py-1 text-[10px] font-black uppercase tracking-[0.1em] text-[#07162F]">
-                          Available
+                        <span className="inline-flex items-center gap-1.5 rounded-full bg-white/95 px-3 py-1 text-[10px] font-black uppercase tracking-[0.1em] text-[#07162F]">
+                          {!available && <LockKeyhole className="h-3 w-3" />}
+                          {available ? "Available" : "Locked"}
                         </span>
                       </div>
                     </div>
@@ -543,40 +553,47 @@ export default function DashboardPage() {
                       <h4 className="text-xl font-black text-[#0B1739]">
                         {title}
                       </h4>
-                      <p className="mt-2 text-sm font-medium leading-6 text-[#52647C]">
+                      <p className="mt-2 min-h-[72px] text-sm font-medium leading-6 text-[#52647C]">
                         {text}
                       </p>
-                      <div className="mt-5 flex items-center justify-between text-sm font-black text-[#1677FF]">
-                        <span>Enter learning world</span>
-                        <span>→</span>
+                      <div
+                        className={`mt-5 flex items-center justify-between text-sm font-black ${
+                          available ? "text-[#1677FF]" : "text-[#65758A]"
+                        }`}
+                      >
+                        <span>
+                          {available
+                            ? "Enter learning world"
+                            : "Not available yet"}
+                        </span>
+                        {available ? (
+                          <span>→</span>
+                        ) : (
+                          <LockKeyhole className="h-4 w-4" />
+                        )}
                       </div>
                     </div>
-                  </Link>
-                ))}
-            </div>
+                  </>
+                );
 
-            <div className="mt-6 border-t border-[#D8E0EA] pt-5">
-              <p className="text-[11px] font-black uppercase tracking-[0.14em] text-[#65758A]">
-                Planned after core MVP validation
-              </p>
-              <div className="mt-3 flex flex-wrap gap-3">
-                {worlds
-                  .filter(({ slug }) => !LEARNING_WORLD_AVAILABILITY[slug]?.available)
-                  .map(({ slug, Icon, title }) => (
-                    <div
-                      key={slug}
-                      className="flex items-center gap-3 rounded-full border border-[#D8E0EA] bg-[#EEF2F7] px-4 py-2.5"
-                    >
-                      <Icon className="h-4 w-4 text-[#52647C]" />
-                      <span className="text-sm font-black text-[#33455F]">
-                        {title}
-                      </span>
-                      <span className="text-[10px] font-black uppercase tracking-[0.08em] text-[#7C8A9D]">
-                        Not available
-                      </span>
-                    </div>
-                  ))}
-              </div>
+                return available ? (
+                  <Link
+                    key={slug}
+                    href={`/learn/${slug}`}
+                    className="group overflow-hidden rounded-[1.5rem] border border-[#D8E0EA] bg-white shadow-[0_14px_34px_rgba(11,23,57,0.06)] transition-[transform,border-color,box-shadow] hover:-translate-y-0.5 hover:border-[#9CC4F7] hover:shadow-[0_18px_38px_rgba(11,23,57,0.09)]"
+                  >
+                    {card}
+                  </Link>
+                ) : (
+                  <div
+                    key={slug}
+                    aria-disabled="true"
+                    className="overflow-hidden rounded-[1.5rem] border border-[#D8E0EA] bg-white shadow-[0_14px_34px_rgba(11,23,57,0.06)]"
+                  >
+                    {card}
+                  </div>
+                );
+              })}
             </div>
           </section>
 
