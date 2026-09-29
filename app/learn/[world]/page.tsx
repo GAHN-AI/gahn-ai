@@ -148,33 +148,94 @@ function CareerCard({
   );
 }
 
-function SubjectCard({
+function LearningSectionCard({
   href,
   title,
   description,
+  imageUrl,
+  skills,
+  locked = false,
 }: {
-  href: string;
+  href?: string;
   title: string;
   description: string;
+  imageUrl: string;
+  skills: string[];
+  locked?: boolean;
 }) {
+  const content = (
+    <>
+      <div className="relative h-48 overflow-hidden bg-[#DDE8F7]">
+        <img
+          src={imageUrl}
+          alt=""
+          className={`h-full w-full object-cover ${locked ? "brightness-[0.72]" : "transition-transform duration-300 group-hover:scale-[1.02]"}`}
+        />
+        <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(7,22,47,0.02)_15%,rgba(7,22,47,0.68)_100%)]" />
+        <div className="absolute bottom-4 left-4 right-4 flex items-end justify-between gap-3">
+          <span className="rounded-full bg-white/95 px-3 py-1.5 text-[10px] font-black uppercase tracking-[0.1em] text-[#07162F]">
+            {locked ? "Locked" : "Learning path"}
+          </span>
+          {locked && (
+            <span className="grid h-9 w-9 place-items-center rounded-full bg-[#07162F]/85 text-white">
+              <LockKeyhole className="h-4 w-4" />
+            </span>
+          )}
+        </div>
+      </div>
+
+      <div className="p-5">
+        <h2 className="text-xl font-black tracking-[-0.025em] text-[#0B1739]">
+          {title}
+        </h2>
+
+        <p className="mt-2 min-h-[72px] text-sm font-medium leading-6 text-[#24344D]">
+          {description}
+        </p>
+
+        <div className="mt-5 border-t border-[#E6ECF3] pt-4">
+          <p className="text-[11px] font-black uppercase tracking-[0.1em] text-[#52647C]">
+            {locked ? "What this world will cover" : "Skills you will build"}
+          </p>
+
+          <div className="mt-3 flex flex-wrap gap-2">
+            {skills.map((skill) => (
+              <span
+                key={skill}
+                className="rounded-full bg-[#F1F5FA] px-2.5 py-1 text-xs font-bold text-[#25364F]"
+              >
+                {skill}
+              </span>
+            ))}
+          </div>
+        </div>
+
+        <div className="mt-5 flex items-center justify-between">
+          <span className={`text-sm font-black ${locked ? "text-[#65758A]" : "text-[#1677FF]"}`}>
+            {locked ? "Not available yet" : "Open learning path"}
+          </span>
+          <span className={`grid h-9 w-9 place-items-center rounded-full ${locked ? "bg-[#EEF2F7] text-[#65758A]" : "bg-[#EAF3FF] text-[#1677FF] transition-transform group-hover:translate-x-0.5"}`}>
+            {locked ? <LockKeyhole className="h-4 w-4" /> : <ArrowRight className="h-4 w-4" />}
+          </span>
+        </div>
+      </div>
+    </>
+  );
+
+  if (locked || !href) {
+    return (
+      <div className="overflow-hidden rounded-[1.35rem] border border-[#D8E0EA] bg-white shadow-[0_12px_30px_rgba(11,23,57,0.05)]">
+        {content}
+      </div>
+    );
+  }
+
   return (
     <Link
       href={href}
-      className="group flex min-h-52 flex-col rounded-[1.25rem] border border-[#D8E0EA] bg-white p-5 shadow-[0_10px_26px_rgba(11,23,57,0.04)] hover:border-[#9CC4F7]"
+      className="group overflow-hidden rounded-[1.35rem] border border-[#D8E0EA] bg-white shadow-[0_12px_30px_rgba(11,23,57,0.05)] transition-[transform,border-color,box-shadow] hover:-translate-y-0.5 hover:border-[#9CC4F7] hover:shadow-[0_18px_38px_rgba(11,23,57,0.09)]"
     >
-      <div className="grid h-11 w-11 place-items-center rounded-xl bg-[#EAF3FF] text-[#1677FF]">
-        <GraduationCap className="h-5 w-5" />
-      </div>
-
-      <h2 className="mt-4 text-lg font-black text-[#0B1739]">{title}</h2>
-      <p className="mt-2 flex-1 text-sm font-medium leading-6 text-[#24344D]">
-        {description}
-      </p>
-
-      <div className="mt-4 inline-flex items-center gap-2 text-sm font-black text-[#1677FF]">
-        Choose level
-        <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
-      </div>
+      {content}
     </Link>
   );
 }
@@ -237,48 +298,9 @@ export default function LearningWorldPage() {
   const available = isLearningWorldAvailable(world);
   const { title, eyebrow, description, Icon } = learningWorld;
 
-  if (!available) {
-    return (
-      <main className="min-h-screen bg-[#F4F7FB] px-5 py-8 font-sans text-black sm:px-8">
-        <div className="mx-auto max-w-5xl">
-          <div className="flex items-center justify-between gap-4">
-            <Link
-              href="/dashboard"
-              className="inline-flex items-center gap-2 text-sm font-black text-[#0B1739]"
-            >
-              <ArrowLeft className="h-4 w-4" />
-              Back to Dashboard
-            </Link>
-            <Link href="/" className="font-black text-[#0B1739]">
-              GAHN AI
-            </Link>
-          </div>
 
-          <section className="mt-12 rounded-[1.75rem] border border-[#D8E0EA] bg-white p-8 text-center shadow-[0_16px_40px_rgba(11,23,57,0.05)] sm:p-12">
-            <div className="mx-auto grid h-16 w-16 place-items-center rounded-2xl bg-[#07162F] text-white">
-              <LockKeyhole className="h-7 w-7" />
-            </div>
-            <p className="mt-6 text-xs font-black uppercase tracking-[0.18em] text-[#1677FF]">
-              Not available
-            </p>
-            <h1 className="mt-2 text-4xl font-black tracking-[-0.04em] text-[#0B1739]">
-              {title}
-            </h1>
-            <p className="mx-auto mt-4 max-w-xl text-sm font-medium leading-7 text-black">
-              {description}
-            </p>
-            <p className="mx-auto mt-3 max-w-xl text-sm font-bold leading-6 text-black">
-              This learning world is intentionally disabled while GAHN tests
-              Career Skills and School Help first.
-            </p>
-          </section>
-        </div>
-      </main>
-    );
-  }
-
-  const schoolSections =
-    world === "school-help" ? getLearningSections(world) : [];
+  const worldSections =
+    world === "career-skills" ? [] : getLearningSections(world);
 
   return (
     <main className="min-h-screen bg-[#F4F7FB] font-sans text-black">
@@ -323,7 +345,9 @@ export default function LearningWorldPage() {
                 {description}
               </p>
               <p className="mt-4 text-sm font-black text-[#8DB8FF]">
-                One instructor for this learning world · Teaching in {language}
+                {available
+                  ? `One instructor for this learning world · Teaching in ${language}`
+                  : "Locked for the MVP · Preview only"}
               </p>
             </div>
           </div>
@@ -331,6 +355,20 @@ export default function LearningWorldPage() {
       </section>
 
       <div className="mx-auto max-w-7xl px-5 py-8 sm:px-8 sm:py-10">
+        {!available && (
+          <div className="mb-7 flex items-start gap-3 rounded-2xl border border-[#D8E0EA] bg-white px-5 py-4 shadow-[0_8px_22px_rgba(11,23,57,0.04)]">
+            <div className="grid h-10 w-10 shrink-0 place-items-center rounded-xl bg-[#EEF2F7] text-[#33455F]">
+              <LockKeyhole className="h-4 w-4" />
+            </div>
+            <div>
+              <p className="text-sm font-black text-[#0B1739]">This learning world is still locked.</p>
+              <p className="mt-1 text-sm font-medium leading-6 text-[#52647C]">
+                You can preview the subjects and skills GAHN plans to teach here, but none of these paths can be opened yet.
+              </p>
+            </div>
+          </div>
+        )}
+
         {world === "career-skills" ? (
           <>
             <section className="flex flex-col gap-5 lg:flex-row lg:items-end lg:justify-between">
@@ -391,25 +429,33 @@ export default function LearningWorldPage() {
         ) : (
           <section>
             <p className="text-xs font-black uppercase tracking-[0.18em] text-[#1677FF]">
-              School subjects
+              {world === "school-help" ? "School subjects" : "Learning paths"}
             </p>
             <h2 className="mt-2 text-3xl font-black tracking-[-0.035em] text-[#0B1739]">
-              Choose what you need help with
+              {world === "school-help"
+                ? "Choose what you need help with"
+                : `Explore what ${title} will teach`}
             </h2>
-            <p className="mt-2 max-w-2xl text-sm font-medium leading-6 text-[#33455F]">
-              Choose a subject, then select the level you want the private
-              instructor to teach.
+            <p className="mt-2 max-w-3xl text-sm font-medium leading-6 text-[#33455F]">
+              {world === "school-help"
+                ? "Choose a subject, then select the level you want the private instructor to teach."
+                : "These paths are shown as a preview only. The learning world remains locked until it is ready for testing."}
             </p>
 
-            <div className="mt-6 grid gap-5 md:grid-cols-2 xl:grid-cols-3">
-              {schoolSections.map((section) => (
-                <SubjectCard
+            <div className="mt-7 grid gap-5 md:grid-cols-2 xl:grid-cols-3">
+              {worldSections.map((section) => (
+                <LearningSectionCard
                   key={section.slug}
-                  href={`/learn/school-help/${section.slug}?language=${encodeURIComponent(
-                    language
-                  )}`}
+                  href={
+                    available
+                      ? `/learn/${world}/${section.slug}?language=${encodeURIComponent(language)}`
+                      : undefined
+                  }
                   title={section.title}
                   description={section.description}
+                  imageUrl={section.imageUrl}
+                  skills={section.options[0]?.skills || []}
+                  locked={!available}
                 />
               ))}
             </div>
