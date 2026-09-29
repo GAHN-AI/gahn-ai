@@ -24,6 +24,7 @@ type ProgressRow = {
   attempts_count: number;
   correct_count: number;
   retry_count: number;
+  evidence: Record<string, unknown> | null;
   last_activity_at: string;
 };
 
@@ -55,7 +56,7 @@ export default function ProgressPage() {
       const { data } = await supabase
         .from("learning_progress")
         .select(
-          "id, world_slug, topic, lesson_id, lesson_title, status, mastery_state, attempts_count, correct_count, retry_count, last_activity_at"
+          "id, world_slug, topic, lesson_id, lesson_title, status, mastery_state, attempts_count, correct_count, retry_count, evidence, last_activity_at"
         )
         .eq("user_id", user.id)
         .order("last_activity_at", { ascending: false });
@@ -67,13 +68,33 @@ export default function ProgressPage() {
     void load();
   }, [router]);
 
+  const visibleRows = useMemo(
+    () =>
+      rows.filter((row) => {
+        const evidence = row.evidence || {};
+        const meaningfulStart =
+          evidence.meaningfulStart === true ||
+          evidence.lastActivitySource === "live_instructor" ||
+          evidence.lastActivitySource === "adaptive_instructor";
+
+        return (
+          meaningfulStart ||
+          (row.attempts_count || 0) > 0 ||
+          ["practicing", "proficient", "mastered", "needs_review"].includes(
+            row.mastery_state || ""
+          )
+        );
+      }),
+    [rows]
+  );
+
   const stats = useMemo(
     () => ({
-      active: rows.filter((row) => row.status === "in_progress").length,
-      mastered: rows.filter((row) => row.mastery_state === "mastered").length,
-      review: rows.filter((row) => row.mastery_state === "needs_review").length,
+      active: visibleRows.filter((row) => row.status === "in_progress").length,
+      mastered: visibleRows.filter((row) => row.mastery_state === "mastered").length,
+      review: visibleRows.filter((row) => row.mastery_state === "needs_review").length,
     }),
-    [rows]
+    [visibleRows]
   );
 
   return (
@@ -95,7 +116,7 @@ export default function ProgressPage() {
             Your Progress
           </h1>
           <p className="mt-2 max-w-3xl text-sm leading-7 text-black">
-            GAHN tracks what you actually attempted, answered correctly, retried, practiced, and mastered. It does not invent a progress percentage.
+            GAHN only shows learning after a real instructor session or checked learning evidence. Opening a lesson page by itself does not count as progress.
           </p>
 
           <div className="mt-6 grid gap-3 sm:grid-cols-3">
@@ -117,7 +138,7 @@ export default function ProgressPage() {
               <p className="py-14 text-center text-sm font-semibold text-black">
                 Loading progress...
               </p>
-            ) : rows.length === 0 ? (
+            ) : visibleRows.length === 0 ? (
               <div className="grid min-h-72 place-items-center rounded-2xl border border-dashed border-[#CFE0F5] bg-[#F8FBFF] px-6 text-center">
                 <div className="max-w-md">
                   <Target className="mx-auto h-8 w-8 text-[#1677FF]" />
@@ -135,7 +156,7 @@ export default function ProgressPage() {
               </div>
             ) : (
               <div className="overflow-hidden rounded-2xl border border-[#D7E3F2]">
-                {rows.map((row) => (
+                {visibleRows.map((row) => (
                   <div
                     key={row.id}
                     className="grid gap-4 border-b border-[#E7EDF5] bg-white p-5 last:border-b-0 lg:grid-cols-[minmax(0,1fr)_auto]"
