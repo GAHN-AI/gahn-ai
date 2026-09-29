@@ -16,7 +16,6 @@ import LanguageSelector from "@/components/LanguageSelector";
 import { getCareerSection } from "@/lib/careerCatalog";
 import {
   getLearningOption,
-  slugifyLearningTitle,
   type LearningOption,
 } from "@/lib/learningCatalog";
 import { isLearningWorldAvailable } from "@/lib/learningWorldAvailability";
@@ -46,16 +45,10 @@ export default function TopicOverviewPage() {
       const section = getCareerSection(params.section);
       if (!section) return null;
 
-      const topic = section.lessons.find(
-        (lesson) => slugifyLearningTitle(lesson.title) === params.topic
-      );
-
-      if (!topic) return null;
-
       return {
-        sectionTitle: section.title,
-        title: topic.title,
-        description: topic.description,
+        sectionTitle: "Technology",
+        title: section.title,
+        description: section.description,
         option: undefined as LearningOption | undefined,
       };
     }
