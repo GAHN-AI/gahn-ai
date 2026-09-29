@@ -10,7 +10,7 @@ export async function getCurrentSubscription(userId: string) {
   const { data, error } = await supabaseAdmin
     .from("subscriptions")
     .select(
-      "plan_id, status, current_period_end, cancel_at_period_end"
+      "plan_id, status, current_period_start, current_period_end, cancel_at_period_end"
     )
     .eq("user_id", userId)
     .maybeSingle();
@@ -22,11 +22,7 @@ export async function getCurrentSubscription(userId: string) {
   const storedPlanId =
     (data?.plan_id as SubscriptionPlanId | undefined) ?? "explore";
 
-  const paidSubscriptionsEnabled =
-    process.env.STRIPE_CHECKOUT_ENABLED === "true";
-
   const hasPaidAccess =
-    paidSubscriptionsEnabled &&
     storedPlanId !== "explore" &&
     ACCESS_STATUSES.has(data?.status ?? "");
 
@@ -37,6 +33,7 @@ export async function getCurrentSubscription(userId: string) {
   return {
     planId,
     status: data?.status ?? "free",
+    currentPeriodStart: data?.current_period_start ?? null,
     currentPeriodEnd: data?.current_period_end ?? null,
     cancelAtPeriodEnd: data?.cancel_at_period_end ?? false,
     entitlements: getSubscriptionEntitlements(planId),
