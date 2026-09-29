@@ -1,37 +1,25 @@
-export type CareerLesson = {
-  title: string;
-  description: string;
-};
-
 export type CareerSection = {
   slug: string;
   title: string;
-  category: string;
+  category: "Technology";
   description: string;
   imageUrl: string;
   level: string;
   pathLabel: string;
   skills: string[];
-  lessons: CareerLesson[];
 };
 
-function techRole(args: Omit<CareerSection, "category" | "lessons">): CareerSection {
+function techRole(args: Omit<CareerSection, "category">): CareerSection {
   return {
     ...args,
     category: "Technology",
-    lessons: [
-      {
-        title: args.title,
-        description: args.description,
-      },
-    ],
   };
 }
 
 /**
- * Phase 1 Career Skills is intentionally narrowed to one Technology section.
- * The skill lists below mirror the "Skills you'll need" lists published on
- * Coursera Career Academy role pages as checked on 2026-09-29.
+ * Phase 1 Career Skills intentionally contains one section: Technology.
+ * Skills mirror the current Coursera Career Academy "Skills you'll need"
+ * lists for the matching role pages.
  */
 export const careerSections: CareerSection[] = [
   techRole({
@@ -144,14 +132,14 @@ export const careerSections: CareerSection[] = [
     level: "Intermediate path",
     pathLabel: "Technology career",
     skills: [
+      "Cloud Computing",
+      "Cloud Solutions",
+      "Amazon Web Services",
+      "Microsoft Azure",
       "Google Cloud Platform",
       "Infrastructure as Code (IaC)",
       "DevOps",
       "Cloud Security",
-      "Cloud Services",
-      "Automation",
-      "Kubernetes",
-      "Terraform",
     ],
   }),
   techRole({
@@ -215,8 +203,8 @@ export const careerSections: CareerSection[] = [
     ],
   }),
   techRole({
-    slug: "ui-ux-designer",
-    title: "UI / UX Designer",
+    slug: "user-interface-user-experience-ui-ux-designer",
+    title: "User Interface / User Experience (UI / UX) Designer",
     description:
       "Research users and design clear, usable digital products through interfaces, prototypes, and testing.",
     imageUrl:
