@@ -1,55 +1,49 @@
 import { NextResponse } from "next/server";
-import { createServerClient } from "@supabase/ssr";
-import { cookies } from "next/headers";
-import { requireEntitlement } from "@/lib/requireEntitlement";
+
+import { getCurrentSubscription } from "@/lib/currentSubscription";
+import { getLiveInstructorUsage } from "@/lib/liveInstructorUsage";
+import { getAuthenticatedUser } from "@/lib/serverAuth";
 
 export async function GET() {
   try {
-    const cookieStore = await cookies();
+    const { user, error: authError } = await getAuthenticatedUser();
 
-    const supabase = createServerClient(
-      process.env.NEXT_PUBLIC_SUPABASE_URL!,
-      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
-      {
-        cookies: {
-          getAll() {
-            return cookieStore.getAll();
-          },
-          setAll(cookiesToSet) {
-            try {
-              cookiesToSet.forEach(({ name, value, options }) => {
-                cookieStore.set(name, value, options);
-              });
-            } catch {
-              // Safe to ignore here.
-            }
-          },
-        },
-      }
-    );
-
-    const {
-      data: { user },
-      error,
-    } = await supabase.auth.getUser();
-
-    if (error || !user) {
+    if (authError || !user) {
       return NextResponse.json(
         { error: "Unauthorized" },
         { status: 401 }
       );
     }
 
-    const access = await requireEntitlement(
-      user.id,
-      "liveInstructor"
-    );
+    const subscription = await getCurrentSubscription(user.id);
+    const usage = await getLiveInstructorUsage(user.id, subscription);
 
-    if (!access.allowed) {
+    const included =
+      subscription.entitlements.liveInstructor &&
+      usage.limitSeconds > 0;
+
+    if (!included) {
       return NextResponse.json(
         {
+          allowed: false,
           error: "Live AI Instructor is not included in your plan.",
-          planId: access.planId,
+          upgradeRequired: true,
+          planId: subscription.planId,
+          ...usage,
+        },
+        { status: 403 }
+      );
+    }
+
+    if (usage.remainingSeconds <= 0) {
+      return NextResponse.json(
+        {
+          allowed: false,
+          error:
+            "You have used all of your Maya time for this billing period.",
+          exhausted: true,
+          planId: subscription.planId,
+          ...usage,
         },
         { status: 403 }
       );
@@ -57,7 +51,8 @@ export async function GET() {
 
     return NextResponse.json({
       allowed: true,
-      planId: access.planId,
+      planId: subscription.planId,
+      ...usage,
       message: "Live AI Instructor access granted.",
     });
   } catch (error) {
