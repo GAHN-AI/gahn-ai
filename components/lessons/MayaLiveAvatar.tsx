@@ -7,6 +7,16 @@ import {
   SessionState,
 } from "@heygen/liveavatar-web-sdk";
 
+type MayaLiveAvatarProps = {
+  worldSlug: string;
+  sectionSlug?: string | null;
+  topicSlug?: string | null;
+  topic: string;
+  lessonId: string;
+  lessonTitle: string;
+  language: string;
+};
+
 type UsageStatus = {
   allowed: boolean;
   exhausted?: boolean;
@@ -27,7 +37,15 @@ function minutesLabel(seconds: number) {
   return `${minutes} minute${minutes === 1 ? "" : "s"}`;
 }
 
-export default function MayaLiveAvatar() {
+export default function MayaLiveAvatar({
+  worldSlug,
+  sectionSlug,
+  topicSlug,
+  topic,
+  lessonId,
+  lessonTitle,
+  language,
+}: MayaLiveAvatarProps) {
   const videoRef = useRef<HTMLVideoElement>(null);
   const sessionRef = useRef<LiveAvatarSession | null>(null);
   const usageEventIdRef = useRef<string | null>(null);
@@ -166,6 +184,20 @@ export default function MayaLiveAvatar() {
 
       const response = await fetch("/api/liveavatar/session", {
         method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          lessonContext: {
+            worldSlug,
+            sectionSlug: sectionSlug || null,
+            topicSlug: topicSlug || null,
+            topic,
+            lessonId,
+            lessonTitle,
+            language,
+          },
+        }),
       });
 
       const data = await response.json();
