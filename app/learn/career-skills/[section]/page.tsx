@@ -147,9 +147,9 @@ export default function CareerSectionPage() {
           </h2>
           <p className="mt-3 max-w-3xl text-sm font-medium leading-7 text-[#33455F]">
             Maya stays the same Career Skills instructor across every career
-            section. The lesson context changes depending on the career you
-            choose, so one instructor can teach many different paths without
-            creating a separate avatar for every subject.
+            section. GAHN keeps the career you selected attached to the lesson
+            record, practice, and progress so one instructor can serve the
+            entire Career Skills learning world.
           </p>
 
           <div className="mt-7 divide-y divide-[#E1E8F0] border-y border-[#E1E8F0]">
@@ -188,9 +188,10 @@ export default function CareerSectionPage() {
             One instructor, career-specific teaching
           </h2>
           <p className="mt-3 text-sm font-medium leading-6 text-[#52647C]">
-            Maya receives this career path as lesson context and teaches inside
-            the same live classroom instead of using a different avatar for
-            every career.
+            Maya is the Career Skills instructor across this learning world.
+            Your selected career stays connected to the lesson record and
+            learning progress instead of creating a different avatar for every
+            career.
           </p>
 
           <Link
