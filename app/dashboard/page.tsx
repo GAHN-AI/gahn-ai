@@ -44,7 +44,7 @@ const worlds: {
     slug: "career-skills",
     Icon: Briefcase,
     title: "Career Skills",
-    text: "Explore real career paths across technology, healthcare, engineering, trades, business, finance, law, and creative work.",
+    text: "Explore technology careers, understand what each role does, and see the concrete skills used in the field.",
     imageUrl:
       "https://images.unsplash.com/photo-1521737711867-e3b97375f902?auto=format&fit=crop&w=1400&q=80",
   },
