@@ -285,21 +285,16 @@ export default function LearningWorldPage() {
             </p>
 
             <div className="mt-7 grid gap-5 md:grid-cols-2 xl:grid-cols-3">
-              {careerIndustries.map((industry) => {
-                const careers = getCareersByIndustry(industry.title);
-                const sampleCareers = careers.slice(0, 4).map((career) => career.title);
-
-                return (
-                  <LearningSectionCard
-                    key={industry.slug}
-                    href={`/learn/career-skills/industry/${industry.slug}?language=${encodeURIComponent(language)}`}
-                    title={industry.displayTitle}
-                    description={industry.description}
-                    imageUrl={industry.imageUrl}
-                    skills={sampleCareers}
-                  />
-                );
-              })}
+              {careerIndustries.map((industry) => (
+                <LearningSectionCard
+                  key={industry.slug}
+                  href={`/learn/career-skills/industry/${industry.slug}?language=${encodeURIComponent(language)}`}
+                  title={industry.displayTitle}
+                  description={industry.description}
+                  imageUrl={industry.imageUrl}
+                  skills={industry.skills.slice(0, 6)}
+                />
+              ))}
             </div>
           </section>
         ) : (
