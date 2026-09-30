@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { FormEvent, useEffect, useState } from "react";
 import { MessageSquareQuote, Send } from "lucide-react";
+import { supabase } from "@/lib/supabaseClient";
 
 type PublicVoice = {
   id: string;
@@ -63,6 +64,17 @@ export default function EarlyAccessVoices() {
     setNeedsSignIn(false);
 
     try {
+      const {
+        data: { user },
+        error: authError,
+      } = await supabase.auth.getUser();
+
+      if (authError || !user) {
+        setNeedsSignIn(true);
+        setNotice("You must sign up or log in before making a review.");
+        return;
+      }
+
       const response = await fetch("/api/public-feedback", {
         method: "POST",
         headers: {
@@ -82,7 +94,7 @@ export default function EarlyAccessVoices() {
 
       if (response.status === 401) {
         setNeedsSignIn(true);
-        setNotice("Sign in or create an account before sharing feedback.");
+        setNotice("You must sign up or log in before making a review.");
         return;
       }
 
