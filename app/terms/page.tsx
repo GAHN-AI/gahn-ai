@@ -358,14 +358,14 @@ export default function TermsPage() {
 
           <Section title="14. Third party services">
             <p>
-              GAHN AI may depend on or link to third-party services, including
+              GAHN AI may depend on or link to third party services, including
               payment processors, authentication providers, hosting services,
               analytics providers, and AI systems.
             </p>
 
             <p>
               Third party services are governed by their own terms and policies.
-              We are not responsible for third-party services outside our
+              We are not responsible for third party services outside our
               reasonable control.
             </p>
           </Section>
