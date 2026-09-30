@@ -11,23 +11,22 @@ import {
 } from "lucide-react";
 
 const exploreFeatures = [
-  "Career Skills and School Help",
-  "Dashboard and basic progress",
-  "Browse learning paths and lesson topics",
-  "Basic lesson notes",
-  "Multiple teaching languages",
-  "No regular paid LiveAvatar usage",
+  "Career Skills and School Help learning worlds",
+  "AI guided text lessons in available learning paths",
+  "Interactive learning canvas for examples and lesson content",
+  "Progress tracking across completed lessons",
+  "Save notes from your lessons",
+  "Learn in multiple supported teaching languages",
 ];
 
 const learnerPlusFeatures = [
   "Everything in Explore",
-  "Maya Live AI Instructor with 60 minutes per billing period",
-  "Interactive AI learning workspace",
-  "Mastery checks and retries",
-  "Homework and file help",
-  "Learner memory for strong and weak areas",
-  "Saved study guides",
-  "Active recall review questions",
+  "60 minutes of live AI instructor sessions per billing period",
+  "Mastery checks with retries when you need more practice",
+  "Upload homework, PDFs, screenshots, and documents for guided help",
+  "Personalized learner memory that tracks strong and weak areas",
+  "Save study guides from lessons",
+  "Active recall review questions for material you have learned",
 ];
 
 type PlanCardProps = {
@@ -191,8 +190,7 @@ export default function PricingPage() {
             Choose how you want to learn
           </h1>
           <p className="mx-auto mt-4 max-w-2xl text-base font-medium leading-7 text-[#5F6368]">
-            Start free with Explore or upgrade when you want the live Maya
-            instructor and stronger learning tools.
+            Start free, then upgrade for a more advanced learning experience with live AI sessions, homework help, mastery checks, and personalized study tools.
           </p>
         </div>
       </section>
@@ -202,7 +200,7 @@ export default function PricingPage() {
           <PlanCard
             name="Explore"
             price="$0"
-            description="Explore GAHN without creating ongoing paid avatar costs."
+            description="Core learning tools for exploring Career Skills and School Help at no cost."
             features={exploreFeatures}
             action={
               <Link
@@ -213,13 +211,13 @@ export default function PricingPage() {
                 <ArrowRight className="h-4 w-4" />
               </Link>
             }
-            note="No card needed. Maya Live AI Instructor is not included in Explore. Brain Development, General Knowledge, and Book Intelligence are also intentionally unavailable during this MVP test."
+            note="No card needed. Explore includes the learning worlds and tools currently available on the free plan."
           />
 
           <PlanCard
             name="Learner Plus"
             price="$29"
-            description="For learners who want the real time Maya instructor and the stronger learning tools."
+            description="Advanced learning tools for students who want live sessions, guided homework help, mastery checks, and personalized study support."
             features={learnerPlusFeatures}
             featured
             action={
@@ -233,7 +231,7 @@ export default function PricingPage() {
                 <ArrowRight className="h-4 w-4" />
               </button>
             }
-            note="The 60 minute Maya allowance is enforced in the backend. Stripe checkout remains behind a safety switch until the payment account and final paid flow are ready."
+            note="Includes 60 minutes of live AI instructor sessions per billing period."
           />
         </div>
 
