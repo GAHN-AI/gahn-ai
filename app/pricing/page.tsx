@@ -20,13 +20,16 @@ const exploreFeatures = [
 ];
 
 const learnerPlusFeatures = [
-  "Everything in Explore",
-  "60 minutes of live AI instructor sessions per billing period",
-  "Mastery checks with retries when you need more practice",
+  "30 minutes of live AI instructor sessions per billing period",
+  "Real time voice conversations with your AI instructor",
+  "Interactive learning canvas during live lessons",
+  "Adaptive re teaching when you get stuck",
+  "Mastery checks with practice, re teaching, and retries",
+  "Learner memory that remembers progress, mistakes, and concepts to review",
+  "Active recall questions from previous lessons",
   "Upload homework, PDFs, screenshots, and documents for guided help",
-  "Personalized learner memory that tracks strong and weak areas",
-  "Save study guides from lessons",
-  "Active recall review questions for material you have learned",
+  "Save personalized notes and study guides from your lessons",
+  "Learning history and progress saved across sessions",
 ];
 
 type PlanCardProps = {
@@ -217,7 +220,7 @@ export default function PricingPage() {
           <PlanCard
             name="Learner Plus"
             price="$29"
-            description="Advanced learning tools for students who want live sessions, guided homework help, mastery checks, and personalized study support."
+            description="Advanced learning with live AI instruction, personalized practice, and tools that help you remember what you learn."
             features={learnerPlusFeatures}
             featured
             action={
@@ -231,7 +234,7 @@ export default function PricingPage() {
                 <ArrowRight className="h-4 w-4" />
               </button>
             }
-            note="Includes 60 minutes of live AI instructor sessions per billing period."
+            note="Includes 30 minutes of live AI instructor sessions per billing period."
           />
         </div>
 
