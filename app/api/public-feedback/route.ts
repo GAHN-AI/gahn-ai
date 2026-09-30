@@ -53,7 +53,7 @@ export async function POST(req: Request) {
 
     if (authError || !user) {
       return NextResponse.json(
-        { error: "You must be signed in to share public feedback." },
+        { error: "You must sign up or log in before making a review." },
         { status: 401 }
       );
     }
