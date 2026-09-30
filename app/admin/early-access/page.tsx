@@ -94,7 +94,7 @@ export default function EarlyAccessAdminPage() {
 
         {loading && (
           <div className="mt-8 rounded-2xl border border-[#D7E3F2] bg-white p-12 text-center text-sm font-semibold text-black">
-            Loading early-access signals...
+            Loading early access signals...
           </div>
         )}
 
