@@ -45,7 +45,7 @@ export default function AboutPage() {
           </h1>
 
           <p className="mt-5 max-w-2xl text-lg leading-8 text-black">
-            GAHN AI — Global AI Human Helper Network — is a structured learning
+            GAHN AI, Global AI Human Helper Network, is a structured learning
             platform built around one idea: an AI instructor should teach the
             way a good tutor does. It explains a concept, checks that you
             actually understood it, corrects you when you didn&apos;t, and
@@ -60,7 +60,7 @@ export default function AboutPage() {
 
           <p className="mt-4 text-base leading-7 text-black">
             Most AI tools answer whatever you ask, in whatever order you ask
-            it. That&apos;s useful, but it isn&apos;t teaching — it&apos;s
+            it. That&apos;s useful, but it isn&apos;t teaching, it&apos;s
             lookup. GAHN AI was built to do something different: run an actual
             lesson. Teach a concept, give you a task, check your answer, correct
             mistakes, and ask you to try again until it sticks. The goal
@@ -77,7 +77,7 @@ export default function AboutPage() {
             An AI instructor on GAHN AI notices your current level, adjusts
             explanations when you&apos;re confused, remembers what you&apos;ve
             struggled with, and paces future lessons around that. It isn&apos;t
-            a replacement for great human teachers — it&apos;s a way to give
+            a replacement for great human teachers, it&apos;s a way to give
             more people access to personalized, patient instruction whenever
             they need it.
           </p>
@@ -111,7 +111,7 @@ export default function AboutPage() {
           <h2 className="text-2xl font-bold">Get in touch</h2>
 
           <p className="mt-3 max-w-lg text-base leading-7 text-white/75">
-            Questions, feedback, or partnership interest — reach out any time.
+            Questions, feedback, or partnership interest, reach out any time.
           </p>
 
           <Link
