@@ -461,6 +461,7 @@ export default function LearningWorldPage() {
                 </p>
               </div>
             )}
+          </>
         ) : (
           <section>
             <p className="text-xs font-black uppercase tracking-[0.18em] text-[#1677FF]">
