@@ -140,14 +140,14 @@ export default function TermsPage() {
             </p>
           </Section>
 
-          <Section title="5. AI-generated content">
+          <Section title="5. AI generated content">
             <p>
               GAHN AI uses automated systems to generate educational content,
               explanations, questions, feedback, and recommendations.
             </p>
 
             <p>
-              AI-generated content may contain errors, incomplete information,
+              AI generated content may contain errors, incomplete information,
               outdated information, or responses that do not fit your specific
               circumstances. You are responsible for reviewing and verifying
               information before relying on it.
@@ -356,7 +356,7 @@ export default function TermsPage() {
             </p>
           </Section>
 
-          <Section title="14. Third-party services">
+          <Section title="14. Third party services">
             <p>
               GAHN AI may depend on or link to third-party services, including
               payment processors, authentication providers, hosting services,
@@ -364,7 +364,7 @@ export default function TermsPage() {
             </p>
 
             <p>
-              Third-party services are governed by their own terms and policies.
+              Third party services are governed by their own terms and policies.
               We are not responsible for third-party services outside our
               reasonable control.
             </p>
