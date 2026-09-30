@@ -158,7 +158,7 @@ export const SUBSCRIPTION_ENTITLEMENTS: Record<
     masteryAssessments: true,
 
     liveInstructor: true,
-    liveInstructorMinutesPerMonth: 60,
+    liveInstructorMinutesPerMonth: 30,
 
     learningCanvas: true,
     advancedLearningCanvas: false,
