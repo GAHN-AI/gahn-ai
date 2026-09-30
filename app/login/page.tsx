@@ -29,11 +29,11 @@ const features = [
   {
     Icon: GraduationCap,
     title: "Built for Real Learning",
-    text: "Practice, correction, recall, and guided retries—not random answers.",
+    text: "Practice, correction, recall, and guided retries, not random answers.",
   },
   {
     Icon: Rocket,
-    title: "Real-World Progress",
+    title: "Real World Progress",
     text: "Build skills, save your work, and continue where you left off.",
   },
 ];
