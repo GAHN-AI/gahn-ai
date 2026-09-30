@@ -87,7 +87,7 @@ export default function AboutPage() {
           <h2 className="text-2xl font-bold">Who it&apos;s for</h2>
 
           <p className="mt-4 text-base leading-7 text-black">
-            Students working through school subjects, self-learners building
+            Students working through school subjects, self learners building
             career and life skills, and anyone who wants to actually understand
             something instead of just getting an answer. GAHN AI is designed around five learning worlds. The current MVP only
             opens Career Skills and School Help so the private tutor experience
