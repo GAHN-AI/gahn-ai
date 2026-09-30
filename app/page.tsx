@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import type { ReactNode } from "react";
+import EarlyAccessVoices from "@/components/EarlyAccessVoices";
 import {
   ArrowRight,
   BookOpenCheck,
@@ -636,6 +637,8 @@ export default function Home() {
             </div>
           </div>
         </section>
+
+        <EarlyAccessVoices />
 
         {/* FAQ */}
         <section id="faq" className="scroll-mt-20 bg-white py-20 sm:py-28">
