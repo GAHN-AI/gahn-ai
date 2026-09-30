@@ -105,6 +105,12 @@ export const learningSectionsByWorld: Record<string, LearningSection[]> = {
       ["Reading", "Active Recall", "Note Taking", "Study Planning"],
       "https://images.unsplash.com/photo-1434030216411-0b793f4b4173?auto=format&fit=crop&w=1200&q=80"
     ),
+    singleSection(
+      "Homework Upload",
+      "Upload homework, worksheets, screenshots, PDFs, or reading material and tell GAHN the subject, grade, topic, and exact part you need help understanding.",
+      ["Homework Help", "File Reading", "Question Help", "Step by Step Support"],
+      "https://images.unsplash.com/photo-1434030216411-0b793f4b4173?auto=format&fit=crop&w=1200&q=80"
+    ),
   ],
 
   "brain-development": [
