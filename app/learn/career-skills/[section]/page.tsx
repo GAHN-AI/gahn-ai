@@ -185,7 +185,7 @@ export default function CareerSectionPage() {
             Private career lesson
           </p>
           <h2 className="mt-2 text-xl font-black text-[#0B1739]">
-            One instructor, career-specific teaching
+            One instructor, career focused teaching
           </h2>
           <p className="mt-3 text-sm font-medium leading-6 text-[#52647C]">
             Maya is the Career Skills instructor across this learning world.
