@@ -21,13 +21,13 @@ const exploreFeatures = [
 
 const learnerPlusFeatures = [
   "Everything in Explore",
-  "Maya Live AI Instructor — 60 minutes per billing period",
+  "Maya Live AI Instructor with 60 minutes per billing period",
   "Interactive AI learning workspace",
   "Mastery checks and retries",
   "Homework and file help",
   "Learner memory for strong and weak areas",
   "Saved study guides",
-  "Active-recall review questions",
+  "Active recall review questions",
 ];
 
 type PlanCardProps = {
@@ -51,16 +51,12 @@ function PlanCard({
 }: PlanCardProps) {
   return (
     <article
-      className={`flex min-h-[660px] flex-col overflow-hidden rounded-[1.4rem] border-2 bg-white shadow-[0_18px_45px_rgba(11,23,57,0.07)] ${
-        featured ? "border-[#0B1739]" : "border-[#D8E0EA]"
+      className={`flex min-h-[660px] flex-col overflow-hidden rounded-[1.4rem] border-2 bg-[#EAF3FF] shadow-[0_18px_45px_rgba(11,23,57,0.07)] ${
+        featured ? "border-[#1677FF]" : "border-[#BFD3ED]"
       }`}
     >
       <div
-        className={`px-6 py-4 text-sm font-extrabold ${
-          featured
-            ? "bg-[#0B1739] text-white"
-            : "bg-[#F4F7FB] text-[#0B1739]"
-        }`}
+        className="border-b border-[#CFE0F5] bg-white px-6 py-4 text-sm font-extrabold text-[#0B1739]"
       >
         {featured ? "Most useful for active learners" : "Start here"}
       </div>
@@ -84,7 +80,7 @@ function PlanCard({
 
         <div className="mt-7">{action}</div>
 
-        <div className="my-7 h-px bg-[#D8E0EA]" />
+        <div className="my-7 h-px bg-white" />
 
         <p className="text-sm font-black text-black">
           {featured ? "Everything in Explore, plus:" : "What’s included:"}
@@ -93,8 +89,8 @@ function PlanCard({
         <ul className="mt-5 grid gap-4">
           {features.map((feature) => (
             <li key={feature} className="flex items-start gap-3">
-              <span className="mt-0.5 grid h-5 w-5 shrink-0 place-items-center border-2 border-[#0B1739]">
-                <Check className="h-3 w-3 text-[#0B1739]" strokeWidth={3} />
+              <span className="mt-0.5 grid h-5 w-5 shrink-0 place-items-center border-2 border-[#1677FF] bg-white">
+                <Check className="h-3 w-3 text-[#1677FF]" strokeWidth={3} />
               </span>
               <span className="text-sm font-medium leading-6 text-black">
                 {feature}
@@ -105,7 +101,7 @@ function PlanCard({
 
         {note && (
           <div className="mt-auto pt-7">
-            <div className="rounded-xl border border-[#BFD3ED] bg-[#F2F7FD] p-4">
+            <div className="rounded-xl border border-[#BFD3ED] bg-white p-4">
               <p className="text-xs font-bold leading-5 text-black">{note}</p>
             </div>
           </div>
@@ -190,8 +186,8 @@ export default function PricingPage() {
             Start free. Pay only when you need more learning power.
           </h1>
           <p className="mx-auto mt-4 max-w-2xl text-base font-medium leading-7 text-black">
-            GAHN is testing two plans only. Explore keeps the low-cost parts of
-            the product free. Learner Plus unlocks the paid real-time AI
+            GAHN is testing two plans only. Explore keeps the low cost parts of
+            the product free. Learner Plus unlocks the paid real time AI
             instructor and stronger learning tools. Live checkout stays behind
             the payment safety switch until the payment account is ready.
           </p>
@@ -208,7 +204,7 @@ export default function PricingPage() {
             action={
               <Link
                 href="/signup"
-                className="flex w-full items-center justify-center gap-2 rounded-xl border-2 border-[#0B1739] bg-white px-5 py-3.5 text-sm font-black text-[#0B1739]"
+                className="flex w-full items-center justify-center gap-2 rounded-xl border-2 border-[#1677FF] bg-white px-5 py-3.5 text-sm font-black text-[#1677FF]"
               >
                 Start Free
                 <ArrowRight className="h-4 w-4" />
@@ -220,7 +216,7 @@ export default function PricingPage() {
           <PlanCard
             name="Learner Plus"
             price="$29"
-            description="For learners who want the real-time Maya instructor and the stronger learning tools."
+            description="For learners who want the real time Maya instructor and the stronger learning tools."
             features={learnerPlusFeatures}
             featured
             action={
@@ -228,13 +224,13 @@ export default function PricingPage() {
                 type="button"
                 onClick={startLearnerPlusCheckout}
                 disabled={checkoutLoading}
-                className="flex w-full items-center justify-center gap-2 rounded-xl bg-[#0B1739] px-5 py-3.5 text-sm font-black text-white disabled:opacity-60"
+                className="flex w-full items-center justify-center gap-2 rounded-xl border-2 border-[#1677FF] bg-white px-5 py-3.5 text-sm font-black text-[#1677FF] disabled:opacity-60"
               >
                 {checkoutLoading ? "Opening checkout..." : "Get Learner Plus"}
                 <ArrowRight className="h-4 w-4" />
               </button>
             }
-            note="The 60-minute Maya allowance is enforced in the backend. Stripe checkout remains behind a safety switch until the payment account and final paid flow are ready."
+            note="The 60 minute Maya allowance is enforced in the backend. Stripe checkout remains behind a safety switch until the payment account and final paid flow are ready."
           />
         </div>
 
