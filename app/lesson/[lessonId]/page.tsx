@@ -165,7 +165,7 @@ export default function LessonPage() {
               </h1>
 
               <p className="mt-2 text-sm font-medium leading-6 text-black">
-                Learn with a real-time AI
+                Learn with a real time AI
                 instructor and an interactive
                 learning workspace.
               </p>
@@ -187,7 +187,7 @@ export default function LessonPage() {
 
                 <p className="mt-1 text-sm font-black text-white">
                   {instructor?.enabled
-                    ? `${instructor.name} — ${instructor.role}`
+                    ? `${instructor.name} • ${instructor.role}`
                     : instructor?.role || "AI Instructor"}
                 </p>
               </div>
