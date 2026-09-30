@@ -52,7 +52,7 @@ const worlds: {
     slug: "school-help",
     Icon: GraduationCap,
     title: "School Help",
-    text: "Get one-on-one help with math, science, English, reading, homework, study skills, quizzes, and tests.",
+    text: "Get one on one help with math, science, English, reading, homework, study skills, quizzes, and tests.",
     imageUrl:
       "https://images.unsplash.com/photo-1503676260728-1c00da094a0b?auto=format&fit=crop&w=1400&q=80",
   },
@@ -374,7 +374,7 @@ export default function DashboardPage() {
             <h2 className="mt-1 text-xl font-black text-white">{planName}</h2>
             <p className="mt-2 text-sm leading-6 text-white">
               {planId === "explore"
-                ? "Explore keeps the low-cost parts of GAHN free. Maya Live AI Instructor is unlocked with Learner Plus."
+                ? "Explore keeps the low cost parts of GAHN free. Maya Live AI Instructor is unlocked with Learner Plus."
                 : "Your paid plan controls the learning tools and AI usage available to your account."}
             </p>
 
@@ -421,7 +421,7 @@ export default function DashboardPage() {
                 <p className="mt-2 text-sm font-medium leading-6 text-black">
                   Dashboard numbers now come from connected learning activity:
                   checked responses, mastery evidence, saved materials, and real
-                  instructor sessions — not from simply opening a page.
+                  instructor sessions, not from simply opening a page.
                 </p>
               </div>
 
