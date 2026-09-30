@@ -101,7 +101,7 @@ export const learningSectionsByWorld: Record<string, LearningSection[]> = {
     ),
     schoolSubject(
       "Reading & Study Skills",
-      "Strengthen reading comprehension, note-taking, active recall, study planning, and test preparation.",
+      "Strengthen reading comprehension, note taking, active recall, study planning, and test preparation.",
       ["Reading", "Active Recall", "Note Taking", "Study Planning"],
       "https://images.unsplash.com/photo-1434030216411-0b793f4b4173?auto=format&fit=crop&w=1200&q=80"
     ),
@@ -128,8 +128,8 @@ export const learningSectionsByWorld: Record<string, LearningSection[]> = {
     ),
     singleSection(
       "Discipline",
-      "Build consistency, self-control, routines, and follow-through on important goals.",
-      ["Discipline", "Consistency", "Habits", "Self-Control"],
+      "Build consistency, self control, routines, and follow through on important goals.",
+      ["Discipline", "Consistency", "Habits", "Self Control"],
       "https://images.unsplash.com/photo-1506784365847-bbad939e9335?auto=format&fit=crop&w=1200&q=80"
     ),
     singleSection(
