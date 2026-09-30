@@ -18,49 +18,63 @@ export type CareerSection = {
 };
 
 export type CareerIndustryInfo = {
+  slug: string;
   title: CareerIndustry;
+  displayTitle: string;
   description: string;
   imageUrl: string;
 };
 
 export const careerIndustries: CareerIndustryInfo[] = [
   {
+    slug: "tech-skills",
     title: "Technology Industry",
+    displayTitle: "Tech Skills",
     description:
       "Software, cybersecurity, cloud, data, artificial intelligence, design, and technical support careers.",
     imageUrl:
       "https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=1400&q=80",
   },
   {
+    slug: "healthcare-medicine",
     title: "Healthcare & Medicine",
+    displayTitle: "Healthcare & Medicine",
     description:
       "Patient care, clinical support, nursing, medicine, and healthcare careers with different training levels.",
     imageUrl:
       "https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?auto=format&fit=crop&w=1400&q=80",
   },
   {
+    slug: "legal-public-service",
     title: "Legal & Public Service",
+    displayTitle: "Legal & Public Service",
     description:
       "Legal research, client support, law, compliance, and public service career paths.",
     imageUrl:
       "https://images.unsplash.com/photo-1589829545856-d10d557cf95f?auto=format&fit=crop&w=1400&q=80",
   },
   {
+    slug: "finance-insurance",
     title: "Finance & Insurance",
+    displayTitle: "Finance & Insurance",
     description:
       "Accounting, insurance, financial analysis, risk, and money focused careers.",
     imageUrl:
       "https://images.unsplash.com/photo-1554224155-6726b3ff858f?auto=format&fit=crop&w=1400&q=80",
   },
   {
+    slug: "business-operations",
     title: "Business & Operations",
+    displayTitle: "Business & Operations",
     description:
       "Customer service, sales, project management, operations, and everyday business careers.",
     imageUrl:
       "https://images.unsplash.com/photo-1521737711867-e3b97375f902?auto=format&fit=crop&w=1400&q=80",
   },
   {
+    slug: "skilled-trades-services",
     title: "Skilled Trades & Services",
+    displayTitle: "Skilled Trades & Services",
     description:
       "Hands on careers in electrical work, plumbing, heating and cooling, repair, and field services.",
     imageUrl:
@@ -636,4 +650,8 @@ export function getCareerSection(slug: string) {
 
 export function getCareersByIndustry(industry: CareerIndustry) {
   return careerSections.filter((section) => section.category === industry);
+}
+
+export function getCareerIndustry(slug: string) {
+  return careerIndustries.find((industry) => industry.slug === slug);
 }
