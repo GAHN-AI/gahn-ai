@@ -3,7 +3,6 @@
 import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
 import { ArrowLeft, FileText, GraduationCap, Upload } from "lucide-react";
-import { useSearchParams } from "next/navigation";
 
 import LanguageSelector from "@/components/LanguageSelector";
 import { lessonIdFromParts } from "@/lib/ai/lessonEngine";
@@ -29,11 +28,7 @@ const subjects = [
 ];
 
 export default function HomeworkUploadPage() {
-  const searchParams = useSearchParams();
-
-  const [language, setLanguage] = useState(
-    searchParams.get("language") || "English"
-  );
+  const [language, setLanguage] = useState("English");
   const [subject, setSubject] = useState("Science");
   const [level, setLevel] = useState("Grade 9");
   const [topic, setTopic] = useState("");
@@ -44,12 +39,16 @@ export default function HomeworkUploadPage() {
   const [error, setError] = useState("");
 
   useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const queryLanguage = params.get("language");
     const stored = window.localStorage.getItem("gahn-language");
 
-    if (!searchParams.get("language") && stored) {
+    if (queryLanguage) {
+      setLanguage(queryLanguage);
+    } else if (stored) {
       setLanguage(stored);
     }
-  }, [searchParams]);
+  }, []);
 
   function changeLanguage(nextLanguage: string) {
     setLanguage(nextLanguage);
