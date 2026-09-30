@@ -29,7 +29,7 @@ const navLinks = [
 const worlds = [
   {
     title: "Career Skills",
-    text: "Business, leadership, entrepreneurship, communication, and job-ready skills.",
+    text: "Business, leadership, entrepreneurship, communication, and job ready skills.",
     available: true,
   },
   {
@@ -44,7 +44,7 @@ const worlds = [
   },
   {
     title: "General Knowledge",
-    text: "History, technology, communication, culture, life skills, current events, and real-world knowledge.",
+    text: "History, technology, communication, culture, life skills, current events, and real world knowledge.",
     available: false,
   },
   {
@@ -67,12 +67,12 @@ const audiences = [
     text: "Get help understanding school subjects, practice difficult concepts, and receive corrections before moving forward.",
   },
   {
-    title: "Self-Learners",
-    text: "Learn business, finance, technology, communication, books, and other real-world skills through structured learning paths.",
+    title: "Self Learners",
+    text: "Learn business, finance, technology, communication, books, and other real world skills through structured learning paths.",
   },
   {
     title: "Skill Builders",
-    text: "Use short guided lessons to improve focus, memory, decision-making, career knowledge, and practical ability over time.",
+    text: "Use short guided lessons to improve focus, memory, decision making, career knowledge, and practical ability over time.",
   },
 ];
 
@@ -94,7 +94,7 @@ const steps = [
 const faqs = [
   {
     q: "What ages is GAHN AI built for?",
-    a: "GAHN AI is built for learners ages 12 and up. It's useful for both teens and adults — whether you're studying for school, building career skills, or learning something new on your own.",
+    a: "GAHN AI is built for learners ages 12 and up. It's useful for both teens and adults, whether you're studying for school, building career skills, or learning something new on your own.",
   },
   {
     q: "What are the learning worlds?",
