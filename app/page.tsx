@@ -517,7 +517,7 @@ export default function Home() {
             <div className="mx-auto min-w-0 max-w-[860px]">
               <p className="inline-flex items-center gap-2 rounded-full border border-white/15 px-3.5 py-1.5 text-xs font-medium text-gahn-sky">
                 <span className="h-1.5 w-1.5 rounded-full bg-gahn-sky" />
-                AI-guided learning · Early access
+                AI guided learning · Early access
               </p>
 
               <h1 className="mx-auto mt-7 max-w-[820px] text-[2.6rem] font-semibold leading-[1.05] tracking-[-0.045em] text-white sm:text-6xl lg:text-[4.4rem]">
