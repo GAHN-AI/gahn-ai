@@ -110,6 +110,32 @@ export default function CareerIndustryPage() {
         </div>
       </section>
 
+      <section className="mx-auto max-w-7xl px-5 pt-9 sm:px-8">
+        <div className="rounded-[1.4rem] border border-[#D8E0EA] bg-white p-6 shadow-[0_12px_30px_rgba(11,23,57,0.05)] sm:p-7">
+          <p className="text-xs font-black uppercase tracking-[0.16em] text-[#1677FF]">
+            Skills and tools you will learn
+          </p>
+          <h2 className="mt-2 text-3xl font-black tracking-[-0.035em] text-[#0B1739]">
+            Build specific skills for this industry
+          </h2>
+          <p className="mt-3 max-w-3xl text-sm font-medium leading-7 text-[#33455F]">
+            These are the concrete concepts and tools GAHN can teach across the
+            careers in this section.
+          </p>
+
+          <div className="mt-5 flex flex-wrap gap-2.5">
+            {industry.skills.map((skill) => (
+              <span
+                key={skill}
+                className="rounded-full bg-[#E8EEF7] px-3.5 py-2 text-sm font-bold text-[#1D2C44]"
+              >
+                {skill}
+              </span>
+            ))}
+          </div>
+        </div>
+      </section>
+
       <section className="mx-auto max-w-7xl px-5 py-9 sm:px-8">
         <p className="text-xs font-black uppercase tracking-[0.16em] text-[#1677FF]">
           Career topics
@@ -147,7 +173,7 @@ export default function CareerIndustryPage() {
                 </p>
 
                 <div className="mt-4 flex flex-wrap gap-2">
-                  {career.skills.slice(0, 4).map((skill) => (
+                  {career.skills.slice(0, 6).map((skill) => (
                     <span
                       key={skill}
                       className="rounded-full bg-[#F1F5FA] px-2.5 py-1 text-xs font-bold text-[#25364F]"
