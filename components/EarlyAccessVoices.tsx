@@ -133,7 +133,7 @@ export default function EarlyAccessVoices() {
           <div className="mt-8 grid gap-4 sm:grid-cols-2">
             {loading ? (
               <div className="rounded-2xl border border-gahn-line bg-white p-5 text-sm text-gahn-slate sm:col-span-2">
-                Loading early-access feedback...
+                Loading early access feedback...
               </div>
             ) : voices.length > 0 ? (
               voices.map((voice) => (
@@ -156,7 +156,7 @@ export default function EarlyAccessVoices() {
                   No approved public comments yet.
                 </p>
                 <p className="mt-2 text-sm leading-6 text-gahn-slate">
-                  GAHN does not display fake testimonials. Approved early-access
+                  GAHN does not display fake testimonials. Approved early access
                   feedback will appear here as people submit it.
                 </p>
               </div>
