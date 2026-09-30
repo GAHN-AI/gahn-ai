@@ -21,7 +21,7 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   title: "GAHN AI",
   description:
-    "Private AI learning for careers, school, skills, books, and almost any topic, with clear step-by-step teaching in your preferred language.",
+    "Private AI learning for careers, school, skills, books, and almost any topic, with clear step by step teaching in your preferred language.",
 };
 
 export default function RootLayout({
