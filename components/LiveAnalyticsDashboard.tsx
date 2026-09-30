@@ -496,7 +496,7 @@ export default function LiveAnalyticsDashboard() {
           <div className="grid border-t border-white/10 sm:grid-cols-2 xl:grid-cols-4">
             {[
               {
-                label: "All-time visitors",
+                label: "All time visitors",
                 value: formatNumber(data.totalVisitors),
                 detail: "Unique browser visitors recorded",
               },
@@ -508,7 +508,7 @@ export default function LiveAnalyticsDashboard() {
               {
                 label: "Visitor → signup",
                 value: formatPercent(signupConversion),
-                detail: "Registered users ÷ all-time visitors",
+                detail: "Registered users ÷ all time visitors",
               },
               {
                 label: "Online now",
@@ -609,7 +609,7 @@ export default function LiveAnalyticsDashboard() {
             <MetricCard
               label="Bounce rate"
               value={formatPercent(data.bounceRate)}
-              detail="Single-page sessions"
+              detail="Single page sessions"
               Icon={Route}
             />
             <MetricCard
@@ -636,7 +636,7 @@ export default function LiveAnalyticsDashboard() {
             <div className="grid divide-y divide-[#EEF2F7]">
               {[
                 ["Top traffic source", topSource],
-                ["Most-viewed page", topPage],
+                ["Most viewed page", topPage],
                 ["Top country", topCountry],
                 ["New visitors", formatNumber(data.newVisitors)],
                 ["Returning visitors", formatNumber(data.returningVisitors)],
@@ -741,7 +741,7 @@ export default function LiveAnalyticsDashboard() {
           <Panel title="Entry pages" subtitle="First page opened in each session.">
             <RankingList items={data.entryPages} />
           </Panel>
-          <Panel title="Countries" subtitle="Country-level audience distribution.">
+          <Panel title="Countries" subtitle="Country level audience distribution.">
             <RankingList items={data.countries} />
           </Panel>
           <Panel title="Devices" subtitle="Desktop, mobile, and tablet usage.">
@@ -764,7 +764,7 @@ export default function LiveAnalyticsDashboard() {
               <Panel title="Campaigns" subtitle="UTM campaign attribution.">
                 <RankingList items={data.campaigns} />
               </Panel>
-              <Panel title="Cities" subtitle="Available city-level audience data.">
+              <Panel title="Cities" subtitle="Available city level audience data.">
                 <RankingList items={data.cities} />
               </Panel>
               <Panel title="Languages" subtitle="Browser language preferences.">
@@ -889,9 +889,9 @@ export default function LiveAnalyticsDashboard() {
               >
                 <div className="grid divide-y divide-[#EEF2F7] text-sm">
                   {[
-                    ["All-time visitors", "Unique browser IDs recorded since GAHN analytics started."],
+                    ["All time visitors", "Unique browser IDs recorded since GAHN analytics started."],
                     ["Registered users", "Profiles created by people who signed up."],
-                    ["Visitor → signup", "Registered users divided by all-time unique visitors."],
+                    ["Visitor → signup", "Registered users divided by all time unique visitors."],
                     ["Bounce rate", "Sessions that viewed only one page."],
                     ["Returning", "Visitors in the selected period who were seen before."],
                     ["Online now", "Sessions active within roughly the last 45 seconds."],
