@@ -17,7 +17,7 @@ import {
 } from "lucide-react";
 
 import LanguageSelector from "@/components/LanguageSelector";
-import { careerSections } from "@/lib/careerCatalog";
+import { careerIndustries, careerSections } from "@/lib/careerCatalog";
 import { getLearningSections } from "@/lib/learningCatalog";
 import { isLearningWorldAvailable } from "@/lib/learningWorldAvailability";
 
@@ -31,16 +31,16 @@ type LearningWorld = {
 const learningWorlds: Record<string, LearningWorld> = {
   "career-skills": {
     title: "Career Skills",
-    eyebrow: "Technology careers",
+    eyebrow: "Career industries",
     description:
-      "Explore technology roles and the concrete skills used in each career. Career Skills is intentionally focused on technology for this MVP.",
+      "Explore careers across technology, healthcare, law, finance, business, and skilled trades. Each industry is organized into specific jobs and the real skills used in that work.",
     Icon: Briefcase,
   },
   "school-help": {
     title: "School Help",
     eyebrow: "School Help",
     description:
-      "Choose a school subject and level, then open a private lesson workspace for one-on-one AI teaching.",
+      "Choose a school subject and level, then open a private lesson workspace for one on one AI teaching.",
     Icon: GraduationCap,
   },
   "brain-development": {
@@ -374,16 +374,16 @@ export default function LearningWorldPage() {
             <section className="flex flex-col gap-5 lg:flex-row lg:items-end lg:justify-between">
               <div className="max-w-3xl">
                 <p className="text-xs font-black uppercase tracking-[0.16em] text-[#1677FF]">
-                  Technology
+                  Career Skills
                 </p>
                 <h2 className="mt-2 text-3xl font-black tracking-[-0.035em] text-[#0B1739]">
-                  Choose a technology role
+                  Choose an industry, then choose a career
                 </h2>
                 <p className="mt-3 text-sm font-medium leading-7 text-[#33455F]">
-                  Career Skills contains one section for this MVP: Technology.
-                  Each role uses a role-specific skill list aligned with
-                  Coursera Career Academy, while Maya remains the single Career
-                  Skills instructor across the whole section.
+                  Every career is grouped into an industry so you can find the
+                  kind of work you want faster. The original technology careers
+                  are all still here, with more common careers added across
+                  healthcare, law, finance, business, and skilled trades.
                 </p>
               </div>
 
@@ -392,27 +392,63 @@ export default function LearningWorldPage() {
                 <input
                   value={careerSearch}
                   onChange={(event) => setCareerSearch(event.target.value)}
-                  placeholder="Search technology roles or skills"
+                  placeholder="Search careers, industries, or skills"
                   className="w-full rounded-xl border border-[#C9D6E5] bg-white py-3 pl-11 pr-4 text-sm font-semibold text-[#0B1739] outline-none focus:border-[#1677FF] focus:ring-2 focus:ring-[#1677FF]/10"
                 />
               </label>
             </section>
 
-            <section className="mt-7 grid gap-5 md:grid-cols-2 xl:grid-cols-3">
-              {filteredCareers.map((section) => (
-                <CareerCard
-                  key={section.slug}
-                  href={`/learn/career-skills/${section.slug}?language=${encodeURIComponent(language)}`}
-                  title={section.title}
-                  category={section.category}
-                  description={section.description}
-                  imageUrl={section.imageUrl}
-                  level={section.level}
-                  pathLabel={section.pathLabel}
-                  skills={section.skills}
-                />
-              ))}
-            </section>
+            {careerIndustries.map((industry) => {
+              const careers = filteredCareers.filter(
+                (career) => career.category === industry.title
+              );
+
+              if (careers.length === 0) return null;
+
+              return (
+                <section key={industry.title} className="mt-10">
+                  <div className="overflow-hidden rounded-[1.45rem] border border-[#CFE0F5] bg-white">
+                    <div className="grid gap-0 md:grid-cols-[220px_minmax(0,1fr)]">
+                      <img
+                        src={industry.imageUrl}
+                        alt=""
+                        className="h-44 w-full object-cover md:h-full"
+                      />
+                      <div className="p-6 sm:p-7">
+                        <p className="text-xs font-black uppercase tracking-[0.16em] text-[#1677FF]">
+                          Career industry
+                        </p>
+                        <h3 className="mt-2 text-2xl font-black tracking-[-0.03em] text-[#0B1739]">
+                          {industry.title}
+                        </h3>
+                        <p className="mt-2 max-w-3xl text-sm font-medium leading-7 text-[#33455F]">
+                          {industry.description}
+                        </p>
+                        <p className="mt-3 text-xs font-black uppercase tracking-[0.1em] text-[#65758A]">
+                          {careers.length} career{careers.length === 1 ? "" : "s"}
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="mt-5 grid gap-5 md:grid-cols-2 xl:grid-cols-3">
+                    {careers.map((section) => (
+                      <CareerCard
+                        key={section.slug}
+                        href={`/learn/career-skills/${section.slug}?language=${encodeURIComponent(language)}`}
+                        title={section.title}
+                        category={section.category}
+                        description={section.description}
+                        imageUrl={section.imageUrl}
+                        level={section.level}
+                        pathLabel={section.pathLabel}
+                        skills={section.skills}
+                      />
+                    ))}
+                  </div>
+                </section>
+              );
+            })}
 
             {filteredCareers.length === 0 && (
               <div className="mt-7 rounded-2xl border border-dashed border-[#BFD3ED] bg-white px-6 py-12 text-center">
@@ -420,12 +456,11 @@ export default function LearningWorldPage() {
                   No career matched that search
                 </h3>
                 <p className="mt-2 text-sm font-medium text-[#52647C]">
-                  Try a role or skill such as software development, Python,
-                  cybersecurity, cloud, data, machine learning, or UX.
+                  Try a job, industry, or skill such as software development,
+                  nursing, law, underwriting, project management, or electrical work.
                 </p>
               </div>
             )}
-          </>
         ) : (
           <section>
             <p className="text-xs font-black uppercase tracking-[0.18em] text-[#1677FF]">
