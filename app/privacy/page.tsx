@@ -378,7 +378,7 @@ export default function PrivacyPage() {
             </p>
           </Section>
 
-          <Section title="13. Third-party links">
+          <Section title="13. Third party links">
             <p>
               The platform may contain links to websites or services operated by
               other companies. Their privacy practices are governed by their own
