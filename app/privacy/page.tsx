@@ -140,7 +140,7 @@ export default function PrivacyPage() {
               <li>Create, authenticate, maintain, and secure your account.</li>
 
               <li>
-                Provide AI-guided lessons, practice exercises, corrections,
+                Provide AI guided lessons, practice exercises, corrections,
                 recommendations, notes, recaps, and progress tracking.
               </li>
 
@@ -264,7 +264,7 @@ export default function PrivacyPage() {
 
           <Section title="7. Service providers">
             <p>
-              GAHN AI may use third-party providers to operate the platform,
+              GAHN AI may use third party providers to operate the platform,
               including services for hosting, databases, authentication,
               payment processing, email delivery, analytics, error monitoring,
               and security.
