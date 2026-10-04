@@ -249,7 +249,7 @@ export default function LearningWorldPage() {
               <p className="mt-4 text-sm font-black text-[#8DB8FF]">
                 {available
                   ? `One instructor for this learning world · Teaching in ${language}`
-                  : "Locked for the MVP · Preview only"}
+                  : "This learning world is not available"}
               </p>
             </div>
           </div>
@@ -307,10 +307,10 @@ export default function LearningWorldPage() {
                 ? "Choose what you need help with"
                 : `Explore what ${title} will teach`}
             </h2>
-            <p className="mt-2 max-w-3xl text-sm font-medium leading-6 text-[#33455F]">
+            <p className="mt-2 max-w-3xl text-sm font-medium leading-6 text-black">
               {world === "school-help"
                 ? "Choose a subject, then select the level you want the private instructor to teach."
-                : "These paths are shown as a preview only. The learning world remains locked until it is ready for testing."}
+                : `Choose a learning path inside ${title} and start learning with the private instructor.`}
             </p>
 
             <div className="mt-7 grid gap-5 md:grid-cols-2 xl:grid-cols-3">
