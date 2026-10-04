@@ -101,7 +101,8 @@ export default function CareerIndustryPage() {
           <img
             src={industry.imageUrl}
             alt=""
-            className="h-[230px] w-full rounded-[12px] object-cover"
+            className="w-full rounded-[12px] object-cover"
+            style={{ height: 210, maxHeight: 210 }}
           />
         </section>
 
@@ -116,17 +117,18 @@ export default function CareerIndustryPage() {
             Open a role to see the work, practical skills, and private lesson for that career.
           </p>
 
-          <div className="mt-6 grid gap-5 md:grid-cols-2 xl:grid-cols-3">
+          <div className="mt-6 grid items-start gap-5 md:grid-cols-2 xl:grid-cols-3">
             {careers.map((career) => (
               <Link
                 key={career.slug}
                 href={`/learn/career-skills/${career.slug}?language=${encodeURIComponent(language)}`}
-                className="group overflow-hidden rounded-[14px] border border-[#E1E3E8] bg-white transition hover:-translate-y-0.5 hover:border-[#BDD3F7] hover:shadow-[0_12px_28px_rgba(29,30,36,0.07)]"
+                className="group self-start overflow-hidden rounded-[14px] border border-[#E1E3E8] bg-white transition hover:-translate-y-0.5 hover:border-[#BDD3F7] hover:shadow-[0_12px_28px_rgba(29,30,36,0.07)]"
               >
                 <img
                   src={career.imageUrl}
                   alt=""
-                  className="h-[170px] w-full object-cover transition-transform duration-300 group-hover:scale-[1.025]"
+                  className="w-full object-cover transition-transform duration-300 group-hover:scale-[1.025]"
+                  style={{ height: 180, maxHeight: 180 }}
                 />
 
                 <div className="p-5">
