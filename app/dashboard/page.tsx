@@ -58,7 +58,7 @@ const worlds: {
     title: "School Help",
     subtitle: "Math, science, English, reading, study skills, and homework help.",
     eyebrow: "SCHOOL WORLD",
-    imageUrl: "https://images.unsplash.com/photo-1523050854058-8df90110c9f1?auto=format&fit=crop&w=1200&q=82",
+    imageUrl: "https://images.unsplash.com/photo-1522202176988-66273c2fd55f?auto=format&fit=crop&w=1200&q=82",
   },
   {
     slug: "brain-development",
@@ -144,7 +144,8 @@ function WorldPreview({
       <img
         src={imageUrl}
         alt=""
-        className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-[1.025]"
+        className="w-full object-cover transition-transform duration-300 group-hover:scale-[1.025]"
+        style={{ height: 220 }}
       />
       <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(5,12,30,0.02)_20%,rgba(5,12,30,0.62)_100%)]" />
       <div className="absolute bottom-4 left-4 right-4 flex items-end justify-between gap-3">
