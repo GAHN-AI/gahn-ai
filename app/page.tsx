@@ -30,12 +30,7 @@ const shell = "mx-auto w-full max-w-[1280px] px-5 sm:px-8 lg:px-12";
 
 const navLinks = [
   { href: "#top", label: "Home" },
-  { href: "#how-gahn-teaches", label: "How GAHN Teaches" },
-  { href: "#learning-tools", label: "Learning Tools" },
-  { href: "#learning-system", label: "Learning System" },
   { href: "#learning-worlds", label: "Learning Worlds" },
-  { href: "#how-it-works", label: "How It Works" },
-  { href: "#learner-voices", label: "Learner Voices" },
   { href: "#faq", label: "FAQ" },
 ];
 
@@ -118,10 +113,10 @@ function Logo() {
       <img
         src="/logo/favicon.png"
         alt=""
-        className="h-9 w-9 rounded-full object-cover"
+        className="h-8 w-8 rounded-full object-cover"
       />
       <span>
-        <span className="block text-[18px] font-semibold tracking-[-0.45px] text-[#0B1739]">
+        <span className="block text-[17px] font-semibold tracking-[-0.4px] text-[#0B1739]">
           GAHN AI
         </span>
         <span className="hidden text-[8px] font-semibold uppercase tracking-[0.19em] text-black sm:block">
@@ -136,7 +131,7 @@ function AnnouncementBar() {
   return (
     <a
       href="#learning-worlds"
-      className="flex min-h-[42px] items-center justify-center bg-gradient-to-r from-[#77E8E9] via-[#6ABAFB] to-[#1F6BFF] px-5 text-center text-[13px] font-medium leading-5 text-white"
+      className="flex min-h-[38px] items-center justify-center bg-[#05070B] px-5 text-center text-[13px] font-medium leading-5 text-white"
     >
       Five learning worlds. One private AI learning system.
       <ArrowRight className="ml-2 h-3.5 w-3.5" />
@@ -150,13 +145,13 @@ function SiteHeader() {
   return (
     <>
       <AnnouncementBar />
-      <header className="sticky top-0 z-50 border-b border-[#EEEEF0] bg-white/95 backdrop-blur-xl">
-        <div className={cx(shell, "flex h-[76px] items-center justify-between gap-6")}>
+      <header className="sticky top-0 z-50 border-b border-[#E8EDF5] bg-white/95 backdrop-blur-xl">
+        <div className={cx(shell, "flex h-[64px] items-center justify-between gap-5")}>
           <a href="#top" aria-label="GAHN AI home">
             <Logo />
           </a>
 
-          <nav className="hidden items-center gap-4 text-[12px] font-medium leading-6 text-black xl:flex">
+          <nav className="hidden items-center gap-8 text-[14px] font-medium leading-6 text-black lg:flex">
             {navLinks.map((item) => (
               <a key={item.label} href={item.href} className="transition-opacity hover:opacity-60">
                 {item.label}
@@ -167,7 +162,7 @@ function SiteHeader() {
             </Link>
           </nav>
 
-          <div className="hidden items-center gap-3 xl:flex">
+          <div className="hidden items-center gap-2 lg:flex">
             <Link
               href="/login"
               className="inline-flex h-9 items-center justify-center px-2 text-[14px] font-medium text-black"
@@ -185,7 +180,7 @@ function SiteHeader() {
           <button
             type="button"
             onClick={() => setOpen((value) => !value)}
-            className="grid h-10 w-10 place-items-center rounded-full border border-[#D8E6FA] text-black xl:hidden"
+            className="grid h-9 w-9 place-items-center rounded-lg border border-[#D8E6FA] text-black lg:hidden"
             aria-label={open ? "Close navigation" : "Open navigation"}
             aria-expanded={open}
           >
@@ -194,7 +189,7 @@ function SiteHeader() {
         </div>
 
         {open && (
-          <div className="border-t border-[#D8E6FA] bg-white xl:hidden">
+          <div className="border-t border-[#D8E6FA] bg-white lg:hidden">
             <div className={cx(shell, "py-5")}>
               <div className="grid gap-1">
                 {navLinks.map((item) => (
@@ -814,7 +809,7 @@ function DarkPrinciplesSection() {
             <h2 className="mt-5 max-w-[430px] text-[36px] font-medium leading-[48px] tracking-[-0.9px]">
               A stronger learning experience than passive content.
             </h2>
-            <p className="mt-5 max-w-[430px] text-[15.75px] leading-7 text-white/65">
+            <p className="mt-5 max-w-[430px] text-[15.75px] leading-7 text-white">
               GAHN is being built around interaction, correction, and repeated understanding checks instead of long streams of content.
             </p>
           </div>
@@ -831,7 +826,7 @@ function DarkPrinciplesSection() {
                   </span>
                   <div>
                     <h3 className="text-[16px] font-medium">{title}</h3>
-                    <p className="mt-2 text-[14px] leading-6 text-white/60">{text}</p>
+                    <p className="mt-2 text-[14px] leading-6 text-white">{text}</p>
                   </div>
                 </div>
               </div>
@@ -844,45 +839,54 @@ function DarkPrinciplesSection() {
 }
 
 function LearningSystemMap() {
-  const items = [
-    ["Lesson", "Explain and demonstrate"],
-    ["Practice", "Learner responds"],
-    ["Notes", "Save key ideas"],
-    ["Review", "Retrieve old material"],
-    ["Progress", "Keep learning history"],
+  const flow = [
+    {
+      title: "The AI instructor teaches the concept",
+      text: "GAHN explains the topic using clear language, examples, diagrams, equations, code, or the school material you uploaded.",
+    },
+    {
+      title: "You answer a question",
+      text: "You respond instead of only reading or watching, so the lesson can check what you actually understand.",
+    },
+    {
+      title: "GAHN checks your understanding",
+      text: "Your response is evaluated to find the exact idea, step, or skill that is still confusing.",
+    },
+    {
+      title: "The instructor teaches the weak point again",
+      text: "GAHN changes the explanation, gives another example, and focuses on the part you missed.",
+    },
+    {
+      title: "You practice the concept again",
+      text: "You get another question or activity and keep practicing until you can use the idea correctly.",
+    },
+    {
+      title: "Your lesson record is saved",
+      text: "GAHN keeps your notes, mistakes, mastered concepts, and topics to review so the next session can continue from where you stopped.",
+    },
   ];
 
   return (
-    <div className="relative mx-auto mt-14 max-w-[960px]">
-      <div className="sequence-rings absolute inset-0" />
-      <div className="relative grid gap-5 lg:grid-cols-[1fr_220px_1fr] lg:items-center">
-        <div className="grid gap-4">
-          {items.slice(0, 2).map(([title, text]) => (
-            <div key={title} className="sequence-mini-card rounded-lg bg-white p-4">
-              <p className="text-[13px] font-medium text-black">{title}</p>
-              <p className="mt-1 text-[12px] leading-5 text-black">{text}</p>
+    <div className="mx-auto mt-14 max-w-[980px]">
+      <div className="grid gap-4 md:grid-cols-2">
+        {flow.map((item, index) => (
+          <motion.div
+            key={item.title}
+            initial={{ opacity: 0, y: 18 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, amount: 0.3 }}
+            transition={{ duration: 0.42, delay: index * 0.06 }}
+            className="rounded-lg border border-[#D8E6FA] bg-white p-5 text-left shadow-[0_10px_28px_rgba(31,107,255,0.06)]"
+          >
+            <div className="flex items-start gap-4">
+              <span className="mt-1 h-10 w-1.5 shrink-0 rounded-full bg-[#1677FF]" />
+              <div>
+                <h3 className="text-[16px] font-semibold text-black">{item.title}</h3>
+                <p className="mt-2 text-[14px] leading-6 text-black">{item.text}</p>
+              </div>
             </div>
-          ))}
-        </div>
-
-        <div className="mx-auto grid h-[180px] w-[180px] place-items-center rounded-full border border-[#C7D7EF] bg-white shadow-[0_12px_30px_rgba(31,107,255,0.10)]">
-          <div className="text-center">
-            <div className="mx-auto grid h-12 w-12 place-items-center rounded-xl bg-[#0B1739] text-white">
-              <Sparkles className="h-5 w-5" />
-            </div>
-            <p className="mt-3 text-[13px] font-semibold text-black">Learner memory</p>
-            <p className="mt-1 text-[11px] text-black">One learning record</p>
-          </div>
-        </div>
-
-        <div className="grid gap-4">
-          {items.slice(2).map(([title, text]) => (
-            <div key={title} className="sequence-mini-card rounded-lg bg-white p-4">
-              <p className="text-[13px] font-medium text-black">{title}</p>
-              <p className="mt-1 text-[12px] leading-5 text-black">{text}</p>
-            </div>
-          ))}
-        </div>
+          </motion.div>
+        ))}
       </div>
     </div>
   );
@@ -890,18 +894,19 @@ function LearningSystemMap() {
 
 function SystemSection() {
   return (
-    <section id="learning-system" className="scroll-mt-24 relative overflow-hidden bg-white py-24 sm:py-32">
-      <div className="sequence-ui-grid absolute inset-x-0 top-0 h-full opacity-30 [mask-image:linear-gradient(to_bottom,transparent,black_22%,black_78%,transparent)]" />
-      <div className={cx(shell, "relative text-center")}>
-        <span className="inline-flex rounded-full border border-[#EEEEF0] bg-white px-3 py-1 text-[12px] font-medium text-black">
-          Connected learning
-        </span>
-        <h2 className="mx-auto mt-5 max-w-[650px] text-[34px] font-medium leading-[48px] tracking-[-0.9px] text-black sm:text-[36px]">
-          One learning system instead of disconnected tools.
-        </h2>
-        <p className="mx-auto mt-5 max-w-[560px] text-[15.75px] leading-7 text-black">
-          Lessons, practice, notes, review, and progress can share the same learner context so each session starts with what GAHN already knows about your learning.
-        </p>
+    <section id="learning-system" className="scroll-mt-24 bg-[#F3F8FF] py-24 sm:py-32">
+      <div className={shell}>
+        <div className="mx-auto max-w-[760px] text-center">
+          <span className="inline-flex rounded-full border border-[#CFE0F8] bg-white px-3 py-1 text-[12px] font-medium text-black">
+            What happens in a GAHN lesson
+          </span>
+          <h2 className="mx-auto mt-5 max-w-[700px] text-[34px] font-medium leading-[48px] tracking-[-0.9px] text-black sm:text-[36px]">
+            GAHN teaches, checks your answer, fixes misunderstandings, and keeps the lesson moving.
+          </h2>
+          <p className="mx-auto mt-5 max-w-[650px] text-[15.75px] leading-7 text-black">
+            The MVP is built around one private teaching loop. You learn a concept, respond, get checked, receive a different explanation when needed, practice again, and carry your learning history into the next session.
+          </p>
+        </div>
 
         <LearningSystemMap />
       </div>
@@ -1200,25 +1205,24 @@ function FaqSection() {
 
 function ClosingCta() {
   return (
-    <section className="relative overflow-hidden bg-[#0B4FD6] py-24 text-white sm:py-28">
-      <div className="sequence-rings absolute inset-0 opacity-80" />
-      <div className={cx(shell, "relative text-center")}>
+    <section className="bg-[#05070B] py-24 text-white sm:py-28">
+      <div className={cx(shell, "text-center")}>
         <h2 className="mx-auto max-w-[650px] text-[36px] font-medium leading-[48px] tracking-[-0.9px] sm:text-[38px]">
           Start learning with GAHN AI.
         </h2>
-        <p className="mx-auto mt-5 max-w-[520px] text-[15.75px] leading-7 text-white/70">
-          Choose from all five learning worlds, start free, and upgrade when you want the full private instructor experience.
+        <p className="mx-auto mt-5 max-w-[560px] text-[15.75px] leading-7 text-white">
+          Choose a learning world, start a lesson, and use a private AI instructor that teaches, checks your understanding, re teaches when needed, and gives you practice.
         </p>
         <div className="mt-8 flex flex-col justify-center gap-3 sm:flex-row">
           <Link
             href="/signup"
-            className="inline-flex h-10 items-center justify-center rounded-full bg-[#1F6BFF] px-6 text-[14px] font-medium text-white transition-colors hover:bg-[#1858E0]"
+            className="inline-flex h-10 items-center justify-center rounded-full bg-[#1677FF] px-6 text-[14px] font-medium text-white transition-colors hover:bg-[#0E63E8]"
           >
             Start free
           </Link>
           <Link
             href="/pricing"
-            className="inline-flex h-10 items-center justify-center rounded-full border border-white/20 px-6 text-[14px] font-medium text-white"
+            className="inline-flex h-10 items-center justify-center rounded-full border border-white/30 px-6 text-[14px] font-medium text-white transition-colors hover:border-white/60"
           >
             View pricing
           </Link>
