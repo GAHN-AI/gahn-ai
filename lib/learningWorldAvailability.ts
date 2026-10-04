@@ -1,6 +1,9 @@
 export const AVAILABLE_LEARNING_WORLDS = [
   "career-skills",
   "school-help",
+  "brain-development",
+  "general-knowledge",
+  "book-intelligence",
 ] as const;
 
 export type AvailableLearningWorld =
@@ -18,7 +21,7 @@ export const LEARNING_WORLD_AVAILABILITY: Record<
 > = {
   "career-skills": { available: true, label: "Available" },
   "school-help": { available: true, label: "Available" },
-  "brain-development": { available: false, label: "Not available" },
-  "general-knowledge": { available: false, label: "Not available" },
-  "book-intelligence": { available: false, label: "Not available" },
+  "brain-development": { available: true, label: "Available" },
+  "general-knowledge": { available: true, label: "Available" },
+  "book-intelligence": { available: true, label: "Available" },
 };
