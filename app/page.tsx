@@ -493,14 +493,11 @@ function TutorFlowUI() {
   return (
     <div className="relative mx-auto w-full max-w-[475px]">
       <div className="sequence-card rounded-lg bg-white p-4 sm:p-5">
-        <div className="flex items-center justify-between border-b border-[#EEEEF0] pb-4">
-          <div>
-            <p className="text-[11px] text-black">Learning session</p>
-            <p className="mt-1 text-[15px] font-medium text-black">
-              Teaching loop
-            </p>
-          </div>
-          <Target className="h-5 w-5 text-[#1F6BFF]" />
+        <div className="border-b border-[#EEEEF0] pb-4">
+          <p className="text-[11px] text-black">Learning session</p>
+          <p className="mt-1 text-[15px] font-medium text-black">
+            Teaching loop
+          </p>
         </div>
 
         <div className="mt-4 grid gap-2">
@@ -511,21 +508,17 @@ function TutorFlowUI() {
               whileInView={{ opacity: 1, x: 0 }}
               viewport={{ once: true, amount: 0.4 }}
               transition={{ duration: 0.4, delay: index * 0.07 }}
-              className="flex items-center gap-3 rounded-md border border-[#D8E6FA] px-3 py-3"
+              className="flex items-start gap-3 rounded-md border border-[#D8E6FA] px-4 py-3.5"
             >
-              <span className="grid h-7 w-7 shrink-0 place-items-center rounded-full bg-[#EEF4FF] text-[11px] font-semibold text-[#1F6BFF]">
-                {index + 1}
-              </span>
-              <div className="min-w-0 flex-1">
+              <span className="mt-1.5 h-2.5 w-2.5 shrink-0 rounded-full bg-[#1F6BFF]" />
+              <div className="min-w-0">
                 <p className="text-[13px] font-medium text-black">{title}</p>
-                <p className="text-[11px] leading-4 text-black">{text}</p>
+                <p className="mt-0.5 text-[11px] leading-4 text-black">{text}</p>
               </div>
-              {index < steps.length - 1 && <ArrowRight className="h-3.5 w-3.5 text-[#B9BAC0]" />}
             </motion.div>
           ))}
         </div>
       </div>
-
     </div>
   );
 }
@@ -812,15 +805,13 @@ function DarkPrinciplesSection() {
           </div>
 
           <div className="grid gap-4">
-            {principles.map(([title, text], index) => (
+            {principles.map(([title, text]) => (
               <div
                 key={title}
                 className="rounded-lg border border-white/10 bg-[#0A3FAE] p-5"
               >
                 <div className="flex items-start gap-4">
-                  <span className="grid h-8 w-8 shrink-0 place-items-center rounded-full bg-white text-[12px] font-semibold text-black">
-                    {index + 1}
-                  </span>
+                  <span className="mt-2 h-2.5 w-2.5 shrink-0 rounded-full bg-white" />
                   <div>
                     <h3 className="text-[16px] font-medium">{title}</h3>
                     <p className="mt-2 text-[14px] leading-6 text-white">{text}</p>
@@ -1202,7 +1193,7 @@ function FaqSection() {
 
 function ClosingCta() {
   return (
-    <section className="bg-[#05070B] py-24 text-white sm:py-28">
+    <section className="bg-[#0B4FD6] py-24 text-white sm:py-28">
       <div className={cx(shell, "text-center")}>
         <h2 className="mx-auto max-w-[650px] text-[36px] font-medium leading-[48px] tracking-[-0.9px] sm:text-[38px]">
           Start learning with GAHN AI.
