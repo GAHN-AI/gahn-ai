@@ -5,29 +5,32 @@ import { useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import type { LucideIcon } from "lucide-react";
 import {
+  Bell,
   BookOpen,
   Brain,
-  Briefcase,
-  CheckCircle2,
-  Crown,
-  Flame,
+  BriefcaseBusiness,
+  ChevronDown,
+  Clock3,
+  FileText,
   Globe2,
   GraduationCap,
   LayoutDashboard,
-  ListChecks,
-  LockKeyhole,
   LogOut,
   MessageSquareText,
-  StickyNote,
+  NotebookPen,
+  Rocket,
+  Search,
+  Sparkles,
   TrendingUp,
+  Upload,
 } from "lucide-react";
 
 import { supabase } from "@/lib/supabaseClient";
-import { LEARNING_WORLD_AVAILABILITY } from "@/lib/learningWorldAvailability";
 
-const navItems: { label: string; Icon: LucideIcon; href: string }[] = [
-  { label: "Dashboard", Icon: LayoutDashboard, href: "/dashboard" },
-  { label: "My Notes", Icon: StickyNote, href: "/notes" },
+const sidebarItems: { label: string; Icon: LucideIcon; href: string }[] = [
+  { label: "Recents", Icon: Clock3, href: "/dashboard" },
+  { label: "Learning Worlds", Icon: LayoutDashboard, href: "#learning-worlds" },
+  { label: "My Notes", Icon: NotebookPen, href: "/notes" },
   { label: "Study Guides", Icon: BookOpen, href: "/study-guides" },
   { label: "Progress", Icon: TrendingUp, href: "/progress" },
   { label: "Feedback", Icon: MessageSquareText, href: "/feedback" },
@@ -37,48 +40,43 @@ const worlds: {
   slug: string;
   Icon: LucideIcon;
   title: string;
-  text: string;
-  imageUrl?: string;
+  subtitle: string;
+  eyebrow: string;
 }[] = [
   {
     slug: "career-skills",
-    Icon: Briefcase,
+    Icon: BriefcaseBusiness,
     title: "Career Skills",
-    text: "Explore technology careers, understand what each role does, and see the concrete skills used in the field.",
-    imageUrl:
-      "https://images.unsplash.com/photo-1521737711867-e3b97375f902?auto=format&fit=crop&w=1400&q=80",
+    subtitle: "Business, technology, finance, communication, and job skills.",
+    eyebrow: "CAREER WORLD",
   },
   {
     slug: "school-help",
     Icon: GraduationCap,
     title: "School Help",
-    text: "Get one on one help with math, science, English, reading, homework, study skills, quizzes, and tests.",
-    imageUrl:
-      "https://images.unsplash.com/photo-1503676260728-1c00da094a0b?auto=format&fit=crop&w=1400&q=80",
+    subtitle: "Math, science, English, reading, study skills, and homework help.",
+    eyebrow: "SCHOOL WORLD",
   },
   {
     slug: "brain-development",
     Icon: Brain,
     title: "Brain Development",
-    text: "Memory, focus, discipline, reasoning, and learning performance.",
-    imageUrl:
-      "https://images.unsplash.com/photo-1559757148-5c350d0d3c56?auto=format&fit=crop&w=1400&q=80",
+    subtitle: "Memory, focus, reasoning, habits, and learning performance.",
+    eyebrow: "BRAIN WORLD",
   },
   {
     slug: "general-knowledge",
     Icon: Globe2,
     title: "General Knowledge",
-    text: "History, technology, economics, geography, culture, and life knowledge.",
-    imageUrl:
-      "https://images.unsplash.com/photo-1526778548025-fa2f459cd5c1?auto=format&fit=crop&w=1400&q=80",
+    subtitle: "History, technology, culture, life skills, and useful knowledge.",
+    eyebrow: "KNOWLEDGE WORLD",
   },
   {
     slug: "book-intelligence",
     Icon: BookOpen,
     title: "Book Intelligence",
-    text: "Book summaries, chapter breakdowns, vocabulary, quizzes, and analysis.",
-    imageUrl:
-      "https://images.unsplash.com/photo-1495446815901-a7297e633e8d?auto=format&fit=crop&w=1400&q=80",
+    subtitle: "Learn from books through guided explanations and practice.",
+    eyebrow: "BOOK WORLD",
   },
 ];
 
@@ -98,11 +96,6 @@ type ProgressRow = {
   last_activity_at: string;
 };
 
-type EvidenceRow = {
-  created_at: string;
-  correct: boolean | null;
-};
-
 function getInitials(name: string) {
   return (
     String(name)
@@ -113,35 +106,6 @@ function getInitials(name: string) {
       .slice(0, 2)
       .toUpperCase() || "AI"
   );
-}
-
-function localDateKey(value: Date) {
-  return [
-    value.getFullYear(),
-    String(value.getMonth() + 1).padStart(2, "0"),
-    String(value.getDate()).padStart(2, "0"),
-  ].join("-");
-}
-
-function calculateStreak(activityTimes: string[]) {
-  const activityDays = new Set(
-    activityTimes.map((value) => localDateKey(new Date(value)))
-  );
-
-  const cursor = new Date();
-
-  if (!activityDays.has(localDateKey(cursor))) {
-    cursor.setDate(cursor.getDate() - 1);
-  }
-
-  let streak = 0;
-
-  while (activityDays.has(localDateKey(cursor))) {
-    streak += 1;
-    cursor.setDate(cursor.getDate() - 1);
-  }
-
-  return streak;
 }
 
 function resumeHref(row: ProgressRow | null) {
@@ -160,6 +124,164 @@ function resumeHref(row: ProgressRow | null) {
   )}&topicSlug=${encodeURIComponent(row.topic_slug)}`;
 }
 
+function WorldPreview({
+  slug,
+  Icon,
+  title,
+}: {
+  slug: string;
+  Icon: LucideIcon;
+  title: string;
+}) {
+  const common =
+    "relative h-[220px] overflow-hidden rounded-[14px] border border-[#E7E7EA] bg-white";
+
+  if (slug === "career-skills") {
+    return (
+      <div className={common}>
+        <div className="absolute inset-x-0 top-0 h-20 bg-[linear-gradient(90deg,#0B5CFF,#59A2FF)]" />
+        <div className="absolute left-6 top-7 flex h-11 w-11 items-center justify-center rounded-xl bg-white text-[#0B5CFF] shadow-sm">
+          <Icon className="h-5 w-5" />
+        </div>
+        <div className="absolute inset-x-6 bottom-5 rounded-xl border border-[#E7E7EA] bg-white p-4 shadow-[0_10px_28px_rgba(23,25,35,0.08)]">
+          <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-[#6C6D75]">
+            Career path
+          </p>
+          <p className="mt-1 text-base font-semibold text-[#1D1E24]">{title}</p>
+          <div className="mt-4 grid grid-cols-3 gap-2">
+            <span className="h-2 rounded-full bg-[#DCEAFF]" />
+            <span className="h-2 rounded-full bg-[#BFD7FF]" />
+            <span className="h-2 rounded-full bg-[#92BCFF]" />
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  if (slug === "school-help") {
+    return (
+      <div className={common}>
+        <div className="absolute inset-0 bg-[#F8FAFF]" />
+        <div className="absolute left-5 top-5 right-5 rounded-xl border border-[#DDE4F0] bg-white p-4">
+          <div className="flex items-center gap-3">
+            <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-[#EEF4FF] text-[#0B5CFF]">
+              <Icon className="h-5 w-5" />
+            </div>
+            <div>
+              <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-[#6C6D75]">
+                School help
+              </p>
+              <p className="text-sm font-semibold text-[#1D1E24]">Choose a subject</p>
+            </div>
+          </div>
+        </div>
+        <div className="absolute bottom-5 left-5 right-5 grid grid-cols-2 gap-3">
+          {["Math", "Science", "English", "Reading"].map((item) => (
+            <div
+              key={item}
+              className="rounded-lg border border-[#E7E7EA] bg-white px-3 py-3 text-xs font-medium text-[#1D1E24]"
+            >
+              {item}
+            </div>
+          ))}
+        </div>
+      </div>
+    );
+  }
+
+  if (slug === "brain-development") {
+    return (
+      <div className={common}>
+        <div className="absolute inset-0 bg-[linear-gradient(135deg,#F7FAFF,#EEF4FF)]" />
+        <div className="absolute left-5 top-5 right-5 flex items-center justify-between">
+          <div>
+            <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-[#6C6D75]">
+              Learning practice
+            </p>
+            <p className="mt-1 text-base font-semibold text-[#1D1E24]">Build stronger skills</p>
+          </div>
+          <Icon className="h-6 w-6 text-[#0B5CFF]" />
+        </div>
+        <div className="absolute left-5 right-5 top-[92px] grid gap-3">
+          {[
+            ["Focus", "Short guided practice"],
+            ["Memory", "Recall what you learned"],
+            ["Reasoning", "Work through a challenge"],
+          ].map(([label, text]) => (
+            <div key={label} className="flex items-center justify-between rounded-lg border border-[#E1E7F0] bg-white px-4 py-3">
+              <div>
+                <p className="text-xs font-semibold text-[#1D1E24]">{label}</p>
+                <p className="mt-0.5 text-[11px] text-[#6C6D75]">{text}</p>
+              </div>
+              <span className="h-2.5 w-2.5 rounded-sm bg-[#0B5CFF]" />
+            </div>
+          ))}
+        </div>
+      </div>
+    );
+  }
+
+  if (slug === "general-knowledge") {
+    return (
+      <div className={common}>
+        <div className="absolute inset-0 bg-[#FAFAFB]" />
+        <div className="absolute left-5 top-5 flex h-10 w-10 items-center justify-center rounded-lg bg-[#EEF4FF] text-[#0B5CFF]">
+          <Icon className="h-5 w-5" />
+        </div>
+        <p className="absolute left-5 top-[76px] text-base font-semibold text-[#1D1E24]">
+          Explore useful knowledge
+        </p>
+        <div className="absolute bottom-5 left-5 right-5 grid grid-cols-3 gap-2">
+          {["History", "Technology", "Culture", "Economics", "Geography", "Life skills"].map(
+            (item) => (
+              <div
+                key={item}
+                className="rounded-lg border border-[#E7E7EA] bg-white px-2 py-3 text-center text-[11px] font-medium text-[#1D1E24]"
+              >
+                {item}
+              </div>
+            )
+          )}
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className={common}>
+      <div className="absolute inset-0 bg-[linear-gradient(180deg,#FFFFFF,#F4F7FF)]" />
+      <div className="absolute left-5 top-5 flex items-center gap-3">
+        <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-[#EEF4FF] text-[#0B5CFF]">
+          <Icon className="h-5 w-5" />
+        </div>
+        <div>
+          <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-[#6C6D75]">
+            Book learning
+          </p>
+          <p className="text-sm font-semibold text-[#1D1E24]">Read with guidance</p>
+        </div>
+      </div>
+      <div className="absolute bottom-5 left-5 right-5 space-y-3">
+        {[88, 72, 58].map((width, index) => (
+          <div
+            key={width}
+            className="rounded-lg border border-[#E7E7EA] bg-white p-3 shadow-sm"
+          >
+            <div
+              className="h-2 rounded-full bg-[#D9E8FF]"
+              style={{ width: `${width}%` }}
+            />
+            <div
+              className="mt-2 h-2 rounded-full bg-[#ECEEF2]"
+              style={{ width: `${Math.max(width - 18, 38)}%` }}
+            />
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
 export default function DashboardPage() {
   const router = useRouter();
 
@@ -167,12 +289,11 @@ export default function DashboardPage() {
   const [avatarUrl, setAvatarUrl] = useState("");
   const [planName, setPlanName] = useState("Explore");
   const [planId, setPlanId] = useState("explore");
-  const [mayaRemainingMinutes, setMayaRemainingMinutes] = useState<number | null>(null);
-  const [mayaLimitMinutes, setMayaLimitMinutes] = useState<number | null>(null);
   const [progressRows, setProgressRows] = useState<ProgressRow[]>([]);
-  const [evidenceRows, setEvidenceRows] = useState<EvidenceRow[]>([]);
   const [notesCount, setNotesCount] = useState(0);
   const [studyGuidesCount, setStudyGuidesCount] = useState(0);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [view, setView] = useState<"worlds" | "activity">("worlds");
 
   const initials = useMemo(() => getInitials(fullName), [fullName]);
 
@@ -187,16 +308,9 @@ export default function DashboardPage() {
         return;
       }
 
-      const [
-        subscriptionResponse,
-        mayaUsageResponse,
-        progressResult,
-        evidenceResult,
-        notesResult,
-        guidesResult,
-      ] = await Promise.all([
+      const [subscriptionResponse, progressResult, notesResult, guidesResult] =
+        await Promise.all([
           fetch("/api/subscription/current"),
-          fetch("/api/liveavatar/usage"),
           supabase
             .from("learning_progress")
             .select(
@@ -204,12 +318,6 @@ export default function DashboardPage() {
             )
             .eq("user_id", user.id)
             .order("last_activity_at", { ascending: false }),
-          supabase
-            .from("lesson_evidence")
-            .select("created_at, correct")
-            .eq("user_id", user.id)
-            .order("created_at", { ascending: false })
-            .limit(1000),
           supabase
             .from("learner_notes")
             .select("id", { count: "exact", head: true })
@@ -226,22 +334,7 @@ export default function DashboardPage() {
         setPlanName(subscription.entitlements?.name || "Explore");
       }
 
-      if (mayaUsageResponse.ok) {
-        const mayaUsage = await mayaUsageResponse.json();
-        setMayaRemainingMinutes(
-          typeof mayaUsage.remainingSeconds === "number"
-            ? Math.ceil(mayaUsage.remainingSeconds / 60)
-            : null
-        );
-        setMayaLimitMinutes(
-          typeof mayaUsage.limitSeconds === "number"
-            ? Math.ceil(mayaUsage.limitSeconds / 60)
-            : null
-        );
-      }
-
       setProgressRows((progressResult.data || []) as ProgressRow[]);
-      setEvidenceRows((evidenceResult.data || []) as EvidenceRow[]);
       setNotesCount(notesResult.count || 0);
       setStudyGuidesCount(guidesResult.count || 0);
 
@@ -292,36 +385,29 @@ export default function DashboardPage() {
     );
   });
 
+  const recentLearning = meaningfulProgressRows[0] || null;
   const activeLessons = meaningfulProgressRows.filter(
     (row) => row.status === "in_progress"
   );
   const masteredLessons = meaningfulProgressRows.filter(
     (row) => row.mastery_state === "mastered"
   );
-  const reviewLessons = meaningfulProgressRows.filter(
-    (row) => row.mastery_state === "needs_review"
-  );
-
-  const recentLearning = meaningfulProgressRows[0] || null;
-  const nextLearning = reviewLessons[0] || activeLessons[0] || null;
 
   const totalAttempts = meaningfulProgressRows.reduce(
     (sum, row) => sum + (row.attempts_count || 0),
     0
   );
-  const totalCorrect = meaningfulProgressRows.reduce(
-    (sum, row) => sum + (row.correct_count || 0),
-    0
-  );
-  const totalRetries = meaningfulProgressRows.reduce(
-    (sum, row) => sum + (row.retry_count || 0),
-    0
-  );
-  const accuracy =
-    totalAttempts > 0 ? Math.round((totalCorrect / totalAttempts) * 100) : 0;
-  const streak = calculateStreak(
-    evidenceRows.map((row) => row.created_at)
-  );
+
+  const filteredWorlds = worlds.filter((world) => {
+    const query = searchQuery.trim().toLowerCase();
+    if (!query) return true;
+
+    return (
+      world.title.toLowerCase().includes(query) ||
+      world.subtitle.toLowerCase().includes(query) ||
+      world.eyebrow.toLowerCase().includes(query)
+    );
+  });
 
   async function handleLogout() {
     await supabase.auth.signOut();
@@ -330,421 +416,349 @@ export default function DashboardPage() {
   }
 
   return (
-    <main className="min-h-screen bg-[#F4F7FB] font-sans text-black">
-      <div className="grid min-h-screen lg:grid-cols-[250px_minmax(0,1fr)]">
-        <aside className="bg-[#07162F] px-5 py-6 text-white lg:sticky lg:top-0 lg:h-screen lg:overflow-y-auto">
-          <Link href="/" className="flex items-center gap-3">
-            <img
-              src="/logo/favicon.png"
-              alt="GAHN AI"
-              className="h-12 w-12 rounded-full object-cover"
-            />
-            <div className="min-w-0">
-              <h1 className="truncate text-xl font-black text-white">GAHN AI</h1>
-              <p className="text-[8px] font-bold uppercase tracking-[0.16em] text-white/80">
-                Global AI Human Helper Network
-              </p>
-            </div>
+    <main className="min-h-screen bg-white font-sans text-[#1D1E24]">
+      <div className="min-h-screen lg:grid lg:grid-cols-[300px_minmax(0,1fr)]">
+        <aside className="hidden min-h-screen border-r border-[#E7E7EA] bg-white lg:flex lg:flex-col lg:sticky lg:top-0 lg:h-screen">
+          <div className="flex items-center justify-between px-5 pt-5">
+            <Link href="/profile" className="flex min-w-0 items-center gap-3">
+              {avatarUrl ? (
+                <img
+                  src={avatarUrl}
+                  alt={fullName}
+                  className="h-9 w-9 rounded-lg object-cover"
+                />
+              ) : (
+                <div className="grid h-9 w-9 place-items-center rounded-lg bg-[#EEF4FF] text-xs font-bold text-[#0B5CFF]">
+                  {initials}
+                </div>
+              )}
+              <div className="min-w-0">
+                <div className="flex items-center gap-1.5">
+                  <p className="truncate text-sm font-semibold text-[#1D1E24]">
+                    {fullName}
+                  </p>
+                  <ChevronDown className="h-3.5 w-3.5 text-[#6C6D75]" />
+                </div>
+                <p className="mt-0.5 truncate text-xs text-[#6C6D75]">{planName}</p>
+              </div>
+            </Link>
+
+            <button
+              type="button"
+              aria-label="Notifications"
+              className="grid h-9 w-9 place-items-center rounded-lg text-[#4F515A] transition hover:bg-[#F6F6F8]"
+            >
+              <Bell className="h-4 w-4" />
+            </button>
+          </div>
+
+          <Link
+            href="/pricing"
+            className="mx-4 mt-5 flex items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium text-[#6F45E8] transition hover:bg-[#F6F2FF]"
+          >
+            <Rocket className="h-4 w-4" />
+            {planId === "explore" ? "Upgrade your learning plan" : "View your learning plan"}
           </Link>
 
-          <nav className="mt-8 grid gap-2">
-            {navItems.map(({ label, Icon, href }, index) => (
+          <div className="relative mx-4 mt-3">
+            <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-[#9698A1]" />
+            <input
+              value={searchQuery}
+              onChange={(event) => setSearchQuery(event.target.value)}
+              placeholder="Search learning worlds"
+              className="h-10 w-full rounded-lg border border-[#DEDFE4] bg-white pl-9 pr-3 text-sm outline-none transition placeholder:text-[#9698A1] focus:border-[#A9C9FF] focus:ring-2 focus:ring-[#EAF2FF]"
+            />
+          </div>
+
+          <nav className="mt-4 space-y-1 px-3">
+            {sidebarItems.map(({ label, Icon, href }, index) => (
               <Link
                 key={label}
                 href={href}
-                className={`flex items-center gap-3 rounded-xl px-4 py-3 text-sm font-bold ${
+                className={`flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition ${
                   index === 0
-                    ? "bg-white text-[#07162F]"
-                    : "text-white hover:bg-white/10"
+                    ? "bg-[#F1F1F3] text-[#1D1E24]"
+                    : "text-[#4F515A] hover:bg-[#F6F6F8] hover:text-[#1D1E24]"
                 }`}
               >
-                <Icon className="h-4 w-4 shrink-0" />
+                <Icon className="h-[18px] w-[18px]" />
                 {label}
               </Link>
             ))}
           </nav>
 
-          <div className="mt-8 rounded-2xl border border-white/15 bg-white/10 p-5">
-            <div className="grid h-10 w-10 place-items-center rounded-xl bg-white text-[#07162F]">
-              <Crown className="h-4 w-4" />
+          <div className="mt-5 border-t border-[#EEEEF1] px-5 pt-5">
+            <p className="text-xs font-semibold uppercase tracking-[0.12em] text-[#92949D]">
+              Learning
+            </p>
+            <div className="mt-3 space-y-2 text-sm">
+              <div className="flex items-center justify-between text-[#4F515A]">
+                <span>Saved notes</span>
+                <span className="font-semibold text-[#1D1E24]">{notesCount}</span>
+              </div>
+              <div className="flex items-center justify-between text-[#4F515A]">
+                <span>Study guides</span>
+                <span className="font-semibold text-[#1D1E24]">{studyGuidesCount}</span>
+              </div>
             </div>
-            <p className="mt-4 text-xs font-black uppercase tracking-[0.14em] text-white/80">
-              Current plan
-            </p>
-            <h2 className="mt-1 text-xl font-black text-white">{planName}</h2>
-            <p className="mt-2 text-sm leading-6 text-white">
-              {planId === "explore"
-                ? "Explore keeps the low cost parts of GAHN free. Maya Live AI Instructor is unlocked with Learner Plus."
-                : "Your paid plan controls the learning tools and AI usage available to your account."}
-            </p>
-
-            {planId !== "explore" &&
-              mayaRemainingMinutes !== null &&
-              mayaLimitMinutes !== null && (
-                <div className="mt-4 rounded-xl border border-white/20 bg-white/10 px-3 py-2">
-                  <p className="text-xs font-bold text-white/80">
-                    Maya time
-                  </p>
-                  <p className="mt-1 text-sm font-black text-white">
-                    {mayaRemainingMinutes} of {mayaLimitMinutes} minutes remaining
-                  </p>
-                </div>
-              )}
-            <Link
-              href="/pricing"
-              className="mt-5 block rounded-xl bg-white px-4 py-3 text-center text-sm font-black text-[#07162F]"
-            >
-              View Plan
-            </Link>
           </div>
 
-          <button
-            type="button"
-            onClick={handleLogout}
-            className="mt-6 flex w-full items-center justify-center gap-2 rounded-xl border border-white/20 px-4 py-3 text-sm font-bold text-white hover:bg-white/10"
-          >
-            <LogOut className="h-4 w-4" />
-            Log out
-          </button>
+          <div className="mt-auto p-4">
+            <div className="rounded-xl border border-[#E7E7EA] bg-[#FAFAFB] p-4">
+              <div className="flex items-center gap-2 text-[#0B5CFF]">
+                <Sparkles className="h-4 w-4" />
+                <p className="text-xs font-semibold uppercase tracking-[0.12em]">
+                  GAHN AI
+                </p>
+              </div>
+              <p className="mt-3 text-sm font-semibold text-[#1D1E24]">
+                Private learning workspace
+              </p>
+              <p className="mt-1 text-xs leading-5 text-[#6C6D75]">
+                Your worlds, lessons, notes, study guides, and progress in one place.
+              </p>
+            </div>
+
+            <button
+              type="button"
+              onClick={handleLogout}
+              className="mt-3 flex w-full items-center gap-2 rounded-lg px-3 py-2.5 text-sm font-medium text-[#5C5E66] transition hover:bg-[#F6F6F8] hover:text-[#1D1E24]"
+            >
+              <LogOut className="h-4 w-4" />
+              Log out
+            </button>
+          </div>
         </aside>
 
-        <section className="min-w-0 px-5 py-6 sm:px-8 lg:px-10 lg:py-8">
-          <header className="rounded-[1.6rem] border border-[#D8E0EA] bg-white p-5 shadow-[0_12px_32px_rgba(11,23,57,0.05)] sm:p-6">
-            <div className="flex flex-col gap-5 sm:flex-row sm:items-center sm:justify-between">
-              <div>
-                <p className="text-xs font-black uppercase tracking-[0.18em] text-[#1677FF]">
-                  Learning Dashboard
-                </p>
-                <h2 className="mt-2 text-3xl font-black tracking-[-0.04em] text-[#0B1739]">
-                  Welcome back, {fullName}
-                </h2>
-                <p className="mt-2 text-sm font-medium leading-6 text-black">
-                  Dashboard numbers now come from connected learning activity:
-                  checked responses, mastery evidence, saved materials, and real
-                  instructor sessions, not from simply opening a page.
-                </p>
-              </div>
-
-              <Link
-                href="/profile"
-                className="flex items-center gap-3 rounded-2xl border border-[#D8E0EA] bg-[#F4F7FB] p-3"
-              >
-                {avatarUrl ? (
-                  <img
-                    src={avatarUrl}
-                    alt={fullName}
-                    className="h-12 w-12 rounded-full object-cover"
-                  />
-                ) : (
-                  <div className="grid h-12 w-12 place-items-center rounded-full bg-[#1677FF] text-sm font-black text-white">
-                    {initials}
-                  </div>
-                )}
-                <div>
-                  <p className="text-sm font-black text-black">{fullName}</p>
-                  <p className="text-xs font-bold text-black">{planName}</p>
-                </div>
-              </Link>
-            </div>
+        <section className="min-w-0 bg-white">
+          <header className="flex items-center justify-between border-b border-[#EEEEF1] px-5 py-4 lg:hidden">
+            <Link href="/" className="flex items-center gap-2">
+              <img
+                src="/logo/favicon.png"
+                alt="GAHN AI"
+                className="h-8 w-8 rounded-full object-cover"
+              />
+              <span className="font-semibold">GAHN AI</span>
+            </Link>
+            <Link
+              href="/profile"
+              className="grid h-9 w-9 place-items-center rounded-lg bg-[#EEF4FF] text-xs font-bold text-[#0B5CFF]"
+            >
+              {initials}
+            </Link>
           </header>
 
-          <section className="mt-6 overflow-hidden rounded-[1.5rem] bg-[#07162F] text-white shadow-[0_14px_34px_rgba(7,22,47,0.12)]">
-            <div className="grid sm:grid-cols-2 xl:grid-cols-4">
-              {[
-                {
-                  Icon: Flame,
-                  value: streak,
-                  label: "Learning streak",
-                  detail: streak === 1 ? "day with learning evidence" : "days with learning evidence",
-                },
-                {
-                  Icon: ListChecks,
-                  value: totalAttempts,
-                  label: "Questions answered",
-                  detail: "checked learning responses",
-                },
-                {
-                  Icon: TrendingUp,
-                  value: `${accuracy}%`,
-                  label: "Answer accuracy",
-                  detail: totalAttempts ? `${totalCorrect} correct of ${totalAttempts}` : "waiting for checked answers",
-                },
-                {
-                  Icon: CheckCircle2,
-                  value: masteredLessons.length,
-                  label: "Skills mastered",
-                  detail: "requires mastery evidence",
-                },
-              ].map(({ Icon, value, label, detail }, index) => (
-                <div
-                  key={label}
-                  className={`p-5 sm:p-6 ${
-                    index > 0 ? "border-t border-white/10 sm:border-t-0 sm:border-l" : ""
-                  } ${
-                    index === 2 ? "sm:border-t sm:border-l-0 xl:border-t-0 xl:border-l" : ""
-                  } ${
-                    index === 3 ? "sm:border-t sm:border-l xl:border-t-0" : ""
+          <div className="mx-auto w-full max-w-[1320px] px-5 py-8 sm:px-8 lg:px-10 lg:py-10">
+            <div>
+              <h1 className="text-[30px] font-semibold tracking-[-0.035em] text-[#1D1E24]">
+                Recents
+              </h1>
+
+              <div className="mt-5 grid gap-3 md:grid-cols-3">
+                <Link
+                  href="/learn/career-skills"
+                  className="group flex min-h-[76px] items-center gap-4 rounded-xl border border-[#E2E3E7] bg-white px-5 py-4 transition hover:border-[#C6D9FF] hover:shadow-[0_8px_24px_rgba(29,30,36,0.05)]"
+                >
+                  <span className="grid h-9 w-9 place-items-center rounded-lg border border-[#D7E5FF] text-[#0B5CFF]">
+                    <Sparkles className="h-4 w-4" />
+                  </span>
+                  <span>
+                    <span className="block text-sm font-semibold text-[#1D1E24]">
+                      Start a new lesson
+                    </span>
+                    <span className="mt-0.5 block text-xs text-[#6C6D75]">
+                      Choose a learning world
+                    </span>
+                  </span>
+                </Link>
+
+                <Link
+                  href={resumeHref(recentLearning)}
+                  className="group flex min-h-[76px] items-center gap-4 rounded-xl border border-[#E2E3E7] bg-white px-5 py-4 transition hover:border-[#C6D9FF] hover:shadow-[0_8px_24px_rgba(29,30,36,0.05)]"
+                >
+                  <span className="grid h-9 w-9 place-items-center rounded-lg border border-[#D7E5FF] text-[#0B5CFF]">
+                    <Clock3 className="h-4 w-4" />
+                  </span>
+                  <span>
+                    <span className="block text-sm font-semibold text-[#1D1E24]">
+                      Continue learning
+                    </span>
+                    <span className="mt-0.5 block max-w-[220px] truncate text-xs text-[#6C6D75]">
+                      {recentLearning?.lesson_title || "Your next lesson will appear here"}
+                    </span>
+                  </span>
+                </Link>
+
+                <Link
+                  href="/learn/school-help/homework-upload"
+                  className="group flex min-h-[76px] items-center gap-4 rounded-xl border border-[#E2E3E7] bg-white px-5 py-4 transition hover:border-[#C6D9FF] hover:shadow-[0_8px_24px_rgba(29,30,36,0.05)]"
+                >
+                  <span className="grid h-9 w-9 place-items-center rounded-lg border border-[#D7E5FF] text-[#0B5CFF]">
+                    <Upload className="h-4 w-4" />
+                  </span>
+                  <span>
+                    <span className="block text-sm font-semibold text-[#1D1E24]">
+                      Upload homework
+                    </span>
+                    <span className="mt-0.5 block text-xs text-[#6C6D75]">
+                      Learn from an assignment you already have
+                    </span>
+                  </span>
+                </Link>
+              </div>
+            </div>
+
+            <section id="learning-worlds" className="mt-7">
+              <div className="flex items-center gap-2">
+                <button
+                  type="button"
+                  onClick={() => setView("worlds")}
+                  className={`rounded-lg px-4 py-2 text-sm font-medium transition ${
+                    view === "worlds"
+                      ? "bg-[#ECECEF] text-[#1D1E24]"
+                      : "text-[#5C5E66] hover:bg-[#F6F6F8]"
                   }`}
                 >
-                  <div className="flex items-center gap-2 text-[#8DB8FF]">
-                    <Icon className="h-4 w-4" />
-                    <p className="text-xs font-black uppercase tracking-[0.12em]">
-                      {label}
-                    </p>
-                  </div>
-                  <p className="mt-4 text-3xl font-black text-white">{value}</p>
-                  <p className="mt-1 text-xs font-medium leading-5 text-white/70">
-                    {detail}
-                  </p>
-                </div>
-              ))}
-            </div>
-          </section>
-
-          <section className="mt-9">
-            <div className="flex flex-col gap-3 lg:flex-row lg:items-end lg:justify-between">
-              <div>
-                <p className="text-xs font-black uppercase tracking-[0.18em] text-[#1677FF]">
-                  Learning Worlds
-                </p>
-                <h3 className="mt-2 text-2xl font-black tracking-[-0.03em] text-[#0B1739]">
-                  Choose where you want to learn
-                </h3>
-                <p className="mt-2 max-w-2xl text-sm font-medium leading-6 text-[#52647C]">
-                  Every learning world uses the same visual system. Career Skills
-                  and School Help are available now; the remaining worlds stay
-                  visible but locked until they are ready.
-                </p>
+                  Learning worlds
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setView("activity")}
+                  className={`rounded-lg px-4 py-2 text-sm font-medium transition ${
+                    view === "activity"
+                      ? "bg-[#ECECEF] text-[#1D1E24]"
+                      : "text-[#5C5E66] hover:bg-[#F6F6F8]"
+                  }`}
+                >
+                  Your activity
+                </button>
               </div>
-            </div>
 
-            <div className="mt-6 grid gap-5 md:grid-cols-2 xl:grid-cols-3">
-              {worlds.map(({ slug, Icon, title, text, imageUrl }) => {
-                const available =
-                  LEARNING_WORLD_AVAILABILITY[slug]?.available === true;
-
-                const card = (
-                  <>
-                    <div className="relative h-44 overflow-hidden bg-[#DDE8F7]">
-                      {imageUrl && (
-                        <img
-                          src={imageUrl}
-                          alt=""
-                          className={`h-full w-full object-cover ${
-                            available
-                              ? "transition-transform duration-300 group-hover:scale-[1.02]"
-                              : "brightness-[0.72]"
-                          }`}
-                        />
-                      )}
-                      <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(7,22,47,0.04)_10%,rgba(7,22,47,0.72)_100%)]" />
-                      <div className="absolute bottom-4 left-5 right-5 flex items-center justify-between gap-3">
-                        <div className="grid h-10 w-10 place-items-center rounded-xl bg-white text-[#07162F]">
-                          <Icon className="h-4 w-4" />
-                        </div>
-                        <span className="inline-flex items-center gap-1.5 rounded-full bg-white/95 px-3 py-1 text-[10px] font-black uppercase tracking-[0.1em] text-[#07162F]">
-                          {!available && <LockKeyhole className="h-3 w-3" />}
-                          {available ? "Available" : "Locked"}
-                        </span>
-                      </div>
-                    </div>
-
-                    <div className="p-5">
-                      <h4 className="text-xl font-black text-[#0B1739]">
-                        {title}
-                      </h4>
-                      <p className="mt-2 min-h-[72px] text-sm font-medium leading-6 text-[#52647C]">
-                        {text}
-                      </p>
-                      <div
-                        className={`mt-5 flex items-center justify-between text-sm font-black ${
-                          available ? "text-[#1677FF]" : "text-[#65758A]"
-                        }`}
+              {view === "worlds" ? (
+                <>
+                  <div className="mt-6 grid gap-x-5 gap-y-8 md:grid-cols-2 xl:grid-cols-3">
+                    {filteredWorlds.map(({ slug, Icon, title, subtitle, eyebrow }) => (
+                      <Link
+                        key={slug}
+                        href={`/learn/${slug}`}
+                        className="group block min-w-0"
                       >
-                        <span>
-                          {available
-                            ? "Enter learning world"
-                            : "Not available yet"}
-                        </span>
-                        {available ? (
-                          <span>→</span>
-                        ) : (
-                          <LockKeyhole className="h-4 w-4" />
-                        )}
+                        <div className="transition duration-200 group-hover:-translate-y-0.5 group-hover:shadow-[0_14px_30px_rgba(29,30,36,0.08)]">
+                          <WorldPreview slug={slug} Icon={Icon} title={title} />
+                        </div>
+                        <div className="mt-3 px-0.5">
+                          <p className="text-[11px] font-semibold uppercase tracking-[0.13em] text-[#8B8D96]">
+                            {eyebrow}
+                          </p>
+                          <h2 className="mt-1 text-[16px] font-semibold text-[#1D1E24]">
+                            {title}
+                          </h2>
+                          <p className="mt-1 text-[13px] leading-5 text-[#6C6D75]">
+                            {subtitle}
+                          </p>
+                        </div>
+                      </Link>
+                    ))}
+                  </div>
+
+                  {filteredWorlds.length === 0 && (
+                    <div className="mt-8 rounded-xl border border-dashed border-[#D9DADE] bg-[#FAFAFB] p-8 text-center">
+                      <p className="text-sm font-semibold text-[#1D1E24]">
+                        No learning world matches “{searchQuery}”.
+                      </p>
+                      <button
+                        type="button"
+                        onClick={() => setSearchQuery("")}
+                        className="mt-2 text-sm font-medium text-[#0B5CFF]"
+                      >
+                        Clear search
+                      </button>
+                    </div>
+                  )}
+                </>
+              ) : (
+                <div className="mt-6 grid gap-5 md:grid-cols-2 xl:grid-cols-3">
+                  <Link
+                    href={resumeHref(recentLearning)}
+                    className="rounded-xl border border-[#E2E3E7] bg-white p-5 transition hover:border-[#C6D9FF] hover:shadow-[0_8px_24px_rgba(29,30,36,0.05)]"
+                  >
+                    <p className="text-xs font-semibold uppercase tracking-[0.12em] text-[#8B8D96]">
+                      Most recent
+                    </p>
+                    <h3 className="mt-3 text-lg font-semibold text-[#1D1E24]">
+                      {recentLearning?.lesson_title || "No lesson started yet"}
+                    </h3>
+                    <p className="mt-2 text-sm leading-6 text-[#6C6D75]">
+                      {recentLearning
+                        ? recentLearning.topic
+                        : "Open a learning world and start your first lesson."}
+                    </p>
+                  </Link>
+
+                  <Link
+                    href="/progress"
+                    className="rounded-xl border border-[#E2E3E7] bg-white p-5 transition hover:border-[#C6D9FF] hover:shadow-[0_8px_24px_rgba(29,30,36,0.05)]"
+                  >
+                    <p className="text-xs font-semibold uppercase tracking-[0.12em] text-[#8B8D96]">
+                      Progress
+                    </p>
+                    <p className="mt-3 text-3xl font-semibold tracking-[-0.04em] text-[#1D1E24]">
+                      {masteredLessons.length}
+                    </p>
+                    <p className="mt-1 text-sm text-[#6C6D75]">
+                      mastered skill{masteredLessons.length === 1 ? "" : "s"}
+                    </p>
+                  </Link>
+
+                  <div className="rounded-xl border border-[#E2E3E7] bg-white p-5">
+                    <p className="text-xs font-semibold uppercase tracking-[0.12em] text-[#8B8D96]">
+                      Learning activity
+                    </p>
+                    <div className="mt-4 grid grid-cols-2 gap-3">
+                      <div className="rounded-lg bg-[#F7F7F8] p-3">
+                        <p className="text-2xl font-semibold text-[#1D1E24]">
+                          {activeLessons.length}
+                        </p>
+                        <p className="mt-1 text-xs text-[#6C6D75]">active lessons</p>
+                      </div>
+                      <div className="rounded-lg bg-[#F7F7F8] p-3">
+                        <p className="text-2xl font-semibold text-[#1D1E24]">
+                          {totalAttempts}
+                        </p>
+                        <p className="mt-1 text-xs text-[#6C6D75]">checked answers</p>
                       </div>
                     </div>
-                  </>
-                );
+                  </div>
 
-                return available ? (
                   <Link
-                    key={slug}
-                    href={`/learn/${slug}`}
-                    className="group overflow-hidden rounded-[1.5rem] border border-[#D8E0EA] bg-white shadow-[0_14px_34px_rgba(11,23,57,0.06)] transition-[transform,border-color,box-shadow] hover:-translate-y-0.5 hover:border-[#9CC4F7] hover:shadow-[0_18px_38px_rgba(11,23,57,0.09)]"
+                    href="/notes"
+                    className="rounded-xl border border-[#E2E3E7] bg-white p-5 transition hover:border-[#C6D9FF]"
                   >
-                    {card}
+                    <FileText className="h-5 w-5 text-[#0B5CFF]" />
+                    <h3 className="mt-4 text-base font-semibold text-[#1D1E24]">
+                      Saved notes
+                    </h3>
+                    <p className="mt-1 text-sm text-[#6C6D75]">
+                      {notesCount} note{notesCount === 1 ? "" : "s"} saved to your account
+                    </p>
                   </Link>
-                ) : (
-                  <div
-                    key={slug}
-                    aria-disabled="true"
-                    className="overflow-hidden rounded-[1.5rem] border border-[#D8E0EA] bg-white shadow-[0_14px_34px_rgba(11,23,57,0.06)]"
+
+                  <Link
+                    href="/study-guides"
+                    className="rounded-xl border border-[#E2E3E7] bg-white p-5 transition hover:border-[#C6D9FF]"
                   >
-                    {card}
-                  </div>
-                );
-              })}
-            </div>
-          </section>
-
-          <section className="mt-8 grid gap-4 xl:grid-cols-2">
-            <Link
-              href={resumeHref(recentLearning)}
-              className="rounded-[1.4rem] border border-[#BFD3ED] bg-white p-6 shadow-[0_10px_28px_rgba(11,23,57,0.04)]"
-            >
-              <p className="text-xs font-black uppercase tracking-[0.16em] text-[#1677FF]">
-                Learning Overview
-              </p>
-              <h3 className="mt-3 text-xl font-black text-[#0B1739]">
-                {recentLearning?.lesson_title || "No lesson started yet"}
-              </h3>
-              <p className="mt-2 text-sm font-medium leading-6 text-black">
-                {recentLearning
-                  ? `${recentLearning.topic} · ${recentLearning.mastery_state?.replace(
-                      "_",
-                      " "
-                    ) || "learning"} · ${recentLearning.correct_count}/${recentLearning.attempts_count} checked answers`
-                  : "Open Career Skills or School Help and start your first private lesson."}
-              </p>
-              <p className="mt-4 text-sm font-black text-[#1677FF]">
-                {recentLearning ? "Continue learning →" : "Start learning →"}
-              </p>
-            </Link>
-
-            <Link
-              href={resumeHref(nextLearning)}
-              className="rounded-[1.4rem] border border-[#D8E0EA] bg-[#0B1739] p-6 text-white shadow-[0_10px_28px_rgba(11,23,57,0.08)]"
-            >
-              <p className="text-xs font-black uppercase tracking-[0.16em] text-[#8DB8FF]">
-                What To Do Next
-              </p>
-              <h3 className="mt-3 text-xl font-black text-white">
-                {nextLearning?.lesson_title || "Choose your first learning world"}
-              </h3>
-              <p className="mt-2 text-sm font-medium leading-6 text-white">
-                {reviewLessons.length
-                  ? "This lesson has saved evidence that needs review."
-                  : activeLessons.length
-                    ? "Continue the lesson you already started."
-                    : "Start with Career Skills or School Help."}
-              </p>
-              <p className="mt-4 text-sm font-black text-[#8DB8FF]">
-                Open next step →
-              </p>
-            </Link>
-
-            <Link
-              href="/progress"
-              className="rounded-[1.4rem] border border-[#D8E0EA] bg-white p-6"
-            >
-              <p className="text-xs font-black uppercase tracking-[0.16em] text-[#1677FF]">
-                Mastery Evidence
-              </p>
-              <h3 className="mt-3 text-xl font-black text-[#0B1739]">
-                {masteredLessons.length} mastered · {reviewLessons.length} need review
-              </h3>
-              <p className="mt-2 text-sm font-medium leading-6 text-black">
-                These numbers come from saved lesson states and checked learning
-                activity. GAHN does not invent a progress percentage.
-              </p>
-              <p className="mt-4 text-sm font-black text-[#1677FF]">
-                View progress →
-              </p>
-            </Link>
-
-            <Link
-              href="/notes"
-              className="rounded-[1.4rem] border border-[#D8E0EA] bg-white p-6"
-            >
-              <p className="text-xs font-black uppercase tracking-[0.16em] text-[#1677FF]">
-                Saved Notes
-              </p>
-              <h3 className="mt-3 text-xl font-black text-[#0B1739]">
-                {notesCount} note{notesCount === 1 ? "" : "s"}
-              </h3>
-              <p className="mt-2 text-sm font-medium leading-6 text-black">
-                Notes are saved to your account and stay connected to your
-                learning history.
-              </p>
-              <p className="mt-4 text-sm font-black text-[#1677FF]">
-                Open notes →
-              </p>
-            </Link>
-          </section>
-
-          <section className="mt-8 grid gap-4 lg:grid-cols-[0.9fr_1.1fr]">
-            <div className="rounded-[1.4rem] border border-[#D8E0EA] bg-white p-6">
-              <p className="text-xs font-black uppercase tracking-[0.16em] text-[#1677FF]">
-                Learning Status
-              </p>
-              <div className="mt-5 grid grid-cols-3 gap-3 text-center">
-                {[
-                  ["Active", activeLessons.length],
-                  ["Mastered", masteredLessons.length],
-                  ["Review", reviewLessons.length],
-                ].map(([label, value]) => (
-                  <div
-                    key={String(label)}
-                    className="rounded-xl bg-[#F4F7FB] p-4"
-                  >
-                    <p className="text-2xl font-black text-[#0B1739]">
-                      {value}
+                    <BookOpen className="h-5 w-5 text-[#0B5CFF]" />
+                    <h3 className="mt-4 text-base font-semibold text-[#1D1E24]">
+                      Study guides
+                    </h3>
+                    <p className="mt-1 text-sm text-[#6C6D75]">
+                      {studyGuidesCount} guide{studyGuidesCount === 1 ? "" : "s"} saved
                     </p>
-                    <p className="mt-1 text-xs font-black uppercase tracking-[0.08em] text-black">
-                      {label}
-                    </p>
-                  </div>
-                ))}
-              </div>
-              <p className="mt-4 text-sm font-medium leading-6 text-black">
-                Status changes only when GAHN saves real lesson activity.
-              </p>
-            </div>
-
-            <div className="rounded-[1.4rem] border border-[#BFD3ED] bg-[#EAF3FF] p-6">
-              <p className="text-xs font-black uppercase tracking-[0.16em] text-[#1677FF]">
-                Your Learning Data
-              </p>
-              <div className="mt-5 grid gap-3 sm:grid-cols-4">
-                {[
-                  ["Attempts", totalAttempts],
-                  ["Correct", totalCorrect],
-                  ["Retries", totalRetries],
-                  ["Study guides", studyGuidesCount],
-                ].map(([label, value]) => (
-                  <div key={String(label)} className="rounded-xl bg-white p-4">
-                    <p className="text-2xl font-black text-[#0B1739]">
-                      {value}
-                    </p>
-                    <p className="mt-1 text-xs font-black uppercase tracking-[0.08em] text-black">
-                      {label}
-                    </p>
-                  </div>
-                ))}
-              </div>
-              <p className="mt-4 text-sm font-medium leading-6 text-black">
-                This data comes from your account records in Supabase, not from
-                placeholder dashboard numbers.
-              </p>
-              <Link
-                href="/progress"
-                className="mt-4 inline-flex items-center gap-2 text-sm font-black text-[#0B1739]"
-              >
-                <ListChecks className="h-4 w-4" />
-                View full progress
-              </Link>
-            </div>
-          </section>
+                  </Link>
+                </div>
+              )}
+            </section>
+          </div>
         </section>
       </div>
     </main>
