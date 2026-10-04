@@ -823,7 +823,7 @@ function DarkPrinciplesSection() {
             {principles.map(([title, text], index) => (
               <div
                 key={title}
-                className="rounded-lg border border-white/10 bg-[#2A2A2F] p-5"
+                className="rounded-lg border border-white/10 bg-[#0A3FAE] p-5"
               >
                 <div className="flex items-start gap-4">
                   <span className="grid h-8 w-8 shrink-0 place-items-center rounded-full bg-white text-[12px] font-semibold text-black">
