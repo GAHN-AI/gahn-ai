@@ -14,7 +14,7 @@ import {
   FileText,
   Globe2,
   GraduationCap,
-  LayoutDashboard,
+  ClipboardCheck,
   LogOut,
   MessageSquareText,
   NotebookPen,
@@ -29,11 +29,11 @@ import { supabase } from "@/lib/supabaseClient";
 
 const sidebarItems: { label: string; Icon: LucideIcon; href: string }[] = [
   { label: "Recents", Icon: Clock3, href: "/dashboard" },
-  { label: "Learning Worlds", Icon: LayoutDashboard, href: "#learning-worlds" },
   { label: "My Notes", Icon: NotebookPen, href: "/notes" },
   { label: "Study Guides", Icon: BookOpen, href: "/study-guides" },
   { label: "Progress", Icon: TrendingUp, href: "/progress" },
   { label: "Feedback", Icon: MessageSquareText, href: "/feedback" },
+  { label: "Assigned Homework", Icon: ClipboardCheck, href: "/assigned-homework" },
 ];
 
 const worlds: {
@@ -42,6 +42,7 @@ const worlds: {
   title: string;
   subtitle: string;
   eyebrow: string;
+  imageUrl: string;
 }[] = [
   {
     slug: "career-skills",
@@ -49,6 +50,7 @@ const worlds: {
     title: "Career Skills",
     subtitle: "Business, technology, finance, communication, and job skills.",
     eyebrow: "CAREER WORLD",
+    imageUrl: "https://images.unsplash.com/photo-1522071820081-009f0129c71c?auto=format&fit=crop&w=1200&q=82",
   },
   {
     slug: "school-help",
@@ -56,6 +58,7 @@ const worlds: {
     title: "School Help",
     subtitle: "Math, science, English, reading, study skills, and homework help.",
     eyebrow: "SCHOOL WORLD",
+    imageUrl: "https://images.unsplash.com/photo-1523050854058-8df90110c9f1?auto=format&fit=crop&w=1200&q=82",
   },
   {
     slug: "brain-development",
@@ -63,6 +66,7 @@ const worlds: {
     title: "Brain Development",
     subtitle: "Memory, focus, reasoning, habits, and learning performance.",
     eyebrow: "BRAIN WORLD",
+    imageUrl: "https://images.unsplash.com/photo-1559757175-0eb30cd8c063?auto=format&fit=crop&w=1200&q=82",
   },
   {
     slug: "general-knowledge",
@@ -70,6 +74,7 @@ const worlds: {
     title: "General Knowledge",
     subtitle: "History, technology, culture, life skills, and useful knowledge.",
     eyebrow: "KNOWLEDGE WORLD",
+    imageUrl: "https://images.unsplash.com/photo-1457369804613-52c61a468e7d?auto=format&fit=crop&w=1200&q=82",
   },
   {
     slug: "book-intelligence",
@@ -77,6 +82,7 @@ const worlds: {
     title: "Book Intelligence",
     subtitle: "Learn from books through guided explanations and practice.",
     eyebrow: "BOOK WORLD",
+    imageUrl: "https://images.unsplash.com/photo-1481627834876-b7833e8f5570?auto=format&fit=crop&w=1200&q=82",
   },
 ];
 
@@ -125,158 +131,32 @@ function resumeHref(row: ProgressRow | null) {
 }
 
 function WorldPreview({
-  slug,
+  imageUrl,
   Icon,
   title,
 }: {
-  slug: string;
+  imageUrl: string;
   Icon: LucideIcon;
   title: string;
 }) {
-  const common =
-    "relative h-[220px] overflow-hidden rounded-[14px] border border-[#E7E7EA] bg-white";
-
-  if (slug === "career-skills") {
-    return (
-      <div className={common}>
-        <div className="absolute inset-x-0 top-0 h-20 bg-[linear-gradient(90deg,#0B5CFF,#59A2FF)]" />
-        <div className="absolute left-6 top-7 flex h-11 w-11 items-center justify-center rounded-xl bg-white text-[#0B5CFF] shadow-sm">
-          <Icon className="h-5 w-5" />
-        </div>
-        <div className="absolute inset-x-6 bottom-5 rounded-xl border border-[#E7E7EA] bg-white p-4 shadow-[0_10px_28px_rgba(23,25,35,0.08)]">
-          <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-[#6C6D75]">
-            Career path
-          </p>
-          <p className="mt-1 text-base font-semibold text-[#1D1E24]">{title}</p>
-          <div className="mt-4 grid grid-cols-3 gap-2">
-            <span className="h-2 rounded-full bg-[#DCEAFF]" />
-            <span className="h-2 rounded-full bg-[#BFD7FF]" />
-            <span className="h-2 rounded-full bg-[#92BCFF]" />
-          </div>
-        </div>
-      </div>
-    );
-  }
-
-  if (slug === "school-help") {
-    return (
-      <div className={common}>
-        <div className="absolute inset-0 bg-[#F8FAFF]" />
-        <div className="absolute left-5 top-5 right-5 rounded-xl border border-[#DDE4F0] bg-white p-4">
-          <div className="flex items-center gap-3">
-            <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-[#EEF4FF] text-[#0B5CFF]">
-              <Icon className="h-5 w-5" />
-            </div>
-            <div>
-              <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-[#6C6D75]">
-                School help
-              </p>
-              <p className="text-sm font-semibold text-[#1D1E24]">Choose a subject</p>
-            </div>
-          </div>
-        </div>
-        <div className="absolute bottom-5 left-5 right-5 grid grid-cols-2 gap-3">
-          {["Math", "Science", "English", "Reading"].map((item) => (
-            <div
-              key={item}
-              className="rounded-lg border border-[#E7E7EA] bg-white px-3 py-3 text-xs font-medium text-[#1D1E24]"
-            >
-              {item}
-            </div>
-          ))}
-        </div>
-      </div>
-    );
-  }
-
-  if (slug === "brain-development") {
-    return (
-      <div className={common}>
-        <div className="absolute inset-0 bg-[linear-gradient(135deg,#F7FAFF,#EEF4FF)]" />
-        <div className="absolute left-5 top-5 right-5 flex items-center justify-between">
-          <div>
-            <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-[#6C6D75]">
-              Learning practice
-            </p>
-            <p className="mt-1 text-base font-semibold text-[#1D1E24]">Build stronger skills</p>
-          </div>
-          <Icon className="h-6 w-6 text-[#0B5CFF]" />
-        </div>
-        <div className="absolute left-5 right-5 top-[92px] grid gap-3">
-          {[
-            ["Focus", "Short guided practice"],
-            ["Memory", "Recall what you learned"],
-            ["Reasoning", "Work through a challenge"],
-          ].map(([label, text]) => (
-            <div key={label} className="flex items-center justify-between rounded-lg border border-[#E1E7F0] bg-white px-4 py-3">
-              <div>
-                <p className="text-xs font-semibold text-[#1D1E24]">{label}</p>
-                <p className="mt-0.5 text-[11px] text-[#6C6D75]">{text}</p>
-              </div>
-              <span className="h-2.5 w-2.5 rounded-sm bg-[#0B5CFF]" />
-            </div>
-          ))}
-        </div>
-      </div>
-    );
-  }
-
-  if (slug === "general-knowledge") {
-    return (
-      <div className={common}>
-        <div className="absolute inset-0 bg-[#FAFAFB]" />
-        <div className="absolute left-5 top-5 flex h-10 w-10 items-center justify-center rounded-lg bg-[#EEF4FF] text-[#0B5CFF]">
-          <Icon className="h-5 w-5" />
-        </div>
-        <p className="absolute left-5 top-[76px] text-base font-semibold text-[#1D1E24]">
-          Explore useful knowledge
-        </p>
-        <div className="absolute bottom-5 left-5 right-5 grid grid-cols-3 gap-2">
-          {["History", "Technology", "Culture", "Economics", "Geography", "Life skills"].map(
-            (item) => (
-              <div
-                key={item}
-                className="rounded-lg border border-[#E7E7EA] bg-white px-2 py-3 text-center text-[11px] font-medium text-[#1D1E24]"
-              >
-                {item}
-              </div>
-            )
-          )}
-        </div>
-      </div>
-    );
-  }
-
   return (
-    <div className={common}>
-      <div className="absolute inset-0 bg-[linear-gradient(180deg,#FFFFFF,#F4F7FF)]" />
-      <div className="absolute left-5 top-5 flex items-center gap-3">
-        <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-[#EEF4FF] text-[#0B5CFF]">
-          <Icon className="h-5 w-5" />
-        </div>
-        <div>
-          <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-[#6C6D75]">
-            Book learning
+    <div className="relative h-[220px] overflow-hidden rounded-[14px] border border-[#E7E7EA] bg-[#F7F8FA]">
+      <img
+        src={imageUrl}
+        alt=""
+        className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-[1.025]"
+      />
+      <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(5,12,30,0.02)_20%,rgba(5,12,30,0.62)_100%)]" />
+      <div className="absolute bottom-4 left-4 right-4 flex items-end justify-between gap-3">
+        <div className="min-w-0">
+          <p className="text-[11px] font-semibold uppercase tracking-[0.13em] text-white/80">
+            Learning world
           </p>
-          <p className="text-sm font-semibold text-[#1D1E24]">Read with guidance</p>
+          <p className="mt-1 truncate text-base font-semibold text-white">{title}</p>
         </div>
-      </div>
-      <div className="absolute bottom-5 left-5 right-5 space-y-3">
-        {[88, 72, 58].map((width, index) => (
-          <div
-            key={width}
-            className="rounded-lg border border-[#E7E7EA] bg-white p-3 shadow-sm"
-          >
-            <div
-              className="h-2 rounded-full bg-[#D9E8FF]"
-              style={{ width: `${width}%` }}
-            />
-            <div
-              className="mt-2 h-2 rounded-full bg-[#ECEEF2]"
-              style={{ width: `${Math.max(width - 18, 38)}%` }}
-            />
-          </div>
-        ))}
+        <span className="grid h-10 w-10 shrink-0 place-items-center rounded-xl bg-white text-[#0B5CFF] shadow-sm">
+          <Icon className="h-5 w-5" />
+        </span>
       </div>
     </div>
   );
@@ -555,8 +435,8 @@ export default function DashboardPage() {
               </h1>
 
               <div className="mt-5 grid gap-3 md:grid-cols-3">
-                <Link
-                  href="/learn/career-skills"
+                <a
+                  href="#learning-worlds"
                   className="group flex min-h-[76px] items-center gap-4 rounded-xl border border-[#E2E3E7] bg-white px-5 py-4 transition hover:border-[#C6D9FF] hover:shadow-[0_8px_24px_rgba(29,30,36,0.05)]"
                 >
                   <span className="grid h-9 w-9 place-items-center rounded-lg border border-[#D7E5FF] text-[#0B5CFF]">
@@ -564,27 +444,27 @@ export default function DashboardPage() {
                   </span>
                   <span>
                     <span className="block text-sm font-semibold text-[#1D1E24]">
-                      Start a new lesson
+                      Browse learning worlds
                     </span>
                     <span className="mt-0.5 block text-xs text-[#6C6D75]">
-                      Choose a learning world
+                      Choose the world that matches your goal
                     </span>
                   </span>
-                </Link>
+                </a>
 
                 <Link
-                  href={resumeHref(recentLearning)}
+                  href="/assigned-homework"
                   className="group flex min-h-[76px] items-center gap-4 rounded-xl border border-[#E2E3E7] bg-white px-5 py-4 transition hover:border-[#C6D9FF] hover:shadow-[0_8px_24px_rgba(29,30,36,0.05)]"
                 >
                   <span className="grid h-9 w-9 place-items-center rounded-lg border border-[#D7E5FF] text-[#0B5CFF]">
-                    <Clock3 className="h-4 w-4" />
+                    <ClipboardCheck className="h-4 w-4" />
                   </span>
                   <span>
                     <span className="block text-sm font-semibold text-[#1D1E24]">
-                      Continue learning
+                      Assigned homework
                     </span>
-                    <span className="mt-0.5 block max-w-[220px] truncate text-xs text-[#6C6D75]">
-                      {recentLearning?.lesson_title || "Your next lesson will appear here"}
+                    <span className="mt-0.5 block text-xs text-[#6C6D75]">
+                      Independent practice from School Help sessions
                     </span>
                   </span>
                 </Link>
@@ -598,10 +478,10 @@ export default function DashboardPage() {
                   </span>
                   <span>
                     <span className="block text-sm font-semibold text-[#1D1E24]">
-                      Upload homework
+                      Upload school homework
                     </span>
                     <span className="mt-0.5 block text-xs text-[#6C6D75]">
-                      Learn from an assignment you already have
+                      Get guided help with an assignment you already have
                     </span>
                   </span>
                 </Link>
@@ -637,14 +517,14 @@ export default function DashboardPage() {
               {view === "worlds" ? (
                 <>
                   <div className="mt-6 grid gap-x-5 gap-y-8 md:grid-cols-2 xl:grid-cols-3">
-                    {filteredWorlds.map(({ slug, Icon, title, subtitle, eyebrow }) => (
+                    {filteredWorlds.map(({ slug, Icon, title, subtitle, eyebrow, imageUrl }) => (
                       <Link
                         key={slug}
                         href={`/learn/${slug}`}
                         className="group block min-w-0"
                       >
                         <div className="transition duration-200 group-hover:-translate-y-0.5 group-hover:shadow-[0_14px_30px_rgba(29,30,36,0.08)]">
-                          <WorldPreview slug={slug} Icon={Icon} title={title} />
+                          <WorldPreview imageUrl={imageUrl} Icon={Icon} title={title} />
                         </div>
                         <div className="mt-3 px-0.5">
                           <p className="text-[11px] font-semibold uppercase tracking-[0.13em] text-[#8B8D96]">
