@@ -526,9 +526,6 @@ function TutorFlowUI() {
         </div>
       </div>
 
-      <div className="absolute -left-8 bottom-10 hidden rounded-lg border border-[#EEEEF0] bg-white px-3 py-2 text-[11px] font-medium text-black shadow-sm sm:block">
-        Re teach when needed
-      </div>
     </div>
   );
 }
