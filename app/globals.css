@@ -8,7 +8,7 @@
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
+  --font-sans: var(--font-inter);
   --font-mono: var(--font-geist-mono);
 
   /* GAHN marketing palette */
@@ -187,4 +187,56 @@ button:disabled {
   background-size: 64px 64px;
   -webkit-mask-image: radial-gradient(ellipse 70% 60% at 50% 40%, #000 0%, transparent 75%);
   mask-image: radial-gradient(ellipse 70% 60% at 50% 40%, #000 0%, transparent 75%);
+}
+
+
+/* Sequence-inspired marketing layout for the GAHN landing page. */
+.sequence-marketing {
+  font-family: var(--font-inter), var(--font-geist-sans), Arial, sans-serif;
+  color: #1d1d20;
+}
+
+.sequence-hero-grid {
+  background-image:
+    linear-gradient(rgba(238, 238, 240, 0.72) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(238, 238, 240, 0.72) 1px, transparent 1px);
+  background-size: 58px 58px;
+  -webkit-mask-image: linear-gradient(to bottom, transparent 0%, #000 30%, #000 82%, transparent 100%);
+  mask-image: linear-gradient(to bottom, transparent 0%, #000 30%, #000 82%, transparent 100%);
+}
+
+.sequence-ui-grid {
+  background-image:
+    linear-gradient(rgba(227, 232, 239, 0.72) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(227, 232, 239, 0.72) 1px, transparent 1px);
+  background-size: 28px 28px;
+}
+
+.sequence-rings {
+  background:
+    radial-gradient(circle at 50% 50%, rgba(31, 107, 255, 0.18) 0 14%, transparent 14.5% 25%, rgba(119, 232, 233, 0.10) 25.5% 26%, transparent 26.5% 39%, rgba(31, 107, 255, 0.08) 39.5% 40%, transparent 40.5%);
+}
+
+.sequence-card {
+  box-shadow:
+    0 0 0 1px rgba(29, 29, 32, 0.06),
+    0 20px 25px -5px rgba(0, 0, 0, 0.08),
+    0 8px 10px -6px rgba(0, 0, 0, 0.08);
+}
+
+.sequence-mini-card {
+  box-shadow: 0 0 0 1px rgba(29, 29, 32, 0.08);
+}
+
+.sequence-marketing button,
+.sequence-marketing a {
+  -webkit-tap-highlight-color: transparent;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .sequence-marketing *,
+  .sequence-marketing *::before,
+  .sequence-marketing *::after {
+    scroll-behavior: auto !important;
+  }
 }

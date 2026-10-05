@@ -174,12 +174,12 @@ export default function HomeworkUploadPage() {
   }
 
   return (
-    <main className="min-h-screen bg-[#F4F7FB] font-sans text-black">
-      <header className="border-b border-[#D8E0EA] bg-white">
-        <div className="mx-auto flex max-w-7xl flex-wrap items-center justify-between gap-4 px-5 py-4 sm:px-8">
+    <main className="min-h-screen bg-[#F7F8FA] font-sans text-black">
+      <header className="border-b border-[#E7E7EA] bg-white">
+        <div className="mx-auto flex max-w-[1180px] flex-wrap items-center justify-between gap-4 px-5 py-4 sm:px-8">
           <Link
             href={`/learn/school-help?language=${encodeURIComponent(language)}`}
-            className="inline-flex items-center gap-2 text-sm font-black text-[#0B1739]"
+            className="inline-flex items-center gap-2 text-sm font-semibold text-[#1D1E24]"
           >
             <ArrowLeft className="h-4 w-4" />
             Back to School Help
@@ -191,27 +191,27 @@ export default function HomeworkUploadPage() {
               onChange={changeLanguage}
               compact
             />
-            <Link href="/" className="font-black text-[#0B1739]">
+            <Link href="/" className="font-semibold text-[#1D1E24]">
               GAHN AI
             </Link>
           </div>
         </div>
       </header>
 
-      <section className="border-b border-[#BFD3ED] bg-[#07162F] text-white">
-        <div className="mx-auto max-w-7xl px-5 py-10 sm:px-8 sm:py-12">
+      <section className="border-b border-[#E7E7EA] bg-white text-[#1D1E24]">
+        <div className="mx-auto max-w-[1180px] px-5 py-9 sm:px-8 sm:py-12">
           <div className="flex max-w-4xl items-start gap-5">
-            <div className="hidden h-14 w-14 shrink-0 place-items-center rounded-2xl bg-white text-[#07162F] sm:grid">
+            <div className="hidden h-14 w-14 shrink-0 place-items-center rounded-[12px] bg-[#EAF2FF] text-[#0B5CFF] sm:grid">
               <GraduationCap className="h-6 w-6" />
             </div>
             <div>
-              <p className="text-xs font-black uppercase tracking-[0.18em] text-[#8DB8FF]">
+              <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#0B5CFF]">
                 School Help
               </p>
-              <h1 className="mt-2 text-4xl font-black tracking-[-0.04em] text-white sm:text-5xl">
+              <h1 className="mt-2 text-4xl font-semibold tracking-[-0.04em] text-[#1D1E24] sm:text-5xl">
                 Homework Upload
               </h1>
-              <p className="mt-4 max-w-3xl text-base font-medium leading-8 text-white/90">
+              <p className="mt-4 max-w-3xl text-base font-medium leading-8 text-[#34363D]">
                 Upload the exact homework your teacher gave you. Tell GAHN the
                 subject, grade, topic, and what is confusing so the AI can read
                 the material and guide you through it.
@@ -221,22 +221,22 @@ export default function HomeworkUploadPage() {
         </div>
       </section>
 
-      <div className="mx-auto grid max-w-7xl gap-6 px-5 py-8 sm:px-8 lg:grid-cols-[minmax(0,0.9fr)_minmax(0,1.1fr)]">
-        <section className="rounded-[1.5rem] border border-[#CFE0F5] bg-white p-6 shadow-[0_16px_40px_rgba(11,23,57,0.05)] sm:p-7">
-          <p className="text-xs font-black uppercase tracking-[0.16em] text-[#1677FF]">
+      <div className="mx-auto grid max-w-[1180px] gap-6 px-5 py-8 sm:px-8 lg:grid-cols-[minmax(0,0.9fr)_minmax(0,1.1fr)]">
+        <section className="rounded-[16px] border border-[#E1E3E8] bg-white p-6 shadow-[0_16px_40px_rgba(11,23,57,0.05)] sm:p-7">
+          <p className="text-xs font-semibold uppercase tracking-[0.16em] text-[#0B5CFF]">
             Tell GAHN what you are working on
           </p>
-          <h2 className="mt-2 text-2xl font-black text-[#0B1739]">
+          <h2 className="mt-2 text-2xl font-semibold text-[#1D1E24]">
             Add the homework context first
           </h2>
 
           <div className="mt-6 grid gap-5 sm:grid-cols-2">
             <label>
-              <span className="text-sm font-black text-[#0B1739]">Subject</span>
+              <span className="text-sm font-semibold text-[#1D1E24]">Subject</span>
               <select
                 value={subject}
                 onChange={(event) => setSubject(event.target.value)}
-                className="mt-2 h-12 w-full rounded-xl border border-[#C9D6E5] bg-white px-3 text-sm font-semibold text-[#0B1739] outline-none focus:border-[#1677FF]"
+                className="mt-2 h-12 w-full rounded-[12px] border border-[#C9D6E5] bg-white px-3 text-sm font-semibold text-[#1D1E24] outline-none focus:border-[#1677FF]"
               >
                 {subjects.map((item) => (
                   <option key={item}>{item}</option>
@@ -245,11 +245,11 @@ export default function HomeworkUploadPage() {
             </label>
 
             <label>
-              <span className="text-sm font-black text-[#0B1739]">Level</span>
+              <span className="text-sm font-semibold text-[#1D1E24]">Level</span>
               <select
                 value={level}
                 onChange={(event) => setLevel(event.target.value)}
-                className="mt-2 h-12 w-full rounded-xl border border-[#C9D6E5] bg-white px-3 text-sm font-semibold text-[#0B1739] outline-none focus:border-[#1677FF]"
+                className="mt-2 h-12 w-full rounded-[12px] border border-[#C9D6E5] bg-white px-3 text-sm font-semibold text-[#1D1E24] outline-none focus:border-[#1677FF]"
               >
                 {levels.map((item) => (
                   <option key={item}>{item}</option>
@@ -259,19 +259,19 @@ export default function HomeworkUploadPage() {
           </div>
 
           <label className="mt-5 block">
-            <span className="text-sm font-black text-[#0B1739]">
+            <span className="text-sm font-semibold text-[#1D1E24]">
               What topic is the homework about?
             </span>
             <input
               value={topic}
               onChange={(event) => setTopic(event.target.value)}
               placeholder="Example: Ecology, linear equations, essay evidence"
-              className="mt-2 h-12 w-full rounded-xl border border-[#C9D6E5] bg-white px-4 text-sm font-semibold text-[#0B1739] outline-none focus:border-[#1677FF]"
+              className="mt-2 h-12 w-full rounded-[12px] border border-[#C9D6E5] bg-white px-4 text-sm font-semibold text-[#1D1E24] outline-none focus:border-[#1677FF]"
             />
           </label>
 
           <label className="mt-5 block">
-            <span className="text-sm font-black text-[#0B1739]">
+            <span className="text-sm font-semibold text-[#1D1E24]">
               What do you need help understanding?
             </span>
             <textarea
@@ -279,12 +279,12 @@ export default function HomeworkUploadPage() {
               onChange={(event) => setQuestion(event.target.value)}
               rows={5}
               placeholder="Example: I do not understand the paragraph about food webs or questions 3 and 4."
-              className="mt-2 w-full resize-none rounded-xl border border-[#C9D6E5] bg-white px-4 py-3 text-sm font-medium leading-6 text-[#0B1739] outline-none focus:border-[#1677FF]"
+              className="mt-2 w-full resize-none rounded-[12px] border border-[#C9D6E5] bg-white px-4 py-3 text-sm font-medium leading-6 text-[#1D1E24] outline-none focus:border-[#1677FF]"
             />
           </label>
 
-          <label className="mt-5 flex cursor-pointer items-center justify-center gap-2 rounded-xl border border-dashed border-[#8EB8EB] bg-[#EAF3FF] px-5 py-4 text-sm font-black text-[#0B1739] hover:bg-[#DDEEFF]">
-            <Upload className="h-4 w-4 text-[#1677FF]" />
+          <label className="mt-5 flex cursor-pointer items-center justify-center gap-2 rounded-[12px] border border-dashed border-[#8EB8EB] bg-[#EEF4FF] px-5 py-4 text-sm font-semibold text-[#1D1E24] hover:bg-[#DDEEFF]">
+            <Upload className="h-4 w-4 text-[#0B5CFF]" />
             {uploading ? "Uploading and reading homework..." : "Choose homework file"}
             <input
               type="file"
@@ -305,16 +305,16 @@ export default function HomeworkUploadPage() {
           </p>
 
           {error && (
-            <div className="mt-5 rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm font-semibold leading-6 text-red-700">
+            <div className="mt-5 rounded-[12px] border border-red-200 bg-red-50 px-4 py-3 text-sm font-semibold leading-6 text-red-700">
               {error}
               {error.includes("sign up") && (
                 <span>
                   {" "}
-                  <Link href="/signup" className="font-black underline">
+                  <Link href="/signup" className="font-semibold underline">
                     Sign up
                   </Link>{" "}
                   or{" "}
-                  <Link href="/login" className="font-black underline">
+                  <Link href="/login" className="font-semibold underline">
                     log in
                   </Link>
                   .
@@ -324,16 +324,16 @@ export default function HomeworkUploadPage() {
           )}
         </section>
 
-        <section className="rounded-[1.5rem] border border-[#CFE0F5] bg-white p-6 shadow-[0_16px_40px_rgba(11,23,57,0.05)] sm:p-7">
+        <section className="rounded-[16px] border border-[#E1E3E8] bg-white p-6 shadow-[0_16px_40px_rgba(11,23,57,0.05)] sm:p-7">
           <div className="flex items-start gap-4">
-            <div className="grid h-11 w-11 shrink-0 place-items-center rounded-xl bg-[#EAF3FF] text-[#1677FF]">
+            <div className="grid h-11 w-11 shrink-0 place-items-center rounded-[12px] bg-[#EEF4FF] text-[#0B5CFF]">
               <FileText className="h-5 w-5" />
             </div>
             <div>
-              <p className="text-xs font-black uppercase tracking-[0.14em] text-[#1677FF]">
+              <p className="text-xs font-semibold uppercase tracking-[0.14em] text-[#0B5CFF]">
                 Homework workspace
               </p>
-              <h2 className="mt-1 text-2xl font-black text-[#0B1739]">
+              <h2 className="mt-1 text-2xl font-semibold text-[#1D1E24]">
                 GAHN reads the material with you
               </h2>
               <p className="mt-2 text-sm font-medium leading-7 text-[#52647C]">
@@ -343,8 +343,8 @@ export default function HomeworkUploadPage() {
             </div>
           </div>
 
-          <div className="mt-6 rounded-xl bg-[#F4F7FB] p-5">
-            <p className="text-xs font-black uppercase tracking-[0.12em] text-[#65758A]">
+          <div className="mt-6 rounded-[12px] bg-[#F7F8FA] p-5">
+            <p className="text-xs font-semibold uppercase tracking-[0.12em] text-[#65758A]">
               Example
             </p>
             <p className="mt-2 text-sm font-semibold leading-7 text-[#24344D]">
@@ -355,11 +355,11 @@ export default function HomeworkUploadPage() {
           </div>
 
           {uploadedFileName && (
-            <div className="mt-5 rounded-xl border border-[#CFE0F5] bg-[#EAF3FF] px-4 py-3">
-              <p className="text-xs font-black uppercase tracking-[0.1em] text-[#1677FF]">
+            <div className="mt-5 rounded-[12px] border border-[#E1E3E8] bg-[#EEF4FF] px-4 py-3">
+              <p className="text-xs font-semibold uppercase tracking-[0.1em] text-[#0B5CFF]">
                 Uploaded file
               </p>
-              <p className="mt-1 text-sm font-black text-[#0B1739]">
+              <p className="mt-1 text-sm font-semibold text-[#1D1E24]">
                 {uploadedFileName}
               </p>
             </div>
@@ -367,16 +367,16 @@ export default function HomeworkUploadPage() {
 
           {analysis ? (
             <div className="mt-5">
-              <p className="text-xs font-black uppercase tracking-[0.12em] text-[#1677FF]">
+              <p className="text-xs font-semibold uppercase tracking-[0.12em] text-[#0B5CFF]">
                 GAHN explanation
               </p>
-              <div className="mt-3 max-h-[520px] overflow-y-auto whitespace-pre-wrap rounded-xl border border-[#D8E0EA] bg-[#F8FAFD] p-5 text-sm font-medium leading-7 text-[#24344D]">
+              <div className="mt-3 max-h-[520px] overflow-y-auto whitespace-pre-wrap rounded-[12px] border border-[#E1E3E8] bg-[#F8FAFD] p-5 text-sm font-medium leading-7 text-[#24344D]">
                 {analysis}
               </div>
             </div>
           ) : (
-            <div className="mt-5 rounded-xl border border-dashed border-[#C9D6E5] px-5 py-10 text-center">
-              <p className="text-sm font-black text-[#0B1739]">
+            <div className="mt-5 rounded-[12px] border border-dashed border-[#C9D6E5] px-5 py-10 text-center">
+              <p className="text-sm font-semibold text-[#1D1E24]">
                 Your homework explanation will appear here
               </p>
               <p className="mt-2 text-sm font-medium leading-6 text-[#65758A]">

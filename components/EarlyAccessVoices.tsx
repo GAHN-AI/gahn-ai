@@ -116,24 +116,24 @@ export default function EarlyAccessVoices() {
   }
 
   return (
-    <section className="border-y border-gahn-line bg-gahn-paper py-20 sm:py-28">
+    <section id="learner-voices" className="scroll-mt-24 border-y border-[#D8E6FA] bg-[#F3F8FF] py-20 sm:py-28">
       <div className="mx-auto grid w-full max-w-[1200px] gap-10 px-5 sm:px-8 lg:grid-cols-[minmax(0,1.05fr)_minmax(360px,0.95fr)] lg:px-10">
         <div>
           <p className="text-xs font-semibold uppercase tracking-[0.2em] text-gahn-blue">
-            Early Access Voices
+            Learner Voices
           </p>
           <h2 className="mt-4 max-w-2xl text-3xl font-semibold leading-[1.1] tracking-[-0.03em] text-gahn-navy sm:text-4xl lg:text-[2.75rem]">
-            What early learners think about GAHN AI.
+            What learners think about GAHN AI.
           </h2>
-          <p className="mt-5 max-w-2xl text-base leading-7 text-gahn-slate sm:text-lg sm:leading-8">
+          <p className="mt-5 max-w-2xl text-base leading-7 text-black sm:text-lg sm:leading-8">
             These comments come from real signed-in users and are reviewed before
             they are shown publicly.
           </p>
 
           <div className="mt-8 grid gap-4 sm:grid-cols-2">
             {loading ? (
-              <div className="rounded-2xl border border-gahn-line bg-white p-5 text-sm text-gahn-slate sm:col-span-2">
-                Loading early access feedback...
+              <div className="rounded-2xl border border-gahn-line bg-white p-5 text-sm text-black sm:col-span-2">
+                Loading learner feedback...
               </div>
             ) : voices.length > 0 ? (
               voices.map((voice) => (
@@ -145,7 +145,7 @@ export default function EarlyAccessVoices() {
                   <p className="mt-4 text-[15px] leading-7 text-gahn-navy">
                     “{voice.message}”
                   </p>
-                  <p className="mt-4 text-sm font-semibold text-gahn-slate">
+                  <p className="mt-4 text-sm font-semibold text-black">
                     {voice.displayName}
                   </p>
                 </article>
@@ -155,7 +155,7 @@ export default function EarlyAccessVoices() {
                 <p className="text-sm font-semibold text-gahn-navy">
                   No approved public comments yet.
                 </p>
-                <p className="mt-2 text-sm leading-6 text-gahn-slate">
+                <p className="mt-2 text-sm leading-6 text-black">
                   GAHN does not display fake testimonials. Approved early access
                   feedback will appear here as people submit it.
                 </p>
@@ -168,7 +168,7 @@ export default function EarlyAccessVoices() {
           <h3 className="text-xl font-semibold tracking-[-0.02em] text-gahn-navy">
             Would you try GAHN AI?
           </h3>
-          <p className="mt-2 text-sm leading-6 text-gahn-slate">
+          <p className="mt-2 text-sm leading-6 text-black">
             Share a short comment about the idea. If approved, it may appear on
             this page using the display name you provide.
           </p>
@@ -210,7 +210,7 @@ export default function EarlyAccessVoices() {
                 placeholder="Example: I would use this to learn business skills outside of school."
                 className="mt-2 w-full resize-none rounded-xl border border-gahn-line px-4 py-3 text-sm leading-6 text-gahn-navy outline-none transition focus:border-gahn-blue"
               />
-              <p className="mt-2 text-right text-xs text-gahn-slate">
+              <p className="mt-2 text-right text-xs text-black">
                 {message.length}/280
               </p>
             </div>
@@ -226,7 +226,7 @@ export default function EarlyAccessVoices() {
           </form>
 
           {notice && (
-            <div className="mt-4 rounded-xl bg-gahn-paper px-4 py-3 text-sm leading-6 text-gahn-slate">
+            <div className="mt-4 rounded-xl bg-gahn-paper px-4 py-3 text-sm leading-6 text-black">
               {notice}
               {needsSignIn && (
                 <span>

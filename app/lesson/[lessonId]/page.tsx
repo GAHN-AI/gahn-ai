@@ -124,7 +124,7 @@ export default function LessonPage() {
   }
 
   return (
-    <main className="min-h-screen bg-[#F4F7FB] font-sans text-black">
+    <main className="min-h-screen bg-[#F4F7FB] font-sans text-black lg:[zoom:0.92]">
       <header className="border-b border-[#D8E0EA] bg-white">
         <div className="mx-auto flex max-w-[1600px] flex-wrap items-center justify-between gap-4 px-5 py-4 sm:px-8">
           <Link

@@ -6,7 +6,7 @@ import { useParams, useSearchParams } from "next/navigation";
 import {
   ArrowLeft,
   ArrowRight,
-  Briefcase,
+  BriefcaseBusiness,
   CheckCircle2,
 } from "lucide-react";
 
@@ -36,19 +36,17 @@ export default function CareerSectionPage() {
 
   if (!careerSection) {
     return (
-      <main className="min-h-screen bg-[#F4F7FB] px-5 py-10 text-black sm:px-8">
+      <main className="min-h-screen bg-[#F7F8FA] px-5 py-10 font-sans text-[#1D1E24] sm:px-8">
         <div className="mx-auto max-w-5xl">
           <Link
             href="/learn/career-skills"
-            className="inline-flex items-center gap-2 text-sm font-black text-[#0B1739]"
+            className="inline-flex items-center gap-2 text-sm font-medium"
           >
             <ArrowLeft className="h-4 w-4" />
-            Back to Career Skills
+            Career Skills
           </Link>
-          <div className="mt-8 rounded-2xl border border-[#D8E0EA] bg-white p-10 text-center">
-            <h1 className="text-3xl font-black text-[#0B1739]">
-              Career path not found
-            </h1>
+          <div className="mt-8 rounded-[14px] border border-[#E1E3E8] bg-white p-10 text-center">
+            <h1 className="text-3xl font-semibold">Career path not found</h1>
           </div>
         </div>
       </main>
@@ -62,147 +60,89 @@ export default function CareerSectionPage() {
   )}&language=${encodeURIComponent(language)}`;
 
   return (
-    <main className="min-h-screen bg-[#F4F7FB] font-sans text-black">
-      <header className="border-b border-[#D8E0EA] bg-white">
-        <div className="mx-auto flex max-w-7xl flex-wrap items-center justify-between gap-4 px-5 py-4 sm:px-8">
+    <main className="min-h-screen bg-[#F7F8FA] font-sans text-[#1D1E24]">
+      <header className="border-b border-[#E7E7EA] bg-white">
+        <div className="mx-auto flex min-h-[68px] max-w-[1180px] flex-wrap items-center justify-between gap-4 px-5 sm:px-8">
           <Link
             href={`/learn/career-skills?language=${encodeURIComponent(language)}`}
-            className="inline-flex items-center gap-2 text-sm font-black text-[#0B1739]"
+            className="inline-flex items-center gap-2 text-sm font-medium"
           >
             <ArrowLeft className="h-4 w-4" />
-            Back to Career Skills
+            Career Skills
           </Link>
 
           <div className="flex items-center gap-3">
-            <LanguageSelector
-              value={language}
-              onChange={changeLanguage}
-              compact
-            />
-            <Link href="/" className="font-black text-[#0B1739]">
+            <LanguageSelector value={language} onChange={changeLanguage} compact />
+            <Link href="/" className="flex items-center gap-2 text-sm font-semibold text-[#0B1739]">
+              <img src="/logo/favicon.png" alt="" className="h-7 w-7 rounded-full object-cover" />
               GAHN AI
             </Link>
           </div>
         </div>
       </header>
 
-      <section className="bg-[#07162F] text-white">
-        <div className="mx-auto grid max-w-7xl gap-8 px-5 py-10 sm:px-8 sm:py-12 lg:grid-cols-[1.05fr_0.95fr] lg:items-center">
+      <div className="mx-auto max-w-[1180px] px-5 py-9 sm:px-8 lg:py-12">
+        <section className="grid gap-7 overflow-hidden rounded-[16px] border border-[#E1E3E8] bg-white p-6 sm:p-8 lg:grid-cols-[minmax(0,1fr)_390px] lg:items-center">
           <div>
-            <p className="text-xs font-black uppercase tracking-[0.18em] text-[#8DB8FF]">
-              {careerSection.category} · {careerSection.pathLabel}
-            </p>
+            <div className="flex items-center gap-3">
+              <span className="grid h-11 w-11 place-items-center rounded-xl bg-[#EAF2FF] text-[#0B5CFF]">
+                <BriefcaseBusiness className="h-5 w-5" />
+              </span>
+              <p className="text-xs font-semibold uppercase tracking-[0.14em] text-[#0B5CFF]">
+                {careerSection.category}
+              </p>
+            </div>
 
-            <h1 className="mt-3 max-w-3xl text-4xl font-black tracking-[-0.045em] text-white sm:text-5xl">
+            <h1 className="mt-5 text-[34px] font-semibold leading-[1.12] tracking-[-0.035em] sm:text-[40px]">
               {careerSection.title}
             </h1>
-
-            <p className="mt-5 max-w-2xl text-base font-medium leading-8 text-white/90">
+            <p className="mt-4 max-w-[690px] text-[15px] leading-7 text-[#34363D]">
               {careerSection.description}
             </p>
+            <p className="mt-4 text-sm font-medium text-[#5C5E66]">
+              {careerSection.level}
+            </p>
 
-            <div className="mt-6 flex flex-wrap gap-2">
-              {careerSection.skills.map((skill) => (
-                <span
-                  key={skill}
-                  className="rounded-full border border-white/15 bg-white/10 px-3 py-1.5 text-xs font-bold text-white"
-                >
-                  {skill}
-                </span>
-              ))}
-            </div>
-
-            <div className="mt-7 flex flex-wrap items-center gap-4">
-              <Link
-                href={lessonHref}
-                className="inline-flex items-center gap-2 rounded-xl bg-white px-5 py-3.5 text-sm font-black text-[#07162F]"
-              >
-                Start with Maya
-                <ArrowRight className="h-4 w-4" />
-              </Link>
-
-              <span className="text-sm font-bold text-white/75">
-                {careerSection.level} · Taught by Maya
-              </span>
-            </div>
+            <Link
+              href={lessonHref}
+              className="mt-6 inline-flex h-11 items-center justify-center gap-2 rounded-lg bg-[#0B5CFF] px-5 text-sm font-semibold text-white transition hover:bg-[#094FD9]"
+            >
+              Start private lesson
+              <ArrowRight className="h-4 w-4" />
+            </Link>
           </div>
 
-          <div className="overflow-hidden rounded-[1.5rem] border border-white/15 bg-white/10 p-2 shadow-[0_24px_50px_rgba(0,0,0,0.22)]">
-            <img
-              src={careerSection.imageUrl}
-              alt=""
-              className="h-[320px] w-full rounded-[1.1rem] object-cover sm:h-[380px]"
-            />
-          </div>
-        </div>
-      </section>
+          <img
+            src={careerSection.imageUrl}
+            alt=""
+            className="h-[250px] w-full rounded-[12px] object-cover"
+          />
+        </section>
 
-      <section className="mx-auto grid max-w-7xl gap-8 px-5 py-10 sm:px-8 lg:grid-cols-[minmax(0,1fr)_340px]">
-        <div>
-          <p className="text-xs font-black uppercase tracking-[0.16em] text-[#1677FF]">
-            What this path teaches
+        <section className="mt-8 rounded-[16px] border border-[#E1E3E8] bg-white p-6 sm:p-8">
+          <p className="text-xs font-semibold uppercase tracking-[0.14em] text-[#0B5CFF]">
+            Practical skills
           </p>
-          <h2 className="mt-2 text-3xl font-black tracking-[-0.035em] text-[#0B1739]">
-            Learn the work, not just the job title
+          <h2 className="mt-2 text-[27px] font-semibold tracking-[-0.03em]">
+            What this career path can teach
           </h2>
-          <p className="mt-3 max-w-3xl text-sm font-medium leading-7 text-[#33455F]">
-            Maya stays the same Career Skills instructor across every career
-            section. GAHN keeps the career you selected attached to the lesson
-            record, practice, and progress so one instructor can serve the
-            entire Career Skills learning world.
+          <p className="mt-3 max-w-[760px] text-[14px] leading-6 text-[#3C3E45]">
+            These skills become lesson topics, examples, questions, and practice inside the Career Skills instructor workspace.
           </p>
 
-          <div className="mt-7 divide-y divide-[#E1E8F0] border-y border-[#E1E8F0]">
-            {careerSection.skills.map((skill, index) => (
+          <div className="mt-6 grid gap-3 md:grid-cols-2">
+            {careerSection.skills.map((skill) => (
               <div
                 key={skill}
-                className="flex items-start gap-4 py-5"
+                className="flex items-start gap-3 rounded-[12px] border border-[#E7E7EA] bg-[#FAFAFB] p-4"
               >
-                <div className="grid h-9 w-9 shrink-0 place-items-center rounded-full bg-[#EAF3FF] text-[#1677FF]">
-                  <CheckCircle2 className="h-4 w-4" />
-                </div>
-                <div>
-                  <p className="text-sm font-black text-[#0B1739]">
-                    {skill}
-                  </p>
-                  <p className="mt-1 text-sm font-medium leading-6 text-[#52647C]">
-                    This skill becomes part of the lesson context, practice,
-                    questions, and examples used in the private learning
-                    session.
-                  </p>
-                </div>
+                <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-[#0B5CFF]" />
+                <p className="text-[14px] font-medium text-[#1D1E24]">{skill}</p>
               </div>
             ))}
           </div>
-        </div>
-
-        <aside className="h-fit rounded-[1.4rem] border border-[#D8E0EA] bg-white p-6 shadow-[0_12px_30px_rgba(11,23,57,0.05)] lg:sticky lg:top-6">
-          <div className="grid h-11 w-11 place-items-center rounded-xl bg-[#EAF3FF] text-[#1677FF]">
-            <Briefcase className="h-5 w-5" />
-          </div>
-
-          <p className="mt-5 text-xs font-black uppercase tracking-[0.14em] text-[#1677FF]">
-            Private career lesson
-          </p>
-          <h2 className="mt-2 text-xl font-black text-[#0B1739]">
-            One instructor, career focused teaching
-          </h2>
-          <p className="mt-3 text-sm font-medium leading-6 text-[#52647C]">
-            Maya is the Career Skills instructor across this learning world.
-            Your selected career stays connected to the lesson record and
-            learning progress instead of creating a different avatar for every
-            career.
-          </p>
-
-          <Link
-            href={lessonHref}
-            className="mt-6 flex w-full items-center justify-center gap-2 rounded-xl bg-[#0B1739] px-5 py-3.5 text-sm font-black text-white"
-          >
-            Continue
-            <ArrowRight className="h-4 w-4" />
-          </Link>
-        </aside>
-      </section>
+        </section>
+      </div>
     </main>
   );
 }

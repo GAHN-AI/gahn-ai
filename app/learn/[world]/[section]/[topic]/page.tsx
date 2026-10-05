@@ -6,9 +6,11 @@ import { useParams, useSearchParams } from "next/navigation";
 import {
   ArrowLeft,
   ArrowRight,
-  Briefcase,
+  BookOpen,
+  Brain,
+  BriefcaseBusiness,
+  Globe2,
   GraduationCap,
-  LockKeyhole,
   ShieldCheck,
 } from "lucide-react";
 
@@ -19,6 +21,14 @@ import {
   type LearningOption,
 } from "@/lib/learningCatalog";
 import { isLearningWorldAvailable } from "@/lib/learningWorldAvailability";
+
+const worldMeta = {
+  "career-skills": { title: "Career Skills", Icon: BriefcaseBusiness },
+  "school-help": { title: "School Help", Icon: GraduationCap },
+  "brain-development": { title: "Brain Development", Icon: Brain },
+  "general-knowledge": { title: "General Knowledge", Icon: Globe2 },
+  "book-intelligence": { title: "Book Intelligence", Icon: BookOpen },
+} as const;
 
 export default function TopicOverviewPage() {
   const params = useParams<{ world: string; section: string; topic: string }>();
@@ -46,7 +56,7 @@ export default function TopicOverviewPage() {
       if (!section) return null;
 
       return {
-        sectionTitle: "Technology",
+        sectionTitle: section.category,
         title: section.title,
         description: section.description,
         option: undefined as LearningOption | undefined,
@@ -65,46 +75,22 @@ export default function TopicOverviewPage() {
   }, [params.section, params.topic, params.world]);
 
   const available = isLearningWorldAvailable(params.world);
+  const meta = worldMeta[params.world as keyof typeof worldMeta];
 
-  if (!available) {
+  if (!available || !resolved || !meta) {
     return (
-      <main className="min-h-screen bg-[#F4F7FB] px-5 py-8 text-black sm:px-8">
-        <div className="mx-auto max-w-5xl">
-          <Link
-            href="/dashboard"
-            className="inline-flex items-center gap-2 text-sm font-black text-[#0B1739]"
-          >
-            <ArrowLeft className="h-4 w-4" />
-            Back to Dashboard
-          </Link>
-          <div className="mt-10 rounded-[1.6rem] border border-[#D8E0EA] bg-white p-10 text-center">
-            <LockKeyhole className="mx-auto h-7 w-7 text-[#0B1739]" />
-            <h1 className="mt-4 text-3xl font-black text-[#0B1739]">
-              Not available
-            </h1>
-            <p className="mt-3 text-sm font-medium text-black">
-              This learning world is disabled during the current MVP test.
-            </p>
-          </div>
-        </div>
-      </main>
-    );
-  }
-
-  if (!resolved) {
-    return (
-      <main className="min-h-screen bg-[#F4F7FB] px-5 py-8 text-black sm:px-8">
+      <main className="min-h-screen bg-[#F7F8FA] px-5 py-10 font-sans text-[#1D1E24] sm:px-8">
         <div className="mx-auto max-w-5xl">
           <Link
             href={`/learn/${params.world}`}
-            className="inline-flex items-center gap-2 text-sm font-black text-[#0B1739]"
+            className="inline-flex items-center gap-2 text-sm font-medium text-[#1D1E24]"
           >
             <ArrowLeft className="h-4 w-4" />
-            Back to Learning World
+            Back to learning world
           </Link>
-          <div className="mt-10 rounded-[1.6rem] border border-[#D8E0EA] bg-white p-10 text-center">
-            <h1 className="text-3xl font-black text-[#0B1739]">
-              Course not found
+          <div className="mt-8 rounded-[14px] border border-[#E1E3E8] bg-white p-10 text-center">
+            <h1 className="text-3xl font-semibold">
+              {!available ? "Learning world unavailable" : "Lesson not found"}
             </h1>
           </div>
         </div>
@@ -112,9 +98,15 @@ export default function TopicOverviewPage() {
     );
   }
 
+  const Icon = meta.Icon;
+  const isSchool = params.world === "school-help";
   const isCareer = params.world === "career-skills";
-  const Icon = isCareer ? Briefcase : GraduationCap;
-  const instructorName = isCareer ? "Maya" : "GAHN School Tutor";
+
+  const backHref = isCareer
+    ? `/learn/career-skills/${params.section}?language=${encodeURIComponent(language)}`
+    : isSchool
+      ? `/learn/school-help/${params.section}?language=${encodeURIComponent(language)}`
+      : `/learn/${params.world}/${params.section}?language=${encodeURIComponent(language)}`;
 
   const startHref = `/lesson/custom?world=${encodeURIComponent(
     params.world
@@ -125,18 +117,12 @@ export default function TopicOverviewPage() {
   )}`;
 
   return (
-    <main className="min-h-screen bg-[#F4F7FB] px-5 py-8 font-sans text-black sm:px-8 lg:px-10">
-      <div className="mx-auto max-w-6xl">
-        <div className="flex flex-wrap items-center justify-between gap-4">
+    <main className="min-h-screen bg-[#F7F8FA] font-sans text-[#1D1E24]">
+      <header className="border-b border-[#E7E7EA] bg-white">
+        <div className="mx-auto flex min-h-[68px] max-w-[1180px] flex-wrap items-center justify-between gap-4 px-5 sm:px-8">
           <Link
-            href={
-              isCareer
-                ? `/learn/career-skills?language=${encodeURIComponent(language)}`
-                : `/learn/school-help/${params.section}?language=${encodeURIComponent(
-                    language
-                  )}`
-            }
-            className="inline-flex items-center gap-2 text-sm font-black text-[#0B1739]"
+            href={backHref}
+            className="inline-flex items-center gap-2 text-sm font-medium text-[#1D1E24]"
           >
             <ArrowLeft className="h-4 w-4" />
             Back
@@ -144,96 +130,88 @@ export default function TopicOverviewPage() {
 
           <div className="flex items-center gap-3">
             <LanguageSelector value={language} onChange={changeLanguage} compact />
-            <Link href="/" className="font-black text-[#0B1739]">
+            <Link href="/" className="flex items-center gap-2 text-sm font-semibold text-[#0B1739]">
+              <img src="/logo/favicon.png" alt="" className="h-7 w-7 rounded-full object-cover" />
               GAHN AI
             </Link>
           </div>
         </div>
+      </header>
 
-        <section className="mt-8 grid gap-6 lg:grid-cols-[minmax(0,1fr)_360px]">
-          <div className="overflow-hidden rounded-[1.75rem] border border-[#BFD3ED] bg-white shadow-[0_18px_48px_rgba(11,23,57,0.06)]">
-            <div className="bg-[#07162F] p-7 text-white sm:p-9">
-              <div className="grid h-14 w-14 place-items-center rounded-2xl bg-white text-[#07162F]">
-                <Icon className="h-6 w-6" />
-              </div>
-              <p className="mt-5 text-xs font-black uppercase tracking-[0.18em] text-[#8DB8FF]">
-                {isCareer ? "Career Skills" : "School Help"} · {resolved.sectionTitle}
-              </p>
-              <h1 className="mt-2 text-4xl font-black tracking-[-0.04em] text-white">
-                {resolved.title}
-              </h1>
-              <p className="mt-4 max-w-3xl text-base font-medium leading-8 text-white">
-                {resolved.description}
+      <div className="mx-auto max-w-[1180px] px-5 py-9 sm:px-8 lg:py-12">
+        <section className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_330px]">
+          <div className="rounded-[16px] border border-[#E1E3E8] bg-white p-6 sm:p-8">
+            <div className="flex items-center gap-3">
+              <span className="grid h-11 w-11 place-items-center rounded-xl bg-[#EAF2FF] text-[#0B5CFF]">
+                <Icon className="h-5 w-5" />
+              </span>
+              <p className="text-xs font-semibold uppercase tracking-[0.14em] text-[#0B5CFF]">
+                {meta.title} · {resolved.sectionTitle}
               </p>
             </div>
 
-            <div className="p-6 sm:p-8">
-              <p className="text-xs font-black uppercase tracking-[0.16em] text-[#1677FF]">
-                How your lesson works
-              </p>
-              <h2 className="mt-2 text-2xl font-black text-[#0B1739]">
-                Learn this topic with a private AI instructor
-              </h2>
-              <p className="mt-3 text-sm font-medium leading-7 text-[#33455F]">
-                Your instructor uses the topic you selected as the lesson context,
-                teaches it in conversation, asks questions, and builds practice
-                around what you are learning.
-              </p>
+            <h1 className="mt-5 text-[34px] font-semibold leading-[1.12] tracking-[-0.035em] sm:text-[40px]">
+              {resolved.title}
+            </h1>
+            <p className="mt-4 max-w-[720px] text-[15px] leading-7 text-[#34363D]">
+              {resolved.description}
+            </p>
 
-              <div className="mt-6 grid gap-3 sm:grid-cols-3">
+            <div className="mt-8 border-t border-[#EEEEF1] pt-7">
+              <p className="text-xs font-semibold uppercase tracking-[0.14em] text-[#0B5CFF]">
+                How the lesson works
+              </p>
+              <div className="mt-5 grid gap-3 sm:grid-cols-3">
                 {[
-                  ["1", "Meet your instructor"],
-                  ["2", "Learn through conversation"],
-                  ["3", "Practice and check understanding"],
-                ].map(([step, label]) => (
+                  "The instructor teaches the concept clearly.",
+                  "You answer questions so GAHN can check understanding.",
+                  "Weak points are taught again before more practice.",
+                ].map((label) => (
                   <div
-                    key={step}
-                    className="rounded-xl border border-[#D8E0EA] bg-[#F4F7FB] p-4"
+                    key={label}
+                    className="flex gap-3 rounded-[12px] border border-[#E1E3E8] bg-[#FAFAFB] p-4"
                   >
-                    <p className="text-xs font-black text-[#1677FF]">STEP {step}</p>
-                    <p className="mt-2 text-sm font-black text-black">{label}</p>
+                    <span className="mt-1.5 h-2.5 w-2.5 shrink-0 rounded-full bg-[#0B5CFF]" />
+                    <p className="text-[13px] leading-5 text-[#303239]">{label}</p>
                   </div>
                 ))}
               </div>
             </div>
           </div>
 
-          <aside className="rounded-[1.75rem] border border-[#0B1739] bg-white p-6 shadow-[0_18px_48px_rgba(11,23,57,0.08)] lg:sticky lg:top-6 lg:self-start">
-            <div className="grid h-12 w-12 place-items-center rounded-xl bg-[#EAF3FF] text-[#1677FF]">
+          <aside className="h-fit rounded-[16px] border border-[#E1E3E8] bg-white p-6 lg:sticky lg:top-6">
+            <div className="grid h-11 w-11 place-items-center rounded-xl bg-[#EAF2FF] text-[#0B5CFF]">
               <ShieldCheck className="h-5 w-5" />
             </div>
-
-            <p className="mt-5 text-xs font-black uppercase tracking-[0.16em] text-[#1677FF]">
-              Private lesson
+            <p className="mt-5 text-xs font-semibold uppercase tracking-[0.14em] text-[#0B5CFF]">
+              Private AI lesson
             </p>
-            <h2 className="mt-2 text-2xl font-black text-[#0B1739]">
-              Learn with {instructorName}
+            <h2 className="mt-2 text-xl font-semibold">
+              Start this lesson
             </h2>
 
-            <div className="mt-5 grid gap-3">
-              <div className="rounded-xl bg-[#F4F7FB] p-4">
-                <p className="text-xs font-black uppercase tracking-[0.08em] text-black">
+            <div className="mt-5 space-y-3 text-sm">
+              <div className="rounded-xl bg-[#F7F8FA] p-4">
+                <p className="text-xs font-semibold uppercase tracking-[0.1em] text-[#6C6D75]">
                   Language
                 </p>
-                <p className="mt-1 text-sm font-black text-[#0B1739]">
-                  {language}
-                </p>
+                <p className="mt-1 font-semibold text-[#1D1E24]">{language}</p>
               </div>
-              <div className="rounded-xl bg-[#F4F7FB] p-4">
-                <p className="text-xs font-black uppercase tracking-[0.08em] text-black">
-                  Session layout
+              <div className="rounded-xl bg-[#F7F8FA] p-4">
+                <p className="text-xs font-semibold uppercase tracking-[0.1em] text-[#6C6D75]">
+                  Workspace
                 </p>
-                <p className="mt-1 text-sm font-black text-[#0B1739]">
-                  AI instructor + learning panel
+                <p className="mt-1 font-semibold text-[#1D1E24]">
+                  AI instructor and learning canvas
                 </p>
               </div>
             </div>
 
             <Link
               href={startHref}
-              className="mt-6 flex w-full items-center justify-center gap-2 rounded-xl bg-[#0B1739] px-5 py-3.5 text-sm font-black text-white"
+              className="mt-6 flex h-11 w-full items-center justify-center gap-2 rounded-lg bg-[#0B5CFF] px-5 text-sm font-semibold text-white transition hover:bg-[#094FD9]"
             >
-              Start Private Lesson
+              Start private lesson
               <ArrowRight className="h-4 w-4" />
             </Link>
           </aside>
