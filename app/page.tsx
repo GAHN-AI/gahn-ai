@@ -362,28 +362,17 @@ function HeroProductPreview() {
     <motion.div
       initial={{ opacity: 0, y: 34, scale: 0.985 }}
       animate={{ opacity: 1, y: 0, scale: 1 }}
-      transition={{ duration: 0.75, delay: 0.2, ease: [0.22, 1, 0.36, 1] }}
-      className="relative mx-auto mt-16 w-full max-w-[768px]"
-    >
-      <div
-        aria-hidden="true"
-        className="absolute left-1/2 top-[46%] h-[180px] w-[78%] -translate-x-1/2 rounded-full bg-gradient-to-r from-[#77E8E9]/25 via-[#1F6BFF]/25 to-[#8DB8FF]/10 blur-[28px]"
+      transition={{
+        duration: 0.75,
+        delay: 0.2,
+        ease: [0.22, 1, 0.36, 1],
+      }}
+className="relative mx-auto mt-16 w-full max-w-[760px] overflow-hidden rounded-[24px] border border-[#DCE6F5] bg-white shadow-[0_28px_80px_rgba(15,35,75,0.12)]"    >
+      <img
+        src="/learning-workspace-demo.png"
+        alt="GAHN AI private instructor and Magic Canvas learning workspace"
+        className="block h-auto w-full"
       />
-
-      <div className="sequence-card relative overflow-hidden rounded-t-lg bg-white">
-        <div className="grid min-h-[400px] md:grid-cols-[240px_1fr]">
-          <InstructorPlaceholder />
-          <CanvasSkeleton />
-        </div>
-      </div>
-
-      <div className="absolute -left-16 top-[110px] hidden items-center gap-2 rounded-lg border border-dashed border-[#B9BAC0] bg-white px-3 py-1.5 text-[12px] font-medium text-black xl:flex">
-        Private AI lesson
-      </div>
-
-      <div className="absolute -right-4 bottom-[-14px] hidden rounded-full bg-white px-3 py-1.5 text-[11px] font-medium text-black shadow-[0_0_0_1px_rgba(29,29,32,0.08),0_4px_6px_-1px_rgba(0,0,0,0.1)] md:block">
-        Learning workspace
-      </div>
     </motion.div>
   );
 }
@@ -525,48 +514,19 @@ function TutorFlowUI() {
 
 function HistoryLessonUI() {
   return (
-    <div className="sequence-card mx-auto w-full max-w-[475px] overflow-hidden rounded-lg bg-white">
-      <div className="flex items-center justify-between border-b border-[#EEEEF0] px-5 py-4">
-        <div>
-          <p className="text-[11px] font-medium uppercase tracking-[0.08em] text-black">
-            Grade 8 History
-          </p>
-          <p className="mt-1 text-[15px] font-medium text-black">
-            Primary source response
-          </p>
-        </div>
-        <span className="rounded-full bg-[#EEF4FF] px-3 py-1 text-[10px] font-semibold text-[#1F6BFF]">
-          School Help
-        </span>
-      </div>
-
-      <div className="grid gap-4 p-5 sm:grid-cols-[0.95fr_1.05fr]">
-        <div className="rounded-lg bg-[#F3F8FF] p-4">
-          <p className="text-[11px] font-medium text-black">Source excerpt</p>
-          <div className="mt-4 space-y-3">
-            <div className="h-3 w-full rounded bg-[#D9D9DE]" />
-            <div className="h-3 w-[92%] rounded bg-[#E5E7EB]" />
-            <div className="h-3 w-[86%] rounded bg-[#E5E7EB]" />
-            <div className="h-3 w-[68%] rounded bg-[#E5E7EB]" />
-          </div>
-        </div>
-
-        <div className="rounded-lg border border-[#EEEEF0] p-4">
-          <p className="text-[12px] font-medium text-black">
-            Explain the author's main argument in your own words.
-          </p>
-          <div className="mt-4 rounded-md border border-dashed border-[#C9D5E6] bg-[#FBFCFD] p-3">
-            <div className="h-3 w-[88%] rounded bg-[#E5E7EB]" />
-            <div className="mt-2 h-3 w-[72%] rounded bg-[#E5E7EB]" />
-            <div className="mt-2 h-3 w-[55%] rounded bg-[#E5E7EB]" />
-          </div>
-          <div className="mt-4 flex items-center gap-2 text-[11px] font-medium text-[#1F6BFF]">
-            <CircleDot className="h-3.5 w-3.5" />
-            Instructor checks your reasoning
-          </div>
-        </div>
-      </div>
-    </div>
+    <motion.div
+      initial={{ opacity: 0, y: 24, scale: 0.99 }}
+      whileInView={{ opacity: 1, y: 0, scale: 1 }}
+      viewport={{ once: true, amount: 0.2 }}
+      transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
+      className="mx-auto w-full max-w-[760px] overflow-hidden rounded-[24px] border border-[#DCE6F5] bg-white shadow-[0_24px_70px_rgba(15,35,75,0.10)]"
+    >
+      <img
+        src="/magic-canvas.png"
+        alt="GAHN AI School Help lesson with an AI instructor and Magic Canvas"
+        className="block h-auto w-full"
+      />
+    </motion.div>
   );
 }
 
@@ -651,7 +611,7 @@ function LearningToolsPanel() {
       whileInView={{ opacity: 1, y: 0, scale: 1 }}
       viewport={{ once: true, amount: 0.2 }}
       transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
-      className="overflow-hidden rounded-[24px] border border-[#DCE6F5] bg-white shadow-[0_24px_70px_rgba(15,35,75,0.10)]"
+      className="mx-auto w-full max-w-[760px] overflow-hidden rounded-[24px] border border-[#DCE6F5] bg-white shadow-[0_24px_70px_rgba(15,35,75,0.10)]"
     >
       <img
         src="/dashboardui.png"
