@@ -86,12 +86,12 @@ export const SUBSCRIPTION_ENTITLEMENTS: Record<
 > = {
   explore: {
     planId: "explore",
-    name: "Explore",
+    name: "Early Access",
     monthlyPrice: 0,
 
     purchaseEnabled: true,
 
-    allLearningWorlds: false,
+    allLearningWorlds: true,
     multilingualLearning: true,
     adaptiveLearning: true,
     masteryAssessments: false,
@@ -152,7 +152,7 @@ export const SUBSCRIPTION_ENTITLEMENTS: Record<
 
     purchaseEnabled: true,
 
-    allLearningWorlds: false,
+    allLearningWorlds: true,
     multilingualLearning: true,
     adaptiveLearning: true,
     masteryAssessments: true,
