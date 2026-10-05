@@ -362,18 +362,28 @@ function HeroProductPreview() {
     <motion.div
       initial={{ opacity: 0, y: 34, scale: 0.985 }}
       animate={{ opacity: 1, y: 0, scale: 1 }}
-      transition={{
-        duration: 0.75,
-        delay: 0.2,
-        ease: [0.22, 1, 0.36, 1],
-      }}
-      className="relative mx-auto mt-16 w-full max-w-[1180px] overflow-hidden rounded-[24px] border border-[#DCE6F5] bg-white shadow-[0_28px_80px_rgba(15,35,75,0.12)]"
+      transition={{ duration: 0.75, delay: 0.2, ease: [0.22, 1, 0.36, 1] }}
+      className="relative mx-auto mt-16 w-full max-w-[768px]"
     >
-      <img
-        src="/magic-canvas.png"
-        alt="GAHN AI School Help lesson with a private AI instructor and Magic Canvas"
-        className="block h-auto w-full"
+      <div
+        aria-hidden="true"
+        className="absolute left-1/2 top-[46%] h-[180px] w-[78%] -translate-x-1/2 rounded-full bg-gradient-to-r from-[#77E8E9]/25 via-[#1F6BFF]/25 to-[#8DB8FF]/10 blur-[28px]"
       />
+
+      <div className="sequence-card relative overflow-hidden rounded-t-lg bg-white">
+        <div className="grid min-h-[400px] md:grid-cols-[240px_1fr]">
+          <InstructorPlaceholder />
+          <CanvasSkeleton />
+        </div>
+      </div>
+
+      <div className="absolute -left-16 top-[110px] hidden items-center gap-2 rounded-lg border border-dashed border-[#B9BAC0] bg-white px-3 py-1.5 text-[12px] font-medium text-black xl:flex">
+        Private AI lesson
+      </div>
+
+      <div className="absolute -right-4 bottom-[-14px] hidden rounded-full bg-white px-3 py-1.5 text-[11px] font-medium text-black shadow-[0_0_0_1px_rgba(29,29,32,0.08),0_4px_6px_-1px_rgba(0,0,0,0.1)] md:block">
+        Learning workspace
+      </div>
     </motion.div>
   );
 }

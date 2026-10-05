@@ -301,7 +301,7 @@ export default function DashboardPage() {
   }
 
   return (
-    <main className="min-h-screen bg-white font-sans text-[#1D1E24] lg:w-[108.7%] lg:[zoom:0.92]">
+    <main className="min-h-screen bg-white font-sans text-[#1D1E24] lg:w-[108.7%] lg:[zoom:0.70]">
       <div className="min-h-screen lg:grid lg:grid-cols-[300px_minmax(0,1fr)]">
         <aside className="hidden min-h-screen border-r border-[#E7E7EA] bg-white lg:flex lg:flex-col lg:sticky lg:top-0 lg:h-screen">
           <div className="flex items-center justify-between px-5 pt-5">
