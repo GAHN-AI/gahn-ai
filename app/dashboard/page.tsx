@@ -66,7 +66,7 @@ const worlds: {
     title: "Brain Development",
     subtitle: "Memory, focus, reasoning, habits, and learning performance.",
     eyebrow: "BRAIN WORLD",
-    imageUrl: "https://images.unsplash.com/photo-1635321856029-68a8cbae50fe?auto=format&fit=crop&w=1200&q=82",
+    imageUrl: "https://images.unsplash.com/photo-1777301498237-576a26e10986?auto=format&fit=crop&w=1200&q=82",
   },
   {
     slug: "general-knowledge",
@@ -563,22 +563,38 @@ export default function DashboardPage() {
                 </>
               ) : (
                 <div className="mt-6 grid gap-5 md:grid-cols-2 xl:grid-cols-3">
-                  <Link
-                    href={resumeHref(recentLearning)}
-                    className="rounded-xl border border-[#E2E3E7] bg-white p-5 transition hover:border-[#C6D9FF] hover:shadow-[0_8px_24px_rgba(29,30,36,0.05)]"
-                  >
-                    <p className="text-xs font-semibold uppercase tracking-[0.12em] text-[#8B8D96]">
-                      Most recent
-                    </p>
-                    <h3 className="mt-3 text-lg font-semibold text-[#1D1E24]">
-                      {recentLearning?.lesson_title || "No lesson started yet"}
-                    </h3>
-                    <p className="mt-2 text-sm leading-6 text-[#6C6D75]">
-                      {recentLearning
-                        ? recentLearning.topic
-                        : "Open a learning world and start your first lesson."}
-                    </p>
-                  </Link>
+                  {recentLearning ? (
+                    <Link
+                      href={resumeHref(recentLearning)}
+                      className="rounded-xl border border-[#E2E3E7] bg-white p-5 transition hover:border-[#C6D9FF] hover:shadow-[0_8px_24px_rgba(29,30,36,0.05)]"
+                    >
+                      <p className="text-xs font-semibold uppercase tracking-[0.12em] text-[#8B8D96]">
+                        Most recent
+                      </p>
+                      <h3 className="mt-3 text-lg font-semibold text-[#1D1E24]">
+                        {recentLearning.lesson_title || "Continue learning"}
+                      </h3>
+                      <p className="mt-2 text-sm leading-6 text-[#6C6D75]">
+                        {recentLearning.topic}
+                      </p>
+                    </Link>
+                  ) : (
+                    <button
+                      type="button"
+                      onClick={() => setView("worlds")}
+                      className="rounded-xl border border-[#E2E3E7] bg-white p-5 text-left transition hover:border-[#C6D9FF] hover:shadow-[0_8px_24px_rgba(29,30,36,0.05)]"
+                    >
+                      <p className="text-xs font-semibold uppercase tracking-[0.12em] text-[#8B8D96]">
+                        Most recent
+                      </p>
+                      <h3 className="mt-3 text-lg font-semibold text-[#1D1E24]">
+                        No lesson started yet
+                      </h3>
+                      <p className="mt-2 text-sm leading-6 text-[#6C6D75]">
+                        Open a learning world and start your first lesson.
+                      </p>
+                    </button>
+                  )}
 
                   <Link
                     href="/progress"
