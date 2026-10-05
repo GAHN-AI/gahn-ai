@@ -66,7 +66,7 @@ const worlds: {
     title: "Brain Development",
     subtitle: "Memory, focus, reasoning, habits, and learning performance.",
     eyebrow: "BRAIN WORLD",
-    imageUrl: "https://images.unsplash.com/photo-1559757175-0eb30cd8c063?auto=format&fit=crop&w=1200&q=82",
+    imageUrl: "https://images.unsplash.com/photo-1635321856029-68a8cbae50fe?auto=format&fit=crop&w=1200&q=82",
   },
   {
     slug: "general-knowledge",
