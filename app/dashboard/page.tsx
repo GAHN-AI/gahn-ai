@@ -58,7 +58,7 @@ const worlds: {
     title: "School Help",
     subtitle: "Math, science, English, reading, study skills, and homework help.",
     eyebrow: "SCHOOL WORLD",
-    imageUrl: "https://images.unsplash.com/photo-1522202176988-66273c2fd55f?auto=format&fit=crop&w=1200&q=82",
+    imageUrl: "https://images.unsplash.com/photo-1509062522246-3755977927d7?auto=format&fit=crop&w=1400&q=84",
   },
   {
     slug: "brain-development",
@@ -140,12 +140,16 @@ function WorldPreview({
   title: string;
 }) {
   return (
-    <div className="relative h-[220px] overflow-hidden rounded-[14px] border border-[#E7E7EA] bg-[#F7F8FA]">
+    <div className="relative h-[200px] overflow-hidden rounded-[14px] border border-[#E7E7EA] bg-[linear-gradient(135deg,#0B1739,#1677FF)]">
       <img
         src={imageUrl}
         alt=""
-        className="w-full object-cover transition-transform duration-300 group-hover:scale-[1.025]"
-        style={{ height: 220 }}
+        className="w-full object-cover object-center transition-transform duration-300 group-hover:scale-[1.025]"
+        style={{ height: 200 }}
+        loading="lazy"
+        onError={(event) => {
+          event.currentTarget.style.display = "none";
+        }}
       />
       <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(5,12,30,0.02)_20%,rgba(5,12,30,0.62)_100%)]" />
       <div className="absolute bottom-4 left-4 right-4 flex items-end justify-between gap-3">
@@ -297,7 +301,7 @@ export default function DashboardPage() {
   }
 
   return (
-    <main className="min-h-screen bg-white font-sans text-[#1D1E24]">
+    <main className="min-h-screen bg-white font-sans text-[#1D1E24] lg:w-[108.7%] lg:[zoom:0.92]">
       <div className="min-h-screen lg:grid lg:grid-cols-[300px_minmax(0,1fr)]">
         <aside className="hidden min-h-screen border-r border-[#E7E7EA] bg-white lg:flex lg:flex-col lg:sticky lg:top-0 lg:h-screen">
           <div className="flex items-center justify-between px-5 pt-5">
