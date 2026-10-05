@@ -362,28 +362,18 @@ function HeroProductPreview() {
     <motion.div
       initial={{ opacity: 0, y: 34, scale: 0.985 }}
       animate={{ opacity: 1, y: 0, scale: 1 }}
-      transition={{ duration: 0.75, delay: 0.2, ease: [0.22, 1, 0.36, 1] }}
-      className="relative mx-auto mt-16 w-full max-w-[768px]"
+      transition={{
+        duration: 0.75,
+        delay: 0.2,
+        ease: [0.22, 1, 0.36, 1],
+      }}
+      className="relative mx-auto mt-16 w-full max-w-[1180px] overflow-hidden rounded-[24px] border border-[#DCE6F5] bg-white shadow-[0_28px_80px_rgba(15,35,75,0.12)]"
     >
-      <div
-        aria-hidden="true"
-        className="absolute left-1/2 top-[46%] h-[180px] w-[78%] -translate-x-1/2 rounded-full bg-gradient-to-r from-[#77E8E9]/25 via-[#1F6BFF]/25 to-[#8DB8FF]/10 blur-[28px]"
+      <img
+        src="/magic-canvas.png"
+        alt="GAHN AI School Help lesson with a private AI instructor and Magic Canvas"
+        className="block h-auto w-full"
       />
-
-      <div className="sequence-card relative overflow-hidden rounded-t-lg bg-white">
-        <div className="grid min-h-[400px] md:grid-cols-[240px_1fr]">
-          <InstructorPlaceholder />
-          <CanvasSkeleton />
-        </div>
-      </div>
-
-      <div className="absolute -left-16 top-[110px] hidden items-center gap-2 rounded-lg border border-dashed border-[#B9BAC0] bg-white px-3 py-1.5 text-[12px] font-medium text-black xl:flex">
-        Private AI lesson
-      </div>
-
-      <div className="absolute -right-4 bottom-[-14px] hidden rounded-full bg-white px-3 py-1.5 text-[11px] font-medium text-black shadow-[0_0_0_1px_rgba(29,29,32,0.08),0_4px_6px_-1px_rgba(0,0,0,0.1)] md:block">
-        Learning workspace
-      </div>
     </motion.div>
   );
 }
@@ -645,115 +635,20 @@ function InstructionSection() {
 }
 
 function LearningToolsPanel() {
-  const tabs = ["Lesson", "Practice", "Notes", "Review"];
-
   return (
-    <div className="sequence-card overflow-hidden rounded-lg bg-white">
-      <div className="grid min-h-[520px] lg:grid-cols-[260px_1fr]">
-        <aside className="border-b border-[#EEEEF0] bg-[#F3F8FF] p-5 lg:border-b-0 lg:border-r">
-          <p className="text-[11px] font-medium uppercase tracking-[0.08em] text-black">
-            Learning tools
-          </p>
-          <div className="mt-5 grid gap-2">
-            {tabs.map((tab, index) => (
-              <div
-                key={tab}
-                className={cx(
-                  "flex items-center gap-3 rounded-md px-3 py-3 text-[13px] font-medium",
-                  index === 0 ? "bg-white text-black shadow-sm" : "text-black"
-                )}
-              >
-                <span
-                  className={cx(
-                    "h-2 w-2 rounded-full",
-                    index === 0 ? "bg-[#1F6BFF]" : "bg-[#D9D9DE]"
-                  )}
-                />
-                {tab}
-              </div>
-            ))}
-          </div>
-
-          <div className="mt-8 border-t border-[#E5E7EB] pt-5">
-            <p className="text-[11px] text-black">Current world</p>
-            <p className="mt-1 text-[13px] font-medium text-black">School Help</p>
-          </div>
-        </aside>
-
-        <div className="p-5 sm:p-7">
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="text-[11px] text-black">Magic Canvas</p>
-              <h3 className="mt-1 text-[17px] font-medium text-black">
-                A workspace that changes with the lesson
-              </h3>
-            </div>
-            <span className="rounded-full border border-[#D7E3F2] bg-[#EEF4FF] px-3 py-1 text-[10px] font-semibold text-[#1F6BFF]">
-              Active
-            </span>
-          </div>
-
-          <div className="mt-6 grid gap-4 sm:grid-cols-2">
-            <div className="rounded-lg border border-[#EEEEF0] p-4">
-              <div className="flex items-center gap-2">
-                <FileText className="h-4 w-4 text-[#1F6BFF]" />
-                <span className="text-[12px] font-medium text-black">Explanation</span>
-              </div>
-              <div className="mt-4 space-y-3">
-                <div className="h-3 rounded bg-[#E5E7EB]" />
-                <div className="h-3 w-[90%] rounded bg-[#E5E7EB]" />
-                <div className="h-3 w-[70%] rounded bg-[#E5E7EB]" />
-              </div>
-            </div>
-
-            <div className="rounded-lg border border-[#EEEEF0] p-4">
-              <div className="flex items-center gap-2">
-                <CircleDot className="h-4 w-4 text-[#1F6BFF]" />
-                <span className="text-[12px] font-medium text-black">Question</span>
-              </div>
-              <div className="mt-4 h-20 rounded-md bg-[#F3F8FF]" />
-            </div>
-
-            <div className="rounded-lg border border-[#EEEEF0] p-4">
-              <div className="flex items-center gap-2">
-                <NotebookTabs className="h-4 w-4 text-[#1F6BFF]" />
-                <span className="text-[12px] font-medium text-black">Notes</span>
-              </div>
-              <div className="mt-4 grid gap-2">
-                <div className="h-9 rounded-md bg-[#F3F8FF]" />
-                <div className="h-9 rounded-md bg-[#F3F8FF]" />
-              </div>
-            </div>
-
-            <div className="rounded-lg border border-[#EEEEF0] p-4">
-              <div className="flex items-center gap-2">
-                <Target className="h-4 w-4 text-[#1F6BFF]" />
-                <span className="text-[12px] font-medium text-black">Mastery check</span>
-              </div>
-              <div className="mt-4 flex h-[74px] items-end gap-2">
-                {[35, 48, 64, 78, 92].map((height) => (
-                  <span
-                    key={height}
-                    className="flex-1 rounded-t bg-[#AFCBFF]"
-                    style={{ height: String(height) + "%" }}
-                  />
-                ))}
-              </div>
-            </div>
-          </div>
-
-          <div className="mt-4 rounded-lg border border-[#EEEEF0] bg-[#F3F8FF] p-4">
-            <div className="flex items-center justify-between">
-              <span className="text-[12px] font-medium text-black">
-                Learner response
-              </span>
-              <span className="text-[10px] text-black">Saved to history</span>
-            </div>
-            <div className="mt-3 h-16 rounded-md bg-white" />
-          </div>
-        </div>
-      </div>
-    </div>
+    <motion.div
+      initial={{ opacity: 0, y: 24, scale: 0.99 }}
+      whileInView={{ opacity: 1, y: 0, scale: 1 }}
+      viewport={{ once: true, amount: 0.2 }}
+      transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
+      className="overflow-hidden rounded-[24px] border border-[#DCE6F5] bg-white shadow-[0_24px_70px_rgba(15,35,75,0.10)]"
+    >
+      <img
+        src="/dashboardui.png"
+        alt="GAHN AI learner dashboard with learning worlds, notes, study guides, progress, feedback, and assigned homework"
+        className="block h-auto w-full"
+      />
+    </motion.div>
   );
 }
 
