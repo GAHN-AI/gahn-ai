@@ -41,7 +41,7 @@ const plans: Plan[] = [
     featured: true,
     features: [
       "Everything in Early Access",
-      "30 live AI instructor minutes each month",
+      "30 live AI instructor minutes each day",
       "Real time voice conversations with your AI instructor",
       "Adaptive re teaching when you are still confused",
       "Mastery checks with retries before moving on",
@@ -59,7 +59,7 @@ const plans: Plan[] = [
     available: false,
     features: [
       "Everything in Learner Plus",
-      "90 live AI instructor minutes each month",
+      "90 live AI instructor minutes each day",
       "Advanced Magic Canvas tools",
       "Code workspace for technical lessons",
       "Browser assisted learning workspace",
@@ -77,7 +77,7 @@ const plans: Plan[] = [
     available: false,
     features: [
       "Everything in Mastery",
-      "180 live AI instructor minutes each month",
+      "180 live AI instructor minutes each day",
       "Structured career programs",
       "Portfolio and project based learning",
       "Career simulations for real work scenarios",

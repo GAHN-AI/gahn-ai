@@ -154,7 +154,7 @@ export const learningSectionsByWorld: Record<string, LearningSection[]> = {
       "Time Management",
       "Plan priorities, manage deadlines, structure work sessions, and use time intentionally.",
       ["Planning", "Prioritization", "Scheduling", "Execution"],
-      "https://images.unsplash.com/photo-1484480974693-6ca0a78fb36b?auto=format&fit=crop&w=1200&q=80"
+      "https://images.unsplash.com/photo-1501139083538-0139583c060f?auto=format&fit=crop&w=1200&q=80"
     ),
     singleSection(
       "Learning Strategies",
@@ -175,7 +175,7 @@ export const learningSectionsByWorld: Record<string, LearningSection[]> = {
       "Technology",
       "Understand computers, software, AI, the internet, digital systems, and major technology concepts.",
       ["Technology", "Digital Literacy", "Systems", "AI"],
-      "https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=1200&q=80"
+      "https://images.unsplash.com/photo-1497366811353-6870744d04b2?auto=format&fit=crop&w=1200&q=80"
     ),
     singleSection(
       "Science",
@@ -187,7 +187,7 @@ export const learningSectionsByWorld: Record<string, LearningSection[]> = {
       "Economics",
       "Understand markets, incentives, trade, inflation, growth, money, and economic decision making.",
       ["Economics", "Markets", "Incentives", "Tradeoffs"],
-      "https://images.unsplash.com/photo-1554224155-6726b3ff858f?auto=format&fit=crop&w=1200&q=80"
+      "https://images.unsplash.com/photo-1526304640581-d334cdbbf45e?auto=format&fit=crop&w=1200&q=80"
     ),
     singleSection(
       "Geography",
