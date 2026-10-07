@@ -650,7 +650,7 @@ export const careerSections: CareerSection[] = [
     description:
       "Research companies and securities, compare risk and return, analyze financial statements, value investments, and build evidence for investment decisions.",
     imageUrl:
-      "https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?auto=format&fit=crop&w=1200&q=80",
+      "https://images.unsplash.com/photo-1590283603385-17ffb3a7f29f?auto=format&fit=crop&w=1200&q=80",
     level: "Beginner to intermediate",
     pathLabel: "Investment career",
     skills: [
@@ -674,7 +674,7 @@ export const careerSections: CareerSection[] = [
     description:
       "Learn how financial professionals organize goals, evaluate risk, explain investment choices, build diversified allocations, and plan long term finances.",
     imageUrl:
-      "https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?auto=format&fit=crop&w=1200&q=80",
+      "https://images.unsplash.com/photo-1551836022-d5d88e9218df?auto=format&fit=crop&w=1200&q=80",
     level: "Beginner to intermediate",
     pathLabel: "Wealth management career",
     skills: [
