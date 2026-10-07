@@ -399,7 +399,7 @@ export const careerSections: CareerSection[] = [
     description:
       "Build, train, evaluate, and improve machine learning systems that learn from data.",
     imageUrl:
-      "https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=1200&q=80",
+      "https://images.unsplash.com/photo-1677442136019-21780ecad995?auto=format&fit=crop&w=1200&q=80",
     level: "Intermediate path",
     pathLabel: "Technology career",
     skills: [
@@ -521,7 +521,7 @@ export const careerSections: CareerSection[] = [
     description:
       "Support legal work through research, document preparation, case organization, client communication, and legal procedures.",
     imageUrl:
-      "https://images.unsplash.com/photo-1589829545856-d10d557cf95f?auto=format&fit=crop&w=1200&q=80",
+      "https://images.unsplash.com/photo-1505664194779-8beaceb93744?auto=format&fit=crop&w=1200&q=80",
     level: "Beginner path",
     pathLabel: "Legal career",
     skills: [
@@ -582,7 +582,7 @@ export const careerSections: CareerSection[] = [
     description:
       "Record financial activity, prepare reports, understand business accounts, and help organizations track money accurately.",
     imageUrl:
-      "https://images.unsplash.com/photo-1554224155-6726b3ff858f?auto=format&fit=crop&w=1200&q=80",
+      "https://images.unsplash.com/photo-1554224154-22dec7ec8818?auto=format&fit=crop&w=1200&q=80",
     level: "Beginner path",
     pathLabel: "Finance career",
     skills: [
