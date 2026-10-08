@@ -272,6 +272,7 @@ export default function DashboardPage() {
 
     return (
       hasConnectedLearning ||
+      row.status === "completed" ||
       (row.attempts_count || 0) > 0 ||
       ["practicing", "proficient", "mastered", "needs_review"].includes(
         row.mastery_state || ""
