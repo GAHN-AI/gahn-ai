@@ -30,6 +30,7 @@ export default function NotesPage() {
   const router = useRouter();
   const [notes, setNotes] = useState<Note[]>([]);
   const [loading, setLoading] = useState(true);
+  const [loadError, setLoadError] = useState("");
   const [editingId, setEditingId] = useState<string | null>(null);
   const [draft, setDraft] = useState("");
   const [message, setMessage] = useState("");
@@ -45,13 +46,19 @@ export default function NotesPage() {
       return;
     }
 
-    const { data } = await supabase
+    const { data, error: fetchError } = await supabase
       .from("learner_notes")
       .select("id, world_slug, lesson_id, lesson_title, title, body, updated_at")
       .eq("user_id", user.id)
       .order("updated_at", { ascending: false });
 
+    if (fetchError) {
+      setLoadError("Your saved learning materials could not be loaded right now. Please refresh and try again.");
+      setLoading(false);
+      return;
+    }
     setNotes((data || []) as Note[]);
+    setLoadError("");
     setLoading(false);
   }
 
@@ -85,6 +92,7 @@ export default function NotesPage() {
   }
 
   async function deleteNote(noteId: string) {
+    if (!window.confirm("Delete this note? This cannot be undone.")) return;
     const { error } = await supabase
       .from("learner_notes")
       .delete()
@@ -160,6 +168,8 @@ export default function NotesPage() {
               <div className="py-16 text-center text-sm font-semibold text-black">
                 Loading notes...
               </div>
+            ) : loadError ? (
+              <p role="alert" className="rounded-xl border border-red-200 bg-red-50 p-5 text-sm text-red-700">{loadError}</p>
             ) : notes.length === 0 ? (
               <div className="grid min-h-72 place-items-center rounded-2xl border border-dashed border-[#CFE0F5] bg-[#F8FBFF] px-6 text-center">
                 <div className="max-w-md">
