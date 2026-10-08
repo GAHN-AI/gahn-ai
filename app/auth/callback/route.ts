@@ -112,6 +112,7 @@ export async function GET(request: Request) {
   }
 
   let profile = existingProfile;
+  const isNewProfile = !existingProfile;
 
   if (!profile) {
     const { data: createdProfile, error: profileCreateError } =
@@ -168,5 +169,9 @@ export async function GET(request: Request) {
     }
   }
 
-  return redirect(next);
+  // When Google or email signup creates the first profile, make it clear
+  // that this is a new Free Plan account, not the restored old account.
+  return redirect(
+    isNewProfile && next === "/dashboard" ? "/dashboard?welcome=1" : next
+  );
 }
