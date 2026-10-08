@@ -372,27 +372,88 @@ async function saveLearningMaterial(args: {
   lessonId: string;
   body: InstructorRequest;
   turn: InstructorTurn;
+  autoSaveNotes: boolean;
 }) {
-  if (
-    args.body.action !== "study_guide" &&
-    args.body.action !== "summary"
-  ) {
-    return;
-  }
+  if (args.body.action !== "study_guide" && args.body.action !== "summary") return;
 
   const isSummary = args.body.action === "summary";
+  const title = `${args.body.lessonTitle} ${isSummary ? "Summary" : "Study Guide"}`;
+  const materialType = isSummary ? "summary" : "study_guide";
 
-  const { error } = await supabaseAdmin.from("study_guides").insert({
-    user_id: args.userId,
-    world_slug: args.body.worldSlug,
-    topic: args.body.topic,
-    lesson_id: args.lessonId,
-    title: `${args.body.lessonTitle} ${isSummary ? "Summary" : "Study Guide"}`,
-    material_type: isSummary ? "summary" : "study_guide",
+  // Repeated summary/guide requests refresh a lesson's materials rather than
+  // filling the learner's dashboard with identical entries.
+  const { data: existing, error: lookupError } = await supabaseAdmin
+    .from("study_guides")
+    .select("id")
+    .eq("user_id", args.userId)
+    .eq("lesson_id", args.lessonId)
+    .eq("material_type", materialType)
+    .order("updated_at", { ascending: false })
+    .limit(1)
+    .maybeSingle();
+  if (lookupError) throw lookupError;
+
+  const guideValues = {
+    title,
     content: args.turn.canvas,
-  });
+    updated_at: new Date().toISOString(),
+  };
+  const guideResult = existing
+    ? await supabaseAdmin.from("study_guides").update(guideValues).eq("id", existing.id).eq("user_id", args.userId)
+    : await supabaseAdmin.from("study_guides").insert({
+        user_id: args.userId,
+        world_slug: args.body.worldSlug,
+        topic: args.body.topic,
+        lesson_id: args.lessonId,
+        material_type: materialType,
+        ...guideValues,
+      });
+  if (guideResult.error) throw guideResult.error;
 
-  if (error) throw error;
+  if (!isSummary || !args.autoSaveNotes) return;
+
+  // These are instructor-generated recap notes. They are kept in a separate
+  // record so that creating a summary never overwrites a student's own notes.
+  const recap = args.turn.canvas.blocks
+    .filter((block) => block.type === "summary" || block.type === "concept")
+    .flatMap((block) => [
+      block.title,
+      block.body || "",
+      ...(block.bullets || []).map((item) => `• ${item}`),
+    ])
+    .filter(Boolean)
+    .join("\n")
+    .trim()
+    .slice(0, 12000);
+  if (!recap) return;
+
+  const noteTitle = `${args.body.lessonTitle} lesson summary`;
+  const { data: savedNote, error: noteLookupError } = await supabaseAdmin
+    .from("learner_notes")
+    .select("id")
+    .eq("user_id", args.userId)
+    .eq("lesson_id", args.lessonId)
+    .eq("title", noteTitle)
+    .order("updated_at", { ascending: false })
+    .limit(1)
+    .maybeSingle();
+  if (noteLookupError) throw noteLookupError;
+
+  const noteValues = {
+    body: recap,
+    updated_at: new Date().toISOString(),
+  };
+  const noteResult = savedNote
+    ? await supabaseAdmin.from("learner_notes").update(noteValues).eq("id", savedNote.id).eq("user_id", args.userId)
+    : await supabaseAdmin.from("learner_notes").insert({
+        user_id: args.userId,
+        world_slug: args.body.worldSlug,
+        lesson_id: args.lessonId,
+        lesson_title: args.body.lessonTitle,
+        title: noteTitle,
+        ...noteValues,
+      });
+  if (noteResult.error) throw noteResult.error;
 }
 
 async function saveEvidence(args: {
@@ -625,6 +686,41 @@ export async function POST(req: Request) {
       body.lessonTitle
     );
 
+    // Finishing a session is separate from mastery: it records that the
+    // learner stopped studying without pretending they passed an assessment.
+    if (body.action === "finish") {
+      if (!body.sessionId) {
+        return NextResponse.json({ error: "Start a lesson before finishing it." }, { status: 400 });
+      }
+      const { data: activeSession, error: sessionLookupError } = await supabaseAdmin
+        .from("lesson_sessions")
+        .select("id")
+        .eq("id", body.sessionId)
+        .eq("user_id", user.id)
+        .eq("lesson_id", lessonId)
+        .maybeSingle();
+      if (sessionLookupError) throw sessionLookupError;
+      if (!activeSession) {
+        return NextResponse.json({ error: "This lesson session was not found." }, { status: 404 });
+      }
+      const now = new Date().toISOString();
+      const { error: finishError } = await supabaseAdmin
+        .from("lesson_sessions")
+        .update({ status: "completed", completed_at: now, last_activity_at: now })
+        .eq("id", activeSession.id)
+        .eq("user_id", user.id);
+      if (finishError) throw finishError;
+
+      const { error: progressError } = await supabaseAdmin
+        .from("learning_progress")
+        .update({ status: "completed", last_activity_at: now })
+        .eq("user_id", user.id)
+        .eq("world_slug", body.worldSlug)
+        .eq("lesson_id", lessonId);
+      if (progressError) throw progressError;
+      return NextResponse.json({ finished: true, sessionId: activeSession.id });
+    }
+
     const sessionId = await createOrTouchSession(
       user.id,
       body,
@@ -666,6 +762,7 @@ export async function POST(req: Request) {
       lessonId,
       body,
       turn,
+      autoSaveNotes: entitlements.notes === true,
     });
 
     await supabaseAdmin

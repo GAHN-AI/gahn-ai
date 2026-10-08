@@ -1,6 +1,7 @@
 "use client";
 
 import { FormEvent, useEffect, useMemo, useRef, useState } from "react";
+import Link from "next/link";
 import {
   ArrowRight,
   BookOpenCheck,
@@ -143,6 +144,8 @@ export default function LearningStudio({
   );
 
   const [started, setStarted] = useState(false);
+  const [finishingLesson, setFinishingLesson] = useState(false);
+  const [finishedLesson, setFinishedLesson] = useState(false);
   const [sessionId, setSessionId] = useState<string | null>(null);
   const [turn, setTurn] = useState<InstructorTurn | null>(null);
   const [messages, setMessages] = useState<Message[]>([]);
@@ -229,6 +232,7 @@ export default function LearningStudio({
         .select("id, body")
         .eq("user_id", user.id)
         .eq("lesson_id", lessonId)
+        .eq("title", `${lessonTitle} notes`)
         .order("updated_at", { ascending: false })
         .limit(1)
         .maybeSingle();
@@ -328,14 +332,67 @@ export default function LearningStudio({
   }
 
   async function startLesson() {
+    setFinishedLesson(false);
     setStarted(true);
     setMessages([]);
-    await requestInstructor(undefined, "start");
+    const firstTurn = await requestInstructor(undefined, "start");
+    if (!firstTurn) setStarted(false);
+  }
+
+  async function finishLesson() {
+    if (loading || finishingLesson || !sessionId) return;
+
+    setFinishingLesson(true);
+    setError("");
+    try {
+      // Save any personal notes before generating separate recap material.
+      if (notesDraftRef.current.trim() && !(await saveNotes())) return;
+
+      const summary = await requestInstructor(undefined, "summary");
+      if (!summary) return;
+
+      if (features.studyGuides) {
+        const guide = await requestInstructor(undefined, "study_guide");
+        if (!guide) return;
+      }
+
+      const response = await fetch("/api/instructor", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          action: "finish",
+          sessionId,
+          worldSlug,
+          worldTitle,
+          sectionSlug,
+          sectionTitle,
+          topicSlug,
+          topic,
+          lessonTitle,
+          lessonPoints,
+          language,
+        }),
+      });
+      const result = await response.json();
+      if (!response.ok || !result.finished) {
+        throw new Error(result.error || "Could not finish this lesson.");
+      }
+
+      setFinishedLesson(true);
+    } catch (finishError) {
+      setError(
+        finishError instanceof Error
+          ? finishError.message
+          : "Could not finish this lesson. Please try again."
+      );
+    } finally {
+      setFinishingLesson(false);
+    }
   }
 
   async function sendResponse(responseText: string) {
     const clean = responseText.trim();
-    if (!clean || loading) return;
+    if (!clean || loading || finishingLesson || finishedLesson) return;
 
     setMessages((current) => [
       ...current,
@@ -490,9 +547,9 @@ export default function LearningStudio({
   }
 
   async function saveNotes() {
-    if (savingNotesRef.current) return;
+    if (savingNotesRef.current) return false;
     const bodyToSave = notesDraftRef.current;
-    if (!bodyToSave.trim() || bodyToSave === lastSavedNotesRef.current) return;
+    if (!bodyToSave.trim() || bodyToSave === lastSavedNotesRef.current) return true;
 
     savingNotesRef.current = true;
     const {
@@ -502,7 +559,7 @@ export default function LearningStudio({
     if (!user) {
       savingNotesRef.current = false;
       setError("Sign in to save notes.");
-      return;
+      return false;
     }
 
     setNotesSaved(false);
@@ -520,7 +577,7 @@ export default function LearningStudio({
       if (updateError) {
         savingNotesRef.current = false;
         setError(updateError.message);
-        return;
+        return false;
       }
     } else {
       const { data, error: insertError } = await supabase
@@ -539,7 +596,7 @@ export default function LearningStudio({
       if (insertError) {
         savingNotesRef.current = false;
         setError(insertError.message);
-        return;
+        return false;
       }
 
       noteIdRef.current = data.id;
@@ -553,6 +610,7 @@ export default function LearningStudio({
     if (notesDraftRef.current !== bodyToSave) {
       window.setTimeout(() => void saveNotes(), 400);
     }
+    return true;
   }
 
   return (
@@ -571,7 +629,7 @@ export default function LearningStudio({
               <p className="truncate text-xs text-[#53657D]">{lessonTitle}</p>
             </div>
             <div className="ml-auto rounded-full border border-[#CFE0F5] bg-white px-3 py-1.5 text-xs font-bold text-[#53657D]">
-              {statusLabel(turn?.evaluation.state)}
+              {finishedLesson ? "Session finished" : statusLabel(turn?.evaluation.state)}
             </div>
           </div>
 
@@ -605,6 +663,7 @@ export default function LearningStudio({
                 <Sparkles className="h-4 w-4" />
                 Start Lesson
               </button>
+              {error && <p role="alert" className="mt-3 text-sm text-red-700">{error}</p>}
             </div>
           </div>
         ) : (
@@ -642,7 +701,31 @@ export default function LearningStudio({
               )}
             </div>
 
+            {finishedLesson ? (
+            <div role="status" className="border-t border-[#D7E3F2] bg-white p-5">
+              <h3 className="text-base font-extrabold text-[#0B1739]">Lesson finished</h3>
+              <p className="mt-2 text-sm leading-6 text-[#40536D]">
+                {features.notes ? "Your lesson summary and notes have been saved." : "Your lesson summary has been saved."} {features.studyGuides ? "Your study guide is also ready." : "Study guides are not included in your current plan."}
+                Finishing a session does not mark a skill as mastered.
+              </p>
+              <div className="mt-4 flex flex-wrap gap-2">
+                <Link href="/notes" className="rounded-lg bg-[#1677FF] px-4 py-2.5 text-sm font-bold text-white">My Notes</Link>
+                <Link href="/study-guides" className="rounded-lg border border-[#D7E3F2] px-4 py-2.5 text-sm font-bold text-[#0B1739]">Review materials</Link>
+                <Link href="/dashboard" className="rounded-lg border border-[#D7E3F2] px-4 py-2.5 text-sm font-bold text-[#0B1739]">Choose another world</Link>
+              </div>
+            </div>
+            ) : (
             <div className="border-t border-[#D7E3F2] bg-white p-4">
+              <button
+                type="button"
+                onClick={() => void finishLesson()}
+                disabled={loading || finishingLesson || !sessionId}
+                className="mb-3 inline-flex w-full items-center justify-center gap-2 rounded-xl bg-[#1677FF] px-4 py-3 text-sm font-bold text-white disabled:cursor-not-allowed disabled:opacity-50"
+              >
+                <Check className="h-4 w-4" />
+                {finishingLesson ? "Saving your lesson materials..." : "Finish lesson & save review materials"}
+              </button>
+
               <div className="mb-3 flex flex-wrap gap-2">
                 <button
                   type="button"
@@ -837,6 +920,7 @@ export default function LearningStudio({
                 </div>
               )}
             </div>
+            )}
           </>
         )}
       </section>

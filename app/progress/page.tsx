@@ -41,6 +41,7 @@ export default function ProgressPage() {
   const router = useRouter();
   const [rows, setRows] = useState<ProgressRow[]>([]);
   const [loading, setLoading] = useState(true);
+  const [loadError, setLoadError] = useState("");
 
   useEffect(() => {
     async function load() {
@@ -53,7 +54,7 @@ export default function ProgressPage() {
         return;
       }
 
-      const { data } = await supabase
+      const { data, error } = await supabase
         .from("learning_progress")
         .select(
           "id, world_slug, topic, lesson_id, lesson_title, status, mastery_state, attempts_count, correct_count, retry_count, evidence, last_activity_at"
@@ -61,7 +62,12 @@ export default function ProgressPage() {
         .eq("user_id", user.id)
         .order("last_activity_at", { ascending: false });
 
-      setRows((data || []) as ProgressRow[]);
+      if (error) {
+        setLoadError("Your learning progress could not be loaded. Refresh the page and try again.");
+      } else {
+        setRows((data || []) as ProgressRow[]);
+        setLoadError("");
+      }
       setLoading(false);
     }
 
@@ -79,7 +85,8 @@ export default function ProgressPage() {
 
         return (
           meaningfulStart ||
-          (row.attempts_count || 0) > 0 ||
+          row.status === "completed" ||
+      (row.attempts_count || 0) > 0 ||
           ["practicing", "proficient", "mastered", "needs_review"].includes(
             row.mastery_state || ""
           )
@@ -138,6 +145,8 @@ export default function ProgressPage() {
               <p className="py-14 text-center text-sm font-semibold text-black">
                 Loading progress...
               </p>
+            ) : loadError ? (
+              <p role="alert" className="rounded-xl border border-red-200 bg-red-50 p-5 text-sm text-red-700">{loadError}</p>
             ) : visibleRows.length === 0 ? (
               <div className="grid min-h-72 place-items-center rounded-2xl border border-dashed border-[#CFE0F5] bg-[#F8FBFF] px-6 text-center">
                 <div className="max-w-md">

@@ -76,17 +76,31 @@ export default function StudyGuidesPage() {
     void loadGuides();
   }, [router]);
 
+  // Old sessions may have saved the same type of material more than once.
+  // Display the newest version without deleting anyone's historical data.
+  const uniqueGuides = useMemo(() => {
+    const seen = new Set<string>();
+    return guides.filter((guide) => {
+      const key = guide.lesson_id
+        ? `${guide.lesson_id}:${guide.material_type}`
+        : guide.id;
+      if (seen.has(key)) return false;
+      seen.add(key);
+      return true;
+    });
+  }, [guides]);
+
   const filtered = useMemo(() => {
     const query = search.trim().toLowerCase();
-    if (!query) return guides;
+    if (!query) return uniqueGuides;
 
-    return guides.filter((guide) =>
+    return uniqueGuides.filter((guide) =>
       [guide.title, guide.topic || "", guide.content?.subtitle || ""]
         .join(" ")
         .toLowerCase()
         .includes(query)
     );
-  }, [guides, search]);
+  }, [uniqueGuides, search]);
 
   return (
     <main className="min-h-screen bg-[#F8FBFF] px-5 py-8 font-sans text-[#0B1739] sm:px-8">

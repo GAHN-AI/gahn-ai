@@ -114,7 +114,7 @@ function getInitials(name: string) {
 }
 
 function resumeHref(row: ProgressRow | null) {
-  if (!row) return "/learn/career-skills";
+  if (!row) return "/dashboard#learning-worlds";
 
   if (!row.section_slug || !row.topic_slug) {
     return `/learn/${row.world_slug}`;
@@ -272,6 +272,7 @@ export default function DashboardPage() {
 
     return (
       hasConnectedLearning ||
+      row.status === "completed" ||
       (row.attempts_count || 0) > 0 ||
       ["practicing", "proficient", "mastered", "needs_review"].includes(
         row.mastery_state || ""
