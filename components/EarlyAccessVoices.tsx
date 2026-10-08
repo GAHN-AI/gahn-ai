@@ -13,6 +13,7 @@ export default function EarlyAccessVoices() {
   const [submitted, setSubmitted] = useState(false);
   const [notice, setNotice] = useState("");
   const [error, setError] = useState("");
+  const [statusError, setStatusError] = useState(false);
   const [needsSignIn, setNeedsSignIn] = useState(false);
 
   useEffect(() => {
@@ -24,7 +25,10 @@ export default function EarlyAccessVoices() {
         const result = await response.json();
         if (!cancelled) setSubmitted(Boolean(result.submitted));
       } catch {
-        if (!cancelled) setError("We cannot check submissions right now. Please try again later.");
+        if (!cancelled) {
+          setStatusError(true);
+          setError("We cannot check submissions right now. Please refresh and try again.");
+        }
       } finally {
         if (!cancelled) setChecking(false);
       }
@@ -35,7 +39,7 @@ export default function EarlyAccessVoices() {
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    if (submitting || submitted || checking || error) return;
+    if (submitting || submitted || checking || statusError) return;
     setSubmitting(true);
     setNotice("");
     setError("");
@@ -170,7 +174,7 @@ export default function EarlyAccessVoices() {
 
                 <button
                   type="submit"
-                  disabled={submitting || checking}
+                  disabled={submitting || checking || statusError}
                   className="inline-flex w-full items-center justify-center gap-2 rounded-full bg-gahn-blue px-6 py-3 text-sm font-semibold text-white hover:bg-gahn-blue-hover disabled:cursor-not-allowed disabled:opacity-60"
                 >
                   <Send className="h-4 w-4" />
