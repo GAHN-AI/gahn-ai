@@ -152,7 +152,10 @@ export default function LearningStudio({
   const [error, setError] = useState("");
   const [listening, setListening] = useState(false);
   const [notesOpen, setNotesOpen] = useState(false);
-  const [noteId, setNoteId] = useState<string | null>(null);
+  const noteIdRef = useRef<string | null>(null);
+  const notesDraftRef = useRef("");
+  const lastSavedNotesRef = useRef("");
+  const savingNotesRef = useRef(false);
   const [notes, setNotes] = useState("");
   const [notesSaved, setNotesSaved] = useState(false);
   const [fileHelpOpen, setFileHelpOpen] = useState(false);
@@ -209,6 +212,10 @@ export default function LearningStudio({
 
   useEffect(() => {
     let cancelled = false;
+    noteIdRef.current = null;
+    notesDraftRef.current = "";
+    lastSavedNotesRef.current = "";
+    setNotes("");
 
     async function loadNotes() {
       const {
@@ -227,7 +234,9 @@ export default function LearningStudio({
         .maybeSingle();
 
       if (!cancelled && data) {
-        setNoteId(data.id);
+        noteIdRef.current = data.id;
+        notesDraftRef.current = data.body || "";
+        lastSavedNotesRef.current = data.body || "";
         setNotes(data.body || "");
       }
     }
@@ -238,6 +247,15 @@ export default function LearningStudio({
       cancelled = true;
     };
   }, [lessonId]);
+
+  // Save learner notes in the background after typing stops. Saved notes
+  // show up in My Notes as soon as the learner opens that page.
+  useEffect(() => {
+    notesDraftRef.current = notes;
+    if (!notesOpen || !notes.trim() || notes === lastSavedNotesRef.current) return;
+    const timer = window.setTimeout(() => void saveNotes(), 1200);
+    return () => window.clearTimeout(timer);
+  }, [notes, notesOpen, lessonId]);
 
   async function requestInstructor(
     learnerMessage?: string,
@@ -472,28 +490,35 @@ export default function LearningStudio({
   }
 
   async function saveNotes() {
+    if (savingNotesRef.current) return;
+    const bodyToSave = notesDraftRef.current;
+    if (!bodyToSave.trim() || bodyToSave === lastSavedNotesRef.current) return;
+
+    savingNotesRef.current = true;
     const {
       data: { user },
     } = await supabase.auth.getUser();
 
     if (!user) {
+      savingNotesRef.current = false;
       setError("Sign in to save notes.");
       return;
     }
 
     setNotesSaved(false);
 
-    if (noteId) {
+    if (noteIdRef.current) {
       const { error: updateError } = await supabase
         .from("learner_notes")
         .update({
-          body: notes,
+          body: bodyToSave,
           updated_at: new Date().toISOString(),
         })
-        .eq("id", noteId)
+        .eq("id", noteIdRef.current)
         .eq("user_id", user.id);
 
       if (updateError) {
+        savingNotesRef.current = false;
         setError(updateError.message);
         return;
       }
@@ -506,21 +531,28 @@ export default function LearningStudio({
           lesson_id: lessonId,
           lesson_title: lessonTitle,
           title: `${lessonTitle} notes`,
-          body: notes,
+          body: bodyToSave,
         })
         .select("id")
         .single();
 
       if (insertError) {
+        savingNotesRef.current = false;
         setError(insertError.message);
         return;
       }
 
-      setNoteId(data.id);
+      noteIdRef.current = data.id;
     }
 
+    lastSavedNotesRef.current = bodyToSave;
+    savingNotesRef.current = false;
     setNotesSaved(true);
     window.setTimeout(() => setNotesSaved(false), 1800);
+    // Capture any typing that occurred during the previous save.
+    if (notesDraftRef.current !== bodyToSave) {
+      window.setTimeout(() => void saveNotes(), 400);
+    }
   }
 
   return (
@@ -740,7 +772,10 @@ export default function LearningStudio({
                 <div className="mb-3 rounded-xl border border-[#CFE0F5] bg-[#F8FBFF] p-3">
                   <textarea
                     value={notes}
-                    onChange={(event) => setNotes(event.target.value)}
+                    onChange={(event) => {
+                      notesDraftRef.current = event.target.value;
+                      setNotes(event.target.value);
+                    }}
                     rows={5}
                     placeholder="Write what you want to remember..."
                     className="w-full resize-none rounded-lg border border-[#D7E3F2] bg-white px-3 py-2.5 text-sm leading-6 outline-none focus:border-[#1677FF]"
@@ -751,7 +786,7 @@ export default function LearningStudio({
                     className="mt-2 inline-flex items-center gap-2 rounded-lg bg-[#0B1739] px-3 py-2 text-xs font-bold text-white"
                   >
                     <Check className="h-3.5 w-3.5" />
-                    {notesSaved ? "Saved" : "Save notes"}
+                    {notesSaved ? "Saved automatically" : "Save notes"}
                   </button>
                 </div>
               )}
