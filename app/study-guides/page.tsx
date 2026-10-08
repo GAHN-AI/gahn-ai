@@ -42,6 +42,7 @@ export default function StudyGuidesPage() {
   const [guides, setGuides] = useState<StudyGuide[]>([]);
   const [search, setSearch] = useState("");
   const [loading, setLoading] = useState(true);
+  const [loadError, setLoadError] = useState("");
 
   useEffect(() => {
     async function loadGuides() {
@@ -54,7 +55,7 @@ export default function StudyGuidesPage() {
         return;
       }
 
-      const { data } = await supabase
+      const { data, error: fetchError } = await supabase
         .from("study_guides")
         .select(
           "id, world_slug, topic, lesson_id, title, material_type, content, created_at, updated_at"
@@ -62,7 +63,13 @@ export default function StudyGuidesPage() {
         .eq("user_id", user.id)
         .order("updated_at", { ascending: false });
 
+    if (fetchError) {
+      setLoadError("Your saved learning materials could not be loaded right now. Please refresh and try again.");
+      setLoading(false);
+      return;
+    }
       setGuides((data || []) as StudyGuide[]);
+      setLoadError("");
       setLoading(false);
     }
 
@@ -120,6 +127,8 @@ export default function StudyGuidesPage() {
               <p className="py-16 text-center text-sm font-semibold text-black">
                 Loading study guides...
               </p>
+            ) : loadError ? (
+              <p role="alert" className="rounded-xl border border-red-200 bg-red-50 p-5 text-sm text-red-700">{loadError}</p>
             ) : guides.length === 0 ? (
               <div className="grid min-h-72 place-items-center rounded-2xl border border-dashed border-[#CFE0F5] bg-[#F8FBFF] px-6 text-center">
                 <div className="max-w-md">
