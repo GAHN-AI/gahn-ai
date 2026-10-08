@@ -156,7 +156,7 @@ export default function EarlyAccessVoices() {
                   No approved public comments yet.
                 </p>
                 <p className="mt-2 text-sm leading-6 text-black">
-                  GAHN does not display fake testimonials. Approved early access
+                  GAHN does not display fake testimonials. Approved Free Plan
                   feedback will appear here as people submit it.
                 </p>
               </div>
