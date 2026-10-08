@@ -435,12 +435,23 @@ export default function DashboardPage() {
               />
               <span className="font-semibold">GAHN AI</span>
             </Link>
-            <Link
-              href="/profile"
-              className="grid h-9 w-9 place-items-center rounded-lg bg-[#EEF4FF] text-xs font-bold text-[#0B5CFF]"
-            >
-              {initials}
-            </Link>
+            <div className="flex items-center gap-3">
+              <button
+                type="button"
+                onClick={handleLogout}
+                aria-label="Log out"
+                title="Log out"
+                className="grid h-9 w-9 place-items-center rounded-lg text-[#4F515A] hover:bg-[#F6F6F8]"
+              >
+                <LogOut className="h-4 w-4" />
+              </button>
+              <Link
+                href="/profile"
+                className="grid h-9 w-9 place-items-center rounded-lg bg-[#EEF4FF] text-xs font-bold text-[#0B5CFF]"
+              >
+                {initials}
+              </Link>
+            </div>
           </header>
 
           <div className="mx-auto w-full max-w-[1320px] px-5 py-8 sm:px-8 lg:px-10 lg:py-10">
