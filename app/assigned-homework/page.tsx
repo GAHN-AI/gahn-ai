@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import {
   ArrowLeft,
@@ -11,8 +11,21 @@ import {
 
 import { supabase } from "@/lib/supabaseClient";
 
+type HomeworkAssignment = {
+  id: string;
+  title: string;
+  topic: string | null;
+  description: string | null;
+  status: string;
+  due_at: string | null;
+  score: number | null;
+};
+
 export default function AssignedHomeworkPage() {
   const router = useRouter();
+  const [assignments, setAssignments] = useState<HomeworkAssignment[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
 
   useEffect(() => {
     async function checkUser() {
@@ -22,7 +35,22 @@ export default function AssignedHomeworkPage() {
 
       if (!user) {
         router.push("/login");
+        return;
       }
+
+      const { data, error: loadError } = await supabase
+        .from("assignments")
+        .select("id, title, topic, description, status, due_at, score")
+        .eq("user_id", user.id)
+        .eq("world_slug", "school-help")
+        .order("created_at", { ascending: false });
+
+      if (loadError) {
+        setError("Your homework could not be loaded. Please try again later.");
+      } else {
+        setAssignments((data || []) as HomeworkAssignment[]);
+      }
+      setLoading(false);
     }
 
     void checkUser();
@@ -66,23 +94,46 @@ export default function AssignedHomeworkPage() {
         </div>
 
         <section className="mt-9 rounded-[16px] border border-[#E1E3E8] bg-white p-7 shadow-[0_10px_30px_rgba(29,30,36,0.04)] sm:p-9">
-          <div className="grid h-11 w-11 place-items-center rounded-xl bg-[#EEF4FF] text-[#0B5CFF]">
-            <BookOpenCheck className="h-5 w-5" />
-          </div>
-
-          <h2 className="mt-5 text-xl font-semibold text-[#1D1E24]">
-            No assigned homework yet
-          </h2>
-          <p className="mt-2 max-w-[620px] text-sm leading-6 text-[#4F515A]">
-            When a School Help instructor assigns practice after a session, it will appear here with the subject, task, and what to review. GAHN will not invent assignments before that system saves them.
-          </p>
-
-          <Link
-            href="/learn/school-help"
-            className="mt-6 inline-flex h-10 items-center justify-center rounded-lg bg-[#0B5CFF] px-5 text-sm font-semibold text-white transition hover:bg-[#094FD9]"
-          >
-            Open School Help
-          </Link>
+          {loading ? (
+            <p role="status" className="text-sm text-[#4F515A]">Loading your assignments...</p>
+          ) : error ? (
+            <p role="alert" className="text-sm text-red-700">{error}</p>
+          ) : assignments.length === 0 ? (
+            <>
+              <div className="grid h-11 w-11 place-items-center rounded-xl bg-[#EEF4FF] text-[#0B5CFF]">
+                <BookOpenCheck className="h-5 w-5" />
+              </div>
+              <h2 className="mt-5 text-xl font-semibold text-[#1D1E24]">No assigned homework yet</h2>
+              <p className="mt-2 max-w-[620px] text-sm leading-6 text-[#4F515A]">
+                Assignments saved by your School Help instructor will appear here. Return to your dashboard to choose a learning world.
+              </p>
+            </>
+          ) : (
+            <div className="grid gap-4">
+              {assignments.map((assignment) => (
+                <article key={assignment.id} className="rounded-xl border border-[#D7E3F2] bg-[#F8FBFF] p-5">
+                  <div className="flex flex-wrap items-center justify-between gap-3">
+                    <p className="text-xs font-semibold uppercase tracking-wide text-[#0B5CFF]">
+                      {assignment.topic || "School Help"}
+                    </p>
+                    <span className="rounded-full bg-white px-3 py-1 text-xs font-semibold text-[#071F4D]">
+                      {assignment.status.replaceAll("_", " ")}
+                    </span>
+                  </div>
+                  <h2 className="mt-3 text-lg font-semibold">{assignment.title}</h2>
+                  {assignment.description && (
+                    <p className="mt-2 whitespace-pre-wrap text-sm leading-6 text-[#4F515A]">{assignment.description}</p>
+                  )}
+                  {assignment.due_at && (
+                    <p className="mt-3 text-xs text-[#4F515A]">Due {new Date(assignment.due_at).toLocaleDateString()}</p>
+                  )}
+                  {assignment.score !== null && (
+                    <p className="mt-2 text-xs font-semibold text-[#0B5CFF]">Score: {assignment.score}</p>
+                  )}
+                </article>
+              ))}
+            </div>
+          )}
         </section>
       </div>
     </main>
