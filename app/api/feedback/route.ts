@@ -28,6 +28,36 @@ function escapeHtml(value: string) {
     .replaceAll("'", "&#039;");
 }
 
+export async function GET() {
+  try {
+    const { user, error: authError } = await getAuthenticatedUser();
+    if (authError || !user) {
+      return NextResponse.json({ error: "Please log in first." }, { status: 401 });
+    }
+
+    const { data, error } = await supabaseAdmin
+      .from("learner_feedback")
+      .select("id, created_at")
+      .eq("user_id", user.id)
+      .order("created_at", { ascending: true })
+      .limit(1)
+      .maybeSingle();
+
+    if (error) throw error;
+
+    return NextResponse.json(
+      { submitted: Boolean(data), submittedAt: data?.created_at ?? null },
+      { headers: { "Cache-Control": "no-store" } }
+    );
+  } catch (error) {
+    console.error("Feedback status lookup failed:", error);
+    return NextResponse.json(
+      { error: "Feedback status is temporarily unavailable." },
+      { status: 503 }
+    );
+  }
+}
+
 export async function POST(req: Request) {
   try {
     const { user, error: authError } = await getAuthenticatedUser();
@@ -72,6 +102,23 @@ export async function POST(req: Request) {
       );
     }
 
+    // Fast, informative check. Database trigger independently enforces the
+    // same rule, including simultaneous requests and direct API calls.
+    const { data: previous, error: lookupError } = await supabaseAdmin
+      .from("learner_feedback")
+      .select("id")
+      .eq("user_id", user.id)
+      .limit(1)
+      .maybeSingle();
+
+    if (lookupError) throw lookupError;
+    if (previous) {
+      return NextResponse.json(
+        { error: "You have already submitted feedback. Thank you for helping improve GAHN.", submitted: true },
+        { status: 409 }
+      );
+    }
+
     const { data: saved, error: insertError } = await supabaseAdmin
       .from("learner_feedback")
       .insert({
@@ -85,6 +132,12 @@ export async function POST(req: Request) {
       .single();
 
     if (insertError) {
+      if (insertError.code === "23505") {
+        return NextResponse.json(
+          { error: "You have already submitted feedback. Thank you for helping improve GAHN.", submitted: true },
+          { status: 409 }
+        );
+      }
       throw insertError;
     }
 
