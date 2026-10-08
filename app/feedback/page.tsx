@@ -111,13 +111,13 @@ export default function FeedbackPage() {
         <section className="mt-6 overflow-hidden rounded-[1.75rem] border border-[#D7E3F2] bg-white shadow-[0_16px_45px_rgba(11,23,57,0.06)]">
           <div className="border-b border-[#D7E3F2] bg-[linear-gradient(135deg,#FFFFFF_0%,#F8FBFF_65%,#EAF3FF_100%)] p-6 sm:p-8">
             <p className="text-xs font-bold uppercase tracking-[0.18em] text-[#1677FF]">
-              Early Access
+              Free Plan
             </p>
             <h1 className="mt-2 text-3xl font-extrabold tracking-[-0.035em]">
               Tell us what happened
             </h1>
             <p className="mt-3 max-w-2xl text-sm leading-7 text-black">
-              Early access is for finding what learners actually use, where they get stuck, and what should be improved next.
+              Feedback from Free Plan learners helps us understand what people use, where they get stuck, and what to improve next.
             </p>
           </div>
 
