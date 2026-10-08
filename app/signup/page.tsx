@@ -46,6 +46,7 @@ export default function SignupPage() {
   const [resendLoading, setResendLoading] = useState(false);
   const [resendCooldown, setResendCooldown] = useState(0);
   const [awaitingVerification, setAwaitingVerification] = useState(false);
+  const [pendingEmail, setPendingEmail] = useState("");
   const [error, setError] = useState("");
   const [message, setMessage] = useState("");
 
@@ -57,19 +58,32 @@ export default function SignupPage() {
     async function checkSession() {
       const {
         data: { user },
+        error: sessionError,
       } = await supabase.auth.getUser();
 
-      if (!cancelled && user) {
+      if (!cancelled && !sessionError && user?.email_confirmed_at) {
         window.location.replace("/dashboard");
       }
     }
 
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(
+      (event, session) => {
+        if (event === "SIGNED_IN" && session?.user.email_confirmed_at) {
+          window.location.replace("/dashboard");
+        }
+      }
+    );
+
+    // Verification often completes in another tab. Check when this one
+    // regains focus instead of polling the auth service every 1.5 seconds.
+    const handleFocus = () => void checkSession();
+    window.addEventListener("focus", handleFocus);
     void checkSession();
-    const interval = window.setInterval(() => void checkSession(), 1500);
 
     return () => {
       cancelled = true;
-      window.clearInterval(interval);
+      subscription.unsubscribe();
+      window.removeEventListener("focus", handleFocus);
     };
   }, [awaitingVerification]);
 
@@ -127,6 +141,7 @@ export default function SignupPage() {
 
     // Supabase deliberately obscures duplicate registrations. A successful
     // response does not prove an account was created or an email was sent.
+    setPendingEmail(cleanEmail);
     setAwaitingVerification(true);
     setResendCooldown(60);
     setMessage(
@@ -135,7 +150,7 @@ export default function SignupPage() {
   }
 
   async function handleResendVerification() {
-    const cleanEmail = email.trim().toLowerCase();
+    const cleanEmail = pendingEmail;
     if (!cleanEmail || resendCooldown > 0) return;
 
     setError("");
@@ -348,6 +363,12 @@ export default function SignupPage() {
               )}
 
               {awaitingVerification && (
+                <p className="mt-4 text-sm font-medium text-[#0B1739]">
+                  Check: <span className="font-bold">{pendingEmail}</span>
+                </p>
+              )}
+
+              {awaitingVerification && (
                 <button
                   type="button"
                   onClick={handleResendVerification}
@@ -358,16 +379,31 @@ export default function SignupPage() {
                     ? "Sending..."
                     : resendCooldown > 0
                       ? `Resend available in ${resendCooldown}s`
-                      : "Resend verification email"}
+                      : "Try sending verification again"}
+                </button>
+              )}
+
+              {awaitingVerification && (
+                <button
+                  type="button"
+                  onClick={() => {
+                    setAwaitingVerification(false);
+                    setPendingEmail("");
+                    setMessage("");
+                    setResendCooldown(0);
+                  }}
+                  className="mt-3 block w-full text-center text-sm font-semibold text-[#1677FF] hover:underline"
+                >
+                  Use a different email address
                 </button>
               )}
 
               <button
                 type="submit"
-                disabled={loading || googleLoading}
+                disabled={loading || googleLoading || awaitingVerification}
                 className="mt-6 w-full rounded-xl bg-[#1677FF] px-5 py-3.5 text-sm font-semibold text-white hover:bg-[#0F65E8] disabled:opacity-60"
               >
-                {loading ? "Creating Account..." : "Create Account"}
+                {loading ? "Creating Account..." : awaitingVerification ? "Check your email first" : "Create Account"}
               </button>
             </form>
 
