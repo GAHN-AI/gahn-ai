@@ -242,7 +242,7 @@ export default function SignupPage() {
               Create your account
             </h2>
             <p className="mt-3 text-sm leading-6 text-black sm:text-base">
-              Join the GAHN AI MVP with the free Explore plan.
+              Join the GAHN AI MVP with the Free Plan.
             </p>
 
             <button
