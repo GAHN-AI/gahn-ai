@@ -99,7 +99,7 @@ export default function SignupPage() {
 
     setLoading(true);
 
-    const { error: signupError } = await supabase.auth.signUp({
+    const { data: signupData, error: signupError } = await supabase.auth.signUp({
       email: cleanEmail,
       password,
       options: {
@@ -111,14 +111,26 @@ export default function SignupPage() {
     setLoading(false);
 
     if (signupError) {
-      setError(signupError.message);
+      setError(
+        signupError.code === "over_email_send_rate_limit"
+          ? "Too many emails were requested. Please wait a little while before trying again."
+          : "We couldn't complete that request. If you already have an account, log in using your original method, including Google."
+      );
       return;
     }
 
+    // Some projects verify email, while others return an active session immediately.
+    if (signupData.session) {
+      window.location.replace("/dashboard");
+      return;
+    }
+
+    // Supabase deliberately obscures duplicate registrations. A successful
+    // response does not prove an account was created or an email was sent.
     setAwaitingVerification(true);
     setResendCooldown(60);
     setMessage(
-      "Account created. Check your email and click Verify Email. Keep this tab open and it will move to your dashboard after verification."
+      "If this address can be registered, check your email for a verification link. Already have an account? Log in instead, using Google if that's how you signed up."
     );
   }
 
@@ -145,7 +157,7 @@ export default function SignupPage() {
     }
 
     setResendCooldown(60);
-    setMessage("Verification email sent again. Check your inbox and spam folder.");
+    setMessage("If a verification email can be sent to this address, check your inbox and spam folder. Already registered? Go to Log in.");
   }
 
   async function handleGoogleSignup() {
@@ -213,8 +225,8 @@ export default function SignupPage() {
               <span className="text-[#1677FF]">GAHN AI.</span>
             </h1>
             <p className="mt-6 max-w-xl text-lg leading-8 text-black">
-              Create one account to test Career Skills and School Help first.
-              The other learning worlds will open after the core tutor experience is proven.
+              Create your Free Plan account to explore all five learning worlds
+              and keep your learning progress in one place.
             </p>
 
             <div className="mt-10 space-y-6">
@@ -252,8 +264,12 @@ export default function SignupPage() {
               className="mt-8 flex w-full items-center justify-center gap-3 rounded-xl border border-[#D7E3F2] bg-white px-5 py-3.5 text-sm font-semibold shadow-sm hover:bg-[#F8FBFF] disabled:opacity-60"
             >
               <img src="/google-logo/google.svg" alt="Google" className="h-5 w-5" />
-              {googleLoading ? "Connecting..." : "Continue with Google"}
+              {googleLoading ? "Connecting..." : "Sign up with Google"}
             </button>
+
+            <p className="mt-3 text-center text-xs leading-5 text-slate-600">
+              If you have used Google to sign in before, use the same Google account to return to your existing profile.
+            </p>
 
             <div className="my-6 flex items-center gap-4 text-xs font-bold uppercase tracking-[0.12em] text-black">
               <div className="h-px flex-1 bg-[#D7E3F2]" />
@@ -348,7 +364,7 @@ export default function SignupPage() {
 
               <button
                 type="submit"
-                disabled={loading}
+                disabled={loading || googleLoading}
                 className="mt-6 w-full rounded-xl bg-[#1677FF] px-5 py-3.5 text-sm font-semibold text-white hover:bg-[#0F65E8] disabled:opacity-60"
               >
                 {loading ? "Creating Account..." : "Create Account"}
@@ -365,6 +381,7 @@ export default function SignupPage() {
               <Link href="/login" className="font-semibold text-[#1677FF]">
                 Log in
               </Link>
+              {" "}with your password or Google.
             </p>
           </div>
         </section>
