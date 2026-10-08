@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { Source_Sans_3 } from "next/font/google";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { supabase } from "@/lib/supabaseClient";
 import {
   ArrowLeft,
@@ -48,6 +48,17 @@ export default function LoginPage() {
   const [error, setError] = useState("");
   const [message, setMessage] = useState("");
 
+  useEffect(() => {
+    const reason = new URLSearchParams(window.location.search).get("error");
+    if (reason === "authentication_failed") {
+      setError("That sign-in link expired or could not be verified. Please try again.");
+    } else if (reason === "profile_setup_failed") {
+      setError("We couldn't finish setting up your profile. Please try signing in again.");
+    } else if (reason === "session_expired") {
+      setMessage("Your session ended. Please sign in again to continue.");
+    }
+  }, []);
+
   async function handleLogin(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
 
@@ -76,7 +87,13 @@ export default function LoginPage() {
     setLoading(false);
 
     if (loginError) {
-      setError("Invalid email or password.");
+      if (loginError.code === "email_not_confirmed") {
+        setError("Please verify your email address before logging in. Check your inbox, or choose Continue with Google if you signed up with Google.");
+      } else if (loginError.code === "too_many_requests" || loginError.status === 429) {
+        setError("Too many sign-in attempts. Please wait and try again.");
+      } else {
+        setError("We couldn't sign you in. Check your email and password, or choose Continue with Google if you originally used Google.");
+      }
       return;
     }
 
@@ -130,7 +147,7 @@ export default function LoginPage() {
       return;
     }
 
-    setMessage("Password reset email sent. Check your inbox.");
+    setMessage("If this email has a password-based account, you'll receive a reset link. Check your inbox and spam folder. Signed up with Google? Use Continue with Google instead.");
   }
 
   return (
@@ -248,6 +265,10 @@ export default function LoginPage() {
               </span>
             </button>
 
+            <p className="mt-3 text-center text-xs leading-5 text-slate-600">
+              Use your existing Google account to sign in. If you're new, Google will create a Free Plan account for you.
+            </p>
+
             <div className="my-6 flex items-center gap-4 text-xs font-bold uppercase tracking-[0.12em] text-black">
               <div className="h-px flex-1 bg-[#D7E3F2]" />
               Or
@@ -287,15 +308,7 @@ export default function LoginPage() {
                 className="w-full rounded-xl border border-[#D7E3F2] bg-white px-4 py-3.5 text-sm text-[#0B1739] outline-none placeholder:text-black focus:border-[#1677FF] focus:ring-2 focus:ring-[#1677FF]/15"
               />
 
-              <div className="mt-4 flex items-center justify-between gap-4 text-sm">
-                <label className="flex cursor-pointer items-center gap-2 text-black">
-                  <input
-                    type="checkbox"
-                    className="h-4 w-4 accent-[#1677FF]"
-                  />
-                  Remember me
-                </label>
-
+              <div className="mt-4 flex justify-end text-sm">
                 <button
                   type="button"
                   onClick={handleForgotPassword}
@@ -320,7 +333,7 @@ export default function LoginPage() {
 
               <button
                 type="submit"
-                disabled={loading}
+                disabled={loading || googleLoading}
                 className="mt-6 flex w-full items-center justify-center rounded-xl bg-[#1677FF] px-5 py-3.5 text-sm font-semibold text-white hover:bg-[#0F65E8] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#1677FF] focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-60"
               >
                 {loading ? "Logging In..." : "Log In"}
