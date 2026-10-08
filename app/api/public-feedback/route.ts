@@ -23,7 +23,7 @@ export async function GET() {
   const { user } = await getAuthenticatedUser();
   if (!user) {
     return NextResponse.json(
-      { submitted: false },
+      { submitted: false, authenticated: false },
       { headers: { "Cache-Control": "no-store" } }
     );
   }
@@ -44,7 +44,7 @@ export async function GET() {
   }
 
   return NextResponse.json(
-    { submitted: Boolean(data) },
+    { submitted: Boolean(data), authenticated: true },
     { headers: { "Cache-Control": "no-store" } }
   );
 }
