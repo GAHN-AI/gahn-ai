@@ -17,7 +17,7 @@ type Plan = {
 const plans: Plan[] = [
   {
     id: "explore",
-    name: "Early Access",
+    name: "Free Plan",
     price: "$0",
     description:
       "Start learning across all five learning worlds with the core GAHN lesson experience.",
@@ -40,7 +40,7 @@ const plans: Plan[] = [
     available: true,
     featured: true,
     features: [
-      "Everything in Early Access",
+      "Everything in Free Plan",
       "30 live AI instructor minutes each day",
       "Real time voice conversations with your AI instructor",
       "Adaptive re teaching when you are still confused",
@@ -304,7 +304,7 @@ export default function PricingPage() {
               See exactly what changes between plans
             </h2>
             <p className="mx-auto mt-4 max-w-2xl text-base leading-7 text-black">
-              Mastery and Career Pro are shown so you can see where GAHN is going, but only Early Access and Learner Plus can be selected right now.
+              Mastery and Career Pro are shown so you can see where GAHN is going, but only Free Plan and Learner Plus can be selected right now.
             </p>
           </div>
 
