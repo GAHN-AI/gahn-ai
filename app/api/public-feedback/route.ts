@@ -97,7 +97,8 @@ export async function POST(request: Request) {
       throw insertError;
     }
 
-    const to = process.env.FEEDBACK_NOTIFICATION_EMAIL?.trim() || "support@gahnai.com";
+    // Send directly to the verified GAHN Zoho support inbox.
+    const to = "support@gahnai.com";
     const { error: notifyError } = await resend.emails.send({
       from: "GAHN AI Feedback <feedback@updates.gahnai.com>",
       to: [to],
