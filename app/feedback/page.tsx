@@ -34,6 +34,7 @@ export default function FeedbackPage() {
   const [notificationSent, setNotificationSent] = useState(true);
   const [error, setError] = useState("");
   const [statusLoading, setStatusLoading] = useState(true);
+  const [statusError, setStatusError] = useState(false);
   const [submittedBefore, setSubmittedBefore] = useState(false);
   const [submittedAt, setSubmittedAt] = useState<string | null>(null);
 
@@ -56,7 +57,8 @@ export default function FeedbackPage() {
         setSubmittedBefore(Boolean(data.submitted));
         setSubmittedAt(data.submittedAt || null);
       } catch {
-        setError("Unable to check your feedback status right now. Please try again later.");
+        setStatusError(true);
+        setError("Unable to check your feedback status right now. Please refresh and try again later.");
       } finally {
         setStatusLoading(false);
       }
@@ -69,7 +71,7 @@ export default function FeedbackPage() {
     event.preventDefault();
 
     const clean = message.trim();
-    if (!clean || !userId || submittedBefore || statusLoading) return;
+    if (!clean || !userId || submittedBefore || statusLoading || statusError) return;
 
     setSending(true);
     setError("");
@@ -151,7 +153,7 @@ export default function FeedbackPage() {
                 {sent && <p className="mt-3 text-sm">{notificationSent ? "Your submission was recorded and a support notification was sent." : "Your submission was recorded, but the email notification could not be delivered."}</p>}
               </div>
             </div>
-          ) : error && !userId ? (
+          ) : statusError ? (
             <p role="alert" className="p-7 text-sm text-red-700">{error}</p>
           ) : (
           <form onSubmit={submitFeedback} className="p-5 sm:p-7">
@@ -221,7 +223,7 @@ export default function FeedbackPage() {
 
             <button
               type="submit"
-              disabled={sending || !message.trim() || statusLoading || submittedBefore}
+              disabled={sending || !message.trim() || statusLoading || statusError || submittedBefore}
               className="mt-6 inline-flex items-center gap-2 rounded-xl bg-[#1677FF] px-5 py-3 text-sm font-bold text-white disabled:bg-[#B8C7DA]"
             >
               <Send className="h-4 w-4" />
