@@ -777,9 +777,13 @@ export default function LearningStudio({
                       setNotes(event.target.value);
                     }}
                     rows={5}
+                    onBlur={() => void saveNotes()}
                     placeholder="Write what you want to remember..."
                     className="w-full resize-none rounded-lg border border-[#D7E3F2] bg-white px-3 py-2.5 text-sm leading-6 outline-none focus:border-[#1677FF]"
                   />
+                  <p className="mt-2 text-xs text-[#53657D]">
+                    Your notes save automatically and will appear in My Notes.
+                  </p>
                   <button
                     type="button"
                     onClick={() => void saveNotes()}
