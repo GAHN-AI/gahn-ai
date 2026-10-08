@@ -5,7 +5,6 @@ import { useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import type { LucideIcon } from "lucide-react";
 import {
-  Bell,
   BookOpen,
   Brain,
   BriefcaseBusiness,
@@ -338,13 +337,6 @@ export default function DashboardPage() {
               </div>
             </Link>
 
-            <button
-              type="button"
-              aria-label="Notifications"
-              className="grid h-9 w-9 place-items-center rounded-lg text-[#4F515A] transition hover:bg-[#F6F6F8]"
-            >
-              <Bell className="h-4 w-4" />
-            </button>
           </div>
 
           <Link
