@@ -25,6 +25,7 @@ export type TeachingAction =
   | "explain_differently"
   | "summary"
   | "study_guide"
+  | "finish"
   | "review"
   | "mastery_check";
 
