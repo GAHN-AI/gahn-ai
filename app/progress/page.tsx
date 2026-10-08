@@ -79,7 +79,8 @@ export default function ProgressPage() {
 
         return (
           meaningfulStart ||
-          (row.attempts_count || 0) > 0 ||
+          row.status === "completed" ||
+      (row.attempts_count || 0) > 0 ||
           ["practicing", "proficient", "mastered", "needs_review"].includes(
             row.mastery_state || ""
           )
