@@ -125,17 +125,12 @@ export default function StudyGuidesPage() {
                 <div className="max-w-md">
                   <Sparkles className="mx-auto h-8 w-8 text-[#1677FF]" />
                   <h2 className="mt-3 text-lg font-extrabold">
-                    No saved study materials yet
+                    No study guides yet
                   </h2>
                   <p className="mt-2 text-sm leading-6 text-black">
-                    Start a lesson and use Summary or Study Guide in the Learning Studio. GAHN will save the result here.
+                    Saved summaries and study guides from your lessons will appear here automatically. Choose a learning world from your dashboard.
                   </p>
-                  <Link
-                    href="/learn/career-skills"
-                    className="mt-5 inline-flex rounded-lg bg-[#1677FF] px-4 py-2.5 text-sm font-bold text-white"
-                  >
-                    Start learning
-                  </Link>
+
                 </div>
               </div>
             ) : filtered.length === 0 ? (
