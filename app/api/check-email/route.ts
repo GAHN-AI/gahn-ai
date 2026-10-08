@@ -1,27 +1,10 @@
 import { NextResponse } from "next/server";
-import { createClient } from "@supabase/supabase-js";
 
-export async function POST(request: Request) {
-  const { email } = await request.json();
-
-  if (!email) {
-    return NextResponse.json({ exists: false }, { status: 400 });
-  }
-
-  const supabaseAdmin = createClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.SUPABASE_SERVICE_ROLE_KEY!
+// Never expose whether an email address is registered. That information can
+// be used to enumerate customer accounts. Supabase handles signup directly.
+export async function POST() {
+  return NextResponse.json(
+    { error: "Account availability checks are not supported. Please use the signup or login page." },
+    { status: 404 }
   );
-
-  const { data, error } = await supabaseAdmin
-    .from("profiles")
-    .select("id")
-    .eq("email", email.trim().toLowerCase())
-    .maybeSingle();
-
-  if (error) {
-    return NextResponse.json({ exists: false, error: error.message }, { status: 500 });
-  }
-
-  return NextResponse.json({ exists: !!data });
 }
