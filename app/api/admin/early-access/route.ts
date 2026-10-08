@@ -148,10 +148,10 @@ export async function GET() {
       recentSessions: recentSessions.data || [],
     });
   } catch (error) {
-    console.error("Founder early-access analytics failed:", error);
+    console.error("Founder Free Plan analytics failed:", error);
 
     return NextResponse.json(
-      { error: "Could not load early-access analytics." },
+      { error: "Could not load Free Plan analytics." },
       { status: 500 }
     );
   }
