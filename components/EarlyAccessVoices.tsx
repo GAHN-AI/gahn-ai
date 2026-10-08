@@ -11,6 +11,7 @@ export default function EarlyAccessVoices() {
   const [submitting, setSubmitting] = useState(false);
   const [checking, setChecking] = useState(true);
   const [submitted, setSubmitted] = useState(false);
+  const [authenticated, setAuthenticated] = useState(false);
   const [notice, setNotice] = useState("");
   const [error, setError] = useState("");
   const [statusError, setStatusError] = useState(false);
@@ -23,7 +24,10 @@ export default function EarlyAccessVoices() {
         const response = await fetch("/api/public-feedback", { cache: "no-store" });
         if (!response.ok) throw new Error("Could not check message status.");
         const result = await response.json();
-        if (!cancelled) setSubmitted(Boolean(result.submitted));
+        if (!cancelled) {
+          setSubmitted(Boolean(result.submitted));
+          setAuthenticated(Boolean(result.authenticated));
+        }
       } catch {
         if (!cancelled) {
           setStatusError(true);
@@ -112,6 +116,17 @@ export default function EarlyAccessVoices() {
         <div className="rounded-3xl border border-gahn-line bg-white p-6 sm:p-8">
           {checking ? (
             <p className="py-8 text-sm text-gahn-navy">Checking your submission status...</p>
+          ) : !authenticated ? (
+            <div className="py-6">
+              <h3 className="text-xl font-semibold text-gahn-navy">Sign in to share your thoughts</h3>
+              <p className="mt-3 text-sm leading-6 text-black">
+                Comments are private. Sign in or create a Free Plan account to send one message.
+              </p>
+              <div className="mt-6 flex flex-wrap gap-3">
+                <Link href="/login" className="rounded-full bg-gahn-blue px-5 py-2.5 text-sm font-semibold text-white">Log in</Link>
+                <Link href="/signup" className="rounded-full border border-gahn-line px-5 py-2.5 text-sm font-semibold text-gahn-navy">Create account</Link>
+              </div>
+            </div>
           ) : submitted ? (
             <div role="status" className="py-6">
               <CheckCircle2 className="h-10 w-10 text-gahn-blue" />
