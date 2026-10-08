@@ -335,7 +335,8 @@ export default function LearningStudio({
     setFinishedLesson(false);
     setStarted(true);
     setMessages([]);
-    await requestInstructor(undefined, "start");
+    const firstTurn = await requestInstructor(undefined, "start");
+    if (!firstTurn) setStarted(false);
   }
 
   async function finishLesson() {
@@ -345,7 +346,7 @@ export default function LearningStudio({
     setError("");
     try {
       // Save any personal notes before generating separate recap material.
-      if (notesDraftRef.current.trim()) await saveNotes();
+      if (notesDraftRef.current.trim() && !(await saveNotes())) return;
 
       const summary = await requestInstructor(undefined, "summary");
       if (!summary) return;
@@ -391,7 +392,7 @@ export default function LearningStudio({
 
   async function sendResponse(responseText: string) {
     const clean = responseText.trim();
-    if (!clean || loading) return;
+    if (!clean || loading || finishingLesson || finishedLesson) return;
 
     setMessages((current) => [
       ...current,
@@ -546,9 +547,9 @@ export default function LearningStudio({
   }
 
   async function saveNotes() {
-    if (savingNotesRef.current) return;
+    if (savingNotesRef.current) return false;
     const bodyToSave = notesDraftRef.current;
-    if (!bodyToSave.trim() || bodyToSave === lastSavedNotesRef.current) return;
+    if (!bodyToSave.trim() || bodyToSave === lastSavedNotesRef.current) return true;
 
     savingNotesRef.current = true;
     const {
@@ -558,7 +559,7 @@ export default function LearningStudio({
     if (!user) {
       savingNotesRef.current = false;
       setError("Sign in to save notes.");
-      return;
+      return false;
     }
 
     setNotesSaved(false);
@@ -576,7 +577,7 @@ export default function LearningStudio({
       if (updateError) {
         savingNotesRef.current = false;
         setError(updateError.message);
-        return;
+        return false;
       }
     } else {
       const { data, error: insertError } = await supabase
@@ -595,7 +596,7 @@ export default function LearningStudio({
       if (insertError) {
         savingNotesRef.current = false;
         setError(insertError.message);
-        return;
+        return false;
       }
 
       noteIdRef.current = data.id;
@@ -609,6 +610,7 @@ export default function LearningStudio({
     if (notesDraftRef.current !== bodyToSave) {
       window.setTimeout(() => void saveNotes(), 400);
     }
+    return true;
   }
 
   return (
@@ -661,6 +663,7 @@ export default function LearningStudio({
                 <Sparkles className="h-4 w-4" />
                 Start Lesson
               </button>
+              {error && <p role="alert" className="mt-3 text-sm text-red-700">{error}</p>}
             </div>
           </div>
         ) : (
@@ -702,7 +705,7 @@ export default function LearningStudio({
             <div role="status" className="border-t border-[#D7E3F2] bg-white p-5">
               <h3 className="text-base font-extrabold text-[#0B1739]">Lesson finished</h3>
               <p className="mt-2 text-sm leading-6 text-[#40536D]">
-                Your lesson summary and notes have been saved. {features.studyGuides ? "Your study guide is also ready." : "Study guides are not included in your current plan."}
+                {features.notes ? "Your lesson summary and notes have been saved." : "Your lesson summary has been saved."} {features.studyGuides ? "Your study guide is also ready." : "Study guides are not included in your current plan."}
                 Finishing a session does not mark a skill as mastered.
               </p>
               <div className="mt-4 flex flex-wrap gap-2">
