@@ -143,7 +143,11 @@ export default function LoginPage() {
     setResetLoading(false);
 
     if (resetError) {
-      setError(resetError.message);
+      setError(
+        resetError.status === 429
+          ? "Too many reset requests. Please wait before trying again."
+          : "We couldn't process the reset request right now. Please try again later."
+      );
       return;
     }
 
