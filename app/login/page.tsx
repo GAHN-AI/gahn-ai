@@ -151,7 +151,7 @@ export default function LoginPage() {
       return;
     }
 
-    setMessage("If this email has a password-based account, you'll receive a reset link. Check your inbox and spam folder. Signed up with Google? Use Continue with Google instead.");
+    setMessage("If a password reset is available for this email, you'll receive a link. Check your inbox and spam folder. Signed up with Google? Use Continue with Google instead.");
   }
 
   return (
