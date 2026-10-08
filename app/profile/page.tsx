@@ -34,9 +34,22 @@ function getInitialColor(name: string) {
   return colors[total % colors.length];
 }
 
+type ProfileDraft = {
+  fullName: string;
+  learnerRole: string;
+  learningPace: string;
+  explanationStyle: string;
+};
+
+type PendingNavigation =
+  | { type: "link"; href: string }
+  | { type: "back" };
+
 export default function ProfilePage() {
   const router = useRouter();
   const fileInputRef = useRef<HTMLInputElement | null>(null);
+  const hasHistoryGuardRef = useRef(false);
+  const allowBackNavigationRef = useRef(false);
 
   const [userId, setUserId] = useState("");
   const [fullName, setFullName] = useState("Learner");
@@ -53,9 +66,18 @@ export default function ProfilePage() {
   const [cancelAtPeriodEnd, setCancelAtPeriodEnd] = useState(false);
   const [message, setMessage] = useState("");
   const [error, setError] = useState("");
+  const [savedProfile, setSavedProfile] = useState<ProfileDraft | null>(null);
+  const [pendingNavigation, setPendingNavigation] =
+    useState<PendingNavigation | null>(null);
 
   const initials = useMemo(() => getInitials(fullName), [fullName]);
   const avatarColor = useMemo(() => getInitialColor(fullName), [fullName]);
+  const hasUnsavedChanges =
+    savedProfile !== null &&
+    (fullName !== savedProfile.fullName ||
+      learnerRole !== savedProfile.learnerRole ||
+      learningPace !== savedProfile.learningPace ||
+      explanationStyle !== savedProfile.explanationStyle);
 
   useEffect(() => {
     async function loadProfile() {
@@ -105,22 +127,141 @@ export default function ProfilePage() {
 
         setFullName(fallbackName);
         setAvatarUrl("");
+        setSavedProfile({
+          fullName: fallbackName,
+          learnerRole: "student",
+          learningPace: "steady",
+          explanationStyle: "balanced",
+        });
         setLoading(false);
         return;
       }
 
-      setFullName(profile.full_name || fallbackName);
+      const loadedProfile: ProfileDraft = {
+        fullName: profile.full_name || fallbackName,
+        learnerRole: profile.learner_role || "student",
+        learningPace: profile.learning_pace || "steady",
+        explanationStyle: profile.explanation_style || "balanced",
+      };
+
+      setFullName(loadedProfile.fullName);
       setAvatarUrl(profile.avatar_url || "");
-      setLearnerRole(profile.learner_role || "student");
-      setLearningPace(profile.learning_pace || "steady");
-      setExplanationStyle(profile.explanation_style || "balanced");
+      setLearnerRole(loadedProfile.learnerRole);
+      setLearningPace(loadedProfile.learningPace);
+      setExplanationStyle(loadedProfile.explanationStyle);
+      setSavedProfile(loadedProfile);
       setLoading(false);
     }
 
     loadProfile();
   }, [router]);
 
-  async function handleSaveName() {
+  // Browser refreshes and tab closes use the browser's native leave warning.
+  useEffect(() => {
+    if (!hasUnsavedChanges) return;
+
+    const warnBeforeUnload = (event: BeforeUnloadEvent) => {
+      event.preventDefault();
+      event.returnValue = "";
+    };
+
+    window.addEventListener("beforeunload", warnBeforeUnload);
+    return () => window.removeEventListener("beforeunload", warnBeforeUnload);
+  }, [hasUnsavedChanges]);
+
+  // Add one same-page history entry to catch the browser Back button before
+  // Next.js navigates away and destroys the unsaved form.
+  useEffect(() => {
+    if (!hasUnsavedChanges || hasHistoryGuardRef.current) return;
+
+    window.history.pushState(
+      { ...window.history.state, __gahnProfileGuard: true },
+      "",
+      window.location.href
+    );
+    hasHistoryGuardRef.current = true;
+  }, [hasUnsavedChanges]);
+
+  useEffect(() => {
+    const handleBack = () => {
+      if (!hasHistoryGuardRef.current || allowBackNavigationRef.current) return;
+      hasHistoryGuardRef.current = false;
+
+      if (hasUnsavedChanges) {
+        window.history.pushState(
+          { ...window.history.state, __gahnProfileGuard: true },
+          "",
+          window.location.href
+        );
+        hasHistoryGuardRef.current = true;
+        setPendingNavigation({ type: "back" });
+      } else {
+        // After a successful save or reset, skip our extra history entry.
+        window.history.back();
+      }
+    };
+
+    window.addEventListener("popstate", handleBack);
+    return () => window.removeEventListener("popstate", handleBack);
+  }, [hasUnsavedChanges]);
+
+  useEffect(() => {
+    if (!pendingNavigation) return;
+    const handleEscape = (event: KeyboardEvent) => {
+      if (event.key === "Escape") setPendingNavigation(null);
+    };
+    window.addEventListener("keydown", handleEscape);
+    return () => window.removeEventListener("keydown", handleEscape);
+  }, [pendingNavigation]);
+
+  function handleResetChanges() {
+    if (!savedProfile) return;
+    setFullName(savedProfile.fullName);
+    setLearnerRole(savedProfile.learnerRole);
+    setLearningPace(savedProfile.learningPace);
+    setExplanationStyle(savedProfile.explanationStyle);
+    setError("");
+    setMessage("");
+  }
+
+  function handleProfileLink(
+    event: React.MouseEvent<HTMLAnchorElement>,
+    href: string
+  ) {
+    if (
+      !hasUnsavedChanges ||
+      event.defaultPrevented ||
+      event.button !== 0 ||
+      event.metaKey ||
+      event.ctrlKey ||
+      event.shiftKey ||
+      event.altKey
+    ) {
+      return;
+    }
+
+    event.preventDefault();
+    setPendingNavigation({ type: "link", href });
+  }
+
+  function leaveProfile(navigation: PendingNavigation) {
+    setPendingNavigation(null);
+    if (navigation.type === "back") {
+      allowBackNavigationRef.current = true;
+      window.history.go(-2);
+    } else {
+      router.push(navigation.href);
+    }
+  }
+
+  async function handleSaveAndLeave() {
+    if (!pendingNavigation) return;
+    const navigation = pendingNavigation;
+    if (await handleSaveName()) leaveProfile(navigation);
+  }
+
+  async function handleSaveName(): Promise<boolean> {
+    if (saving || !userId) return false;
     setSaving(true);
     setError("");
     setMessage("");
@@ -130,8 +271,15 @@ export default function ProfilePage() {
     if (!cleanName) {
       setSaving(false);
       setError("Name cannot be empty.");
-      return;
+      return false;
     }
+
+    const savedValues: ProfileDraft = {
+      fullName: cleanName,
+      learnerRole,
+      learningPace,
+      explanationStyle,
+    };
 
     const { error: updateError } = await supabase
       .from("profiles")
@@ -147,10 +295,13 @@ export default function ProfilePage() {
 
     if (updateError) {
       setError(updateError.message);
-      return;
+      return false;
     }
 
+    setFullName(cleanName);
+    setSavedProfile(savedValues);
     setMessage("Profile updated.");
+    return true;
   }
 
   async function handleManageSubscription() {
@@ -229,9 +380,10 @@ export default function ProfilePage() {
   }
 
   return (
+    <>
     <main className="min-h-screen bg-white px-8 py-10 text-[#061633] lg:[zoom:0.85] xl:[zoom:0.75] 2xl:[zoom:0.85]">
       <div className="mx-auto max-w-3xl">
-        <Link href="/dashboard" className="text-lg font-black text-blue-600">
+        <Link href="/dashboard" onClick={(event) => handleProfileLink(event, "/dashboard")} className="text-lg font-black text-blue-600">
           ← Back to Dashboard
         </Link>
 
@@ -382,6 +534,7 @@ export default function ProfilePage() {
               ) : (
                 <Link
                   href="/pricing"
+                  onClick={(event) => handleProfileLink(event, "/pricing")}
                   className="rounded-xl border border-slate-300 bg-white px-5 py-3 text-center text-sm font-black text-[#061633]"
                 >
                   View Plan
@@ -404,7 +557,8 @@ export default function ProfilePage() {
           )}
 
           <button
-            onClick={handleSaveName}
+            type="button"
+            onClick={() => void handleSaveName()}
             disabled={saving}
             className="mt-8 rounded-2xl bg-blue-600 px-8 py-4 text-lg font-black text-white disabled:opacity-60"
           >
@@ -413,5 +567,78 @@ export default function ProfilePage() {
         </section>
       </div>
     </main>
+
+    {hasUnsavedChanges && (
+      <div className="fixed inset-x-4 bottom-4 z-50 mx-auto flex max-w-3xl flex-col gap-3 rounded-2xl border border-[#1C3666] bg-[#071F4D] px-5 py-4 text-white shadow-[0_18px_50px_rgba(7,31,77,0.28)] sm:flex-row sm:items-center sm:justify-between">
+        <div>
+          <p className="text-base font-bold">You have unsaved changes</p>
+          <p className="mt-1 text-sm text-white/80">Save your profile before leaving this page.</p>
+        </div>
+        <div className="flex shrink-0 items-center gap-3">
+          <button
+            type="button"
+            onClick={handleResetChanges}
+            disabled={saving}
+            className="rounded-lg px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-white/10 disabled:opacity-50"
+          >
+            Reset
+          </button>
+          <button
+            type="button"
+            onClick={() => void handleSaveName()}
+            disabled={saving}
+            className="rounded-lg bg-white px-5 py-2.5 text-sm font-bold text-[#071F4D] transition hover:bg-[#E8F0FF] disabled:opacity-50"
+          >
+            {saving ? "Saving..." : "Save Changes"}
+          </button>
+        </div>
+      </div>
+    )}
+
+    {pendingNavigation && (
+      <div className="fixed inset-0 z-[60] flex items-center justify-center bg-black/60 px-4">
+        <div
+          role="alertdialog"
+          aria-modal="true"
+          aria-labelledby="unsaved-profile-title"
+          aria-describedby="unsaved-profile-description"
+          className="w-full max-w-md rounded-2xl bg-white p-6 text-[#061633] shadow-2xl"
+        >
+          <h2 id="unsaved-profile-title" className="text-xl font-black">
+            Save changes before leaving?
+          </h2>
+          <p id="unsaved-profile-description" className="mt-3 text-sm leading-6 text-slate-600">
+            Your new profile settings have not been saved. Leaving now will discard them.
+          </p>
+          {error && <p className="mt-3 text-sm font-medium text-red-600">{error}</p>}
+          <div className="mt-6 flex flex-wrap justify-end gap-2">
+            <button
+              type="button"
+              autoFocus
+              onClick={() => setPendingNavigation(null)}
+              className="rounded-lg border border-slate-200 px-4 py-2.5 text-sm font-semibold text-[#061633]"
+            >
+              Keep Editing
+            </button>
+            <button
+              type="button"
+              onClick={() => leaveProfile(pendingNavigation)}
+              className="rounded-lg border border-red-200 px-4 py-2.5 text-sm font-semibold text-red-700"
+            >
+              Discard Changes
+            </button>
+            <button
+              type="button"
+              onClick={() => void handleSaveAndLeave()}
+              disabled={saving}
+              className="rounded-lg bg-[#0B5CFF] px-4 py-2.5 text-sm font-bold text-white disabled:opacity-50"
+            >
+              {saving ? "Saving..." : "Save & Leave"}
+            </button>
+          </div>
+        </div>
+      </div>
+    )}
+    </>
   );
 }
