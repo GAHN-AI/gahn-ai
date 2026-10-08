@@ -179,8 +179,18 @@ export default function DashboardPage() {
   const [studyGuidesCount, setStudyGuidesCount] = useState(0);
   const [searchQuery, setSearchQuery] = useState("");
   const [view, setView] = useState<"worlds" | "activity">("worlds");
+  const [showWelcome, setShowWelcome] = useState(false);
 
   const initials = useMemo(() => getInitials(fullName), [fullName]);
+
+  useEffect(() => {
+    setShowWelcome(new URLSearchParams(window.location.search).get("welcome") === "1");
+  }, []);
+
+  function dismissWelcome() {
+    setShowWelcome(false);
+    window.history.replaceState(window.history.state, "", "/dashboard");
+  }
 
   useEffect(() => {
     async function loadDashboard() {
@@ -434,6 +444,23 @@ export default function DashboardPage() {
           </header>
 
           <div className="mx-auto w-full max-w-[1320px] px-5 py-8 sm:px-8 lg:px-10 lg:py-10">
+            {showWelcome && (
+              <div role="status" className="mb-6 flex items-start justify-between gap-4 rounded-xl border border-[#BBD3FF] bg-[#F1F7FF] px-5 py-4">
+                <div>
+                  <p className="text-base font-semibold text-[#0B1739]">Your Free Plan account is ready</p>
+                  <p className="mt-1 text-sm leading-6 text-[#3B4F75]">
+                    This is your new learning account. Explore the five learning worlds whenever you're ready.
+                  </p>
+                </div>
+                <button
+                  type="button"
+                  onClick={dismissWelcome}
+                  className="shrink-0 rounded-lg px-3 py-2 text-xs font-semibold text-[#0B5CFF] hover:bg-[#E1EDFF]"
+                >
+                  Dismiss
+                </button>
+              </div>
+            )}
             <div>
               <h1 className="text-[30px] font-semibold tracking-[-0.035em] text-[#1D1E24]">
                 Recents
