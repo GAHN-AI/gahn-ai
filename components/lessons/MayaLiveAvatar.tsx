@@ -405,7 +405,7 @@ export default function MayaLiveAvatar({
               Maya is a Learner Plus feature.
             </p>
             <p className="mt-1 text-xs font-medium leading-5 text-white/80">
-              Explore stays free without paid avatar usage. Learner Plus includes
+              The Free Plan does not include paid avatar usage. Learner Plus includes
               60 Maya minutes per billing period.
             </p>
           </div>
