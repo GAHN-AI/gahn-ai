@@ -49,7 +49,7 @@ export default function ProfilePage() {
   const [saving, setSaving] = useState(false);
   const [billingLoading, setBillingLoading] = useState(false);
   const [planId, setPlanId] = useState("explore");
-  const [planName, setPlanName] = useState("Explore");
+  const [planName, setPlanName] = useState("Free Plan");
   const [cancelAtPeriodEnd, setCancelAtPeriodEnd] = useState(false);
   const [message, setMessage] = useState("");
   const [error, setError] = useState("");
@@ -76,7 +76,7 @@ export default function ProfilePage() {
       if (subscriptionResponse.ok) {
         const subscription = await subscriptionResponse.json();
         setPlanId(subscription.planId || "explore");
-        setPlanName(subscription.entitlements?.name || "Explore");
+        setPlanName(subscription.entitlements?.name || "Free Plan");
         setCancelAtPeriodEnd(Boolean(subscription.cancelAtPeriodEnd));
       }
 
@@ -365,7 +365,7 @@ export default function ProfilePage() {
                   {cancelAtPeriodEnd
                     ? "Your paid plan remains active until the end of the current billing period."
                     : planId === "explore"
-                      ? "Explore is the free GAHN AI plan."
+                      ? "The Free Plan is free."
                       : "Your dashboard and feature access follow this subscription automatically."}
                 </p>
               </div>
