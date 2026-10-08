@@ -164,16 +164,11 @@ export default function NotesPage() {
               <div className="grid min-h-72 place-items-center rounded-2xl border border-dashed border-[#CFE0F5] bg-[#F8FBFF] px-6 text-center">
                 <div className="max-w-md">
                   <BookOpen className="mx-auto h-8 w-8 text-[#1677FF]" />
-                  <h2 className="mt-3 text-lg font-extrabold">No saved notes yet</h2>
+                  <h2 className="mt-3 text-lg font-extrabold">No notes yet</h2>
                   <p className="mt-2 text-sm leading-6 text-black">
-                    Start a lesson, open Notes in the Learning Studio, and save what you want to remember.
+                    Notes saved during your lessons will appear here automatically. Return to your dashboard to choose any learning world.
                   </p>
-                  <Link
-                    href="/learn/career-skills"
-                    className="mt-5 inline-flex rounded-lg bg-[#1677FF] px-4 py-2.5 text-sm font-bold text-white"
-                  >
-                    Start learning
-                  </Link>
+
                 </div>
               </div>
             ) : filteredNotes.length === 0 ? (
