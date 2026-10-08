@@ -144,14 +144,9 @@ export default function ProgressPage() {
                   <Target className="mx-auto h-8 w-8 text-[#1677FF]" />
                   <h2 className="mt-3 text-lg font-extrabold">No lesson evidence yet</h2>
                   <p className="mt-2 text-sm leading-6 text-black">
-                    Start an interactive lesson. Your answers and mastery evidence will be recorded here.
+                    When you complete learning activities, your checked answers and mastery progress will appear here. Return to your dashboard to choose a learning world.
                   </p>
-                  <Link
-                    href="/learn/career-skills"
-                    className="mt-5 inline-flex rounded-lg bg-[#1677FF] px-4 py-2.5 text-sm font-bold text-white"
-                  >
-                    Start learning
-                  </Link>
+
                 </div>
               </div>
             ) : (
