@@ -172,7 +172,7 @@ export default function DashboardPage() {
 
   const [fullName, setFullName] = useState("Learner");
   const [avatarUrl, setAvatarUrl] = useState("");
-  const [planName, setPlanName] = useState("Explore");
+  const [planName, setPlanName] = useState("Free Plan");
   const [planId, setPlanId] = useState("explore");
   const [progressRows, setProgressRows] = useState<ProgressRow[]>([]);
   const [notesCount, setNotesCount] = useState(0);
@@ -216,7 +216,7 @@ export default function DashboardPage() {
       if (subscriptionResponse.ok) {
         const subscription = await subscriptionResponse.json();
         setPlanId(subscription.planId || "explore");
-        setPlanName(subscription.entitlements?.name || "Explore");
+        setPlanName(subscription.entitlements?.name || "Free Plan");
       }
 
       setProgressRows((progressResult.data || []) as ProgressRow[]);
