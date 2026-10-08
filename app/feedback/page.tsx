@@ -33,6 +33,9 @@ export default function FeedbackPage() {
   const [sent, setSent] = useState(false);
   const [notificationSent, setNotificationSent] = useState(true);
   const [error, setError] = useState("");
+  const [statusLoading, setStatusLoading] = useState(true);
+  const [submittedBefore, setSubmittedBefore] = useState(false);
+  const [submittedAt, setSubmittedAt] = useState<string | null>(null);
 
   useEffect(() => {
     async function loadUser() {
@@ -46,6 +49,17 @@ export default function FeedbackPage() {
       }
 
       setUserId(user.id);
+      try {
+        const response = await fetch("/api/feedback", { cache: "no-store" });
+        if (!response.ok) throw new Error("Could not check feedback status.");
+        const data = await response.json();
+        setSubmittedBefore(Boolean(data.submitted));
+        setSubmittedAt(data.submittedAt || null);
+      } catch {
+        setError("Unable to check your feedback status right now. Please try again later.");
+      } finally {
+        setStatusLoading(false);
+      }
     }
 
     void loadUser();
@@ -55,7 +69,7 @@ export default function FeedbackPage() {
     event.preventDefault();
 
     const clean = message.trim();
-    if (!clean || !userId) return;
+    if (!clean || !userId || submittedBefore || statusLoading) return;
 
     setSending(true);
     setError("");
@@ -81,6 +95,7 @@ export default function FeedbackPage() {
       const data = await response.json();
 
       if (!response.ok) {
+        if (response.status === 409) setSubmittedBefore(true);
         setError(data.error || "Feedback could not be sent.");
         return;
       }
@@ -89,6 +104,8 @@ export default function FeedbackPage() {
       setRating(null);
       setCategory("feedback");
       setNotificationSent(data.notificationSent !== false);
+      setSubmittedBefore(true);
+      setSubmittedAt(new Date().toISOString());
       setSent(true);
     } catch {
       setError("Feedback could not be sent. Please try again.");
@@ -117,10 +134,26 @@ export default function FeedbackPage() {
               Tell us what happened
             </h1>
             <p className="mt-3 max-w-2xl text-sm leading-7 text-black">
-              Feedback from Free Plan learners helps us understand what people use, where they get stuck, and what to improve next.
+              You can send feedback once from your account. Tell us what worked, what was confusing, or what we should improve.
             </p>
           </div>
 
+          {statusLoading ? (
+            <p className="p-7 text-sm font-semibold text-[#0B1739]">Checking your feedback status...</p>
+          ) : submittedBefore ? (
+            <div role="status" className="p-7 sm:p-9">
+              <div className="rounded-xl border border-[#BFD8F8] bg-[#F1F7FF] p-6">
+                <h2 className="text-xl font-extrabold text-[#0B1739]">Thank you for your feedback</h2>
+                <p className="mt-2 text-sm leading-6 text-black">
+                  You have already sent feedback from this account. Only one submission is allowed, so the form is now closed.
+                </p>
+                {submittedAt && <p className="mt-2 text-xs text-[#40536D]">Submitted {new Date(submittedAt).toLocaleDateString()}</p>}
+                {sent && <p className="mt-3 text-sm">{notificationSent ? "Your submission was recorded and a support notification was sent." : "Your submission was recorded, but the email notification could not be delivered."}</p>}
+              </div>
+            </div>
+          ) : error && !userId ? (
+            <p role="alert" className="p-7 text-sm text-red-700">{error}</p>
+          ) : (
           <form onSubmit={submitFeedback} className="p-5 sm:p-7">
             <p className="text-sm font-bold">What kind of feedback is this?</p>
             <div className="mt-3 grid gap-2 sm:grid-cols-2">
@@ -188,13 +221,14 @@ export default function FeedbackPage() {
 
             <button
               type="submit"
-              disabled={sending || !message.trim()}
+              disabled={sending || !message.trim() || statusLoading || submittedBefore}
               className="mt-6 inline-flex items-center gap-2 rounded-xl bg-[#1677FF] px-5 py-3 text-sm font-bold text-white disabled:bg-[#B8C7DA]"
             >
               <Send className="h-4 w-4" />
               {sending ? "Sending..." : "Send feedback"}
             </button>
           </form>
+          )}
         </section>
       </div>
     </main>
