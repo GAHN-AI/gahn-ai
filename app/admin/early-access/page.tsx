@@ -85,7 +85,7 @@ export default function EarlyAccessAdminPage() {
             Founder View
           </p>
           <h1 className="mt-2 text-3xl font-extrabold tracking-[-0.035em]">
-            Early Access Learning Signals
+            Free Plan Learning Signals
           </h1>
           <p className="mt-2 max-w-3xl text-sm leading-7 text-black">
             Watch what learners actually use, what they master, what they ask the AI to do, and what they report as confusing.
@@ -94,7 +94,7 @@ export default function EarlyAccessAdminPage() {
 
         {loading && (
           <div className="mt-8 rounded-2xl border border-[#D7E3F2] bg-white p-12 text-center text-sm font-semibold text-black">
-            Loading early access signals...
+            Loading Free Plan learning signals...
           </div>
         )}
 
