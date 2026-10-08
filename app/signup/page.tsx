@@ -167,7 +167,11 @@ export default function SignupPage() {
     setResendLoading(false);
 
     if (resendError) {
-      setError(resendError.message);
+      setError(
+        resendError.status === 429
+          ? "Too many email requests. Please wait before trying again."
+          : "We couldn't process that request right now. Please try again later."
+      );
       return;
     }
 
