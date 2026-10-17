@@ -9,10 +9,10 @@ const SITE_URL =
   process.env.NEXT_PUBLIC_SITE_URL || "https://gahnai.com";
 
 function safeNext(next: string | null) {
-  if (!next || !next.startsWith("/") || next.startsWith("//")) {
-    return "/dashboard";
-  }
-  return next;
+  // Only the password recovery flow may redirect somewhere other than
+  // the dashboard. An arbitrary path can become an off-site URL when
+  // backslashes or encoded URL separators are normalized by WHATWG URL.
+  return next === "/update-password" ? "/update-password" : "/dashboard";
 }
 
 function redirect(path: string) {
@@ -141,7 +141,8 @@ export async function GET(request: Request) {
 
   if (email && !profile.welcome_email_sent_at) {
     const safeName = escapeHtml(fullName);
-    const { error: welcomeError } = await resend.emails.send({
+    try {
+      const { error: welcomeError } = await resend.emails.send({
       from: "GAHN AI <hello@updates.gahnai.com>",
       to: email,
       subject: "Welcome to GAHN AI",
@@ -166,6 +167,10 @@ export async function GET(request: Request) {
       if (statusError) {
         console.error("Welcome email status update failed:", statusError);
       }
+    }
+    } catch (welcomeError) {
+      // A temporary email delivery outage must not block a successful login.
+      console.error("Welcome email delivery failed:", welcomeError);
     }
   }
 

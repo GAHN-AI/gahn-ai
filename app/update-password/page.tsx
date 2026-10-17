@@ -1,123 +1,146 @@
 "use client";
 
-import { useState } from "react";
-import { useRouter } from "next/navigation";
+import Link from "next/link";
+import { useEffect, useState, type FormEvent } from "react";
+import PasswordInput from "@/components/auth/PasswordInput";
 import { supabase } from "@/lib/supabaseClient";
 
-export default function UpdatePasswordPage() {
-  const router = useRouter();
+type RecoveryStatus = "checking" | "ready" | "invalid";
 
+export default function UpdatePasswordPage() {
+  const [status, setStatus] = useState<RecoveryStatus>("checking");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [message, setMessage] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+  const [complete, setComplete] = useState(false);
 
-  async function handleUpdatePassword(e: React.FormEvent<HTMLFormElement>) {
-    e.preventDefault();
+  useEffect(() => {
+    let mounted = true;
+
+    async function validateSession() {
+      try {
+        // A password reset link is exchanged for a Supabase session by /auth/callback.
+        const { data, error: authError } = await supabase.auth.getUser();
+        if (mounted) setStatus(!authError && data.user ? "ready" : "invalid");
+      } catch {
+        if (mounted) setStatus("invalid");
+      }
+    }
+
+    void validateSession();
+    return () => { mounted = false; };
+  }, []);
+
+  async function handleUpdatePassword(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    if (loading || status !== "ready" || complete) return;
+
     setMessage("");
     setError("");
 
     if (password.length < 8) {
-  setError("Password must be at least 8 characters.");
-  return;
-}
-
+      setError("Password must be at least 8 characters.");
+      return;
+    }
     if (password !== confirmPassword) {
       setError("Passwords do not match.");
       return;
     }
 
     setLoading(true);
+    try {
+      const { error: updateError } = await supabase.auth.updateUser({ password });
+      if (updateError) {
+        setError("Could not update your password. Try a stronger password or request a new reset link.");
+        return;
+      }
 
-    const { error } = await supabase.auth.updateUser({
-      password,
-    });
-
-    if (error) {
+      setComplete(true);
+      setPassword("");
+      setConfirmPassword("");
+      const { error: signOutError } = await supabase.auth.signOut({ scope: "local" });
+      if (signOutError) console.error("Logout after password reset failed:", signOutError);
+      setMessage("Password updated. You can now log in with your new password.");
+      if (!signOutError) window.setTimeout(() => window.location.replace("/login"), 1500);
+    } catch {
+      setError("Unable to connect to the authentication service. Please try again.");
+    } finally {
       setLoading(false);
-      setError(
-        "This reset link is invalid or expired. Please request a new password reset email."
-      );
-      return;
     }
-
-    const { error: logoutError } = await supabase.auth.signOut({
-  scope: "local",
-});
-
-if (logoutError) {
-  console.error("Logout after password update failed:", logoutError);
-}
-
-setLoading(false);
-setMessage("Password updated successfully. Redirecting to login...");
-
-setTimeout(() => {
-  window.location.replace("/login");
-}, 1500);
   }
 
   return (
-    <main className="min-h-screen bg-[#f6f9ff] px-6 py-10 text-[#061633] lg:[zoom:0.55]">
-      <div className="mx-auto mb-8 text-center">
-        <img
-          src="/logo/favicon.png"
-          alt="GAHN AI"
-          className="mx-auto mb-4 h-20 w-20 object-contain"
-        />
+    <main className="min-h-screen bg-[#F6F9FF] px-5 py-12 text-[#0B1739] sm:py-16">
+      <div className="mx-auto max-w-xl">
+        <header className="mb-8 text-center">
+          <Link href="/" aria-label="GAHN AI home" className="inline-flex flex-col items-center">
+            <img src="/logo/favicon.png" alt="" className="mb-3 h-16 w-16 object-contain" />
+            <span className="text-3xl font-black">GAHN AI</span>
+          </Link>
+          <p className="mt-2 text-xs font-bold uppercase tracking-[0.12em]">Global AI Human Helper Network</p>
+        </header>
 
-        <h1 className="text-5xl font-black text-[#061633]">GAHN AI</h1>
-
-        <p className="mt-1 text-sm font-bold uppercase tracking-[0.2em] text-black">
-          Global AI Human Helper Network
-        </p>
-      </div>
-
-      <div className="mx-auto max-w-xl overflow-hidden rounded-[2rem] bg-white p-12 shadow-2xl">
-        <h2 className="text-center text-4xl font-black">Create New Password</h2>
-
-        <p className="mt-3 text-center text-black">
-          Enter and confirm your new password.
-        </p>
-
-        <form onSubmit={handleUpdatePassword} className="mt-10">
-          <input
-            type="password"
-            placeholder="New Password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            className="w-full rounded-2xl border border-slate-200 px-5 py-4 text-lg outline-none focus:border-blue-400"
-          />
-
-          <input
-            type="password"
-            placeholder="Confirm New Password"
-            value={confirmPassword}
-            onChange={(e) => setConfirmPassword(e.target.value)}
-            className="mt-5 w-full rounded-2xl border border-slate-200 px-5 py-4 text-lg outline-none focus:border-blue-400"
-          />
-
-          {error && (
-            <p className="mt-5 rounded-xl bg-red-50 p-4 text-red-600">
-              {error}
-            </p>
+        <section className="rounded-3xl border border-[#D7E3F2] bg-white p-6 shadow-xl sm:p-10">
+          <h1 className="text-3xl font-black tracking-tight">Create a new password</h1>
+          {status === "checking" ? (
+            <p role="status" className="mt-5 text-sm text-[#53647D]">Checking your reset link...</p>
+          ) : status === "invalid" ? (
+            <div className="mt-6 space-y-5">
+              <p role="alert" className="rounded-xl border border-red-200 bg-red-50 p-4 text-sm text-red-700">
+                Your reset link has expired or could not be verified. Request a new link from the login page.
+              </p>
+              <Link href="/login" className="inline-flex rounded-xl bg-[#1677FF] px-5 py-3 text-sm font-semibold text-white">
+                Return to login
+              </Link>
+            </div>
+          ) : (
+            <>
+              <p className="mt-3 text-sm leading-6 text-[#53647D]">
+                Enter and confirm your new password. Use at least 8 characters.
+              </p>
+              <form onSubmit={handleUpdatePassword} className="mt-7 space-y-5">
+                <div>
+                  <label htmlFor="newPassword" className="mb-2 block text-sm font-semibold">New password</label>
+                  <PasswordInput
+                    id="newPassword"
+                    label="New password"
+                    value={password}
+                    onChange={setPassword}
+                    placeholder="Enter a new password"
+                    autoComplete="new-password"
+                    className="w-full rounded-xl border border-[#D7E3F2] px-4 py-3.5 outline-none focus:border-[#1677FF]"
+                  />
+                </div>
+                <div>
+                  <label htmlFor="confirmNewPassword" className="mb-2 block text-sm font-semibold">Confirm new password</label>
+                  <PasswordInput
+                    id="confirmNewPassword"
+                    label="Confirm new password"
+                    value={confirmPassword}
+                    onChange={setConfirmPassword}
+                    placeholder="Repeat your new password"
+                    autoComplete="new-password"
+                    className="w-full rounded-xl border border-[#D7E3F2] px-4 py-3.5 outline-none focus:border-[#1677FF]"
+                  />
+                </div>
+                {error && <p role="alert" className="rounded-xl bg-red-50 p-4 text-sm text-red-700">{error}</p>}
+                {message && <p role="status" className="rounded-xl bg-blue-50 p-4 text-sm text-[#0B5CFF]">{message}</p>}
+                <button
+                  type="submit"
+                  disabled={loading || complete}
+                  className="w-full rounded-xl bg-[#1677FF] px-5 py-3.5 text-sm font-semibold text-white transition hover:bg-[#0F65E8] disabled:cursor-not-allowed disabled:opacity-60"
+                >
+                  {loading ? "Updating password..." : complete ? "Password updated" : "Update password"}
+                </button>
+              </form>
+              <Link href="/login" className="mt-5 inline-block text-sm font-semibold text-[#1677FF] hover:underline">
+                Back to login
+              </Link>
+            </>
           )}
-
-          {message && (
-            <p className="mt-5 rounded-xl bg-green-50 p-4 text-green-700">
-              {message}
-            </p>
-          )}
-
-          <button
-            type="submit"
-            disabled={loading}
-            className="mt-8 flex w-full justify-center rounded-2xl bg-[#071f4d] px-5 py-4 text-lg font-black text-white shadow-lg disabled:cursor-not-allowed disabled:opacity-60"
-          >
-            {loading ? "Updating Password..." : "Update Password"}
-          </button>
-        </form>
+        </section>
       </div>
     </main>
   );

@@ -1,6 +1,5 @@
-import { createServerClient } from "@supabase/ssr";
-import { cookies } from "next/headers";
 import { NextResponse } from "next/server";
+import { getAuthenticatedUser } from "@/lib/serverAuth";
 import { supabaseAdmin } from "@/lib/supabaseAdmin";
 
 const RANGE_MS: Record<string, number> = {
@@ -102,39 +101,14 @@ async function getVisitorCounts() {
 }
 
 export async function GET(request: Request) {
-  const cookieStore = await cookies();
-
-  const supabase = createServerClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
-    {
-      cookies: {
-        getAll() {
-          return cookieStore.getAll();
-        },
-        setAll(cookiesToSet) {
-          try {
-            cookiesToSet.forEach(({ name, value, options }) => {
-              cookieStore.set(name, value, options);
-            });
-          } catch {
-            // Server Components and route reads cannot always refresh cookies.
-          }
-        },
-      },
-    }
-  );
-
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+  const { user, error: sessionError } = await getAuthenticatedUser();
 
   const adminEmails = (process.env.ADMIN_EMAIL ?? "")
     .split(",")
     .map((value) => value.trim().toLowerCase())
     .filter(Boolean);
 
-  if (!user?.email || !adminEmails.includes(user.email.toLowerCase())) {
+  if (sessionError || !user?.email || !adminEmails.includes(user.email.toLowerCase())) {
     return NextResponse.json({ error: "Not found" }, { status: 404 });
   }
 
