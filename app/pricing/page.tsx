@@ -37,7 +37,7 @@ const plans: Plan[] = [
     price: "$29",
     description:
       "Add live AI instruction, homework help, mastery checks, and stronger study tools.",
-    available: true,
+    available: false,
     featured: true,
     features: [
       "Everything in Free Plan",
@@ -156,7 +156,7 @@ function PlanCard({
             Start free
             <ArrowRight className="h-4 w-4" />
           </Link>
-        ) : isPlus ? (
+        ) : isPlus && plan.available ? (
           <button
             type="button"
             onClick={onLearnerPlus}
@@ -304,7 +304,7 @@ export default function PricingPage() {
               See exactly what changes between plans
             </h2>
             <p className="mx-auto mt-4 max-w-2xl text-base leading-7 text-black">
-              Mastery and Career Pro are shown so you can see where GAHN is going, but only Free Plan and Learner Plus can be selected right now.
+              Paid plans are previews of what GAHN AI is building. Subscriptions are not available yet.
             </p>
           </div>
 
@@ -351,10 +351,10 @@ export default function PricingPage() {
               One learning system
             </p>
             <h2 className="mt-3 text-3xl font-black tracking-[-0.035em]">
-              Start free, then upgrade when you need more instructor time.
+              Explore GAHN AI while we build the full learning experience.
             </h2>
             <p className="mt-4 text-base leading-7 text-white">
-              Your learning worlds, progress, notes, and lesson history stay connected when your plan changes.
+              Paid AI instructor plans are coming later. The full learning experience is still in development.
             </p>
           </div>
 
