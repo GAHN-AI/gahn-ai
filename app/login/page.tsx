@@ -4,6 +4,7 @@ import Link from "next/link";
 import { Source_Sans_3 } from "next/font/google";
 import { useEffect, useState } from "react";
 import { supabase } from "@/lib/supabaseClient";
+import PasswordInput from "@/components/auth/PasswordInput";
 import {
   ArrowLeft,
   Bot,
@@ -79,12 +80,19 @@ export default function LoginPage() {
 
     setLoading(true);
 
-    const { error: loginError } = await supabase.auth.signInWithPassword({
-      email: cleanEmail,
-      password,
-    });
-
-    setLoading(false);
+    let loginError: { code?: string; status?: number } | null = null;
+    try {
+      const result = await supabase.auth.signInWithPassword({
+        email: cleanEmail,
+        password,
+      });
+      loginError = result.error;
+    } catch {
+      setError("Unable to reach the sign-in service. Please try again.");
+      return;
+    } finally {
+      setLoading(false);
+    }
 
     if (loginError) {
       if (loginError.code === "email_not_confirmed") {
@@ -105,20 +113,19 @@ export default function LoginPage() {
     setMessage("");
     setGoogleLoading(true);
 
-    const { error: googleError } = await supabase.auth.signInWithOAuth({
-      provider: "google",
-      options: {
-        redirectTo: `${SITE_URL}/auth/callback?intent=login`,
-        queryParams: {
-          prompt: "select_account",
+    try {
+      const { error: googleError } = await supabase.auth.signInWithOAuth({
+        provider: "google",
+        options: {
+          redirectTo: `${SITE_URL}/auth/callback?intent=login`,
+          queryParams: { prompt: "select_account" },
         },
-      },
-    });
-
-    setGoogleLoading(false);
-
-    if (googleError) {
-      setError(googleError.message);
+      });
+      if (googleError) setError("Google sign-in could not start. Please try again.");
+    } catch {
+      setError("Unable to connect to Google sign-in. Please try again.");
+    } finally {
+      setGoogleLoading(false);
     }
   }
 
@@ -135,20 +142,25 @@ export default function LoginPage() {
 
     setResetLoading(true);
 
-    const { error: resetError } =
-      await supabase.auth.resetPasswordForEmail(cleanEmail, {
-        redirectTo: `${SITE_URL}/auth/callback?next=/update-password`,
-      });
+    try {
+      const { error: resetError } =
+        await supabase.auth.resetPasswordForEmail(cleanEmail, {
+          redirectTo: `${SITE_URL}/auth/callback?next=/update-password`,
+        });
 
-    setResetLoading(false);
-
-    if (resetError) {
-      setError(
-        resetError.status === 429
-          ? "Too many reset requests. Please wait before trying again."
-          : "We couldn't process the reset request right now. Please try again later."
-      );
+      if (resetError) {
+        setError(
+          resetError.status === 429
+            ? "Too many reset requests. Please wait before trying again."
+            : "We couldn't process the reset request right now. Please try again later."
+        );
+        return;
+      }
+    } catch {
+      setError("Unable to request a reset right now. Please try again.");
       return;
+    } finally {
+      setResetLoading(false);
     }
 
     setMessage("If a password reset is available for this email, you'll receive a link. Check your inbox and spam folder. Signed up with Google? Use Continue with Google instead.");
@@ -302,13 +314,13 @@ export default function LoginPage() {
               >
                 Password
               </label>
-              <input
+              <PasswordInput
                 id="password"
+                label="Password"
                 placeholder="Enter your password"
-                type="password"
                 autoComplete="current-password"
                 value={password}
-                onChange={(e) => setPassword(e.target.value)}
+                onChange={setPassword}
                 className="w-full rounded-xl border border-[#D7E3F2] bg-white px-4 py-3.5 text-sm text-[#0B1739] outline-none placeholder:text-black focus:border-[#1677FF] focus:ring-2 focus:ring-[#1677FF]/15"
               />
 
