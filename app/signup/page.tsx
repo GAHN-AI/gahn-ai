@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import posthog from "posthog-js";
 import { Source_Sans_3 } from "next/font/google";
 import { useEffect, useState } from "react";
 import { supabase } from "@/lib/supabaseClient";
@@ -104,12 +105,11 @@ export default function SignupPage() {
     const cleanName = fullName.trim();
     const cleanEmail = email.trim().toLowerCase();
 
-    if (!cleanName) return setError("Please enter your full name.");
-    if (!cleanEmail) return setError("Please enter your email address.");
-    if (password.length < 8)
-      return setError("Password must be at least 8 characters.");
-    if (password !== confirmPassword)
-      return setError("Passwords do not match.");
+    posthog.capture("signup_attempted", { method: "email" });
+    if (!cleanName) { posthog.capture("signup_error", { reason: "name_required" }); return setError("Please enter your full name."); }
+    if (!cleanEmail) { posthog.capture("signup_error", { reason: "email_required" }); return setError("Please enter your email address."); }
+    if (password.length < 8) { posthog.capture("signup_error", { reason: "password_too_short" }); return setError("Password must be at least 8 characters."); }
+    if (password !== confirmPassword) { posthog.capture("signup_error", { reason: "password_mismatch" }); return setError("Passwords do not match."); }
 
     setLoading(true);
 
@@ -125,6 +125,7 @@ export default function SignupPage() {
     setLoading(false);
 
     if (signupError) {
+      posthog.capture("signup_error", { reason: signupError.code || "provider_error" });
       setError(
         signupError.code === "over_email_send_rate_limit"
           ? "Too many emails were requested. Please wait a little while before trying again."
@@ -135,12 +136,14 @@ export default function SignupPage() {
 
     // Some projects verify email, while others return an active session immediately.
     if (signupData.session) {
+      posthog.capture("signup_completed", { method: "email" });
       window.location.replace("/dashboard");
       return;
     }
 
     // Supabase deliberately obscures duplicate registrations. A successful
     // response does not prove an account was created or an email was sent.
+    posthog.capture("signup_request_accepted", { method: "email", verification_required: true });
     setPendingEmail(cleanEmail);
     setAwaitingVerification(true);
     setResendCooldown(60);
@@ -180,6 +183,7 @@ export default function SignupPage() {
   }
 
   async function handleGoogleSignup() {
+    posthog.capture("signup_attempted", { method: "google" });
     setError("");
     setMessage("");
     setGoogleLoading(true);
@@ -193,7 +197,10 @@ export default function SignupPage() {
     });
 
     setGoogleLoading(false);
-    if (googleError) setError(googleError.message);
+    if (googleError) {
+      posthog.capture("signup_error", { method: "google", reason: googleError.code || "provider_error" });
+      setError(googleError.message);
+    }
   }
 
   return (
@@ -244,8 +251,7 @@ export default function SignupPage() {
               <span className="text-[#1677FF]">GAHN AI.</span>
             </h1>
             <p className="mt-6 max-w-xl text-lg leading-8 text-black">
-              Create your Free Plan account to explore all five learning worlds
-              and keep your learning progress in one place.
+              Join early access with a free account. We will email you when the complete AI learning experience launches.
             </p>
 
             <div className="mt-10 space-y-6">
@@ -273,7 +279,7 @@ export default function SignupPage() {
               Create your account
             </h2>
             <p className="mt-3 text-sm leading-6 text-black sm:text-base">
-              Join the GAHN AI MVP with the Free Plan.
+              GAHN AI is still in development. Create a free account to join early access and receive launch updates. The full AI instructor experience is not ready yet.
             </p>
 
             <button
