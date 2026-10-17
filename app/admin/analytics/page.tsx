@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
-import { createServerClient } from "@supabase/ssr";
-import { cookies } from "next/headers";
+import { getAuthenticatedUser } from "@/lib/serverAuth";
 import { notFound, redirect } from "next/navigation";
 import LiveAnalyticsDashboard from "@/components/LiveAnalyticsDashboard";
 
@@ -13,35 +12,9 @@ export const metadata: Metadata = {
 };
 
 export default async function AdminAnalyticsPage() {
-  const cookieStore = await cookies();
+  const { user, error: sessionError } = await getAuthenticatedUser();
 
-  const supabase = createServerClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
-    {
-      cookies: {
-        getAll() {
-          return cookieStore.getAll();
-        },
-        setAll(cookiesToSet) {
-          try {
-            cookiesToSet.forEach(({ name, value, options }) => {
-              cookieStore.set(name, value, options);
-            });
-          } catch {
-            // Server Components cannot always write cookies. Auth refresh is
-            // handled by the app's normal auth flow when writes are available.
-          }
-        },
-      },
-    }
-  );
-
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-
-  if (!user) {
+  if (sessionError || !user) {
     redirect("/login");
   }
 
