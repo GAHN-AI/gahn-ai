@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import posthog from "posthog-js";
 import { useState } from "react";
 import type { ReactNode } from "react";
 import { motion } from "framer-motion";
@@ -170,7 +171,7 @@ function SiteHeader() {
               Log In
             </Link>
             <Link
-              href="/signup"
+              href="/signup" onClick={() => posthog.capture("signup_clicked", { location: "homepage" })}
               className="inline-flex h-9 items-center justify-center rounded-full bg-[#0B1739] px-5 text-[14px] font-medium text-white transition-colors hover:bg-[#132754]"
             >
               Sign Up
@@ -219,7 +220,7 @@ function SiteHeader() {
                   Log In
                 </Link>
                 <Link
-                  href="/signup"
+                  href="/signup" onClick={() => posthog.capture("signup_clicked", { location: "homepage" })}
                   className="inline-flex h-11 items-center justify-center rounded-full bg-[#0B1739] text-sm font-medium text-white"
                 >
                   Sign Up
@@ -399,15 +400,19 @@ function Hero() {
             Choose from five learning worlds and learn with a private AI instructor designed to teach, check understanding, and adapt when you get stuck.
           </p>
 
+          <div className="mx-auto mt-6 max-w-[600px] rounded-2xl border border-[#BFD7FF] bg-[#F1F7FF] px-5 py-4 text-center">
+            <p className="text-base font-semibold text-[#0B1739]">GAHN AI is currently in development.</p>
+            <p className="mt-1 text-sm leading-6 text-[#344563]">Join early access by creating a free account. We will use your account email to let you know when the full AI learning experience launches.</p>
+          </div>
           <div className="mx-auto mt-7 flex min-h-[56px] w-full max-w-[376px] items-center rounded-full border border-[#E5E7EB] bg-white p-[10px] pl-5 shadow-sm">
             <span className="min-w-0 flex-1 truncate text-left text-[13px] text-black">
-              Explore all five learning worlds
+              Join early access
             </span>
             <Link
-              href="/signup"
+              href="/signup" onClick={() => posthog.capture("signup_clicked", { location: "homepage" })}
               className="inline-flex h-9 shrink-0 items-center justify-center rounded-full bg-[#1F6BFF] px-5 text-[14px] font-medium leading-5 text-white transition-colors hover:bg-[#1858E0]"
             >
-              Start free
+              Join early access
             </Link>
           </div>
 
@@ -1061,14 +1066,14 @@ function ClosingCta() {
     <section className="bg-[#0B4FD6] py-24 text-white sm:py-28">
       <div className={cx(shell, "text-center")}>
         <h2 className="mx-auto max-w-[650px] text-[36px] font-medium leading-[48px] tracking-[-0.9px] sm:text-[38px]">
-          Start learning with GAHN AI.
+          Join GAHN AI early access.
         </h2>
         <p className="mx-auto mt-5 max-w-[560px] text-[15.75px] leading-7 text-white">
-          Choose a learning world, start a lesson, and use a private AI instructor that teaches, checks your understanding, re teaches when needed, and gives you practice.
+          GAHN AI is in development. Create a free account now and get notified when the full AI instructor experience launches.
         </p>
         <div className="mt-8 flex flex-col justify-center gap-3 sm:flex-row">
           <Link
-            href="/signup"
+            href="/signup" onClick={() => posthog.capture("signup_clicked", { location: "homepage" })}
             className="inline-flex h-10 items-center justify-center rounded-full bg-[#1677FF] px-6 text-[14px] font-medium text-white transition-colors hover:bg-[#0E63E8]"
           >
             Start free
