@@ -5,6 +5,7 @@ import posthog from "posthog-js";
 import { Source_Sans_3 } from "next/font/google";
 import { useEffect, useState } from "react";
 import { supabase } from "@/lib/supabaseClient";
+import PasswordInput from "@/components/auth/PasswordInput";
 import {
   ArrowLeft,
   Brain,
@@ -113,16 +114,26 @@ export default function SignupPage() {
 
     setLoading(true);
 
-    const { data: signupData, error: signupError } = await supabase.auth.signUp({
-      email: cleanEmail,
-      password,
-      options: {
-        data: { full_name: cleanName },
-        emailRedirectTo: `${SITE_URL}/auth/callback`,
-      },
-    });
-
-    setLoading(false);
+    let signupData: { session: unknown } | null = null;
+    let signupError: { code?: string } | null = null;
+    try {
+      const result = await supabase.auth.signUp({
+        email: cleanEmail,
+        password,
+        options: {
+          data: { full_name: cleanName },
+          emailRedirectTo: `${SITE_URL}/auth/callback`,
+        },
+      });
+      signupData = result.data;
+      signupError = result.error;
+    } catch {
+      posthog.capture("signup_error", { reason: "network_error" });
+      setError("Unable to reach the signup service. Please try again.");
+      return;
+    } finally {
+      setLoading(false);
+    }
 
     if (signupError) {
       posthog.capture("signup_error", { reason: signupError.code || "provider_error" });
@@ -135,7 +146,7 @@ export default function SignupPage() {
     }
 
     // Some projects verify email, while others return an active session immediately.
-    if (signupData.session) {
+    if (signupData?.session) {
       posthog.capture("signup_completed", { method: "email" });
       window.location.replace("/dashboard");
       return;
@@ -159,23 +170,28 @@ export default function SignupPage() {
     setError("");
     setResendLoading(true);
 
-    const { error: resendError } = await supabase.auth.resend({
-      type: "signup",
-      email: cleanEmail,
-      options: {
-        emailRedirectTo: `${SITE_URL}/auth/callback`,
-      },
-    });
+    try {
+      const { error: resendError } = await supabase.auth.resend({
+        type: "signup",
+        email: cleanEmail,
+        options: {
+          emailRedirectTo: `${SITE_URL}/auth/callback`,
+        },
+      });
 
-    setResendLoading(false);
-
-    if (resendError) {
-      setError(
-        resendError.status === 429
-          ? "Too many email requests. Please wait before trying again."
-          : "We couldn't process that request right now. Please try again later."
-      );
+      if (resendError) {
+        setError(
+          resendError.status === 429
+            ? "Too many email requests. Please wait before trying again."
+            : "We couldn't process that request right now. Please try again later."
+        );
+        return;
+      }
+    } catch {
+      setError("Unable to send the verification email. Please try again.");
       return;
+    } finally {
+      setResendLoading(false);
     }
 
     setResendCooldown(60);
@@ -188,18 +204,23 @@ export default function SignupPage() {
     setMessage("");
     setGoogleLoading(true);
 
-    const { error: googleError } = await supabase.auth.signInWithOAuth({
-      provider: "google",
-      options: {
-        redirectTo: `${SITE_URL}/auth/callback?intent=signup`,
-        queryParams: { prompt: "select_account" },
-      },
-    });
-
-    setGoogleLoading(false);
-    if (googleError) {
-      posthog.capture("signup_error", { method: "google", reason: googleError.code || "provider_error" });
-      setError(googleError.message);
+    try {
+      const { error: googleError } = await supabase.auth.signInWithOAuth({
+        provider: "google",
+        options: {
+          redirectTo: `${SITE_URL}/auth/callback?intent=signup`,
+          queryParams: { prompt: "select_account" },
+        },
+      });
+      if (googleError) {
+        posthog.capture("signup_error", { method: "google", reason: googleError.code || "provider_error" });
+        setError("Google signup could not start. Please try again.");
+      }
+    } catch {
+      posthog.capture("signup_error", { method: "google", reason: "network_error" });
+      setError("Unable to connect to Google signup. Please try again.");
+    } finally {
+      setGoogleLoading(false);
     }
   }
 
@@ -333,11 +354,11 @@ export default function SignupPage() {
                   <label htmlFor="password" className="mb-2 block text-sm font-bold">
                     Password
                   </label>
-                  <input
+                  <PasswordInput
                     id="password"
-                    type="password"
+                    label="Password"
                     value={password}
-                    onChange={(e) => setPassword(e.target.value)}
+                    onChange={setPassword}
                     autoComplete="new-password"
                     placeholder="8+ characters"
                     className="w-full rounded-xl border border-[#D7E3F2] px-4 py-3.5 outline-none focus:border-[#1677FF]"
@@ -348,11 +369,11 @@ export default function SignupPage() {
                   <label htmlFor="confirmPassword" className="mb-2 block text-sm font-bold">
                     Confirm password
                   </label>
-                  <input
+                  <PasswordInput
                     id="confirmPassword"
-                    type="password"
+                    label="Confirm password"
                     value={confirmPassword}
-                    onChange={(e) => setConfirmPassword(e.target.value)}
+                    onChange={setConfirmPassword}
                     autoComplete="new-password"
                     placeholder="Repeat password"
                     className="w-full rounded-xl border border-[#D7E3F2] px-4 py-3.5 outline-none focus:border-[#1677FF]"
