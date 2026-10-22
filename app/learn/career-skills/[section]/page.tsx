@@ -82,8 +82,12 @@ export default function CareerSectionPage() {
             <p className="mt-4 max-w-[690px] text-[15px] leading-7 text-[#34363D]">
               {careerSection.description}
             </p>
-            <p className="mt-4 text-sm font-medium text-[#5C5E66]">
-              {careerSection.level}
+            <div className="mt-5 flex flex-wrap gap-2">
+              <span className="rounded-full bg-[#EAF2FF] px-3 py-1.5 text-xs font-semibold text-[#0B5CFF]">{careerSection.level}</span>
+              <span className="rounded-full bg-[#F0F4F8] px-3 py-1.5 text-xs font-semibold text-[#40536D]">{careerSection.payCategory}</span>
+            </div>
+            <p className="mt-4 max-w-[690px] text-[13px] leading-6 text-[#53657D]">
+              {careerSection.onlineScope}
             </p>
 
             <Link
@@ -108,8 +112,12 @@ export default function CareerSectionPage() {
             Skills you&apos;ll learn
           </h2>
           <p className="mt-3 max-w-[780px] text-[14px] leading-6 text-[#3C3E45]">
-            Work through the knowledge, practical tasks, teamwork scenarios and evidence you would need to apply these skills responsibly.
-            Each stage includes something specific to explain, create, discuss or demonstrate.
+            Each stage includes specific knowledge, digital practice, collaboration and a project or simulation you can demonstrate.
+          </p>
+          <p className="mt-2 max-w-[780px] text-xs leading-5 text-[#64748B]">
+            Earnings categories are broad planning guidance, not salary quotes. Remote jobs and employment are not guaranteed.
+            Check current local wages, education requirements and job openings before choosing a career.
+            {" "}<a href="https://www.bls.gov/ooh/" target="_blank" rel="noreferrer" className="font-semibold text-[#0B5CFF] underline">Compare official U.S. career data</a>.
           </p>
           {skillRoadmap && (
             <ol className="mt-6 grid gap-4">
