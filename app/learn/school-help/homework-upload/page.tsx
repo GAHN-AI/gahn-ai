@@ -1,10 +1,9 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import { ArrowLeft, FileText, GraduationCap, Upload } from "lucide-react";
 
-import LanguageSelector from "@/components/LanguageSelector";
 import { lessonIdFromParts } from "@/lib/ai/lessonEngine";
 import { supabase } from "@/lib/supabaseClient";
 
@@ -28,7 +27,6 @@ const subjects = [
 ];
 
 export default function HomeworkUploadPage() {
-  const [language, setLanguage] = useState("English");
   const [subject, setSubject] = useState("Science");
   const [level, setLevel] = useState("Grade 9");
   const [topic, setTopic] = useState("");
@@ -38,22 +36,6 @@ export default function HomeworkUploadPage() {
   const [analysis, setAnalysis] = useState("");
   const [error, setError] = useState("");
 
-  useEffect(() => {
-    const params = new URLSearchParams(window.location.search);
-    const queryLanguage = params.get("language");
-    const stored = window.localStorage.getItem("gahn-language");
-
-    if (queryLanguage) {
-      setLanguage(queryLanguage);
-    } else if (stored) {
-      setLanguage(stored);
-    }
-  }, []);
-
-  function changeLanguage(nextLanguage: string) {
-    setLanguage(nextLanguage);
-    window.localStorage.setItem("gahn-language", nextLanguage);
-  }
 
   const lessonTitle = useMemo(() => {
     const cleanTopic = topic.trim() || "Homework Help";
@@ -178,7 +160,7 @@ export default function HomeworkUploadPage() {
       <header className="border-b border-[#E7E7EA] bg-white">
         <div className="mx-auto flex max-w-[1180px] flex-wrap items-center justify-between gap-4 px-5 py-4 sm:px-8">
           <Link
-            href={`/learn/school-help?language=${encodeURIComponent(language)}`}
+            href={`/learn/school-help`}
             className="inline-flex items-center gap-2 text-sm font-semibold text-[#1D1E24]"
           >
             <ArrowLeft className="h-4 w-4" />
@@ -186,11 +168,7 @@ export default function HomeworkUploadPage() {
           </Link>
 
           <div className="flex items-center gap-3">
-            <LanguageSelector
-              value={language}
-              onChange={changeLanguage}
-              compact
-            />
+
             <Link href="/" className="font-semibold text-[#1D1E24]">
               GAHN AI
             </Link>
