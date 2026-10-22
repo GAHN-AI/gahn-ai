@@ -20,6 +20,7 @@ import {
   type LearningOption,
 } from "@/lib/learningCatalog";
 import { isLearningWorldAvailable } from "@/lib/learningWorldAvailability";
+import { getPracticalSkillRoadmap } from "@/lib/practicalSkillRoadmaps";
 
 const worldMeta = {
   "career-skills": { title: "Career Skills", Icon: BriefcaseBusiness },
@@ -58,6 +59,7 @@ export default function TopicOverviewPage() {
   }, [params.section, params.topic, params.world]);
 
   const available = isLearningWorldAvailable(params.world);
+  const skillRoadmap = getPracticalSkillRoadmap(params.world, params.section, params.topic);
   const meta = worldMeta[params.world as keyof typeof worldMeta];
 
   if (!available || !resolved || !meta) {
@@ -137,6 +139,36 @@ export default function TopicOverviewPage() {
             <p className="mt-4 max-w-[720px] text-[15px] leading-7 text-[#34363D]">
               {resolved.description}
             </p>
+
+            {skillRoadmap && (
+              <section aria-labelledby="topic-skills-heading" className="mt-8 border-t border-[#EEEEF1] pt-7">
+                <p className="text-xs font-semibold uppercase tracking-[0.14em] text-[#0B5CFF]">
+                  Detailed learning roadmap
+                </p>
+                <h2 id="topic-skills-heading" className="mt-2 text-[25px] font-semibold tracking-[-0.03em]">
+                  Skills you&apos;ll learn
+                </h2>
+                <p className="mt-3 text-sm leading-6 text-[#53657D]">
+                  Build these abilities in order, then practise applying them to realistic problems and conversations.
+                </p>
+                <ol className="mt-5 space-y-3">
+                  {skillRoadmap.steps.map((step, index) => (
+                    <li key={step.phase} className="flex gap-3 rounded-xl border border-[#E1E3E8] bg-[#F8FAFD] p-4">
+                      <span className="grid h-8 w-8 shrink-0 place-items-center rounded-lg bg-[#EAF2FF] text-sm font-bold text-[#0B5CFF]">
+                        {index + 1}
+                      </span>
+                      <div>
+                        <h3 className="text-sm font-bold text-[#0B1739]">{step.phase.slice(5)}</h3>
+                        <p className="mt-1 text-sm leading-6 text-[#3C3E45]">{step.detail}</p>
+                      </div>
+                    </li>
+                  ))}
+                </ol>
+                {skillRoadmap.safetyNote && (
+                  <p className="mt-4 text-sm leading-6 text-[#53657D]">{skillRoadmap.safetyNote}</p>
+                )}
+              </section>
+            )}
 
             <div className="mt-8 border-t border-[#EEEEF1] pt-7">
               <p className="text-xs font-semibold uppercase tracking-[0.14em] text-[#0B5CFF]">
