@@ -1,8 +1,7 @@
 "use client";
 
-import { useEffect, useState } from "react";
 import Link from "next/link";
-import { useParams, useSearchParams } from "next/navigation";
+import { useParams } from "next/navigation";
 import type { LucideIcon } from "lucide-react";
 import {
   ArrowLeft,
@@ -15,7 +14,6 @@ import {
   LockKeyhole,
 } from "lucide-react";
 
-import LanguageSelector from "@/components/LanguageSelector";
 import { careerIndustries } from "@/lib/careerCatalog";
 import { getLearningSections } from "@/lib/learningCatalog";
 import { isLearningWorldAvailable } from "@/lib/learningWorldAvailability";
@@ -137,25 +135,9 @@ function LearningSectionCard({
 
 export default function LearningWorldPage() {
   const params = useParams<{ world: string }>();
-  const searchParams = useSearchParams();
   const world = params.world;
   const learningWorld = learningWorlds[world];
 
-  const [language, setLanguage] = useState(
-    searchParams.get("language") || "English"
-  );
-
-  useEffect(() => {
-    const stored = window.localStorage.getItem("gahn-language");
-    if (!searchParams.get("language") && stored) {
-      setLanguage(stored);
-    }
-  }, [searchParams]);
-
-  function changeLanguage(nextLanguage: string) {
-    setLanguage(nextLanguage);
-    window.localStorage.setItem("gahn-language", nextLanguage);
-  }
 
   if (!learningWorld) {
     return (
@@ -189,7 +171,7 @@ export default function LearningWorldPage() {
           </Link>
 
           <div className="flex items-center gap-3">
-            <LanguageSelector value={language} onChange={changeLanguage} compact />
+
             <Link href="/" className="flex items-center gap-2 text-sm font-semibold text-[#0B1739]">
               <img src="/logo/favicon.png" alt="" className="h-7 w-7 rounded-full object-cover" />
               GAHN AI
@@ -218,10 +200,6 @@ export default function LearningWorldPage() {
             </p>
           </div>
 
-          <div className="rounded-xl border border-[#E1E3E8] bg-white px-4 py-3 text-sm">
-            <span className="font-medium text-[#1D1E24]">{language}</span>
-            <span className="ml-2 text-[#6C6D75]">instruction language</span>
-          </div>
         </section>
 
         {!available && (
@@ -255,7 +233,7 @@ export default function LearningWorldPage() {
                     key={industry.slug}
                     href={
                       available
-                        ? `/learn/career-skills/industry/${industry.slug}?language=${encodeURIComponent(language)}`
+                        ? `/learn/career-skills/industry/${industry.slug}`
                         : undefined
                     }
                     title={industry.displayTitle}
@@ -269,7 +247,7 @@ export default function LearningWorldPage() {
                     key={section.slug}
                     href={
                       available
-                        ? `/learn/${world}/${section.slug}?language=${encodeURIComponent(language)}`
+                        ? `/learn/${world}/${section.slug}`
                         : undefined
                     }
                     title={section.title}
