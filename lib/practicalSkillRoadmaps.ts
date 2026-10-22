@@ -13,15 +13,19 @@ const phases = [
 ] as const;
 
 const regulatedCareers: Record<string, string> = {
-  "medical-assistant": "Academic simulation only: patient care requires relevant training, supervision and applicable credentials.",
-  "registered-nurse": "Academic simulation only: nursing requires formal education, supervised clinical training and licensure.",
-  physician: "Academic simulation only: practicing medicine requires approved education, training and licensure.",
-  paralegal: "Paralegal exercises do not authorize independent legal advice.",
-  lawyer: "Legal education does not authorize practice without admission to the applicable bar.",
-  "financial-advisor-wealth-management": "Personalized financial advice may require licenses, registration and professional supervision.",
-  electrician: "Electrical work, especially energized installations, requires applicable licensing and qualified supervision.",
-  plumber: "Real plumbing work must follow local codes and applicable licensing/supervision rules.",
-  "hvac-technician": "Refrigerant handling and certain HVAC activities require certification and qualified supervision.",
+  "medical-billing-coding-specialist": "Nonclinical preparation only. Medical coding employers may require credentials, supervised experience, and training on regulated systems.",
+  "health-information-specialist": "Healthcare records roles may require formal education, certification, HIPAA training and employer-controlled system access.",
+  "patient-scheduling-coordinator": "Administrative training only. Employers determine scheduling-system access, onboarding and privacy requirements.",
+  "legal-operations-coordinator": "Legal operations support is not permission to practice law or give legal advice.",
+  "contract-administrator": "Contracts may require review by qualified legal professionals; online training does not authorize legal advice.",
+  "accountant": "Employer education requirements vary; certified public accountant credentials require separate jurisdiction-specific qualifications.",
+  "insurance-underwriter": "Employers typically require training and apply their own underwriting standards. GAHN does not issue insurance credentials.",
+  "financial-analyst": "Many analyst jobs expect postsecondary education and applied experience. GAHN cannot guarantee employment or investment results.",
+  "investment-analyst": "Investment analysis education does not authorize regulated client advice, trading, or professional registration.",
+  "cyber-security-analyst": "Cybersecurity exercises must use authorized systems and safe defensive practice; employer experience requirements vary.",
+  "cloud-architect": "Cloud architect is generally an experienced role; GAHN teaches skills but cannot replace production experience.",
+  "devops-engineer": "DevOps roles often require significant experience managing live software systems.",
+  "project-manager": "Project managers are responsible for real budgets and people; practice projects do not replace professional experience.",
 };
 
 function buildRoadmap(details: readonly [string, string, string, string], safetyNote?: string): SkillRoadmap {
