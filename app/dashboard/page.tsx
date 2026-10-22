@@ -19,6 +19,7 @@ import {
   NotebookPen,
   Rocket,
   Search,
+  Settings2,
   Sparkles,
   TrendingUp,
   Upload,
@@ -33,6 +34,7 @@ const sidebarItems: { label: string; Icon: LucideIcon; href: string }[] = [
   { label: "Progress", Icon: TrendingUp, href: "/progress" },
   { label: "Feedback", Icon: MessageSquareText, href: "/feedback" },
   { label: "Assigned Homework", Icon: ClipboardCheck, href: "/assigned-homework" },
+  { label: "Settings", Icon: Settings2, href: "/settings" },
 ];
 
 const worlds: {
@@ -438,6 +440,10 @@ export default function DashboardPage() {
               >
                 <LogOut className="h-4 w-4" />
               </button>
+              <Link href="/settings" aria-label="Settings" title="Settings"
+                className="grid h-9 w-9 place-items-center rounded-lg text-[#4F515A] hover:bg-[#F6F6F8]">
+                <Settings2 className="h-4 w-4" />
+              </Link>
               <Link
                 href="/profile"
                 className="grid h-9 w-9 place-items-center rounded-lg bg-[#EEF4FF] text-xs font-bold text-[#0B5CFF]"
