@@ -6,6 +6,7 @@ import { ArrowLeft } from "lucide-react";
 import LearningStudio from "@/components/lessons/LearningStudio";
 import { getCareerSection } from "@/lib/careerCatalog";
 import { isLearningWorldAvailable } from "@/lib/learningWorldAvailability";
+import { getPracticalSkillRoadmap, practicalLessonPoints } from "@/lib/practicalSkillRoadmaps";
 
 const worldNames: Record<string, string> = {
   "career-skills": "Career Skills",
@@ -31,10 +32,12 @@ export default function LessonPage() {
     worldSlug === "career-skills" && sectionSlug
       ? getCareerSection(sectionSlug)
       : null;
-  const lessonPoints = careerSection?.skills || [
-    "Understand the concept",
-    "Practice with examples",
-    "Explain what you learned",
+  const skillRoadmap = getPracticalSkillRoadmap(worldSlug, sectionSlug, topicSlug);
+  const lessonPoints = practicalLessonPoints(skillRoadmap);
+  const lessonGoals = lessonPoints.length > 0 ? lessonPoints : [
+    `Explain the essential knowledge behind ${topic} with accurate examples.`,
+    `Practice a realistic ${topic} task, show your reasoning, and correct mistakes.`,
+    `Explain how to apply ${topic} responsibly and communicate the result to someone else.`,
   ];
 
   const backHref = sectionSlug && topicSlug
@@ -89,7 +92,7 @@ export default function LessonPage() {
           topicSlug={topicSlug}
           topic={topic}
           lessonTitle={topic}
-          lessonPoints={lessonPoints}
+          lessonPoints={lessonGoals}
           language="English"
         />
       </div>
