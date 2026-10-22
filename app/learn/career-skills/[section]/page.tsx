@@ -1,8 +1,7 @@
 "use client";
 
-import { useEffect, useState } from "react";
 import Link from "next/link";
-import { useParams, useSearchParams } from "next/navigation";
+import { useParams } from "next/navigation";
 import {
   ArrowLeft,
   ArrowRight,
@@ -10,29 +9,12 @@ import {
   CheckCircle2,
 } from "lucide-react";
 
-import LanguageSelector from "@/components/LanguageSelector";
 import { getCareerSection } from "@/lib/careerCatalog";
 
 export default function CareerSectionPage() {
   const params = useParams<{ section: string }>();
-  const searchParams = useSearchParams();
   const careerSection = getCareerSection(params.section);
 
-  const [language, setLanguage] = useState(
-    searchParams.get("language") || "English"
-  );
-
-  useEffect(() => {
-    const stored = window.localStorage.getItem("gahn-language");
-    if (!searchParams.get("language") && stored) {
-      setLanguage(stored);
-    }
-  }, [searchParams]);
-
-  function changeLanguage(nextLanguage: string) {
-    setLanguage(nextLanguage);
-    window.localStorage.setItem("gahn-language", nextLanguage);
-  }
 
   if (!careerSection) {
     return (
@@ -57,14 +39,14 @@ export default function CareerSectionPage() {
     careerSection.slug
   )}&topic=${encodeURIComponent(careerSection.title)}&topicSlug=${encodeURIComponent(
     careerSection.slug
-  )}&language=${encodeURIComponent(language)}`;
+  )}`;
 
   return (
     <main className="min-h-screen bg-[#F7F8FA] font-sans text-[#1D1E24]">
       <header className="border-b border-[#E7E7EA] bg-white">
         <div className="mx-auto flex min-h-[68px] max-w-[1180px] flex-wrap items-center justify-between gap-4 px-5 sm:px-8">
           <Link
-            href={`/learn/career-skills?language=${encodeURIComponent(language)}`}
+            href={`/learn/career-skills`}
             className="inline-flex items-center gap-2 text-sm font-medium"
           >
             <ArrowLeft className="h-4 w-4" />
@@ -72,7 +54,7 @@ export default function CareerSectionPage() {
           </Link>
 
           <div className="flex items-center gap-3">
-            <LanguageSelector value={language} onChange={changeLanguage} compact />
+
             <Link href="/" className="flex items-center gap-2 text-sm font-semibold text-[#0B1739]">
               <img src="/logo/favicon.png" alt="" className="h-7 w-7 rounded-full object-cover" />
               GAHN AI
