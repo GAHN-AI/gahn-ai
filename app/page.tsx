@@ -40,7 +40,7 @@ const worlds = [
     slug: "career-skills",
     title: "Career Skills",
     description:
-      "Business, technology, finance, communication, and job focused learning paths.",
+      "Digital career paths from online support and design to high-skill software, AI, finance, and business roles.",
     icon: BriefcaseBusiness,
   },
   {
