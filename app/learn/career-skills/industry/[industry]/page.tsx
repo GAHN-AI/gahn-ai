@@ -1,11 +1,9 @@
 "use client";
 
-import { useEffect, useState } from "react";
 import Link from "next/link";
-import { useParams, useSearchParams } from "next/navigation";
+import { useParams } from "next/navigation";
 import { ArrowLeft, ArrowRight, BriefcaseBusiness } from "lucide-react";
 
-import LanguageSelector from "@/components/LanguageSelector";
 import {
   getCareerIndustry,
   getCareersByIndustry,
@@ -13,24 +11,8 @@ import {
 
 export default function CareerIndustryPage() {
   const params = useParams<{ industry: string }>();
-  const searchParams = useSearchParams();
   const industry = getCareerIndustry(params.industry);
 
-  const [language, setLanguage] = useState(
-    searchParams.get("language") || "English"
-  );
-
-  useEffect(() => {
-    const stored = window.localStorage.getItem("gahn-language");
-    if (!searchParams.get("language") && stored) {
-      setLanguage(stored);
-    }
-  }, [searchParams]);
-
-  function changeLanguage(nextLanguage: string) {
-    setLanguage(nextLanguage);
-    window.localStorage.setItem("gahn-language", nextLanguage);
-  }
 
   if (!industry) {
     return (
@@ -58,7 +40,7 @@ export default function CareerIndustryPage() {
       <header className="border-b border-[#E7E7EA] bg-white">
         <div className="mx-auto flex min-h-[68px] max-w-[1180px] flex-wrap items-center justify-between gap-4 px-5 sm:px-8">
           <Link
-            href={`/learn/career-skills?language=${encodeURIComponent(language)}`}
+            href={`/learn/career-skills`}
             className="inline-flex items-center gap-2 text-sm font-medium"
           >
             <ArrowLeft className="h-4 w-4" />
@@ -66,7 +48,7 @@ export default function CareerIndustryPage() {
           </Link>
 
           <div className="flex items-center gap-3">
-            <LanguageSelector value={language} onChange={changeLanguage} compact />
+
             <Link href="/" className="flex items-center gap-2 text-sm font-semibold text-[#0B1739]">
               <img src="/logo/favicon.png" alt="" className="h-7 w-7 rounded-full object-cover" />
               GAHN AI
@@ -121,7 +103,7 @@ export default function CareerIndustryPage() {
             {careers.map((career) => (
               <Link
                 key={career.slug}
-                href={`/learn/career-skills/${career.slug}?language=${encodeURIComponent(language)}`}
+                href={`/learn/career-skills/${career.slug}`}
                 className="group self-start overflow-hidden rounded-[14px] border border-[#E1E3E8] bg-white transition hover:-translate-y-0.5 hover:border-[#BDD3F7] hover:shadow-[0_12px_28px_rgba(29,30,36,0.07)]"
               >
                 <img

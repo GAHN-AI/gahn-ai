@@ -34,12 +34,7 @@ function getInitialColor(name: string) {
   return colors[total % colors.length];
 }
 
-type ProfileDraft = {
-  fullName: string;
-  learnerRole: string;
-  learningPace: string;
-  explanationStyle: string;
-};
+type ProfileDraft = { fullName: string };
 
 type PendingNavigation =
   | { type: "link"; href: string }
@@ -55,15 +50,8 @@ export default function ProfilePage() {
   const [fullName, setFullName] = useState("Learner");
   const [email, setEmail] = useState("");
   const [avatarUrl, setAvatarUrl] = useState("");
-  const [learnerRole, setLearnerRole] = useState("student");
-  const [learningPace, setLearningPace] = useState("steady");
-  const [explanationStyle, setExplanationStyle] = useState("balanced");
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
-  const [billingLoading, setBillingLoading] = useState(false);
-  const [planId, setPlanId] = useState("explore");
-  const [planName, setPlanName] = useState("Free Plan");
-  const [cancelAtPeriodEnd, setCancelAtPeriodEnd] = useState(false);
   const [message, setMessage] = useState("");
   const [error, setError] = useState("");
   const [savedProfile, setSavedProfile] = useState<ProfileDraft | null>(null);
@@ -74,10 +62,7 @@ export default function ProfilePage() {
   const avatarColor = useMemo(() => getInitialColor(fullName), [fullName]);
   const hasUnsavedChanges =
     savedProfile !== null &&
-    (fullName !== savedProfile.fullName ||
-      learnerRole !== savedProfile.learnerRole ||
-      learningPace !== savedProfile.learningPace ||
-      explanationStyle !== savedProfile.explanationStyle);
+    fullName !== savedProfile.fullName;
 
   useEffect(() => {
     async function loadProfile() {
@@ -93,18 +78,9 @@ export default function ProfilePage() {
       setUserId(user.id);
       setEmail(user.email || "");
 
-      const subscriptionResponse = await fetch("/api/subscription/current");
-
-      if (subscriptionResponse.ok) {
-        const subscription = await subscriptionResponse.json();
-        setPlanId(subscription.planId || "explore");
-        setPlanName(subscription.entitlements?.name || "Free Plan");
-        setCancelAtPeriodEnd(Boolean(subscription.cancelAtPeriodEnd));
-      }
-
       const { data: profile } = await supabase
         .from("profiles")
-        .select("full_name, avatar_url, email, learner_role, learning_pace, explanation_style")
+        .select("full_name, avatar_url, email")
         .eq("id", user.id)
         .maybeSingle();
 
@@ -127,28 +103,15 @@ export default function ProfilePage() {
 
         setFullName(fallbackName);
         setAvatarUrl("");
-        setSavedProfile({
-          fullName: fallbackName,
-          learnerRole: "student",
-          learningPace: "steady",
-          explanationStyle: "balanced",
-        });
+        setSavedProfile({ fullName: fallbackName });
         setLoading(false);
         return;
       }
 
-      const loadedProfile: ProfileDraft = {
-        fullName: profile.full_name || fallbackName,
-        learnerRole: profile.learner_role || "student",
-        learningPace: profile.learning_pace || "steady",
-        explanationStyle: profile.explanation_style || "balanced",
-      };
+      const loadedProfile: ProfileDraft = { fullName: profile.full_name || fallbackName };
 
       setFullName(loadedProfile.fullName);
       setAvatarUrl(profile.avatar_url || "");
-      setLearnerRole(loadedProfile.learnerRole);
-      setLearningPace(loadedProfile.learningPace);
-      setExplanationStyle(loadedProfile.explanationStyle);
       setSavedProfile(loadedProfile);
       setLoading(false);
     }
@@ -217,9 +180,6 @@ export default function ProfilePage() {
   function handleResetChanges() {
     if (!savedProfile) return;
     setFullName(savedProfile.fullName);
-    setLearnerRole(savedProfile.learnerRole);
-    setLearningPace(savedProfile.learningPace);
-    setExplanationStyle(savedProfile.explanationStyle);
     setError("");
     setMessage("");
   }
@@ -274,21 +234,11 @@ export default function ProfilePage() {
       return false;
     }
 
-    const savedValues: ProfileDraft = {
-      fullName: cleanName,
-      learnerRole,
-      learningPace,
-      explanationStyle,
-    };
+    const savedValues: ProfileDraft = { fullName: cleanName };
 
     const { error: updateError } = await supabase
       .from("profiles")
-      .update({
-        full_name: cleanName,
-        learner_role: learnerRole,
-        learning_pace: learningPace,
-        explanation_style: explanationStyle,
-      })
+      .update({ full_name: cleanName })
       .eq("id", userId);
 
     setSaving(false);
@@ -302,30 +252,6 @@ export default function ProfilePage() {
     setSavedProfile(savedValues);
     setMessage("Profile updated.");
     return true;
-  }
-
-  async function handleManageSubscription() {
-    setBillingLoading(true);
-    setError("");
-
-    try {
-      const response = await fetch("/api/stripe/portal", {
-        method: "POST",
-      });
-
-      const data = await response.json();
-
-      if (!response.ok || !data.url) {
-        setError(data.error || "Could not open subscription management.");
-        setBillingLoading(false);
-        return;
-      }
-
-      window.location.href = data.url;
-    } catch {
-      setError("Could not open subscription management.");
-      setBillingLoading(false);
-    }
   }
 
   async function handleImageUpload(e: React.ChangeEvent<HTMLInputElement>) {
@@ -387,9 +313,12 @@ export default function ProfilePage() {
           ← Back to Dashboard
         </Link>
 
-        <h1 className="mt-10 text-5xl font-black">Edit Profile</h1>
+        <div className="mt-8 flex flex-wrap items-center justify-between gap-3">
+          <h1 className="text-5xl font-black">Edit Profile</h1>
+          <Link href="/settings" onClick={(event) => handleProfileLink(event, "/settings")} className="rounded-xl border border-[#D7E3F2] bg-[#F8FBFF] px-4 py-2.5 text-sm font-semibold text-[#071F4D]">Settings</Link>
+        </div>
         <p className="mt-4 text-xl text-black">
-          Update your account and tell GAHN how you prefer to learn.
+          Update your name and profile image.
         </p>
 
         <section className="mt-12 rounded-3xl border border-slate-200 bg-white p-8 shadow-sm">
@@ -444,106 +373,11 @@ export default function ProfilePage() {
             />
           </div>
 
-          <div className="mt-8 rounded-2xl border border-slate-200 bg-[#F8FBFF] p-5">
-            <p className="text-sm font-black uppercase tracking-[0.14em] text-black">
-              Learning Preferences
-            </p>
-            <h2 className="mt-2 text-xl font-black text-[#061633]">
-              How GAHN should teach you
-            </h2>
-            <p className="mt-2 text-sm leading-6 text-black">
-              These preferences guide the instructor, while your real lesson evidence still decides when GAHN should slow down, review, or increase difficulty.
-            </p>
-
-            <div className="mt-5 grid gap-4 sm:grid-cols-3">
-              <label className="grid gap-2">
-                <span className="text-xs font-black uppercase tracking-[0.1em] text-black">
-                  I am a
-                </span>
-                <select
-                  value={learnerRole}
-                  onChange={(event) => setLearnerRole(event.target.value)}
-                  className="h-12 rounded-xl border border-slate-200 bg-white px-3 text-sm font-bold outline-none focus:border-blue-500"
-                >
-                  <option value="student">Student</option>
-                  <option value="self_learner">Self-learner</option>
-                  <option value="teacher">Teacher</option>
-                  <option value="professor">Professor</option>
-                  <option value="other">Other learner</option>
-                </select>
-              </label>
-
-              <label className="grid gap-2">
-                <span className="text-xs font-black uppercase tracking-[0.1em] text-black">
-                  Teaching pace
-                </span>
-                <select
-                  value={learningPace}
-                  onChange={(event) => setLearningPace(event.target.value)}
-                  className="h-12 rounded-xl border border-slate-200 bg-white px-3 text-sm font-bold outline-none focus:border-blue-500"
-                >
-                  <option value="slower">Slower & more checks</option>
-                  <option value="steady">Steady</option>
-                  <option value="faster">Faster</option>
-                </select>
-              </label>
-
-              <label className="grid gap-2">
-                <span className="text-xs font-black uppercase tracking-[0.1em] text-black">
-                  Explain with
-                </span>
-                <select
-                  value={explanationStyle}
-                  onChange={(event) => setExplanationStyle(event.target.value)}
-                  className="h-12 rounded-xl border border-slate-200 bg-white px-3 text-sm font-bold outline-none focus:border-blue-500"
-                >
-                  <option value="balanced">Balanced teaching</option>
-                  <option value="visual">Visuals first</option>
-                  <option value="step_by_step">Step by step</option>
-                  <option value="examples_first">Examples first</option>
-                </select>
-              </label>
-            </div>
+          <div className="mt-7">
+            <label className="text-sm font-black uppercase tracking-[0.14em] text-black">Email address</label>
+            <p className="mt-3 rounded-2xl border border-slate-200 bg-slate-50 px-5 py-4 text-base text-slate-600">{email || "Not available"}</p>
           </div>
 
-          <div className="mt-8 rounded-2xl border border-slate-200 bg-slate-50 p-5">
-            <p className="text-sm font-black uppercase tracking-[0.14em] text-black">
-              Current Plan
-            </p>
-            <div className="mt-2 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-              <div>
-                <p className="text-xl font-black text-[#061633]">{planName}</p>
-                <p className="mt-1 text-sm text-black">
-                  {cancelAtPeriodEnd
-                    ? "Your paid plan remains active until the end of the current billing period."
-                    : planId === "explore"
-                      ? "The Free Plan is free."
-                      : "Your dashboard and feature access follow this subscription automatically."}
-                </p>
-              </div>
-
-              {planId !== "explore" ? (
-                <button
-                  type="button"
-                  onClick={handleManageSubscription}
-                  disabled={billingLoading}
-                  className="rounded-xl border border-slate-300 bg-white px-5 py-3 text-sm font-black text-[#061633] disabled:opacity-60"
-                >
-                  {billingLoading ? "Opening..." : "Manage Subscription"}
-                </button>
-              ) : (
-                <Link
-                  href="/pricing"
-                  onClick={(event) => handleProfileLink(event, "/pricing")}
-                  className="rounded-xl border border-slate-300 bg-white px-5 py-3 text-center text-sm font-black text-[#061633]"
-                >
-                  View Plan
-                </Link>
-              )}
-            </div>
-          </div>
-
-          
           {error && (
             <p className="mt-6 rounded-xl bg-red-50 p-4 text-red-600">
               {error}

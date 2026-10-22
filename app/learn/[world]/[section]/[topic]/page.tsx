@@ -1,8 +1,8 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useMemo } from "react";
 import Link from "next/link";
-import { useParams, useSearchParams } from "next/navigation";
+import { useParams } from "next/navigation";
 import {
   ArrowLeft,
   ArrowRight,
@@ -14,7 +14,6 @@ import {
   ShieldCheck,
 } from "lucide-react";
 
-import LanguageSelector from "@/components/LanguageSelector";
 import { getCareerSection } from "@/lib/careerCatalog";
 import {
   getLearningOption,
@@ -32,23 +31,7 @@ const worldMeta = {
 
 export default function TopicOverviewPage() {
   const params = useParams<{ world: string; section: string; topic: string }>();
-  const searchParams = useSearchParams();
 
-  const [language, setLanguage] = useState(
-    searchParams.get("language") || "English"
-  );
-
-  useEffect(() => {
-    const stored = window.localStorage.getItem("gahn-language");
-    if (!searchParams.get("language") && stored) {
-      setLanguage(stored);
-    }
-  }, [searchParams]);
-
-  function changeLanguage(nextLanguage: string) {
-    setLanguage(nextLanguage);
-    window.localStorage.setItem("gahn-language", nextLanguage);
-  }
 
   const resolved = useMemo(() => {
     if (params.world === "career-skills") {
@@ -103,18 +86,16 @@ export default function TopicOverviewPage() {
   const isCareer = params.world === "career-skills";
 
   const backHref = isCareer
-    ? `/learn/career-skills/${params.section}?language=${encodeURIComponent(language)}`
+    ? `/learn/career-skills/${params.section}`
     : isSchool
-      ? `/learn/school-help/${params.section}?language=${encodeURIComponent(language)}`
-      : `/learn/${params.world}/${params.section}?language=${encodeURIComponent(language)}`;
+      ? `/learn/school-help/${params.section}`
+      : `/learn/${params.world}/${params.section}`;
 
   const startHref = `/lesson/custom?world=${encodeURIComponent(
     params.world
   )}&section=${encodeURIComponent(params.section)}&topic=${encodeURIComponent(
     resolved.title
-  )}&topicSlug=${encodeURIComponent(params.topic)}&language=${encodeURIComponent(
-    language
-  )}`;
+  )}&topicSlug=${encodeURIComponent(params.topic)}`;
 
   return (
     <main className="min-h-screen bg-[#F7F8FA] font-sans text-[#1D1E24]">
@@ -129,7 +110,7 @@ export default function TopicOverviewPage() {
           </Link>
 
           <div className="flex items-center gap-3">
-            <LanguageSelector value={language} onChange={changeLanguage} compact />
+
             <Link href="/" className="flex items-center gap-2 text-sm font-semibold text-[#0B1739]">
               <img src="/logo/favicon.png" alt="" className="h-7 w-7 rounded-full object-cover" />
               GAHN AI
@@ -191,12 +172,6 @@ export default function TopicOverviewPage() {
             </h2>
 
             <div className="mt-5 space-y-3 text-sm">
-              <div className="rounded-xl bg-[#F7F8FA] p-4">
-                <p className="text-xs font-semibold uppercase tracking-[0.1em] text-[#6C6D75]">
-                  Language
-                </p>
-                <p className="mt-1 font-semibold text-[#1D1E24]">{language}</p>
-              </div>
               <div className="rounded-xl bg-[#F7F8FA] p-4">
                 <p className="text-xs font-semibold uppercase tracking-[0.1em] text-[#6C6D75]">
                   Workspace

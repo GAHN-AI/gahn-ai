@@ -15,7 +15,6 @@ import {
   Paperclip,
   Send,
   Sparkles,
-  StickyNote,
   Upload,
   Volume2,
 } from "lucide-react";
@@ -51,7 +50,7 @@ type Props = {
   topic: string;
   lessonTitle: string;
   lessonPoints: string[];
-  instructorName: string;
+  instructorName?: string;
   language: string;
   nextLessonHref?: string | null;
   nextLessonTitle?: string | null;
@@ -163,7 +162,6 @@ export default function LearningStudio({
   const [textSelected, setTextSelected] = useState(true);
   const inputRef = useRef<HTMLTextAreaElement | null>(null);
   const recognitionRef = useRef<BrowserSpeechRecognition | null>(null);
-  const [notesOpen, setNotesOpen] = useState(false);
   const noteIdRef = useRef<string | null>(null);
   const notesDraftRef = useRef("");
   const lastSavedNotesRef = useRef("");
@@ -265,10 +263,10 @@ export default function LearningStudio({
   // show up in My Notes as soon as the learner opens that page.
   useEffect(() => {
     notesDraftRef.current = notes;
-    if (!notesOpen || !notes.trim() || notes === lastSavedNotesRef.current) return;
+    if (!notes.trim() || notes === lastSavedNotesRef.current) return;
     const timer = window.setTimeout(() => void saveNotes(), 1200);
     return () => window.clearTimeout(timer);
-  }, [notes, notesOpen, lessonId]);
+  }, [notes, lessonId]);
 
   async function requestInstructor(
     learnerMessage?: string,
@@ -671,9 +669,9 @@ export default function LearningStudio({
             </div>
             <div className="min-w-0">
               <p className="text-xs font-bold uppercase tracking-[0.16em] text-[#1677FF]">
-                GAHN Instructor
+                AI Instructor
               </p>
-              <h2 className="mt-1 truncate text-lg font-extrabold">{instructorName}</h2>
+              <h2 className="mt-1 truncate text-lg font-extrabold">{instructorName || "AI instructor"}</h2>
               <p className="truncate text-xs text-[#53657D]">{lessonTitle}</p>
             </div>
             <div className="ml-auto rounded-full border border-[#CFE0F5] bg-white px-3 py-1.5 text-xs font-bold text-[#53657D]">
@@ -682,9 +680,6 @@ export default function LearningStudio({
           </div>
 
           <div className="mt-4 flex flex-wrap gap-2">
-            <span className="rounded-full bg-[#EAF3FF] px-3 py-1.5 text-xs font-semibold text-[#1677FF]">
-              {language}
-            </span>
             <span className="rounded-full border border-[#D7E3F2] bg-white px-3 py-1.5 text-xs font-semibold text-[#53657D]">
               {aiConnected ? "Adaptive AI connected" : "Core lesson engine"}
             </span>
@@ -695,9 +690,9 @@ export default function LearningStudio({
             Do not create a live provider session until the API and billing are configured. */}
         <div className="border-b border-[#D7E3F2] bg-white p-4 sm:p-5">
           <div data-tavus-video-slot="instructor" aria-label="Inactive AI instructor video window"
-            className="relative mx-auto aspect-video w-full overflow-hidden rounded-2xl border border-[#1A2B43] bg-black">
+            className="relative mx-auto aspect-square w-full max-w-[430px] overflow-hidden rounded-2xl border border-[#1A2B43] bg-black">
             <span className="absolute bottom-3 left-3 rounded-lg border border-white/20 bg-[#111827]/90 px-3 py-1.5 text-xs font-semibold text-white">
-              {instructorName} · AI Instructor
+              {instructorName ? `${instructorName} · AI instructor` : "AI instructor"}
             </span>
             <span className="absolute right-3 top-3 rounded-full bg-[#1F2937] px-3 py-1 text-[11px] font-semibold text-white/80">
               Tavus not connected
@@ -720,7 +715,7 @@ export default function LearningStudio({
             </button>
           </div>
           <p className="mt-2 text-center text-xs text-[#64748B]">
-            Live instructor video is not connected yet. Existing text lessons remain available.
+            Tavus video is not connected. Controls currently apply to browser-based lesson audio only.
           </p>
         </div>
 
@@ -826,16 +821,6 @@ export default function LearningStudio({
                   <Volume2 className="h-4 w-4 text-[#1677FF]" />
                   Read aloud
                 </button>
-                {features.notes && (
-                  <button
-                    type="button"
-                    onClick={() => setNotesOpen((value) => !value)}
-                    className="inline-flex items-center gap-2 rounded-lg border border-[#D7E3F2] px-3 py-2 text-xs font-bold text-[#40536D] hover:bg-[#F5F8FC]"
-                  >
-                    <StickyNote className="h-4 w-4 text-[#1677FF]" />
-                    Notes
-                  </button>
-                )}
                 {features.fileUploads && features.homeworkHelp && (
                   <button
                     type="button"
@@ -933,33 +918,6 @@ export default function LearningStudio({
                 </div>
               )}
 
-              {notesOpen && (
-                <div className="mb-3 rounded-xl border border-[#CFE0F5] bg-[#F8FBFF] p-3">
-                  <textarea
-                    value={notes}
-                    onChange={(event) => {
-                      notesDraftRef.current = event.target.value;
-                      setNotes(event.target.value);
-                    }}
-                    rows={5}
-                    onBlur={() => void saveNotes()}
-                    placeholder="Write what you want to remember..."
-                    className="w-full resize-none rounded-lg border border-[#D7E3F2] bg-white px-3 py-2.5 text-sm leading-6 outline-none focus:border-[#1677FF]"
-                  />
-                  <p className="mt-2 text-xs text-[#53657D]">
-                    Your notes save automatically and will appear in My Notes.
-                  </p>
-                  <button
-                    type="button"
-                    onClick={() => void saveNotes()}
-                    className="mt-2 inline-flex items-center gap-2 rounded-lg bg-[#0B1739] px-3 py-2 text-xs font-bold text-white"
-                  >
-                    <Check className="h-3.5 w-3.5" />
-                    {notesSaved ? "Saved automatically" : "Save notes"}
-                  </button>
-                </div>
-              )}
-
               <form onSubmit={submitMessage} className="flex items-end gap-2">
                 <textarea
                   ref={inputRef}
@@ -1010,8 +968,17 @@ export default function LearningStudio({
 
       <MagicCanvas
         turn={turn}
+        lessonTitle={lessonTitle}
         loading={loading}
         onRespond={(response) => sendResponse(response)}
+        notes={notes}
+        notesEnabled={features.notes}
+        notesSaved={notesSaved}
+        onNotesChange={(value) => {
+          notesDraftRef.current = value;
+          setNotes(value);
+        }}
+        onSaveNotes={() => void saveNotes()}
       />
     </div>
   );

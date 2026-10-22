@@ -1,12 +1,12 @@
 # Tavus integration handoff — GAHN AI lesson workspace
 
 ## Status
-The lesson UI is prepared for a future Tavus integration; **no Tavus credentials, API requests, paid usage, or video stream are connected yet**. Do not describe the black video slot as a live instructor.
+The actual /lesson/[lessonId] route now uses LearningStudio across all five worlds. The lesson UI is prepared for a future Tavus integration; **no Tavus credentials, API requests, paid usage, or video stream are connected yet**. Do not describe the black video slot as a live instructor.
 
 ## Shared location
-- `components/lessons/LearningStudio.tsx` is the existing cross-Learning-World lesson experience. It contains a black, responsive 16:9 video mount with `data-tavus-video-slot="instructor"`, along with microphone, text, and sound controls.
+- `components/lessons/LearningStudio.tsx` is the existing cross-Learning-World lesson experience. It contains a black, responsive video mount with `data-tavus-video-slot="instructor"`, along with microphone, text, and sound controls.
 - `components/lessons/MagicCanvas.tsx` retains lesson blocks and answer input. Its empty state reads **No learning workspace started** before a teaching turn exists.
-- The existing `/api/instructor` endpoint and lesson-engine structures provide text learning, teaching turns, canvas blocks, session state, notes and progress. Do not bypass their entitlement checks or persistence rules.
+- The provider's instructor name must come from the future authorized session configuration, not from hard-coded learning-world names. The existing `/api/instructor` endpoint and lesson-engine structures provide text learning, teaching turns, canvas blocks, session state, notes and progress. Do not bypass their entitlement checks or persistence rules.
 
 ## Engineering integration tasks (future paid, approved work only)
 1. Create an authenticated **server-only** Tavus session creation/termination adapter. API keys must remain server-side; do not embed Tavus secrets in the browser or GitHub.
