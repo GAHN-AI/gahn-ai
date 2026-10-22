@@ -28,7 +28,6 @@ const plans: Plan[] = [
       "Magic Canvas for examples and lesson content",
       "Progress saved across lessons",
       "Save your own lesson notes",
-      "Multiple supported teaching languages",
     ],
   },
   {
