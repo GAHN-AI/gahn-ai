@@ -6,14 +6,15 @@ import {
   ArrowLeft,
   ArrowRight,
   BriefcaseBusiness,
-  CheckCircle2,
 } from "lucide-react";
 
 import { getCareerSection } from "@/lib/careerCatalog";
+import { getPracticalSkillRoadmap } from "@/lib/practicalSkillRoadmaps";
 
 export default function CareerSectionPage() {
   const params = useParams<{ section: string }>();
   const careerSection = getCareerSection(params.section);
+  const skillRoadmap = getPracticalSkillRoadmap("career-skills", params.section, params.section);
 
 
   if (!careerSection) {
@@ -101,28 +102,33 @@ export default function CareerSectionPage() {
           />
         </section>
 
-        <section className="mt-8 rounded-[16px] border border-[#E1E3E8] bg-white p-6 sm:p-8">
-          <p className="text-xs font-semibold uppercase tracking-[0.14em] text-[#0B5CFF]">
-            Practical skills
-          </p>
-          <h2 className="mt-2 text-[27px] font-semibold tracking-[-0.03em]">
-            What this career path can teach
+        <section aria-labelledby="career-skills-heading" className="mt-8 rounded-[16px] border border-[#E1E3E8] bg-white p-6 sm:p-8">
+          <p className="text-xs font-semibold uppercase tracking-[0.14em] text-[#0B5CFF]">Applied learning roadmap</p>
+          <h2 id="career-skills-heading" className="mt-2 text-[27px] font-semibold tracking-[-0.03em]">
+            Skills you&apos;ll learn
           </h2>
-          <p className="mt-3 max-w-[760px] text-[14px] leading-6 text-[#3C3E45]">
-            These skills become lesson topics, examples, questions, and practice inside the Career Skills instructor workspace.
+          <p className="mt-3 max-w-[780px] text-[14px] leading-6 text-[#3C3E45]">
+            Work through the knowledge, practical tasks, teamwork scenarios and evidence you would need to apply these skills responsibly.
+            Each stage includes something specific to explain, create, discuss or demonstrate.
           </p>
-
-          <div className="mt-6 grid gap-3 md:grid-cols-2">
-            {careerSection.skills.map((skill) => (
-              <div
-                key={skill}
-                className="flex items-start gap-3 rounded-[12px] border border-[#E7E7EA] bg-[#FAFAFB] p-4"
-              >
-                <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-[#0B5CFF]" />
-                <p className="text-[14px] font-medium text-[#1D1E24]">{skill}</p>
-              </div>
-            ))}
-          </div>
+          {skillRoadmap && (
+            <ol className="mt-6 grid gap-4">
+              {skillRoadmap.steps.map((step, index) => (
+                <li key={step.phase} className="flex gap-4 rounded-[14px] border border-[#E1E3E8] bg-[#FAFAFB] p-5">
+                  <span className="grid h-10 w-10 shrink-0 place-items-center rounded-xl bg-[#EAF2FF] text-sm font-bold text-[#0B5CFF]">{index + 1}</span>
+                  <div>
+                    <h3 className="text-sm font-bold text-[#0B1739]">{step.phase.slice(5)}</h3>
+                    <p className="mt-1.5 text-sm leading-6 text-[#3C3E45]">{step.detail}</p>
+                  </div>
+                </li>
+              ))}
+            </ol>
+          )}
+          {skillRoadmap?.safetyNote && (
+            <p className="mt-5 rounded-xl border border-[#DBE5F2] bg-[#F8FBFF] px-4 py-3 text-sm leading-6 text-[#4F647D]">
+              {skillRoadmap.safetyNote}
+            </p>
+          )}
         </section>
       </div>
     </main>
