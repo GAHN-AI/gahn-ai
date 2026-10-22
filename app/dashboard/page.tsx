@@ -49,7 +49,7 @@ const worlds: {
     slug: "career-skills",
     Icon: BriefcaseBusiness,
     title: "Career Skills",
-    subtitle: "Business, technology, finance, communication, and job skills.",
+    subtitle: "Online-practice career skills in software, data, marketing, finance, creative work and remote support.",
     eyebrow: "CAREER WORLD",
     imageUrl: "https://images.unsplash.com/photo-1522071820081-009f0129c71c?auto=format&fit=crop&w=1200&q=82",
   },
