@@ -9,6 +9,9 @@ import {
   Check,
   FileText,
   Mic,
+  MicOff,
+  MessageSquareText,
+  VolumeX,
   Paperclip,
   Send,
   Sparkles,
@@ -66,6 +69,7 @@ type BrowserSpeechRecognition = {
   interimResults: boolean;
   continuous: boolean;
   start: () => void;
+  stop: () => void;
   onresult: ((event: SpeechResult) => void) | null;
   onerror: (() => void) | null;
   onend: (() => void) | null;
@@ -154,6 +158,11 @@ export default function LearningStudio({
   const [aiConnected, setAiConnected] = useState(false);
   const [error, setError] = useState("");
   const [listening, setListening] = useState(false);
+  const [micMuted, setMicMuted] = useState(true);
+  const [soundOn, setSoundOn] = useState(true);
+  const [textSelected, setTextSelected] = useState(true);
+  const inputRef = useRef<HTMLTextAreaElement | null>(null);
+  const recognitionRef = useRef<BrowserSpeechRecognition | null>(null);
   const [notesOpen, setNotesOpen] = useState(false);
   const noteIdRef = useRef<string | null>(null);
   const notesDraftRef = useRef("");
@@ -411,7 +420,7 @@ export default function LearningStudio({
   }
 
   function speakLastMessage() {
-    if (!turn?.message || typeof window === "undefined") return;
+    if (!turn?.message || !soundOn || typeof window === "undefined") return;
     window.speechSynthesis.cancel();
     const utterance = new SpeechSynthesisUtterance(turn.message);
     utterance.lang = speechLocale(language);
@@ -431,7 +440,13 @@ export default function LearningStudio({
       return;
     }
 
+    if (micMuted) {
+      setError("Unmute your microphone before using browser voice input.");
+      return;
+    }
+    if (recognitionRef.current) return;
     const recognition = new SpeechRecognition();
+    recognitionRef.current = recognition;
     recognition.lang = speechLocale(language);
     recognition.interimResults = false;
     recognition.continuous = false;
@@ -447,10 +462,43 @@ export default function LearningStudio({
       setError("I could not hear that clearly. Try again or type your answer.");
     };
 
-    recognition.onend = () => setListening(false);
+    recognition.onend = () => {
+      setListening(false);
+      recognitionRef.current = null;
+    };
 
     setListening(true);
-    recognition.start();
+    try {
+      recognition.start();
+    } catch {
+      setListening(false);
+      recognitionRef.current = null;
+      setError("Voice input could not start. Type your answer instead.");
+    }
+  }
+
+  function toggleMicrophone() {
+    setMicMuted((muted) => {
+      if (!muted && recognitionRef.current) {
+        recognitionRef.current.onend = null;
+        recognitionRef.current.stop();
+        recognitionRef.current = null;
+        setListening(false);
+      }
+      return !muted;
+    });
+  }
+
+  function toggleSound() {
+    setSoundOn((enabled) => {
+      if (enabled && typeof window !== "undefined") window.speechSynthesis?.cancel();
+      return !enabled;
+    });
+  }
+
+  function focusText() {
+    setTextSelected(true);
+    inputRef.current?.focus();
   }
 
   async function uploadLearningFile(file: File) {
@@ -614,7 +662,7 @@ export default function LearningStudio({
   }
 
   return (
-    <div className="grid gap-6 xl:grid-cols-[minmax(0,0.82fr)_minmax(520px,1.18fr)]">
+    <div className="grid gap-6 xl:grid-cols-[minmax(0,0.8fr)_minmax(0,1.2fr)]">
       <section className="flex min-h-[680px] min-w-0 flex-col overflow-hidden rounded-[1.5rem] border border-[#D7E3F2] bg-white shadow-[0_16px_45px_rgba(11,23,57,0.06)]">
         <div className="border-b border-[#D7E3F2] bg-[linear-gradient(135deg,#FFFFFF_0%,#F8FBFF_70%,#EAF3FF_100%)] p-5">
           <div className="flex items-start gap-3">
@@ -641,6 +689,39 @@ export default function LearningStudio({
               {aiConnected ? "Adaptive AI connected" : "Core lesson engine"}
             </span>
           </div>
+        </div>
+
+        {/* Future Tavus video renderer mounts inside this inactive window.
+            Do not create a live provider session until the API and billing are configured. */}
+        <div className="border-b border-[#D7E3F2] bg-white p-4 sm:p-5">
+          <div data-tavus-video-slot="instructor" aria-label="Inactive AI instructor video window"
+            className="relative mx-auto aspect-video w-full overflow-hidden rounded-2xl border border-[#1A2B43] bg-black">
+            <span className="absolute bottom-3 left-3 rounded-lg border border-white/20 bg-[#111827]/90 px-3 py-1.5 text-xs font-semibold text-white">
+              {instructorName} · AI Instructor
+            </span>
+            <span className="absolute right-3 top-3 rounded-full bg-[#1F2937] px-3 py-1 text-[11px] font-semibold text-white/80">
+              Tavus not connected
+            </span>
+          </div>
+          <div role="group" aria-label="Instructor controls" className="mt-3 grid grid-cols-3 gap-2">
+            <button type="button" onClick={toggleMicrophone} aria-pressed={!micMuted}
+              className={`flex min-h-14 flex-col items-center justify-center gap-1 rounded-xl border px-2 py-2 text-xs font-bold ${micMuted ? "border-[#D7E3F2] text-[#53657D]" : "border-[#1677FF] bg-[#EAF3FF] text-[#1677FF]"}`}>
+              {micMuted ? <MicOff className="h-4 w-4" /> : <Mic className="h-4 w-4" />}
+              {micMuted ? "Unmute" : "Mute"}
+            </button>
+            <button type="button" onClick={focusText} aria-pressed={textSelected}
+              className="flex min-h-14 flex-col items-center justify-center gap-1 rounded-xl border border-[#1677FF] bg-[#EAF3FF] px-2 py-2 text-xs font-bold text-[#1677FF]">
+              <MessageSquareText className="h-4 w-4" />Text
+            </button>
+            <button type="button" onClick={toggleSound} aria-pressed={soundOn}
+              className={`flex min-h-14 flex-col items-center justify-center gap-1 rounded-xl border px-2 py-2 text-xs font-bold ${soundOn ? "border-[#D7E3F2] text-[#53657D]" : "border-[#1677FF] bg-[#EAF3FF] text-[#1677FF]"}`}>
+              {soundOn ? <Volume2 className="h-4 w-4" /> : <VolumeX className="h-4 w-4" />}
+              {soundOn ? "Sound on" : "Sound off"}
+            </button>
+          </div>
+          <p className="mt-2 text-center text-xs text-[#64748B]">
+            Live instructor video is not connected yet. Existing text lessons remain available.
+          </p>
         </div>
 
         {!started ? (
@@ -730,6 +811,7 @@ export default function LearningStudio({
                 <button
                   type="button"
                   onClick={startVoiceInput}
+                  disabled={micMuted || finishedLesson}
                   className="inline-flex items-center gap-2 rounded-lg border border-[#D7E3F2] px-3 py-2 text-xs font-bold text-[#40536D] hover:bg-[#F5F8FC]"
                 >
                   <Mic className="h-4 w-4 text-[#1677FF]" />
@@ -738,7 +820,7 @@ export default function LearningStudio({
                 <button
                   type="button"
                   onClick={speakLastMessage}
-                  disabled={!turn?.message}
+                  disabled={!turn?.message || !soundOn}
                   className="inline-flex items-center gap-2 rounded-lg border border-[#D7E3F2] px-3 py-2 text-xs font-bold text-[#40536D] hover:bg-[#F5F8FC] disabled:opacity-50"
                 >
                   <Volume2 className="h-4 w-4 text-[#1677FF]" />
@@ -880,6 +962,7 @@ export default function LearningStudio({
 
               <form onSubmit={submitMessage} className="flex items-end gap-2">
                 <textarea
+                  ref={inputRef}
                   value={input}
                   onChange={(event) => setInput(event.target.value)}
                   rows={1}

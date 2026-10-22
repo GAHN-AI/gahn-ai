@@ -194,32 +194,32 @@ function Block({
 
 export default function MagicCanvas({ turn, loading = false, onRespond }: Props) {
   return (
-    <section className="overflow-hidden rounded-[1.5rem] border border-[#D7E3F2] bg-white shadow-[0_16px_45px_rgba(11,23,57,0.06)]">
+    <section data-learning-workspace="magic-canvas" className="flex min-h-[680px] min-w-0 flex-col overflow-hidden rounded-[1.5rem] border border-[#D7E3F2] bg-white shadow-[0_16px_45px_rgba(11,23,57,0.06)]">
       <div className="border-b border-[#D7E3F2] bg-[linear-gradient(135deg,#FFFFFF_0%,#F8FBFF_62%,#EAF3FF_100%)] p-5 sm:p-6">
         <p className="flex items-center gap-2 text-xs font-bold uppercase tracking-[0.18em] text-[#1677FF]">
           <Sparkles className="h-4 w-4" />
           Magic Canvas
         </p>
         <h2 className="mt-2 text-xl font-extrabold tracking-[-0.025em]">
-          {turn?.canvas.title || "Interactive lesson workspace"}
+          {turn?.canvas.title || "Your learning workspace"}
         </h2>
         <p className="mt-2 text-sm leading-6 text-[#53657D]">
           {turn?.canvas.subtitle || "The Canvas changes with the lesson so you learn by seeing, answering, and doing."}
         </p>
       </div>
 
-      <div className="max-h-[680px] space-y-4 overflow-y-auto bg-[#F8FBFF] p-4 sm:p-5">
+      <div className="flex-1 space-y-4 overflow-y-auto bg-[#F8FBFF] p-4 sm:p-5">
         {!turn && (
-          <div className="grid min-h-[380px] place-items-center rounded-2xl border border-dashed border-[#CFE0F5] bg-white px-6 text-center">
+          <div className="grid min-h-[440px] place-items-center rounded-2xl border border-dashed border-[#CFE0F5] bg-white px-6 text-center">
             <div className="max-w-sm">
               <div className="mx-auto grid h-14 w-14 place-items-center rounded-2xl bg-[#EAF3FF] text-[#1677FF]">
                 <Sparkles className="h-6 w-6" />
               </div>
               <h3 className="mt-4 text-lg font-extrabold">
-                {loading ? "Preparing the lesson..." : "Start the lesson"}
+                {loading ? "Preparing your learning workspace..." : "No learning workspace started"}
               </h3>
               <p className="mt-2 text-sm leading-6 text-[#53657D]">
-                Explanations, diagrams, questions, activities, and mastery checks appear here.
+                Once you start a lesson, explanations, diagrams, questions, activities, and practice will appear here.
               </p>
             </div>
           </div>
