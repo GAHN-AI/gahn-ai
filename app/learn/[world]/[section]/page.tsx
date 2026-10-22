@@ -1,8 +1,7 @@
 "use client";
 
-import { useEffect, useState } from "react";
 import Link from "next/link";
-import { useParams, useSearchParams } from "next/navigation";
+import { useParams } from "next/navigation";
 import {
   ArrowLeft,
   ArrowRight,
@@ -12,7 +11,6 @@ import {
   GraduationCap,
 } from "lucide-react";
 
-import LanguageSelector from "@/components/LanguageSelector";
 import {
   getLearningSection,
   slugifyLearningTitle,
@@ -28,27 +26,11 @@ const worldMeta = {
 
 export default function LearningSectionPage() {
   const params = useParams<{ world: string; section: string }>();
-  const searchParams = useSearchParams();
 
   const section = getLearningSection(params.world, params.section);
   const available = isLearningWorldAvailable(params.world);
   const meta = worldMeta[params.world as keyof typeof worldMeta];
 
-  const [language, setLanguage] = useState(
-    searchParams.get("language") || "English"
-  );
-
-  useEffect(() => {
-    const stored = window.localStorage.getItem("gahn-language");
-    if (!searchParams.get("language") && stored) {
-      setLanguage(stored);
-    }
-  }, [searchParams]);
-
-  function changeLanguage(nextLanguage: string) {
-    setLanguage(nextLanguage);
-    window.localStorage.setItem("gahn-language", nextLanguage);
-  }
 
   if (!available || !section || !meta) {
     return (
@@ -80,7 +62,7 @@ export default function LearningSectionPage() {
       <header className="border-b border-[#E7E7EA] bg-white">
         <div className="mx-auto flex min-h-[68px] max-w-[1180px] flex-wrap items-center justify-between gap-4 px-5 sm:px-8">
           <Link
-            href={`/learn/${params.world}?language=${encodeURIComponent(language)}`}
+            href={`/learn/${params.world}`}
             className="inline-flex items-center gap-2 text-sm font-medium text-[#1D1E24]"
           >
             <ArrowLeft className="h-4 w-4" />
@@ -88,7 +70,7 @@ export default function LearningSectionPage() {
           </Link>
 
           <div className="flex items-center gap-3">
-            <LanguageSelector value={language} onChange={changeLanguage} compact />
+
             <Link href="/" className="flex items-center gap-2 text-sm font-semibold text-[#0B1739]">
               <img src="/logo/favicon.png" alt="" className="h-7 w-7 rounded-full object-cover" />
               GAHN AI
@@ -138,7 +120,7 @@ export default function LearningSectionPage() {
                   key={option.title}
                   href={`/learn/school-help/${section.slug}/${slugifyLearningTitle(
                     option.title
-                  )}?language=${encodeURIComponent(language)}`}
+                  )}`}
                   className="group rounded-[14px] border border-[#E1E3E8] bg-white p-5 transition hover:-translate-y-0.5 hover:border-[#BDD3F7] hover:shadow-[0_10px_24px_rgba(29,30,36,0.05)]"
                 >
                   <p className="text-[17px] font-semibold">{option.title}</p>
@@ -171,7 +153,7 @@ export default function LearningSectionPage() {
                   key={option.title}
                   href={`/learn/${params.world}/${section.slug}/${slugifyLearningTitle(
                     option.title
-                  )}?language=${encodeURIComponent(language)}`}
+                  )}`}
                   className="group flex items-center justify-between gap-5 rounded-[14px] border border-[#E1E3E8] bg-[#FAFAFB] p-5 transition hover:border-[#BDD3F7]"
                 >
                   <div>
