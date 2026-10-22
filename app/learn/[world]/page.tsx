@@ -30,7 +30,7 @@ const learningWorlds: Record<string, LearningWorld> = {
     title: "Career Skills",
     eyebrow: "Career learning world",
     description:
-      "Choose an industry, then explore real job paths and the practical skills used in that field.",
+      "Choose a digital career field, from accessible online support roles to advanced software, AI and finance careers. Practice the skills online, while checking employers' separate hiring requirements.",
     Icon: BriefcaseBusiness,
   },
   "school-help": {
@@ -212,20 +212,26 @@ export default function LearningWorldPage() {
           <div className="max-w-[760px]">
             <p className="text-xs font-semibold uppercase tracking-[0.14em] text-[#0B5CFF]">
               {world === "career-skills"
-                ? "Industries"
+                ? "Digital career fields"
                 : world === "school-help"
                   ? "Subjects and homework"
                   : "Learning paths"}
             </p>
             <h2 className="mt-2 text-[28px] font-semibold tracking-[-0.03em] text-[#1D1E24]">
               {world === "career-skills"
-                ? "Choose an industry"
+                ? "Choose a digital career field"
                 : world === "school-help"
                   ? "Choose what you need help with"
                   : `Choose a path inside ${title}`}
             </h2>
           </div>
 
+          {world === "career-skills" && (
+            <p className="mt-4 max-w-3xl text-sm leading-6 text-[#53657D]">
+              Courses focus on tasks and portfolios that can be practiced digitally. Job eligibility, remote vacancies, compensation and employer training vary.
+              The platform does not replace degrees, professional certifications, hiring assessments or real work experience.
+            </p>
+          )}
           <div className="mt-6 grid gap-5 md:grid-cols-2 xl:grid-cols-3">
             {world === "career-skills"
               ? careerIndustries.map((industry) => (
