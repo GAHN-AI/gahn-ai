@@ -27,3 +27,6 @@ The actual /lesson/[lessonId] route now uses LearningStudio across all five worl
 
 ## Provider contract prerequisites
 Obtain from Tavus: approved API credentials, current SDK/embed docs, per-minute price and included minutes, concurrency limits, overage policy, timeouts, engineering scope, and data/retention agreements. Do not assume 1,000 concurrent sessions or unlimited minutes are included in the base Enterprise price.
+
+## Teaching brain and model upgrades
+The model and teaching-quality architecture for future funding is documented in [Future Teacher Brain Model Policy](./future-teacher-brain-model-policy.md). As of October 2026 OpenAI lists `gpt-6-astra` as its highest-intelligence API model. **This is not enabled in production**, and model releases must pass evaluations, cost review and founder approval before deployment. Tavus should provide video/avatar/media, while GAHN's authorized backend owns lesson logic, Magic Canvas and learner state. Never assume access to ChatGPT app models from a Tavus license.

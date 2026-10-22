@@ -96,9 +96,10 @@ export default function CareerIndustryPage() {
             Choose a job to explore
           </h2>
           <p className="mt-3 max-w-[720px] text-[14px] leading-6 text-[#3C3E45]">
-            Open a role to see the work, practical skills, and private lesson for that career.
+            Open a role to explore digital tools, real-world practice, entry expectations and a guided lesson. Some jobs require degrees, certification, experience or employer onboarding; online lessons alone do not qualify you for employment.
           </p>
 
+          <p className="mt-2 text-xs leading-5 text-[#64748B]">Pay descriptions are broad, not guaranteed salaries. Remote openings, employer requirements, and work arrangements vary.</p>
           <div className="mt-6 grid items-start gap-5 md:grid-cols-2 xl:grid-cols-3">
             {careers.map((career) => (
               <Link
@@ -123,6 +124,10 @@ export default function CareerIndustryPage() {
                   <p className="mt-2 min-h-[72px] text-[13px] leading-6 text-[#3C3E45]">
                     {career.description}
                   </p>
+                  <div className="mt-4 flex flex-wrap gap-2">
+                    <span className="rounded-full bg-[#EAF2FF] px-2.5 py-1 text-[11px] font-semibold text-[#0B5CFF]">{career.payCategory}</span>
+                    <span className="rounded-full bg-[#F1F4F8] px-2.5 py-1 text-[11px] font-semibold text-[#53657D]">{career.level}</span>
+                  </div>
 
                   <div className="mt-5 flex items-center justify-between border-t border-[#EEEEF1] pt-4">
                     <span className="text-sm font-semibold text-[#0B5CFF]">

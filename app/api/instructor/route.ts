@@ -5,6 +5,7 @@ import { cookies } from "next/headers";
 import { supabaseAdmin } from "@/lib/supabaseAdmin";
 import { requireEntitlement } from "@/lib/requireEntitlement";
 import { buildInstructorPrompt } from "@/lib/ai/instructorPrompt";
+import { getCareerSection } from "@/lib/careerCatalog";
 import {
   checkAiUsageLimit,
   recordAiUsage,
@@ -601,6 +602,18 @@ export async function POST(req: Request) {
         { error: "Missing lesson context." },
         { status: 400 }
       );
+    }
+
+    // Retired clinical / trade paths must not be invoked by calling the API
+    // directly with a stale or hand-written lesson URL.
+    if (body.worldSlug === "career-skills" && body.action !== "finish") {
+      const approvedCareer = getCareerSection(body.sectionSlug || "");
+      if (!approvedCareer || approvedCareer.title !== body.topic) {
+        return NextResponse.json(
+          { error: "This career lesson is not available. Choose a current digital career path." },
+          { status: 400 }
+        );
+      }
     }
 
     const access = await requireEntitlement(user.id, "liveInstructor");
