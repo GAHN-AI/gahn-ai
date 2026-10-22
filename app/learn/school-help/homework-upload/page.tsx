@@ -5,6 +5,7 @@ import { useMemo, useState } from "react";
 import { ArrowLeft, FileText, GraduationCap, Upload } from "lucide-react";
 
 import { lessonIdFromParts } from "@/lib/ai/lessonEngine";
+import { getPracticalSkillRoadmap } from "@/lib/practicalSkillRoadmaps";
 import { supabase } from "@/lib/supabaseClient";
 
 const levels = [
@@ -27,6 +28,7 @@ const subjects = [
 ];
 
 export default function HomeworkUploadPage() {
+  const homeworkRoadmap = getPracticalSkillRoadmap("school-help", "homework-upload", "homework-upload");
   const [subject, setSubject] = useState("Science");
   const [level, setLevel] = useState("Grade 9");
   const [topic, setTopic] = useState("");
@@ -198,6 +200,25 @@ export default function HomeworkUploadPage() {
           </div>
         </div>
       </section>
+
+      {homeworkRoadmap && (
+        <section aria-labelledby="homework-skills" className="mx-auto max-w-[1180px] px-5 pt-8 sm:px-8">
+          <div className="rounded-2xl border border-[#E1E3E8] bg-white p-5 sm:p-6">
+            <h2 id="homework-skills" className="text-xl font-semibold text-[#0B1739]">Skills you&apos;ll learn</h2>
+            <ol className="mt-4 grid gap-3 md:grid-cols-2">
+              {homeworkRoadmap.steps.map((step, index) => (
+                <li key={step.phase} className="flex gap-3 rounded-xl bg-[#F7F9FC] p-4">
+                  <span className="grid h-8 w-8 shrink-0 place-items-center rounded-lg bg-[#EAF2FF] text-sm font-bold text-[#0B5CFF]">{index + 1}</span>
+                  <div>
+                    <h3 className="text-sm font-semibold text-[#0B1739]">{step.phase.slice(5)}</h3>
+                    <p className="mt-1 text-sm leading-6 text-[#40536D]">{step.detail}</p>
+                  </div>
+                </li>
+              ))}
+            </ol>
+          </div>
+        </section>
+      )}
 
       <div className="mx-auto grid max-w-[1180px] gap-6 px-5 py-8 sm:px-8 lg:grid-cols-[minmax(0,0.9fr)_minmax(0,1.1fr)]">
         <section className="rounded-[16px] border border-[#E1E3E8] bg-white p-6 shadow-[0_16px_40px_rgba(11,23,57,0.05)] sm:p-7">

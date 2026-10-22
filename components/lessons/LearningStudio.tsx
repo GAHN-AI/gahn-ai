@@ -159,6 +159,7 @@ export default function LearningStudio({
   const [listening, setListening] = useState(false);
   const [micMuted, setMicMuted] = useState(true);
   const [soundOn, setSoundOn] = useState(true);
+  const [autoRead, setAutoRead] = useState(false);
   const [textSelected, setTextSelected] = useState(true);
   const inputRef = useRef<HTMLTextAreaElement | null>(null);
   const recognitionRef = useRef<BrowserSpeechRecognition | null>(null);
@@ -188,6 +189,23 @@ export default function LearningStudio({
   useEffect(() => {
     masteryNotifiedRef.current = false;
   }, [lessonId]);
+
+  // These controls are real browser audio preferences, not Tavus provider settings.
+  // Keep the microphone muted until the learner explicitly unmutes it.
+  useEffect(() => {
+    setSoundOn(window.localStorage.getItem("gahn-lesson-sound-enabled") !== "off");
+    setAutoRead(window.localStorage.getItem("gahn-lesson-auto-read") === "on");
+  }, []);
+
+  useEffect(() => {
+    if (!autoRead || !soundOn || !started || !turn?.message || typeof window === "undefined") return;
+    if (!window.speechSynthesis || typeof SpeechSynthesisUtterance === "undefined") return;
+    window.speechSynthesis.cancel();
+    const utterance = new SpeechSynthesisUtterance(turn.message);
+    utterance.lang = speechLocale(language);
+    window.speechSynthesis.speak(utterance);
+    return () => window.speechSynthesis.cancel();
+  }, [turn?.message, autoRead, soundOn, started, language]);
 
   useEffect(() => {
     async function loadFeatures() {
@@ -489,8 +507,10 @@ export default function LearningStudio({
 
   function toggleSound() {
     setSoundOn((enabled) => {
-      if (enabled && typeof window !== "undefined") window.speechSynthesis?.cancel();
-      return !enabled;
+      const next = !enabled;
+      window.localStorage.setItem("gahn-lesson-sound-enabled", next ? "on" : "off");
+      if (!next) window.speechSynthesis?.cancel();
+      return next;
     });
   }
 
