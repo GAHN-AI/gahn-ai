@@ -1,11 +1,6 @@
-export type CareerIndustry =
-  | "Technology Industry"
-  | "Healthcare & Medicine"
-  | "Legal & Public Service"
-  | "Finance & Insurance"
-  | "Business & Operations"
-  | "Skilled Trades & Services";
-
+/** GAHN Career Skills: digital-practice-first paths; not certificates or employment offers. */
+export type CareerIndustry = "Software & IT" | "Data & AI" | "Digital Design & Content" | "Marketing & Online Sales" | "Finance & Digital Analysis" | "Remote Operations & Support" | "Healthcare & Legal Administration";
+export type CareerPayCategory = "Moderate earning potential" | "Moderate to higher potential" | "Higher earning potential";
 export type CareerSection = {
   slug: string;
   title: string;
@@ -15,8 +10,9 @@ export type CareerSection = {
   level: string;
   pathLabel: string;
   skills: string[];
+  payCategory: CareerPayCategory;
+  onlineScope: string;
 };
-
 export type CareerIndustryInfo = {
   slug: string;
   title: CareerIndustry;
@@ -25,853 +21,908 @@ export type CareerIndustryInfo = {
   imageUrl: string;
   skills: string[];
 };
-
 export const careerIndustries: CareerIndustryInfo[] = [
   {
-    slug: "tech-skills",
-    title: "Technology Industry",
-    displayTitle: "Tech Skills",
-    description:
-      "Build practical software, data, cloud, cybersecurity, artificial intelligence, design, and technical support skills used across modern technology careers.",
-    imageUrl:
-      "https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=1400&q=80",
-    skills: [
-      "HTML",
-      "CSS",
+    "slug": "tech-skills",
+    "title": "Software & IT",
+    "displayTitle": "Software & IT",
+    "description": "Build apps, protect digital systems, automate testing, support users, and operate modern cloud infrastructure.",
+    "imageUrl": "https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=1400&q=80",
+    "skills": [
+      "Web applications",
+      "Programming",
+      "Software testing",
+      "IT support",
+      "Cloud services",
+      "Security",
+      "APIs",
+      "Version control"
+    ]
+  },
+  {
+    "slug": "data-ai",
+    "title": "Data & AI",
+    "displayTitle": "Data & AI",
+    "description": "Analyze datasets, build dashboards, automate digital workflows, and develop machine-learning solutions.",
+    "imageUrl": "https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=1400&q=80",
+    "skills": [
+      "SQL",
+      "Python",
+      "Reporting",
+      "Visualization",
+      "Model evaluation",
+      "AI workflow design",
+      "Business data"
+    ]
+  },
+  {
+    "slug": "design-content",
+    "title": "Digital Design & Content",
+    "displayTitle": "Digital Design & Content",
+    "description": "Design interfaces, create graphics, edit video, and write clear technical and digital content.",
+    "imageUrl": "https://images.unsplash.com/photo-1545235617-9465d2a55698?auto=format&fit=crop&w=1400&q=80",
+    "skills": [
+      "Figma",
+      "Prototyping",
+      "Layout",
+      "Video editing",
+      "Writing",
+      "Accessibility",
+      "Review cycles"
+    ]
+  },
+  {
+    "slug": "digital-marketing-sales",
+    "title": "Marketing & Online Sales",
+    "displayTitle": "Marketing & Online Sales",
+    "description": "Run digital campaigns, grow audiences, improve search visibility, write email campaigns, and sell through online conversations.",
+    "imageUrl": "https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&w=1400&q=80",
+    "skills": [
+      "SEO",
+      "Content strategy",
+      "Marketing analytics",
+      "Email campaigns",
+      "CRM",
+      "Remote sales",
+      "Conversion tracking"
+    ]
+  },
+  {
+    "slug": "finance-insurance",
+    "title": "Finance & Digital Analysis",
+    "displayTitle": "Finance & Digital Analysis",
+    "description": "Maintain digital accounts, build models, assess financial risks, and prepare professional reports.",
+    "imageUrl": "https://images.unsplash.com/photo-1554224155-6726b3ff858f?auto=format&fit=crop&w=1400&q=80",
+    "skills": [
+      "Bookkeeping",
+      "Spreadsheets",
+      "Forecasting",
+      "Financial statements",
+      "Credit review",
+      "Risk analysis"
+    ]
+  },
+  {
+    "slug": "business-operations",
+    "title": "Remote Operations & Support",
+    "displayTitle": "Remote Operations & Support",
+    "description": "Serve customers online, organize digital projects, support teams, coordinate operations, and manage client relationships.",
+    "imageUrl": "https://images.unsplash.com/photo-1521737711867-e3b97375f902?auto=format&fit=crop&w=1400&q=80",
+    "skills": [
+      "Customer service",
+      "Project coordination",
+      "CRM",
+      "Remote collaboration",
+      "Scheduling",
+      "Client communication",
+      "Recruiting"
+    ]
+  },
+  {
+    "slug": "digital-health-legal",
+    "title": "Healthcare & Legal Administration",
+    "displayTitle": "Healthcare & Legal Administration",
+    "description": "Explore nonclinical digital records, coding, patient scheduling, contracts, and legal or compliance operations—without presenting online study as clinical or legal certification.",
+    "imageUrl": "https://images.unsplash.com/photo-1497366754035-f200968a6e72?auto=format&fit=crop&w=1400&q=80",
+    "skills": [
+      "Medical records",
+      "Billing codes",
+      "Scheduling",
+      "Privacy",
+      "Document review",
+      "Contracts",
+      "Compliance records"
+    ]
+  }
+];
+export const careerSections: CareerSection[] = [
+  {
+    "slug": "software-developer-engineer",
+    "title": "Software Developer / Engineer",
+    "category": "Software & IT",
+    "description": "Build and maintain web applications and software services, from requirements to production.",
+    "imageUrl": "https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=1400&q=80",
+    "level": "Foundations to advanced",
+    "pathLabel": "Digital career path",
+    "skills": [
+      "TypeScript",
+      "Backend APIs",
+      "Databases",
+      "Testing",
+      "Deployment",
+      "Code review"
+    ],
+    "payCategory": "Higher earning potential",
+    "onlineScope": "The core skills and portfolio exercises can be learned and practiced digitally. Employers may still require qualifications, interviews, identity checks, supervised work or onsite onboarding."
+  },
+  {
+    "slug": "front-end-developer",
+    "title": "Front End Developer",
+    "category": "Software & IT",
+    "description": "Create responsive, accessible web interfaces and connect them to application data.",
+    "imageUrl": "https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=1400&q=80",
+    "level": "Beginner to intermediate",
+    "pathLabel": "Digital career path",
+    "skills": [
+      "HTML/CSS",
       "JavaScript",
       "React",
+      "Accessibility",
+      "Responsive design",
+      "UI testing"
+    ],
+    "payCategory": "Higher earning potential",
+    "onlineScope": "The core skills and portfolio exercises can be learned and practiced digitally. Employers may still require qualifications, interviews, identity checks, supervised work or onsite onboarding."
+  },
+  {
+    "slug": "python-developer",
+    "title": "Python Developer",
+    "category": "Software & IT",
+    "description": "Write Python applications, automation scripts, data utilities, and backend services.",
+    "imageUrl": "https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=1400&q=80",
+    "level": "Beginner to intermediate",
+    "pathLabel": "Digital career path",
+    "skills": [
       "Python",
+      "Automation",
+      "Flask or Django",
       "SQL",
       "Git",
+      "Testing"
+    ],
+    "payCategory": "Higher earning potential",
+    "onlineScope": "The core skills and portfolio exercises can be learned and practiced digitally. Employers may still require qualifications, interviews, identity checks, supervised work or onsite onboarding."
+  },
+  {
+    "slug": "cyber-security-analyst",
+    "title": "Cybersecurity Analyst",
+    "category": "Software & IT",
+    "description": "Monitor authorized systems, investigate alerts, document risks and recommend defensive controls.",
+    "imageUrl": "https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=1400&q=80",
+    "level": "Intermediate to advanced",
+    "pathLabel": "Digital career path",
+    "skills": [
+      "Security alerts",
+      "Risk registers",
+      "Defensive analysis",
+      "Network fundamentals",
+      "Incident reports",
+      "Access controls"
+    ],
+    "payCategory": "Higher earning potential",
+    "onlineScope": "The core skills and portfolio exercises can be learned and practiced digitally. Employers may still require qualifications, interviews, identity checks, supervised work or onsite onboarding."
+  },
+  {
+    "slug": "devops-engineer",
+    "title": "DevOps Engineer",
+    "category": "Software & IT",
+    "description": "Automate software builds and deployments, improve reliability, and monitor services.",
+    "imageUrl": "https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=1400&q=80",
+    "level": "Intermediate to advanced",
+    "pathLabel": "Digital career path",
+    "skills": [
+      "CI/CD",
+      "Containers",
+      "Infrastructure",
       "Linux",
-      "REST APIs",
-      "Cloud Computing",
-      "Docker",
-      "Cybersecurity",
-      "Data Analysis",
-      "Machine Learning",
+      "Monitoring",
+      "Incident runbooks"
+    ],
+    "payCategory": "Higher earning potential",
+    "onlineScope": "The core skills and portfolio exercises can be learned and practiced digitally. Employers may still require qualifications, interviews, identity checks, supervised work or onsite onboarding."
+  },
+  {
+    "slug": "cloud-architect",
+    "title": "Cloud Architect",
+    "category": "Software & IT",
+    "description": "Design secure, scalable cloud infrastructure and evaluate reliability and cost trade-offs.",
+    "imageUrl": "https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=1400&q=80",
+    "level": "Advanced career",
+    "pathLabel": "Digital career path",
+    "skills": [
+      "Cloud design",
+      "Identity access",
+      "Network design",
+      "Cost modeling",
+      "Backups",
+      "Reliability"
+    ],
+    "payCategory": "Higher earning potential",
+    "onlineScope": "The core skills and portfolio exercises can be learned and practiced digitally. Employers may still require qualifications, interviews, identity checks, supervised work or onsite onboarding."
+  },
+  {
+    "slug": "technical-support-engineer-analyst",
+    "title": "Remote IT Support Specialist",
+    "category": "Software & IT",
+    "description": "Diagnose account, software, device and connectivity issues through remote support channels.",
+    "imageUrl": "https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=1400&q=80",
+    "level": "Beginner to intermediate",
+    "pathLabel": "Digital career path",
+    "skills": [
+      "Remote troubleshooting",
+      "Operating systems",
+      "Networking basics",
+      "Ticket writing",
+      "Account support",
+      "Customer communication"
+    ],
+    "payCategory": "Moderate earning potential",
+    "onlineScope": "The core skills and portfolio exercises can be learned and practiced digitally. Employers may still require qualifications, interviews, identity checks, supervised work or onsite onboarding."
+  },
+  {
+    "slug": "qa-automation-engineer",
+    "title": "QA Automation Engineer",
+    "category": "Software & IT",
+    "description": "Design software test plans and automate repeatable browser and API checks.",
+    "imageUrl": "https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=1400&q=80",
+    "level": "Beginner to intermediate",
+    "pathLabel": "Digital career path",
+    "skills": [
+      "Test cases",
+      "Browser automation",
+      "API checks",
+      "Bug reports",
+      "CI",
+      "Accessibility checks"
+    ],
+    "payCategory": "Higher earning potential",
+    "onlineScope": "The core skills and portfolio exercises can be learned and practiced digitally. Employers may still require qualifications, interviews, identity checks, supervised work or onsite onboarding."
+  },
+  {
+    "slug": "data-analyst",
+    "title": "Data Analyst",
+    "category": "Data & AI",
+    "description": "Clean data, write SQL queries, build reports and help teams make evidence-based decisions.",
+    "imageUrl": "https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=1400&q=80",
+    "level": "Beginner to intermediate",
+    "pathLabel": "Digital career path",
+    "skills": [
+      "SQL",
+      "Spreadsheets",
+      "Data cleaning",
+      "Dashboards",
+      "Basic statistics",
+      "Stakeholder reporting"
+    ],
+    "payCategory": "Moderate to higher potential",
+    "onlineScope": "The core skills and portfolio exercises can be learned and practiced digitally. Employers may still require qualifications, interviews, identity checks, supervised work or onsite onboarding."
+  },
+  {
+    "slug": "data-scientist",
+    "title": "Data Scientist",
+    "category": "Data & AI",
+    "description": "Use statistics, programming and model evaluation to answer complex data questions.",
+    "imageUrl": "https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=1400&q=80",
+    "level": "Intermediate to advanced",
+    "pathLabel": "Digital career path",
+    "skills": [
+      "Python",
+      "Statistics",
+      "Experiment design",
+      "Model baselines",
+      "Data validation",
+      "Visualization"
+    ],
+    "payCategory": "Higher earning potential",
+    "onlineScope": "The core skills and portfolio exercises can be learned and practiced digitally. Employers may still require qualifications, interviews, identity checks, supervised work or onsite onboarding."
+  },
+  {
+    "slug": "machine-learning-engineer",
+    "title": "Machine Learning Engineer",
+    "category": "Data & AI",
+    "description": "Build, evaluate and deploy machine-learning pipelines with monitoring and reproducible results.",
+    "imageUrl": "https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=1400&q=80",
+    "level": "Advanced career",
+    "pathLabel": "Digital career path",
+    "skills": [
+      "Machine learning",
+      "Python",
+      "Training data",
+      "Model evaluation",
+      "Inference APIs",
+      "Monitoring"
+    ],
+    "payCategory": "Higher earning potential",
+    "onlineScope": "The core skills and portfolio exercises can be learned and practiced digitally. Employers may still require qualifications, interviews, identity checks, supervised work or onsite onboarding."
+  },
+  {
+    "slug": "business-intelligence-analyst",
+    "title": "Business Intelligence Analyst",
+    "category": "Data & AI",
+    "description": "Build KPI definitions, dashboards and recurring reports for business teams.",
+    "imageUrl": "https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=1400&q=80",
+    "level": "Beginner to intermediate",
+    "pathLabel": "Digital career path",
+    "skills": [
+      "SQL",
+      "Power BI or similar",
+      "Data models",
+      "Metrics",
+      "Dashboards",
+      "Decision reports"
+    ],
+    "payCategory": "Moderate to higher potential",
+    "onlineScope": "The core skills and portfolio exercises can be learned and practiced digitally. Employers may still require qualifications, interviews, identity checks, supervised work or onsite onboarding."
+  },
+  {
+    "slug": "ai-automation-specialist",
+    "title": "AI Workflow Automation Specialist",
+    "category": "Data & AI",
+    "description": "Automate repeatable office processes with APIs, workflow tools and carefully tested AI features.",
+    "imageUrl": "https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=1400&q=80",
+    "level": "Beginner to intermediate",
+    "pathLabel": "Digital career path",
+    "skills": [
+      "Workflow mapping",
+      "APIs",
+      "No-code tools",
+      "LLM evaluation",
+      "Human approval",
+      "Error handling"
+    ],
+    "payCategory": "Moderate to higher potential",
+    "onlineScope": "The core skills and portfolio exercises can be learned and practiced digitally. Employers may still require qualifications, interviews, identity checks, supervised work or onsite onboarding."
+  },
+  {
+    "slug": "user-interface-user-experience-ui-ux-designer",
+    "title": "UI / UX Designer",
+    "category": "Digital Design & Content",
+    "description": "Research user needs, test prototypes and design accessible digital product experiences.",
+    "imageUrl": "https://images.unsplash.com/photo-1545235617-9465d2a55698?auto=format&fit=crop&w=1400&q=80",
+    "level": "Beginner to intermediate",
+    "pathLabel": "Digital career path",
+    "skills": [
+      "User research",
       "Figma",
-      "Responsive Web Design",
+      "Prototypes",
+      "Design systems",
+      "Accessibility",
+      "Usability tests"
     ],
+    "payCategory": "Higher earning potential",
+    "onlineScope": "The core skills and portfolio exercises can be learned and practiced digitally. Employers may still require qualifications, interviews, identity checks, supervised work or onsite onboarding."
   },
   {
-    slug: "healthcare-medicine",
-    title: "Healthcare & Medicine",
-    displayTitle: "Healthcare & Medicine",
-    description:
-      "Learn patient care, clinical reasoning, medical systems, documentation, safety, and healthcare communication from entry level support through advanced medical roles.",
-    imageUrl:
-      "https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?auto=format&fit=crop&w=1400&q=80",
-    skills: [
-      "Medical Terminology",
-      "Anatomy and Physiology",
-      "Vital Signs",
-      "Patient Assessment",
-      "Clinical Documentation",
-      "Electronic Health Records",
-      "Infection Control",
-      "Medication Concepts",
-      "Patient Safety",
-      "Care Planning",
-      "Clinical Reasoning",
-      "Patient Communication",
-      "Healthcare Ethics",
-      "HIPAA Concepts",
+    "slug": "graphic-designer",
+    "title": "Digital Graphic Designer",
+    "category": "Digital Design & Content",
+    "description": "Produce digital campaign graphics, brand assets and clear visual communication for online products.",
+    "imageUrl": "https://images.unsplash.com/photo-1545235617-9465d2a55698?auto=format&fit=crop&w=1400&q=80",
+    "level": "Beginner to intermediate",
+    "pathLabel": "Digital career path",
+    "skills": [
+      "Layout",
+      "Typography",
+      "Visual hierarchy",
+      "Brand systems",
+      "Image editing",
+      "Design critique"
     ],
+    "payCategory": "Moderate earning potential",
+    "onlineScope": "The core skills and portfolio exercises can be learned and practiced digitally. Employers may still require qualifications, interviews, identity checks, supervised work or onsite onboarding."
   },
   {
-    slug: "legal-public-service",
-    title: "Legal & Public Service",
-    displayTitle: "Legal & Public Service",
-    description:
-      "Practice legal research, writing, case analysis, compliance, negotiation, document review, and client communication used in legal and public service work.",
-    imageUrl:
-      "https://images.unsplash.com/photo-1589829545856-d10d557cf95f?auto=format&fit=crop&w=1400&q=80",
-    skills: [
-      "Legal Research",
-      "Case Briefing",
-      "Legal Writing",
-      "Statutory Interpretation",
-      "Contract Analysis",
-      "Civil Procedure Basics",
-      "Evidence Concepts",
-      "Document Review",
-      "Compliance Research",
-      "Client Interviewing",
-      "Negotiation",
-      "Argument Building",
-      "Legal Ethics",
-      "Case Strategy",
+    "slug": "video-editor",
+    "title": "Video Editor",
+    "category": "Digital Design & Content",
+    "description": "Edit footage into polished short- and long-form online videos with accurate captions and sound.",
+    "imageUrl": "https://images.unsplash.com/photo-1545235617-9465d2a55698?auto=format&fit=crop&w=1400&q=80",
+    "level": "Beginner to intermediate",
+    "pathLabel": "Digital career path",
+    "skills": [
+      "Editing timeline",
+      "Audio balance",
+      "Captions",
+      "Color correction",
+      "Story pacing",
+      "Client revisions"
     ],
+    "payCategory": "Moderate earning potential",
+    "onlineScope": "The core skills and portfolio exercises can be learned and practiced digitally. Employers may still require qualifications, interviews, identity checks, supervised work or onsite onboarding."
   },
   {
-    slug: "finance-insurance",
-    title: "Finance & Insurance",
-    displayTitle: "Finance & Insurance",
-    description:
-      "Learn money, investing, accounting, valuation, financial modeling, insurance, risk, and portfolio skills from basic financial concepts through advanced analysis.",
-    imageUrl:
-      "https://images.unsplash.com/photo-1554224155-6726b3ff858f?auto=format&fit=crop&w=1400&q=80",
-    skills: [
-      "Investment Vocabulary",
-      "Stocks",
-      "Bonds",
-      "ETFs",
-      "Mutual Funds",
-      "Index Funds",
-      "Compound Interest",
-      "Time Value of Money",
-      "Risk and Return",
-      "Diversification",
-      "Asset Allocation",
-      "Portfolio Rebalancing",
-      "Return on Investment",
-      "Cash Flows",
-      "Financial Statements",
-      "Financial Analysis",
-      "Financial Modeling",
-      "Financial Forecasting",
-      "Capital Budgeting",
-      "Corporate Finance",
-      "Business Valuation",
-      "Fundamental Analysis",
-      "Discounted Cash Flow",
-      "Portfolio Construction",
-      "Credit Analysis",
-      "Insurance Underwriting",
-      "Risk Analysis",
-      "Retirement Accounts",
+    "slug": "technical-writer",
+    "title": "Technical Writer",
+    "category": "Digital Design & Content",
+    "description": "Explain complex products through accurate documentation, instructions and searchable help content.",
+    "imageUrl": "https://images.unsplash.com/photo-1545235617-9465d2a55698?auto=format&fit=crop&w=1400&q=80",
+    "level": "Beginner to intermediate",
+    "pathLabel": "Digital career path",
+    "skills": [
+      "Product research",
+      "API documentation",
+      "Procedures",
+      "Editing",
+      "Diagrams",
+      "Usability validation"
     ],
+    "payCategory": "Moderate to higher potential",
+    "onlineScope": "The core skills and portfolio exercises can be learned and practiced digitally. Employers may still require qualifications, interviews, identity checks, supervised work or onsite onboarding."
   },
   {
-    slug: "business-operations",
-    title: "Business & Operations",
-    displayTitle: "Business & Operations",
-    description:
-      "Build practical sales, customer, project, operations, planning, analytics, and management skills used to run teams and organizations.",
-    imageUrl:
-      "https://images.unsplash.com/photo-1521737711867-e3b97375f902?auto=format&fit=crop&w=1400&q=80",
-    skills: [
-      "Customer Discovery",
-      "Sales Pipeline Management",
-      "CRM Systems",
-      "Lead Qualification",
-      "Negotiation",
-      "Market Research",
-      "Project Planning",
-      "Agile Methodology",
-      "Scheduling",
-      "Budgeting",
-      "Business Forecasting",
-      "Operations Management",
-      "KPI Tracking",
-      "Process Improvement",
-      "Microsoft Excel",
-      "Stakeholder Communication",
-    ],
-  },
-  {
-    slug: "skilled-trades-services",
-    title: "Skilled Trades & Services",
-    displayTitle: "Skilled Trades & Services",
-    description:
-      "Learn hands on technical concepts, tools, safety, diagnostics, diagrams, maintenance, and customer service used across major skilled trades.",
-    imageUrl:
-      "https://images.unsplash.com/photo-1504307651254-35680f356dfd?auto=format&fit=crop&w=1400&q=80",
-    skills: [
-      "Electrical Theory",
-      "Circuit Testing",
-      "Wiring Diagrams",
-      "Multimeter Basics",
-      "Plumbing Systems",
-      "Pipe Fittings",
-      "Water Flow",
-      "HVAC Systems",
-      "Refrigeration Concepts",
-      "Blueprint Reading",
-      "Workplace Safety",
-      "Tool Selection",
-      "Diagnostics",
-      "Preventive Maintenance",
-      "Code Concepts",
-      "Customer Service",
-    ],
-  },
-];
-function careerRole(
-  category: CareerIndustry,
-  args: Omit<CareerSection, "category">
-): CareerSection {
-  return {
-    ...args,
-    category,
-  };
-}
-
-const technology = (
-  args: Omit<CareerSection, "category">
-): CareerSection => careerRole("Technology Industry", args);
-
-const healthcare = (
-  args: Omit<CareerSection, "category">
-): CareerSection => careerRole("Healthcare & Medicine", args);
-
-const legal = (
-  args: Omit<CareerSection, "category">
-): CareerSection => careerRole("Legal & Public Service", args);
-
-const finance = (
-  args: Omit<CareerSection, "category">
-): CareerSection => careerRole("Finance & Insurance", args);
-
-const business = (
-  args: Omit<CareerSection, "category">
-): CareerSection => careerRole("Business & Operations", args);
-
-const trades = (
-  args: Omit<CareerSection, "category">
-): CareerSection => careerRole("Skilled Trades & Services", args);
-
-export const careerSections: CareerSection[] = [
-  technology({
-    slug: "software-developer-engineer",
-    title: "Software Developer / Engineer",
-    description:
-      "Design, build, test, and maintain software systems across websites, applications, and services.",
-    imageUrl:
-      "https://images.unsplash.com/photo-1515879218367-8466d910aaa4?auto=format&fit=crop&w=1200&q=80",
-    level: "Beginner path",
-    pathLabel: "Technology career",
-    skills: [
-      "Full Stack Web Development",
-      "Computer Science",
-      "Problem Solving",
-      "Agile Methodology",
-      "DevOps",
-      "CI/CD",
-      "Java",
-      "Python Programming",
-    ],
-  }),
-  technology({
-    slug: "front-end-developer",
-    title: "Front End Developer",
-    description:
-      "Build the visual and interactive parts of websites and applications with modern web tools.",
-    imageUrl:
-      "https://images.unsplash.com/photo-1498050108023-c5249f4df085?auto=format&fit=crop&w=1200&q=80",
-    level: "Beginner path",
-    pathLabel: "Technology career",
-    skills: [
-      "Javascript",
-      "Front End Web Development",
-      "Cascading Style Sheets (CSS)",
-      "Hypertext Markup Language (HTML)",
-      "React.js",
-      "User Interface (UI)",
-      "Agile Methodology",
-      "Responsive Web Design",
-    ],
-  }),
-  technology({
-    slug: "python-developer",
-    title: "Python Developer",
-    description:
-      "Use Python to build software, web applications, automation, and services powered by data.",
-    imageUrl:
-      "https://images.unsplash.com/photo-1526379095098-d400fd0bf935?auto=format&fit=crop&w=1200&q=80",
-    level: "Beginner path",
-    pathLabel: "Technology career",
-    skills: [
-      "Python Programming",
-      "Software Engineering",
-      "Django (Web Framework)",
-      "Flask (Web Framework)",
-      "SQL",
-      "Git (Version Control System)",
-      "Agile Methodology",
-      "CI/CD",
-    ],
-  }),
-  technology({
-    slug: "cyber-security-analyst",
-    title: "Cyber Security Analyst",
-    description:
-      "Protect systems and data by finding vulnerabilities, monitoring threats, and responding to security incidents.",
-    imageUrl:
-      "https://images.unsplash.com/photo-1563013544-824ae1b704d3?auto=format&fit=crop&w=1200&q=80",
-    level: "Beginner path",
-    pathLabel: "Technology career",
-    skills: [
-      "Cybersecurity",
-      "Information Systems Security",
-      "Vulnerability Management",
-      "Risk Management",
-      "Network Security",
-      "Security Information and Event Management (SIEM)",
-      "Incident Management",
-      "Penetration Testing",
-    ],
-  }),
-  technology({
-    slug: "devops-engineer",
-    title: "DevOps Engineer",
-    description:
-      "Automate software delivery, improve reliability, and connect development work with production infrastructure.",
-    imageUrl:
-      "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?auto=format&fit=crop&w=1200&q=80",
-    level: "Intermediate path",
-    pathLabel: "Technology career",
-    skills: [
-      "DevOps",
-      "Automation",
-      "CI/CD",
-      "Kubernetes",
-      "Docker (Software)",
-      "Terraform",
-      "Git (Version Control System)",
-      "Linux",
-    ],
-  }),
-  technology({
-    slug: "cloud-architect",
-    title: "Cloud Architect",
-    description:
-      "Design secure and scalable cloud systems and infrastructure for modern applications and organizations.",
-    imageUrl:
-      "https://images.unsplash.com/photo-1451187580459-43490279c0fa?auto=format&fit=crop&w=1200&q=80",
-    level: "Intermediate path",
-    pathLabel: "Technology career",
-    skills: [
-      "Cloud Computing",
-      "Cloud Solutions",
-      "Amazon Web Services",
-      "Microsoft Azure",
-      "Google Cloud Platform",
-      "Infrastructure as Code (IaC)",
-      "DevOps",
-      "Cloud Security",
-    ],
-  }),
-  technology({
-    slug: "data-analyst",
-    title: "Data Analyst",
-    description:
-      "Collect, clean, analyze, and visualize data so organizations can make better decisions.",
-    imageUrl:
-      "https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=1200&q=80",
-    level: "Beginner path",
-    pathLabel: "Technology career",
-    skills: [
-      "Data Analysis",
-      "SQL",
-      "Python Programming",
-      "Data Visualization",
-      "Microsoft Excel",
-      "Statistics",
-      "Problem Solving",
-      "Data Quality",
-    ],
-  }),
-  technology({
-    slug: "data-scientist",
-    title: "Data Scientist",
-    description:
-      "Use statistics, programming, machine learning, and data visualization to solve complex data problems.",
-    imageUrl:
-      "https://images.unsplash.com/photo-1555949963-aa79dcee981c?auto=format&fit=crop&w=1200&q=80",
-    level: "Beginner to advanced",
-    pathLabel: "Technology career",
-    skills: [
-      "Data Science",
-      "Machine Learning",
-      "Python Programming",
-      "SQL",
-      "Data Analysis",
-      "Statistics",
-      "Algorithms",
-      "Data Visualization",
-    ],
-  }),
-  technology({
-    slug: "machine-learning-engineer",
-    title: "Machine Learning Engineer",
-    description:
-      "Build, train, evaluate, and improve machine learning systems that learn from data.",
-    imageUrl:
-      "https://images.unsplash.com/photo-1677442136019-21780ecad995?auto=format&fit=crop&w=1200&q=80",
-    level: "Intermediate path",
-    pathLabel: "Technology career",
-    skills: [
-      "Machine Learning",
-      "Python Programming",
-      "Artificial Intelligence",
-      "Algorithms",
-      "Tensorflow",
-      "PyTorch (Machine Learning Library)",
-      "Communication",
+    "slug": "content-writer-editor",
+    "title": "Content Writer / Editor",
+    "category": "Digital Design & Content",
+    "description": "Research, draft, fact-check and revise clear website, educational or business content.",
+    "imageUrl": "https://images.unsplash.com/photo-1545235617-9465d2a55698?auto=format&fit=crop&w=1400&q=80",
+    "level": "Beginner-friendly",
+    "pathLabel": "Digital career path",
+    "skills": [
       "Research",
+      "Outlining",
+      "Clear writing",
+      "Editing",
+      "Citations",
+      "Editorial briefs"
     ],
-  }),
-  technology({
-    slug: "user-interface-user-experience-ui-ux-designer",
-    title: "User Interface / User Experience (UI / UX) Designer",
-    description:
-      "Research users and design clear and usable digital products through interfaces, prototypes, and testing.",
-    imageUrl:
-      "https://images.unsplash.com/photo-1561070791-2526d30994b5?auto=format&fit=crop&w=1200&q=80",
-    level: "Beginner path",
-    pathLabel: "Technology career",
-    skills: [
-      "User Experience Design",
-      "User Research",
-      "Prototyping",
-      "Interaction Design",
-      "Usability Testing",
-      "Figma (Design Software)",
-      "Wireframing",
-      "User Interface (UI) Design",
+    "payCategory": "Moderate earning potential",
+    "onlineScope": "The core skills and portfolio exercises can be learned and practiced digitally. Employers may still require qualifications, interviews, identity checks, supervised work or onsite onboarding."
+  },
+  {
+    "slug": "digital-marketing-specialist",
+    "title": "Digital Marketing Specialist",
+    "category": "Marketing & Online Sales",
+    "description": "Plan online campaigns, measure conversions and report channel performance.",
+    "imageUrl": "https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&w=1400&q=80",
+    "level": "Beginner to intermediate",
+    "pathLabel": "Digital career path",
+    "skills": [
+      "Campaign planning",
+      "Analytics",
+      "Audience research",
+      "Landing pages",
+      "Paid ads",
+      "Reporting"
     ],
-  }),
-  technology({
-    slug: "technical-support-engineer-analyst",
-    title: "Technical Support Engineer / Analyst",
-    description:
-      "Troubleshoot hardware and software problems, support users, and keep technical systems working reliably.",
-    imageUrl:
-      "https://images.unsplash.com/photo-1581092918056-0c4c3acd3789?auto=format&fit=crop&w=1200&q=80",
-    level: "Beginner path",
-    pathLabel: "Technology career",
-    skills: [
-      "Technical Support",
-      "Problem Solving",
-      "Customer Service",
-      "Operating Systems",
-      "Help Desk Support",
-      "Networking Hardware",
-      "Communication",
-      "Detail Oriented",
+    "payCategory": "Moderate to higher potential",
+    "onlineScope": "The core skills and portfolio exercises can be learned and practiced digitally. Employers may still require qualifications, interviews, identity checks, supervised work or onsite onboarding."
+  },
+  {
+    "slug": "seo-specialist",
+    "title": "SEO Specialist",
+    "category": "Marketing & Online Sales",
+    "description": "Improve website discoverability through search research, content structure and technical checks.",
+    "imageUrl": "https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&w=1400&q=80",
+    "level": "Beginner to intermediate",
+    "pathLabel": "Digital career path",
+    "skills": [
+      "Keyword intent",
+      "On-page SEO",
+      "Search Console",
+      "Technical audits",
+      "Content briefs",
+      "Performance checks"
     ],
-  }),
-
-  healthcare({
-    slug: "medical-assistant",
-    title: "Medical Assistant",
-    description:
-      "Support patients and clinical teams with basic care, records, scheduling, measurements, and medical office tasks.",
-    imageUrl:
-      "https://images.unsplash.com/photo-1584515933487-779824d29309?auto=format&fit=crop&w=1200&q=80",
-    level: "Beginner path",
-    pathLabel: "Healthcare career",
-    skills: [
-      "Patient Communication",
-      "Medical Terminology",
-      "Vital Signs",
-      "Clinical Procedures",
-      "Medical Records",
-      "Scheduling",
-      "Infection Control",
-      "Detail Oriented",
+    "payCategory": "Moderate earning potential",
+    "onlineScope": "The core skills and portfolio exercises can be learned and practiced digitally. Employers may still require qualifications, interviews, identity checks, supervised work or onsite onboarding."
+  },
+  {
+    "slug": "social-media-manager",
+    "title": "Social Media Manager",
+    "category": "Marketing & Online Sales",
+    "description": "Plan and manage social content, community responses and performance reports.",
+    "imageUrl": "https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&w=1400&q=80",
+    "level": "Beginner-friendly",
+    "pathLabel": "Digital career path",
+    "skills": [
+      "Content calendar",
+      "Video scripts",
+      "Community moderation",
+      "Brand voice",
+      "Analytics",
+      "Reporting"
     ],
-  }),
-  healthcare({
-    slug: "registered-nurse",
-    title: "Registered Nurse",
-    description:
-      "Care for patients, monitor health, communicate with care teams, and apply clinical knowledge in healthcare settings.",
-    imageUrl:
-      "https://images.unsplash.com/photo-1559839734-2b71ea197ec2?auto=format&fit=crop&w=1200&q=80",
-    level: "Professional path",
-    pathLabel: "Healthcare career",
-    skills: [
-      "Patient Care",
-      "Clinical Assessment",
-      "Medical Terminology",
-      "Medication Concepts",
-      "Care Planning",
-      "Communication",
-      "Documentation",
-      "Patient Safety",
+    "payCategory": "Moderate earning potential",
+    "onlineScope": "The core skills and portfolio exercises can be learned and practiced digitally. Employers may still require qualifications, interviews, identity checks, supervised work or onsite onboarding."
+  },
+  {
+    "slug": "email-marketing-specialist",
+    "title": "Email Marketing Specialist",
+    "category": "Marketing & Online Sales",
+    "description": "Create permission-based email campaigns, segment audiences and measure results.",
+    "imageUrl": "https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&w=1400&q=80",
+    "level": "Beginner to intermediate",
+    "pathLabel": "Digital career path",
+    "skills": [
+      "Email segmentation",
+      "Copywriting",
+      "Deliverability",
+      "Consent",
+      "Campaign testing",
+      "Analytics"
     ],
-  }),
-  healthcare({
-    slug: "physician",
-    title: "Physician",
-    description:
-      "Study how doctors evaluate symptoms, reason through medical information, communicate with patients, and plan care.",
-    imageUrl:
-      "https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?auto=format&fit=crop&w=1200&q=80",
-    level: "Advanced professional path",
-    pathLabel: "Healthcare career",
-    skills: [
-      "Human Biology",
-      "Clinical Reasoning",
-      "Patient Interviewing",
-      "Medical Terminology",
-      "Diagnosis Concepts",
-      "Treatment Planning Concepts",
-      "Communication",
-      "Research",
-    ],
-  }),
-
-  legal({
-    slug: "paralegal",
-    title: "Paralegal",
-    description:
-      "Support legal work through research, document preparation, case organization, client communication, and legal procedures.",
-    imageUrl:
-      "https://images.unsplash.com/photo-1505664194779-8beaceb93744?auto=format&fit=crop&w=1200&q=80",
-    level: "Beginner path",
-    pathLabel: "Legal career",
-    skills: [
-      "Legal Research",
-      "Legal Writing",
-      "Case Organization",
-      "Document Preparation",
-      "Client Communication",
-      "Court Procedures",
-      "Attention to Detail",
-      "Professional Communication",
-    ],
-  }),
-  legal({
-    slug: "lawyer",
-    title: "Lawyer",
-    description:
-      "Learn how legal professionals research law, analyze facts, build arguments, advise clients, and communicate cases.",
-    imageUrl:
-      "https://images.unsplash.com/photo-1450101499163-c8848c66ca85?auto=format&fit=crop&w=1200&q=80",
-    level: "Advanced professional path",
-    pathLabel: "Legal career",
-    skills: [
-      "Legal Research",
-      "Legal Analysis",
-      "Legal Writing",
-      "Argument Building",
-      "Client Communication",
+    "payCategory": "Moderate earning potential",
+    "onlineScope": "The core skills and portfolio exercises can be learned and practiced digitally. Employers may still require qualifications, interviews, identity checks, supervised work or onsite onboarding."
+  },
+  {
+    "slug": "sales-representative",
+    "title": "Remote Sales Representative",
+    "category": "Marketing & Online Sales",
+    "description": "Research customers, run video or phone discovery calls, manage a CRM and follow up ethically.",
+    "imageUrl": "https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&w=1400&q=80",
+    "level": "Beginner to intermediate",
+    "pathLabel": "Digital career path",
+    "skills": [
+      "Lead qualification",
+      "Discovery calls",
+      "CRM",
+      "Objections",
       "Negotiation",
-      "Case Strategy",
-      "Public Speaking",
+      "Follow-up"
     ],
-  }),
-  legal({
-    slug: "compliance-specialist",
-    title: "Compliance Specialist",
-    description:
-      "Help organizations follow laws, policies, industry rules, and internal standards while reducing risk.",
-    imageUrl:
-      "https://images.unsplash.com/photo-1556761175-b413da4baf72?auto=format&fit=crop&w=1200&q=80",
-    level: "Beginner to intermediate",
-    pathLabel: "Legal and business career",
-    skills: [
-      "Policy Review",
-      "Risk Assessment",
-      "Regulatory Research",
-      "Documentation",
-      "Auditing Concepts",
-      "Communication",
-      "Problem Solving",
-      "Attention to Detail",
+    "payCategory": "Moderate to higher potential",
+    "onlineScope": "The core skills and portfolio exercises can be learned and practiced digitally. Employers may still require qualifications, interviews, identity checks, supervised work or onsite onboarding."
+  },
+  {
+    "slug": "bookkeeper",
+    "title": "Bookkeeper",
+    "category": "Finance & Digital Analysis",
+    "description": "Record transactions, reconcile accounts, organize receipts and prepare routine digital reports.",
+    "imageUrl": "https://images.unsplash.com/photo-1554224155-6726b3ff858f?auto=format&fit=crop&w=1400&q=80",
+    "level": "Beginner-friendly",
+    "pathLabel": "Digital career path",
+    "skills": [
+      "Double-entry basics",
+      "Invoicing",
+      "Bank reconciliation",
+      "Spreadsheets",
+      "Expense categories",
+      "Reports"
     ],
-  }),
-
-  finance({
-    slug: "accountant",
-    title: "Accountant",
-    description:
-      "Record financial activity, prepare reports, understand business accounts, and help organizations track money accurately.",
-    imageUrl:
-      "https://images.unsplash.com/photo-1554224154-22dec7ec8818?auto=format&fit=crop&w=1200&q=80",
-    level: "Beginner path",
-    pathLabel: "Finance career",
-    skills: [
-      "Double Entry Accounting",
-      "Income Statements",
-      "Balance Sheets",
-      "Cash Flow Statements",
-      "Accounts Payable",
-      "Accounts Receivable",
-      "Bank Reconciliation",
-      "Microsoft Excel",
+    "payCategory": "Moderate earning potential",
+    "onlineScope": "The core skills and portfolio exercises can be learned and practiced digitally. Employers may still require qualifications, interviews, identity checks, supervised work or onsite onboarding."
+  },
+  {
+    "slug": "accountant",
+    "title": "Accountant",
+    "category": "Finance & Digital Analysis",
+    "description": "Prepare and explain financial statements, reconciliations, budgets and internal reports.",
+    "imageUrl": "https://images.unsplash.com/photo-1554224155-6726b3ff858f?auto=format&fit=crop&w=1400&q=80",
+    "level": "Intermediate; degree often expected",
+    "pathLabel": "Digital career path",
+    "skills": [
+      "Journal entries",
+      "Accrual accounting",
+      "Reconciliation",
+      "Financial statements",
       "Budgeting",
-      "Tax Concepts",
+      "Internal controls"
     ],
-  }),
-  finance({
-    slug: "insurance-underwriter",
-    title: "Insurance Underwriter",
-    description:
-      "Review applications, analyze risk, interpret information, and help decide insurance coverage and pricing.",
-    imageUrl:
-      "https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?auto=format&fit=crop&w=1200&q=80",
-    level: "Beginner to intermediate",
-    pathLabel: "Insurance career",
-    skills: [
-      "Insurance Policy Structure",
-      "Risk Classification",
-      "Loss Exposure",
-      "Applicant Review",
-      "Credit and Financial Review",
-      "Coverage Limits",
-      "Premium Factors",
-      "Underwriting Guidelines",
-      "Risk Analysis",
-      "Policy Documentation",
+    "payCategory": "Moderate to higher potential",
+    "onlineScope": "The core skills and portfolio exercises can be learned and practiced digitally. Employers may still require qualifications, interviews, identity checks, supervised work or onsite onboarding."
+  },
+  {
+    "slug": "financial-analyst",
+    "title": "Financial Analyst",
+    "category": "Finance & Digital Analysis",
+    "description": "Build business forecasts, compare scenarios and explain results to decision-makers.",
+    "imageUrl": "https://images.unsplash.com/photo-1554224155-6726b3ff858f?auto=format&fit=crop&w=1400&q=80",
+    "level": "Intermediate to advanced",
+    "pathLabel": "Digital career path",
+    "skills": [
+      "Financial modeling",
+      "Forecasting",
+      "Excel",
+      "Statements",
+      "Variance analysis",
+      "Presentations"
     ],
-  }),
-  finance({
-    slug: "financial-analyst",
-    title: "Financial Analyst",
-    description:
-      "Study business and market data, build financial models, compare performance, and support financial decisions.",
-    imageUrl:
-      "https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?auto=format&fit=crop&w=1200&q=80",
-    level: "Intermediate path",
-    pathLabel: "Finance career",
-    skills: [
-      "Financial Statement Analysis",
-      "Ratio Analysis",
-      "Financial Modeling",
-      "Microsoft Excel",
-      "Cash Flow Forecasting",
-      "Budget Variance Analysis",
-      "Return on Investment",
-      "Capital Budgeting",
-      "Business Valuation",
-      "Discounted Cash Flow",
-      "Scenario Analysis",
-      "Presentation",
+    "payCategory": "Higher earning potential",
+    "onlineScope": "The core skills and portfolio exercises can be learned and practiced digitally. Employers may still require qualifications, interviews, identity checks, supervised work or onsite onboarding."
+  },
+  {
+    "slug": "investment-analyst",
+    "title": "Investment Research Analyst",
+    "category": "Finance & Digital Analysis",
+    "description": "Research companies, compare valuation scenarios and write sourced investment analysis.",
+    "imageUrl": "https://images.unsplash.com/photo-1554224155-6726b3ff858f?auto=format&fit=crop&w=1400&q=80",
+    "level": "Intermediate to advanced",
+    "pathLabel": "Digital career path",
+    "skills": [
+      "Financial filings",
+      "Risk analysis",
+      "Valuation",
+      "Research notes",
+      "Market data",
+      "Investment memos"
     ],
-  }),
-  finance({
-    slug: "investment-analyst",
-    title: "Investment Analyst",
-    description:
-      "Research companies and securities, compare risk and return, analyze financial statements, value investments, and build evidence for investment decisions.",
-    imageUrl:
-      "https://images.unsplash.com/photo-1590283603385-17ffb3a7f29f?auto=format&fit=crop&w=1200&q=80",
-    level: "Beginner to intermediate",
-    pathLabel: "Investment career",
-    skills: [
-      "Investment Vocabulary",
-      "Stocks",
-      "Bonds",
-      "ETFs",
-      "Financial Statement Analysis",
-      "Fundamental Analysis",
-      "Ratio Analysis",
-      "Risk and Return",
-      "Business Valuation",
-      "Discounted Cash Flow",
-      "Market Research",
-      "Investment Research",
+    "payCategory": "Higher earning potential",
+    "onlineScope": "The core skills and portfolio exercises can be learned and practiced digitally. Employers may still require qualifications, interviews, identity checks, supervised work or onsite onboarding."
+  },
+  {
+    "slug": "credit-analyst",
+    "title": "Credit Analyst",
+    "category": "Finance & Digital Analysis",
+    "description": "Analyze borrower data, cash flow, credit risk and written lending recommendations.",
+    "imageUrl": "https://images.unsplash.com/photo-1554224155-6726b3ff858f?auto=format&fit=crop&w=1400&q=80",
+    "level": "Intermediate",
+    "pathLabel": "Digital career path",
+    "skills": [
+      "Credit risk",
+      "Cash flow",
+      "Ratios",
+      "Borrower review",
+      "Covenants",
+      "Credit memos"
     ],
-  }),
-  finance({
-    slug: "financial-advisor-wealth-management",
-    title: "Financial Advisor / Wealth Management",
-    description:
-      "Learn how financial professionals organize goals, evaluate risk, explain investment choices, build diversified allocations, and plan long term finances.",
-    imageUrl:
-      "https://images.unsplash.com/photo-1551836022-d5d88e9218df?auto=format&fit=crop&w=1200&q=80",
-    level: "Beginner to intermediate",
-    pathLabel: "Wealth management career",
-    skills: [
-      "Financial Goal Setting",
-      "Risk Tolerance",
-      "Asset Allocation",
-      "Diversification",
-      "Index Funds",
-      "ETFs",
-      "Retirement Accounts",
-      "Portfolio Rebalancing",
-      "Insurance Planning Concepts",
-      "Cash Flow Planning",
-      "Client Discovery",
-      "Investment Communication",
-    ],
-  }),
-  finance({
-    slug: "portfolio-manager",
-    title: "Portfolio Manager",
-    description:
-      "Study advanced portfolio construction, asset allocation, performance, risk, valuation, and investment decision processes used to manage portfolios.",
-    imageUrl:
-      "https://images.unsplash.com/photo-1559526324-4b87b5e36e44?auto=format&fit=crop&w=1200&q=80",
-    level: "Advanced path",
-    pathLabel: "Investment management career",
-    skills: [
-      "Portfolio Construction",
-      "Strategic Asset Allocation",
-      "Portfolio Rebalancing",
-      "Risk Adjusted Return",
-      "Benchmark Analysis",
-      "Security Selection",
-      "Fundamental Analysis",
-      "Business Valuation",
-      "Discounted Cash Flow",
-      "Scenario Analysis",
-      "Performance Attribution",
-      "Investment Policy Concepts",
-    ],
-  }),
-  finance({
-    slug: "credit-analyst",
-    title: "Credit Analyst",
-    description:
-      "Evaluate borrowers and businesses by studying cash flow, debt, financial statements, credit risk, and repayment capacity.",
-    imageUrl:
-      "https://images.unsplash.com/photo-1554224154-26032ffc0d07?auto=format&fit=crop&w=1200&q=80",
-    level: "Intermediate path",
-    pathLabel: "Banking and credit career",
-    skills: [
-      "Credit Risk",
-      "Cash Flow Analysis",
-      "Debt Ratios",
-      "Financial Statement Analysis",
-      "Liquidity Analysis",
-      "Leverage Analysis",
-      "Collateral Concepts",
-      "Loan Structure",
-      "Covenant Concepts",
-      "Industry Analysis",
-      "Credit Memorandums",
-      "Risk Rating",
-    ],
-  }),
-
-  business({
-    slug: "customer-service-representative",
-    title: "Customer Service Representative",
-    description:
-      "Help customers solve problems, understand products, handle requests, and communicate clearly across support channels.",
-    imageUrl:
-      "https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?auto=format&fit=crop&w=1200&q=80",
-    level: "Beginner path",
-    pathLabel: "Business career",
-    skills: [
-      "Customer Service",
-      "Communication",
-      "Problem Solving",
-      "Product Knowledge",
-      "Conflict Resolution",
-      "Time Management",
+    "payCategory": "Moderate to higher potential",
+    "onlineScope": "The core skills and portfolio exercises can be learned and practiced digitally. Employers may still require qualifications, interviews, identity checks, supervised work or onsite onboarding."
+  },
+  {
+    "slug": "insurance-underwriter",
+    "title": "Insurance Underwriting Analyst",
+    "category": "Finance & Digital Analysis",
+    "description": "Review insurance applications and risk data to support documented coverage decisions.",
+    "imageUrl": "https://images.unsplash.com/photo-1554224155-6726b3ff858f?auto=format&fit=crop&w=1400&q=80",
+    "level": "Intermediate; employer training typical",
+    "pathLabel": "Digital career path",
+    "skills": [
+      "Risk classification",
+      "Policy terms",
+      "Applicant review",
+      "Coverage limits",
       "Documentation",
-      "Professional Writing",
+      "Referral"
     ],
-  }),
-  business({
-    slug: "sales-representative",
-    title: "Sales Representative",
-    description:
-      "Find customer needs, explain value, handle objections, follow up, and move opportunities toward a purchase.",
-    imageUrl:
-      "https://images.unsplash.com/photo-1556761175-5973dc0f32e7?auto=format&fit=crop&w=1200&q=80",
-    level: "Beginner path",
-    pathLabel: "Business career",
-    skills: [
-      "Sales",
-      "Customer Discovery",
-      "Communication",
-      "Negotiation",
-      "Lead Qualification",
-      "Presentations",
-      "Follow Up",
-      "CRM Basics",
+    "payCategory": "Moderate to higher potential",
+    "onlineScope": "The core skills and portfolio exercises can be learned and practiced digitally. Employers may still require qualifications, interviews, identity checks, supervised work or onsite onboarding."
+  },
+  {
+    "slug": "customer-service-representative",
+    "title": "Remote Customer Support Representative",
+    "category": "Remote Operations & Support",
+    "description": "Resolve customer questions through email, chat, tickets and online calls.",
+    "imageUrl": "https://images.unsplash.com/photo-1521737711867-e3b97375f902?auto=format&fit=crop&w=1400&q=80",
+    "level": "Beginner-friendly",
+    "pathLabel": "Digital career path",
+    "skills": [
+      "Active listening",
+      "Ticketing",
+      "Clear email",
+      "Escalations",
+      "Troubleshooting",
+      "Customer care"
     ],
-  }),
-  business({
-    slug: "project-manager",
-    title: "Project Manager",
-    description:
-      "Plan projects, organize work, manage timelines, communicate with teams, track risks, and deliver results.",
-    imageUrl:
-      "https://images.unsplash.com/photo-1552664730-d307ca884978?auto=format&fit=crop&w=1200&q=80",
-    level: "Beginner to intermediate",
-    pathLabel: "Business career",
-    skills: [
-      "Project Planning",
+    "payCategory": "Moderate earning potential",
+    "onlineScope": "The core skills and portfolio exercises can be learned and practiced digitally. Employers may still require qualifications, interviews, identity checks, supervised work or onsite onboarding."
+  },
+  {
+    "slug": "project-manager",
+    "title": "Digital Project Manager",
+    "category": "Remote Operations & Support",
+    "description": "Plan and coordinate software or digital-service projects using remote team tools.",
+    "imageUrl": "https://images.unsplash.com/photo-1521737711867-e3b97375f902?auto=format&fit=crop&w=1400&q=80",
+    "level": "Intermediate to advanced",
+    "pathLabel": "Digital career path",
+    "skills": [
+      "Scope",
       "Scheduling",
-      "Risk Management",
-      "Team Communication",
-      "Agile Methodology",
-      "Budget Concepts",
-      "Stakeholder Management",
-      "Problem Solving",
+      "Task boards",
+      "Budgets",
+      "Risk logs",
+      "Stakeholder updates"
     ],
-  }),
-
-  trades({
-    slug: "electrician",
-    title: "Electrician",
-    description:
-      "Learn electrical theory, circuits, tools, safety concepts, diagrams, troubleshooting, and how the trade is organized.",
-    imageUrl:
-      "https://images.unsplash.com/photo-1621905251918-48416bd8575a?auto=format&fit=crop&w=1200&q=80",
-    level: "Trade preparation path",
-    pathLabel: "Skilled trade",
-    skills: [
-      "Electrical Theory",
-      "Circuit Concepts",
-      "Electrical Safety",
-      "Tools",
-      "Wiring Diagrams",
-      "Troubleshooting",
-      "Code Concepts",
-      "Measurement",
+    "payCategory": "Higher earning potential",
+    "onlineScope": "The core skills and portfolio exercises can be learned and practiced digitally. Employers may still require qualifications, interviews, identity checks, supervised work or onsite onboarding."
+  },
+  {
+    "slug": "virtual-assistant",
+    "title": "Virtual Assistant / Administrative Specialist",
+    "category": "Remote Operations & Support",
+    "description": "Manage email, calendars, scheduling, research and digital documents for individuals or teams.",
+    "imageUrl": "https://images.unsplash.com/photo-1521737711867-e3b97375f902?auto=format&fit=crop&w=1400&q=80",
+    "level": "Beginner-friendly",
+    "pathLabel": "Digital career path",
+    "skills": [
+      "Calendar management",
+      "Email",
+      "Documents",
+      "Research",
+      "Client requests",
+      "Privacy"
     ],
-  }),
-  trades({
-    slug: "plumber",
-    title: "Plumber",
-    description:
-      "Learn plumbing systems, tools, piping, water flow, safety, troubleshooting, and trade planning concepts.",
-    imageUrl:
-      "https://images.unsplash.com/photo-1607472586893-edb57bdc0e39?auto=format&fit=crop&w=1200&q=80",
-    level: "Trade preparation path",
-    pathLabel: "Skilled trade",
-    skills: [
-      "Plumbing Systems",
-      "Piping",
-      "Tools",
-      "Water Flow",
-      "Safety",
-      "Blueprint Concepts",
-      "Troubleshooting",
-      "Code Concepts",
+    "payCategory": "Moderate earning potential",
+    "onlineScope": "The core skills and portfolio exercises can be learned and practiced digitally. Employers may still require qualifications, interviews, identity checks, supervised work or onsite onboarding."
+  },
+  {
+    "slug": "customer-success-specialist",
+    "title": "Customer Success Specialist",
+    "category": "Remote Operations & Support",
+    "description": "Onboard software customers, document outcomes and coordinate account support and retention.",
+    "imageUrl": "https://images.unsplash.com/photo-1521737711867-e3b97375f902?auto=format&fit=crop&w=1400&q=80",
+    "level": "Beginner to intermediate",
+    "pathLabel": "Digital career path",
+    "skills": [
+      "Onboarding",
+      "Product demos",
+      "CRM",
+      "Customer health",
+      "Renewal discussions",
+      "Escalation"
     ],
-  }),
-  trades({
-    slug: "hvac-technician",
-    title: "HVAC Technician",
-    description:
-      "Learn heating and cooling systems, refrigeration concepts, electrical basics, safety, maintenance, and diagnostics.",
-    imageUrl:
-      "https://images.unsplash.com/photo-1581092160607-ee22621dd758?auto=format&fit=crop&w=1200&q=80",
-    level: "Trade preparation path",
-    pathLabel: "Skilled trade",
-    skills: [
-      "HVAC Systems",
-      "Refrigeration Concepts",
-      "Electrical Basics",
-      "Safety",
-      "Maintenance",
-      "Diagnostics",
-      "Tools",
-      "Customer Communication",
+    "payCategory": "Moderate to higher potential",
+    "onlineScope": "The core skills and portfolio exercises can be learned and practiced digitally. Employers may still require qualifications, interviews, identity checks, supervised work or onsite onboarding."
+  },
+  {
+    "slug": "operations-coordinator",
+    "title": "Remote Operations Coordinator",
+    "category": "Remote Operations & Support",
+    "description": "Track recurring processes, manage project records, report exceptions and coordinate distributed teams.",
+    "imageUrl": "https://images.unsplash.com/photo-1521737711867-e3b97375f902?auto=format&fit=crop&w=1400&q=80",
+    "level": "Beginner to intermediate",
+    "pathLabel": "Digital career path",
+    "skills": [
+      "SOPs",
+      "Work trackers",
+      "Schedules",
+      "Reports",
+      "Team coordination",
+      "Quality checks"
     ],
-  }),
+    "payCategory": "Moderate earning potential",
+    "onlineScope": "The core skills and portfolio exercises can be learned and practiced digitally. Employers may still require qualifications, interviews, identity checks, supervised work or onsite onboarding."
+  },
+  {
+    "slug": "recruiter-talent-sourcer",
+    "title": "Digital Recruiter / Talent Sourcer",
+    "category": "Remote Operations & Support",
+    "description": "Research candidates, organize outreach, screen skills and coordinate digital interviews.",
+    "imageUrl": "https://images.unsplash.com/photo-1521737711867-e3b97375f902?auto=format&fit=crop&w=1400&q=80",
+    "level": "Beginner to intermediate",
+    "pathLabel": "Digital career path",
+    "skills": [
+      "Candidate sourcing",
+      "Outreach",
+      "Interview notes",
+      "ATS",
+      "Scheduling",
+      "Fair hiring"
+    ],
+    "payCategory": "Moderate earning potential",
+    "onlineScope": "The core skills and portfolio exercises can be learned and practiced digitally. Employers may still require qualifications, interviews, identity checks, supervised work or onsite onboarding."
+  },
+  {
+    "slug": "medical-billing-coding-specialist",
+    "title": "Medical Billing & Coding Specialist",
+    "category": "Healthcare & Legal Administration",
+    "description": "Learn to classify documented healthcare services and process claims in nonclinical administrative workflows.",
+    "imageUrl": "https://images.unsplash.com/photo-1497366754035-f200968a6e72?auto=format&fit=crop&w=1400&q=80",
+    "level": "Certification or employer training may be required",
+    "pathLabel": "Digital career path",
+    "skills": [
+      "Medical terminology",
+      "Coding systems",
+      "Claims workflow",
+      "Documentation",
+      "Privacy",
+      "Error review"
+    ],
+    "payCategory": "Moderate earning potential",
+    "onlineScope": "The core skills and portfolio exercises can be learned and practiced digitally. Employers may still require qualifications, interviews, identity checks, supervised work or onsite onboarding."
+  },
+  {
+    "slug": "health-information-specialist",
+    "title": "Health Information / Medical Records Specialist",
+    "category": "Healthcare & Legal Administration",
+    "description": "Organize healthcare records, check documentation quality and apply privacy procedures digitally.",
+    "imageUrl": "https://images.unsplash.com/photo-1497366754035-f200968a6e72?auto=format&fit=crop&w=1400&q=80",
+    "level": "Training or credentials may be preferred",
+    "pathLabel": "Digital career path",
+    "skills": [
+      "Electronic records",
+      "Data accuracy",
+      "Privacy",
+      "Record indexing",
+      "Quality checks",
+      "Audit trails"
+    ],
+    "payCategory": "Moderate earning potential",
+    "onlineScope": "The core skills and portfolio exercises can be learned and practiced digitally. Employers may still require qualifications, interviews, identity checks, supervised work or onsite onboarding."
+  },
+  {
+    "slug": "patient-scheduling-coordinator",
+    "title": "Remote Patient Scheduling Coordinator",
+    "category": "Healthcare & Legal Administration",
+    "description": "Schedule visits, communicate administrative requirements and maintain accurate appointment records.",
+    "imageUrl": "https://images.unsplash.com/photo-1497366754035-f200968a6e72?auto=format&fit=crop&w=1400&q=80",
+    "level": "Beginner; employer onboarding typical",
+    "pathLabel": "Digital career path",
+    "skills": [
+      "Scheduling",
+      "Phone etiquette",
+      "Patient privacy",
+      "Eligibility basics",
+      "CRM/EHR basics",
+      "Handoffs"
+    ],
+    "payCategory": "Moderate earning potential",
+    "onlineScope": "The core skills and portfolio exercises can be learned and practiced digitally. Employers may still require qualifications, interviews, identity checks, supervised work or onsite onboarding."
+  },
+  {
+    "slug": "contract-administrator",
+    "title": "Contract Administrator",
+    "category": "Healthcare & Legal Administration",
+    "description": "Organize commercial contracts, monitor deadlines and document approved changes for business teams.",
+    "imageUrl": "https://images.unsplash.com/photo-1497366754035-f200968a6e72?auto=format&fit=crop&w=1400&q=80",
+    "level": "Intermediate; legal review required for advice",
+    "pathLabel": "Digital career path",
+    "skills": [
+      "Contract tracking",
+      "Version control",
+      "Key terms",
+      "Renewals",
+      "Approvals",
+      "Recordkeeping"
+    ],
+    "payCategory": "Moderate to higher potential",
+    "onlineScope": "The core skills and portfolio exercises can be learned and practiced digitally. Employers may still require qualifications, interviews, identity checks, supervised work or onsite onboarding."
+  },
+  {
+    "slug": "legal-operations-coordinator",
+    "title": "Legal Operations Coordinator",
+    "category": "Healthcare & Legal Administration",
+    "description": "Coordinate legal-team documents, intake, calendars, vendors and reporting without giving legal advice.",
+    "imageUrl": "https://images.unsplash.com/photo-1497366754035-f200968a6e72?auto=format&fit=crop&w=1400&q=80",
+    "level": "Beginner to intermediate",
+    "pathLabel": "Digital career path",
+    "skills": [
+      "Matter intake",
+      "Document control",
+      "Deadlines",
+      "Vendor coordination",
+      "Confidentiality",
+      "Reporting"
+    ],
+    "payCategory": "Moderate earning potential",
+    "onlineScope": "The core skills and portfolio exercises can be learned and practiced digitally. Employers may still require qualifications, interviews, identity checks, supervised work or onsite onboarding."
+  },
+  {
+    "slug": "compliance-specialist",
+    "title": "Compliance Analyst",
+    "category": "Healthcare & Legal Administration",
+    "description": "Track documented control checks, research policies and organize evidence for internal reviews.",
+    "imageUrl": "https://images.unsplash.com/photo-1497366754035-f200968a6e72?auto=format&fit=crop&w=1400&q=80",
+    "level": "Intermediate; industry training often needed",
+    "pathLabel": "Digital career path",
+    "skills": [
+      "Policy review",
+      "Control testing",
+      "Risk logs",
+      "Audits",
+      "Documentation",
+      "Stakeholder reports"
+    ],
+    "payCategory": "Moderate to higher potential",
+    "onlineScope": "The core skills and portfolio exercises can be learned and practiced digitally. Employers may still require qualifications, interviews, identity checks, supervised work or onsite onboarding."
+  }
 ];
 
 export function getCareerSection(slug: string) {
   return careerSections.find((section) => section.slug === slug);
 }
-
 export function getCareersByIndustry(industry: CareerIndustry) {
   return careerSections.filter((section) => section.category === industry);
 }
-
 export function getCareerIndustry(slug: string) {
   return careerIndustries.find((industry) => industry.slug === slug);
 }
