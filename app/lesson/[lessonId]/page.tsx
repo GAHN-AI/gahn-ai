@@ -23,7 +23,7 @@ export default function LessonPage() {
   const worldSlug = searchParams.get("world") || "career-skills";
   const sectionSlug = searchParams.get("section");
   const topicSlug = searchParams.get("topicSlug");
-  const topic =
+  const requestedTopic =
     searchParams.get("topic") ||
     (params.lessonId !== "custom" ? params.lessonId : "Private Lesson");
   const worldTitle = worldNames[worldSlug] || "Learning World";
@@ -32,6 +32,11 @@ export default function LessonPage() {
     worldSlug === "career-skills" && sectionSlug
       ? getCareerSection(sectionSlug)
       : null;
+  // Career learning always uses an approved digital career title, not a
+  // free-form URL that could accidentally resurrect a retired clinical/trade path.
+  const topic = worldSlug === "career-skills" && careerSection
+    ? careerSection.title
+    : requestedTopic;
   const skillRoadmap = getPracticalSkillRoadmap(worldSlug, sectionSlug, topicSlug);
   const lessonPoints = practicalLessonPoints(skillRoadmap);
   const lessonGoals = lessonPoints.length > 0 ? lessonPoints : [
@@ -45,6 +50,23 @@ export default function LessonPage() {
     : sectionSlug && worldSlug === "career-skills"
       ? `/learn/career-skills/${sectionSlug}`
       : `/learn/${worldSlug}`;
+
+  if (worldSlug === "career-skills" && !careerSection) {
+    return (
+      <main className="min-h-screen bg-[#F7F8FA] px-5 py-10 font-sans text-[#0B1739]">
+        <div className="mx-auto max-w-3xl rounded-2xl border border-[#D7E3F2] bg-white p-8">
+          <h1 className="text-2xl font-extrabold">This career lesson is no longer offered</h1>
+          <p className="mt-3 text-sm leading-6 text-[#53657D]">
+            Career Skills now focuses on digital work that can be practiced online.
+            Previous clinical, in-person trade and other removed career paths are no longer in the active catalog.
+          </p>
+          <Link href="/learn/career-skills" className="mt-5 inline-block rounded-lg bg-[#0B5CFF] px-5 py-3 text-sm font-bold text-white">
+            Browse current digital careers
+          </Link>
+        </div>
+      </main>
+    );
+  }
 
   if (!isLearningWorldAvailable(worldSlug)) {
     return (
