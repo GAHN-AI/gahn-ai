@@ -20,6 +20,7 @@ import {
 } from "lucide-react";
 
 import MagicCanvas from "@/components/lessons/MagicCanvas";
+import { INTERACTIVE_LESSONS_AVAILABLE } from "@/lib/lessonLaunch";
 import { supabase } from "@/lib/supabaseClient";
 import {
   lessonIdFromParts,
@@ -718,28 +719,52 @@ export default function LearningStudio({
               Tavus not connected
             </span>
           </div>
-          <div role="group" aria-label="Instructor controls" className="mt-3 grid grid-cols-3 gap-2">
-            <button type="button" onClick={toggleMicrophone} aria-pressed={!micMuted}
+          <div role="group" aria-label="Instructor controls (preview only)" className="mt-3 grid grid-cols-3 gap-2">
+            <button type="button" onClick={toggleMicrophone} aria-pressed={!micMuted} disabled={!INTERACTIVE_LESSONS_AVAILABLE} title={!INTERACTIVE_LESSONS_AVAILABLE ? "Available when interactive lessons launch" : undefined}
               className={`flex min-h-14 flex-col items-center justify-center gap-1 rounded-xl border px-2 py-2 text-xs font-bold ${micMuted ? "border-[#D7E3F2] text-[#53657D]" : "border-[#1677FF] bg-[#EAF3FF] text-[#1677FF]"}`}>
               {micMuted ? <MicOff className="h-4 w-4" /> : <Mic className="h-4 w-4" />}
               {micMuted ? "Unmute" : "Mute"}
             </button>
-            <button type="button" onClick={focusText} aria-pressed={textSelected}
+            <button type="button" onClick={focusText} aria-pressed={textSelected} disabled={!INTERACTIVE_LESSONS_AVAILABLE} title={!INTERACTIVE_LESSONS_AVAILABLE ? "Available when interactive lessons launch" : undefined}
               className="flex min-h-14 flex-col items-center justify-center gap-1 rounded-xl border border-[#1677FF] bg-[#EAF3FF] px-2 py-2 text-xs font-bold text-[#1677FF]">
               <MessageSquareText className="h-4 w-4" />Text
             </button>
-            <button type="button" onClick={toggleSound} aria-pressed={soundOn}
+            <button type="button" onClick={toggleSound} aria-pressed={soundOn} disabled={!INTERACTIVE_LESSONS_AVAILABLE} title={!INTERACTIVE_LESSONS_AVAILABLE ? "Available when interactive lessons launch" : undefined}
               className={`flex min-h-14 flex-col items-center justify-center gap-1 rounded-xl border px-2 py-2 text-xs font-bold ${soundOn ? "border-[#D7E3F2] text-[#53657D]" : "border-[#1677FF] bg-[#EAF3FF] text-[#1677FF]"}`}>
               {soundOn ? <Volume2 className="h-4 w-4" /> : <VolumeX className="h-4 w-4" />}
               {soundOn ? "Sound on" : "Sound off"}
             </button>
           </div>
           <p className="mt-2 text-center text-xs text-[#64748B]">
-            Tavus video is not connected. Controls currently apply to browser-based lesson audio only.
+            {INTERACTIVE_LESSONS_AVAILABLE
+              ? "Tavus video is not connected. Controls apply to browser-based lesson audio only."
+              : "Preview only — instructor video, audio and lesson controls are unavailable until launch."}
           </p>
         </div>
 
-        {!started ? (
+        {!INTERACTIVE_LESSONS_AVAILABLE ? (
+          <div className="grid flex-1 place-items-center bg-[#F8FBFF] p-6 text-center">
+            <div className="max-w-md">
+              <div className="mx-auto grid h-16 w-16 place-items-center rounded-2xl bg-[#EAF3FF] text-[#1677FF]">
+                <BookOpenCheck className="h-7 w-7" />
+              </div>
+              <span className="mt-5 inline-block rounded-full border border-[#CFE0F5] bg-white px-3 py-1.5 text-xs font-bold uppercase tracking-[0.12em] text-[#1677FF]">
+                Early access preview
+              </span>
+              <h3 className="mt-4 text-2xl font-extrabold tracking-[-0.03em]">
+                Interactive lessons coming later
+              </h3>
+              <p className="mt-3 text-sm leading-7 text-[#53657D]">
+                GAHN is preparing its real-time AI instructor. You can explore learning
+                paths and preview Magic Canvas, but lessons cannot start yet.
+                Existing accounts and saved learning records are preserved.
+              </p>
+              <Link href="/dashboard" className="mt-6 inline-flex items-center gap-2 rounded-xl bg-[#1677FF] px-6 py-3.5 text-sm font-bold text-white hover:bg-[#0F65E8]">
+                <ArrowRight className="h-4 w-4" /> Explore Learning Worlds
+              </Link>
+            </div>
+          </div>
+        ) : !started ? (
           <div className="grid flex-1 place-items-center bg-[#F8FBFF] p-6 text-center">
             <div className="max-w-md">
               <div className="mx-auto grid h-16 w-16 place-items-center rounded-2xl bg-[#EAF3FF] text-[#1677FF]">
