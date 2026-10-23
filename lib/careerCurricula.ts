@@ -1,3 +1,4 @@
+import { careerCourses } from "./courses";
 import { softwareCourses } from "./curricula/software";
 import { dataCourses } from "./curricula/data";
 import { designCourses } from "./curricula/design";
@@ -41,7 +42,7 @@ function slug(value: string) {
     .replace(/^-|-$/g, "");
 }
 
-export const careerCurricula: Record<string, CareerCurriculumPreview> =
+export const legacyCareerCurricula: Record<string, CareerCurriculumPreview> =
   Object.fromEntries(
     Object.entries(drafts).map(([careerSlug, draft]) => {
       const sections = draft.modules.map(
@@ -71,6 +72,26 @@ export const careerCurricula: Record<string, CareerCurriculumPreview> =
         },
       ];
     }),
+  );
+
+export const careerCurricula: Record<string, CareerCurriculumPreview> =
+  Object.fromEntries(
+    Object.entries(careerCourses).map(([careerSlug, course]) => [
+      careerSlug,
+      {
+        careerSlug,
+        entry: course.description,
+        requirements: course.requirements,
+        sections: course.sections,
+        outcomes: course.sections
+          .filter(
+            (_, i) =>
+              i === 0 || i % Math.ceil(course.sections.length / 6) === 0,
+          )
+          .map((s) => s.practice),
+        lessonCount: course.lessonCount,
+      },
+    ]),
   );
 
 export function getCareerCurriculum(careerSlug: string) {

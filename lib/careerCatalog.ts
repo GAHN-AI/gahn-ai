@@ -141,7 +141,7 @@ export const careerSections: CareerSection[] = [
     "title": "Software Developer / Engineer",
     "category": "Software & IT",
     "description": "Build and maintain web applications and software services, from requirements to production.",
-    "imageUrl": "/illustrations/careers/software-developer-engineer.svg",
+    "imageUrl": "https://images.unsplash.com/photo-1498050108023-c5249f4df085?auto=format&fit=crop&w=1200&q=82",
     "level": "Foundations to advanced",
     "pathLabel": "Digital career path",
     "skills": [
@@ -160,7 +160,7 @@ export const careerSections: CareerSection[] = [
     "title": "Front End Developer",
     "category": "Software & IT",
     "description": "Create responsive, accessible web interfaces and connect them to application data.",
-    "imageUrl": "/illustrations/careers/front-end-developer.svg",
+    "imageUrl": "https://images.unsplash.com/photo-1542831371-29b0f74f9713?auto=format&fit=crop&w=1200&q=82",
     "level": "Beginner to intermediate",
     "pathLabel": "Digital career path",
     "skills": [
@@ -179,7 +179,7 @@ export const careerSections: CareerSection[] = [
     "title": "Python Developer",
     "category": "Software & IT",
     "description": "Write Python applications, automation scripts, data utilities, and backend services.",
-    "imageUrl": "/illustrations/careers/python-developer.svg",
+    "imageUrl": "https://images.unsplash.com/photo-1515879218367-8466d910aaa4?auto=format&fit=crop&w=1200&q=82",
     "level": "Beginner to intermediate",
     "pathLabel": "Digital career path",
     "skills": [
@@ -198,7 +198,7 @@ export const careerSections: CareerSection[] = [
     "title": "Cybersecurity Analyst",
     "category": "Software & IT",
     "description": "Monitor authorized systems, investigate alerts, document risks and recommend defensive controls.",
-    "imageUrl": "/illustrations/careers/cyber-security-analyst.svg",
+    "imageUrl": "https://images.unsplash.com/photo-1639066648921-82d4500abf1a?auto=format&fit=crop&w=1200&q=82",
     "level": "Intermediate to advanced",
     "pathLabel": "Digital career path",
     "skills": [
@@ -217,7 +217,7 @@ export const careerSections: CareerSection[] = [
     "title": "DevOps Engineer",
     "category": "Software & IT",
     "description": "Automate software builds and deployments, improve reliability, and monitor services.",
-    "imageUrl": "/illustrations/careers/devops-engineer.svg",
+    "imageUrl": "https://images.unsplash.com/photo-1695668548342-c0c1ad479aee?auto=format&fit=crop&w=1200&q=82",
     "level": "Intermediate to advanced",
     "pathLabel": "Digital career path",
     "skills": [
@@ -236,7 +236,7 @@ export const careerSections: CareerSection[] = [
     "title": "Cloud Architect",
     "category": "Software & IT",
     "description": "Design secure, scalable cloud infrastructure and evaluate reliability and cost trade-offs.",
-    "imageUrl": "/illustrations/careers/cloud-architect.svg",
+    "imageUrl": "https://images.unsplash.com/photo-1573164713988-8665fc963095?auto=format&fit=crop&w=1200&q=82",
     "level": "Advanced career",
     "pathLabel": "Digital career path",
     "skills": [
@@ -255,7 +255,7 @@ export const careerSections: CareerSection[] = [
     "title": "Remote IT Support Specialist",
     "category": "Software & IT",
     "description": "Diagnose account, software, device and connectivity issues through remote support channels.",
-    "imageUrl": "/illustrations/careers/technical-support-engineer-analyst.svg",
+    "imageUrl": "https://images.unsplash.com/photo-1516321318423-f06f85e504b3?auto=format&fit=crop&w=1200&q=82",
     "level": "Beginner to intermediate",
     "pathLabel": "Digital career path",
     "skills": [
@@ -274,7 +274,7 @@ export const careerSections: CareerSection[] = [
     "title": "QA Automation Engineer",
     "category": "Software & IT",
     "description": "Design software test plans and automate repeatable browser and API checks.",
-    "imageUrl": "/illustrations/careers/qa-automation-engineer.svg",
+    "imageUrl": "https://images.unsplash.com/photo-1555066931-4365d14bab8c?auto=format&fit=crop&w=1200&q=82",
     "level": "Beginner to intermediate",
     "pathLabel": "Digital career path",
     "skills": [
@@ -293,7 +293,7 @@ export const careerSections: CareerSection[] = [
     "title": "Data Analyst",
     "category": "Data & AI",
     "description": "Clean data, write SQL queries, build reports and help teams make evidence-based decisions.",
-    "imageUrl": "/illustrations/careers/data-analyst.svg",
+    "imageUrl": "https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&w=1200&q=82",
     "level": "Beginner to intermediate",
     "pathLabel": "Digital career path",
     "skills": [
@@ -312,7 +312,7 @@ export const careerSections: CareerSection[] = [
     "title": "Data Scientist",
     "category": "Data & AI",
     "description": "Use statistics, programming and model evaluation to answer complex data questions.",
-    "imageUrl": "/illustrations/careers/data-scientist.svg",
+    "imageUrl": "https://images.unsplash.com/photo-1526628953301-3e589a6a8b74?auto=format&fit=crop&w=1200&q=82",
     "level": "Intermediate to advanced",
     "pathLabel": "Digital career path",
     "skills": [
@@ -331,7 +331,7 @@ export const careerSections: CareerSection[] = [
     "title": "Machine Learning Engineer",
     "category": "Data & AI",
     "description": "Build, evaluate and deploy machine-learning pipelines with monitoring and reproducible results.",
-    "imageUrl": "/illustrations/careers/machine-learning-engineer.svg",
+    "imageUrl": "https://images.unsplash.com/photo-1506399558188-acca6f8cbf41?auto=format&fit=crop&w=1200&q=82",
     "level": "Advanced career",
     "pathLabel": "Digital career path",
     "skills": [
@@ -350,7 +350,7 @@ export const careerSections: CareerSection[] = [
     "title": "Business Intelligence Analyst",
     "category": "Data & AI",
     "description": "Build KPI definitions, dashboards and recurring reports for business teams.",
-    "imageUrl": "/illustrations/careers/business-intelligence-analyst.svg",
+    "imageUrl": "https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=1200&q=82",
     "level": "Beginner to intermediate",
     "pathLabel": "Digital career path",
     "skills": [
@@ -369,7 +369,7 @@ export const careerSections: CareerSection[] = [
     "title": "AI Workflow Automation Specialist",
     "category": "Data & AI",
     "description": "Automate repeatable office processes with APIs, workflow tools and carefully tested AI features.",
-    "imageUrl": "/illustrations/careers/ai-automation-specialist.svg",
+    "imageUrl": "https://images.unsplash.com/photo-1521737711867-e3b97375f902?auto=format&fit=crop&w=1200&q=82",
     "level": "Beginner to intermediate",
     "pathLabel": "Digital career path",
     "skills": [
@@ -388,7 +388,7 @@ export const careerSections: CareerSection[] = [
     "title": "UI / UX Designer",
     "category": "Digital Design & Content",
     "description": "Research user needs, test prototypes and design accessible digital product experiences.",
-    "imageUrl": "/illustrations/careers/user-interface-user-experience-ui-ux-designer.svg",
+    "imageUrl": "https://images.unsplash.com/photo-1545235617-9465d2a55698?auto=format&fit=crop&w=1200&q=82",
     "level": "Beginner to intermediate",
     "pathLabel": "Digital career path",
     "skills": [
@@ -407,7 +407,7 @@ export const careerSections: CareerSection[] = [
     "title": "Digital Graphic Designer",
     "category": "Digital Design & Content",
     "description": "Produce digital campaign graphics, brand assets and clear visual communication for online products.",
-    "imageUrl": "/illustrations/careers/graphic-designer.svg",
+    "imageUrl": "https://images.unsplash.com/photo-1558655146-9f40138edfeb?auto=format&fit=crop&w=1200&q=82",
     "level": "Beginner to intermediate",
     "pathLabel": "Digital career path",
     "skills": [
@@ -426,7 +426,7 @@ export const careerSections: CareerSection[] = [
     "title": "Video Editor",
     "category": "Digital Design & Content",
     "description": "Edit footage into polished short- and long-form online videos with accurate captions and sound.",
-    "imageUrl": "/illustrations/careers/video-editor.svg",
+    "imageUrl": "https://images.unsplash.com/photo-1490810194309-344b3661ba39?auto=format&fit=crop&w=1200&q=82",
     "level": "Beginner to intermediate",
     "pathLabel": "Digital career path",
     "skills": [
@@ -445,7 +445,7 @@ export const careerSections: CareerSection[] = [
     "title": "Technical Writer",
     "category": "Digital Design & Content",
     "description": "Explain complex products through accurate documentation, instructions and searchable help content.",
-    "imageUrl": "/illustrations/careers/technical-writer.svg",
+    "imageUrl": "https://images.unsplash.com/photo-1516321497487-e288fb19713f?auto=format&fit=crop&w=1200&q=82",
     "level": "Beginner to intermediate",
     "pathLabel": "Digital career path",
     "skills": [
@@ -464,7 +464,7 @@ export const careerSections: CareerSection[] = [
     "title": "Content Writer / Editor",
     "category": "Digital Design & Content",
     "description": "Research, draft, fact-check and revise clear website, educational or business content.",
-    "imageUrl": "/illustrations/careers/content-writer-editor.svg",
+    "imageUrl": "https://images.unsplash.com/photo-1455390582262-044cdead277a?auto=format&fit=crop&w=1200&q=82",
     "level": "Beginner-friendly",
     "pathLabel": "Digital career path",
     "skills": [
@@ -483,7 +483,7 @@ export const careerSections: CareerSection[] = [
     "title": "Digital Marketing Specialist",
     "category": "Marketing & Online Sales",
     "description": "Plan online campaigns, measure conversions and report channel performance.",
-    "imageUrl": "/illustrations/careers/digital-marketing-specialist.svg",
+    "imageUrl": "https://images.unsplash.com/photo-1542744173-05336fcc7ad4?auto=format&fit=crop&w=1200&q=82",
     "level": "Beginner to intermediate",
     "pathLabel": "Digital career path",
     "skills": [
@@ -502,7 +502,7 @@ export const careerSections: CareerSection[] = [
     "title": "SEO Specialist",
     "category": "Marketing & Online Sales",
     "description": "Improve website discoverability through search research, content structure and technical checks.",
-    "imageUrl": "/illustrations/careers/seo-specialist.svg",
+    "imageUrl": "https://images.unsplash.com/photo-1640158615573-cd28feb1bf4e?auto=format&fit=crop&w=1200&q=82",
     "level": "Beginner to intermediate",
     "pathLabel": "Digital career path",
     "skills": [
@@ -521,7 +521,7 @@ export const careerSections: CareerSection[] = [
     "title": "Social Media Manager",
     "category": "Marketing & Online Sales",
     "description": "Plan and manage social content, community responses and performance reports.",
-    "imageUrl": "/illustrations/careers/social-media-manager.svg",
+    "imageUrl": "https://images.unsplash.com/photo-1626785774573-4b799315345d?auto=format&fit=crop&w=1200&q=82",
     "level": "Beginner-friendly",
     "pathLabel": "Digital career path",
     "skills": [
@@ -540,7 +540,7 @@ export const careerSections: CareerSection[] = [
     "title": "Email Marketing Specialist",
     "category": "Marketing & Online Sales",
     "description": "Create permission-based email campaigns, segment audiences and measure results.",
-    "imageUrl": "/illustrations/careers/email-marketing-specialist.svg",
+    "imageUrl": "https://images.unsplash.com/photo-1515378791036-0648a3ef77b2?auto=format&fit=crop&w=1200&q=82",
     "level": "Beginner to intermediate",
     "pathLabel": "Digital career path",
     "skills": [
@@ -559,7 +559,7 @@ export const careerSections: CareerSection[] = [
     "title": "Remote Sales Representative",
     "category": "Marketing & Online Sales",
     "description": "Research customers, run video or phone discovery calls, manage a CRM and follow up ethically.",
-    "imageUrl": "/illustrations/careers/sales-representative.svg",
+    "imageUrl": "https://images.unsplash.com/photo-1521791136064-7986c2920216?auto=format&fit=crop&w=1200&q=82",
     "level": "Beginner to intermediate",
     "pathLabel": "Digital career path",
     "skills": [
@@ -578,7 +578,7 @@ export const careerSections: CareerSection[] = [
     "title": "Bookkeeper",
     "category": "Finance & Digital Analysis",
     "description": "Record transactions, reconcile accounts, organize receipts and prepare routine digital reports.",
-    "imageUrl": "/illustrations/careers/bookkeeper.svg",
+    "imageUrl": "https://images.unsplash.com/photo-1554224155-6726b3ff858f?auto=format&fit=crop&w=1200&q=82",
     "level": "Beginner-friendly",
     "pathLabel": "Digital career path",
     "skills": [
@@ -597,7 +597,7 @@ export const careerSections: CareerSection[] = [
     "title": "Accountant",
     "category": "Finance & Digital Analysis",
     "description": "Prepare and explain financial statements, reconciliations, budgets and internal reports.",
-    "imageUrl": "/illustrations/careers/accountant.svg",
+    "imageUrl": "https://images.unsplash.com/photo-1772588627373-729b0f47e5bb?auto=format&fit=crop&w=1200&q=82",
     "level": "Intermediate; degree often expected",
     "pathLabel": "Digital career path",
     "skills": [
@@ -616,7 +616,7 @@ export const careerSections: CareerSection[] = [
     "title": "Financial Analyst",
     "category": "Finance & Digital Analysis",
     "description": "Build business forecasts, compare scenarios and explain results to decision-makers.",
-    "imageUrl": "/illustrations/careers/financial-analyst.svg",
+    "imageUrl": "https://images.unsplash.com/photo-1707157284454-553ef0a4ed0d?auto=format&fit=crop&w=1200&q=82",
     "level": "Intermediate to advanced",
     "pathLabel": "Digital career path",
     "skills": [
@@ -635,7 +635,7 @@ export const careerSections: CareerSection[] = [
     "title": "Investment Research Analyst",
     "category": "Finance & Digital Analysis",
     "description": "Research companies, compare valuation scenarios and write sourced investment analysis.",
-    "imageUrl": "/illustrations/careers/investment-analyst.svg",
+    "imageUrl": "https://images.unsplash.com/photo-1709880945165-d2208c6ad2ec?auto=format&fit=crop&w=1200&q=82",
     "level": "Intermediate to advanced",
     "pathLabel": "Digital career path",
     "skills": [
@@ -654,7 +654,7 @@ export const careerSections: CareerSection[] = [
     "title": "Credit Analyst",
     "category": "Finance & Digital Analysis",
     "description": "Analyze borrower data, cash flow, credit risk and written lending recommendations.",
-    "imageUrl": "/illustrations/careers/credit-analyst.svg",
+    "imageUrl": "https://images.unsplash.com/photo-1707902665498-a202981fb5ac?auto=format&fit=crop&w=1200&q=82",
     "level": "Intermediate",
     "pathLabel": "Digital career path",
     "skills": [
@@ -673,7 +673,7 @@ export const careerSections: CareerSection[] = [
     "title": "Insurance Underwriting Analyst",
     "category": "Finance & Digital Analysis",
     "description": "Review insurance applications and risk data to support documented coverage decisions.",
-    "imageUrl": "/illustrations/careers/insurance-underwriter.svg",
+    "imageUrl": "https://images.unsplash.com/photo-1626266061368-46a8f578ddd6?auto=format&fit=crop&w=1200&q=82",
     "level": "Intermediate; employer training typical",
     "pathLabel": "Digital career path",
     "skills": [
@@ -692,7 +692,7 @@ export const careerSections: CareerSection[] = [
     "title": "Remote Customer Support Representative",
     "category": "Remote Operations & Support",
     "description": "Resolve customer questions through email, chat, tickets and online calls.",
-    "imageUrl": "/illustrations/careers/customer-service-representative.svg",
+    "imageUrl": "https://images.unsplash.com/photo-1553775282-20af80779df7?auto=format&fit=crop&w=1200&q=82",
     "level": "Beginner-friendly",
     "pathLabel": "Digital career path",
     "skills": [
@@ -711,7 +711,7 @@ export const careerSections: CareerSection[] = [
     "title": "Digital Project Manager",
     "category": "Remote Operations & Support",
     "description": "Plan and coordinate software or digital-service projects using remote team tools.",
-    "imageUrl": "/illustrations/careers/project-manager.svg",
+    "imageUrl": "https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?auto=format&fit=crop&w=1200&q=82",
     "level": "Intermediate to advanced",
     "pathLabel": "Digital career path",
     "skills": [
@@ -730,7 +730,7 @@ export const careerSections: CareerSection[] = [
     "title": "Virtual Assistant / Administrative Specialist",
     "category": "Remote Operations & Support",
     "description": "Manage email, calendars, scheduling, research and digital documents for individuals or teams.",
-    "imageUrl": "/illustrations/careers/virtual-assistant.svg",
+    "imageUrl": "https://images.unsplash.com/photo-1556745753-b2904692b3cd?auto=format&fit=crop&w=1200&q=82",
     "level": "Beginner-friendly",
     "pathLabel": "Digital career path",
     "skills": [
@@ -749,7 +749,7 @@ export const careerSections: CareerSection[] = [
     "title": "Customer Success Specialist",
     "category": "Remote Operations & Support",
     "description": "Onboard software customers, document outcomes and coordinate account support and retention.",
-    "imageUrl": "/illustrations/careers/customer-success-specialist.svg",
+    "imageUrl": "https://images.unsplash.com/photo-1522071820081-009f0129c71c?auto=format&fit=crop&w=1200&q=82",
     "level": "Beginner to intermediate",
     "pathLabel": "Digital career path",
     "skills": [
@@ -768,7 +768,7 @@ export const careerSections: CareerSection[] = [
     "title": "Remote Operations Coordinator",
     "category": "Remote Operations & Support",
     "description": "Track recurring processes, manage project records, report exceptions and coordinate distributed teams.",
-    "imageUrl": "/illustrations/careers/operations-coordinator.svg",
+    "imageUrl": "https://images.unsplash.com/photo-1606857521015-7f9fcf423740?auto=format&fit=crop&w=1200&q=82",
     "level": "Beginner to intermediate",
     "pathLabel": "Digital career path",
     "skills": [
@@ -787,7 +787,7 @@ export const careerSections: CareerSection[] = [
     "title": "Digital Recruiter / Talent Sourcer",
     "category": "Remote Operations & Support",
     "description": "Research candidates, organize outreach, screen skills and coordinate digital interviews.",
-    "imageUrl": "/illustrations/careers/recruiter-talent-sourcer.svg",
+    "imageUrl": "https://images.unsplash.com/photo-1556761175-b413da4baf72?auto=format&fit=crop&w=1200&q=82",
     "level": "Beginner to intermediate",
     "pathLabel": "Digital career path",
     "skills": [
@@ -806,7 +806,7 @@ export const careerSections: CareerSection[] = [
     "title": "Medical Billing & Coding Specialist",
     "category": "Healthcare & Legal Administration",
     "description": "Learn to classify documented healthcare services and process claims in nonclinical administrative workflows.",
-    "imageUrl": "/illustrations/careers/medical-billing-coding-specialist.svg",
+    "imageUrl": "https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?auto=format&fit=crop&w=1200&q=82",
     "level": "Certification or employer training may be required",
     "pathLabel": "Digital career path",
     "skills": [
@@ -825,7 +825,7 @@ export const careerSections: CareerSection[] = [
     "title": "Health Information / Medical Records Specialist",
     "category": "Healthcare & Legal Administration",
     "description": "Organize healthcare records, check documentation quality and apply privacy procedures digitally.",
-    "imageUrl": "/illustrations/careers/health-information-specialist.svg",
+    "imageUrl": "https://images.unsplash.com/photo-1531973576160-7125cd663d86?auto=format&fit=crop&w=1200&q=82",
     "level": "Training or credentials may be preferred",
     "pathLabel": "Digital career path",
     "skills": [
@@ -844,7 +844,7 @@ export const careerSections: CareerSection[] = [
     "title": "Remote Patient Scheduling Coordinator",
     "category": "Healthcare & Legal Administration",
     "description": "Schedule visits, communicate administrative requirements and maintain accurate appointment records.",
-    "imageUrl": "/illustrations/careers/patient-scheduling-coordinator.svg",
+    "imageUrl": "https://images.unsplash.com/photo-1560264280-88b68371db39?auto=format&fit=crop&w=1200&q=82",
     "level": "Beginner; employer onboarding typical",
     "pathLabel": "Digital career path",
     "skills": [
@@ -863,7 +863,7 @@ export const careerSections: CareerSection[] = [
     "title": "Contract Administrator",
     "category": "Healthcare & Legal Administration",
     "description": "Organize commercial contracts, monitor deadlines and document approved changes for business teams.",
-    "imageUrl": "/illustrations/careers/contract-administrator.svg",
+    "imageUrl": "https://images.unsplash.com/photo-1541746972996-4e0b0f43e02a?auto=format&fit=crop&w=1200&q=82",
     "level": "Intermediate; legal review required for advice",
     "pathLabel": "Digital career path",
     "skills": [
@@ -882,7 +882,7 @@ export const careerSections: CareerSection[] = [
     "title": "Legal Operations Coordinator",
     "category": "Healthcare & Legal Administration",
     "description": "Coordinate legal-team documents, intake, calendars, vendors and reporting without giving legal advice.",
-    "imageUrl": "/illustrations/careers/legal-operations-coordinator.svg",
+    "imageUrl": "https://images.unsplash.com/photo-1606836591695-4d58a73eba1e?auto=format&fit=crop&w=1200&q=82",
     "level": "Beginner to intermediate",
     "pathLabel": "Digital career path",
     "skills": [
@@ -901,7 +901,7 @@ export const careerSections: CareerSection[] = [
     "title": "Compliance Analyst",
     "category": "Healthcare & Legal Administration",
     "description": "Track documented control checks, research policies and organize evidence for internal reviews.",
-    "imageUrl": "/illustrations/careers/compliance-specialist.svg",
+    "imageUrl": "https://images.unsplash.com/photo-1568992687947-868a62a9f521?auto=format&fit=crop&w=1200&q=82",
     "level": "Intermediate; industry training often needed",
     "pathLabel": "Digital career path",
     "skills": [

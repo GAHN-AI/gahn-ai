@@ -120,17 +120,18 @@ export default async function CareerSectionPage({ params }: Props) {
             </div>
             <div className="flex flex-col bg-[#EEF3F8]">
               <Image
+                unoptimized
                 src={career.imageUrl}
                 alt=""
                 width={960}
                 height={600}
                 sizes="(min-width: 1024px) 480px, 100vw"
                 priority
-                className="h-auto w-full flex-1 object-contain"
+                className="h-72 w-full flex-1 object-cover lg:min-h-[420px]"
               />
               <div className="flex flex-wrap gap-x-5 gap-y-2 border-t border-[#DEE6EF] px-6 py-5 text-xs font-medium text-[#53657D]">
                 <span>{curriculum.sections.length} sections</span>
-                <span>{curriculum.lessonCount} planned lessons</span>
+                <span>{curriculum.lessonCount} planned lessons & checks</span>
                 <span>Curriculum preview</span>
               </div>
             </div>
