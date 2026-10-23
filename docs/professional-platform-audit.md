@@ -22,41 +22,41 @@ This review builds on main after PR #25. It preserves the existing application, 
 
 | Route source | Review scope |
 | --- | --- |
-| `about` | Public page, wording, navigation, and responsive-source review |
-| `admin/analytics` | Public page, wording, navigation, and responsive-source review |
-| `admin/early-access` | Public page, wording, navigation, and responsive-source review |
-| `assigned-homework` | Public page, wording, navigation, and responsive-source review |
-| `contact` | Public page, wording, navigation, and responsive-source review |
-| `dashboard` | Public page, wording, navigation, and responsive-source review |
-| `feedback` | Public page, wording, navigation, and responsive-source review |
-| `in-progress` | Public page, wording, navigation, and responsive-source review |
-| `instructor/[instructorId]` | Public page, wording, navigation, and responsive-source review |
-| `learn/[world]/[section]/[topic]` | Public page, wording, navigation, and responsive-source review |
-| `learn/[world]/[section]` | Public page, wording, navigation, and responsive-source review |
-| `learn/[world]` | Public page, wording, navigation, and responsive-source review |
-| `learn/career-skills/[section]` | Curriculum and artwork coverage, route checks, preview visual review |
-| `learn/career-skills/industry/[industry]` | Curriculum and artwork coverage, route checks, preview visual review |
-| `learn/school-help/homework-upload` | Public page, wording, navigation, and responsive-source review |
-| `lesson/[lessonId]` | Public page, wording, navigation, and responsive-source review |
-| `login` | Public page, wording, navigation, and responsive-source review |
-| `notes` | Public page, wording, navigation, and responsive-source review |
-| `/` | Public page, wording, navigation, and responsive-source review |
-| `pricing` | Public page, wording, navigation, and responsive-source review |
-| `privacy` | Public page, wording, navigation, and responsive-source review |
-| `profile` | Public page, wording, navigation, and responsive-source review |
-| `progress` | Public page, wording, navigation, and responsive-source review |
-| `sentry-example-page` | Public page, wording, navigation, and responsive-source review |
-| `settings` | Public page, wording, navigation, and responsive-source review |
-| `signup` | Public page, wording, navigation, and responsive-source review |
-| `study-guides` | Public page, wording, navigation, and responsive-source review |
-| `terms` | Public page, wording, navigation, and responsive-source review |
-| `update-password` | Public page, wording, navigation, and responsive-source review |
+| `/about` | Public source, wording, navigation, and read-only HTTP checks where listed |
+| `/admin/analytics` | Internal/demo source and authorization-boundary review; no admin or error-demo interaction |
+| `/admin/early-access` | Internal/demo source and authorization-boundary review; no admin or error-demo interaction |
+| `/assigned-homework` | Account UI/source review and passed signed-out guard; real-account writes remain untested |
+| `/contact` | Public source, wording, navigation, and read-only HTTP checks where listed |
+| `/dashboard` | Account UI/source review and passed signed-out guard; real-account writes remain untested |
+| `/feedback` | Account UI/source review and passed signed-out guard; real-account writes remain untested |
+| `/in-progress` | Public source, wording, navigation, and read-only HTTP checks where listed |
+| `/instructor/[instructorId]` | Public source, wording, navigation, and read-only HTTP checks where listed |
+| `/learn/[world]/[section]/[topic]` | Study-plan, navigation, HTTP, and paused-workspace checks |
+| `/learn/[world]/[section]` | Study-plan, navigation, HTTP, and paused-workspace checks |
+| `/learn/[world]` | Study-plan, navigation, HTTP, and paused-workspace checks |
+| `/learn/career-skills/[section]` | Curriculum, artwork, and HTTP route checks passed; browser visual review pending |
+| `/learn/career-skills/industry/[industry]` | Curriculum, artwork, and HTTP route checks passed; browser visual review pending |
+| `/learn/school-help/homework-upload` | Study-plan, navigation, HTTP, and paused-workspace checks |
+| `/lesson/[lessonId]` | Study-plan, navigation, HTTP, and paused-workspace checks |
+| `/login` | Public source, wording, navigation, and read-only HTTP checks where listed |
+| `/notes` | Account UI/source review and passed signed-out guard; real-account writes remain untested |
+| `/` | Public source, wording, navigation, and read-only HTTP checks where listed |
+| `/pricing` | Public source, wording, navigation, and read-only HTTP checks where listed |
+| `/privacy` | Public source, wording, navigation, and read-only HTTP checks where listed |
+| `/profile` | Account UI/source review and passed signed-out guard; real-account writes remain untested |
+| `/progress` | Account UI/source review and passed signed-out guard; real-account writes remain untested |
+| `/sentry-example-page` | Internal/demo source and authorization-boundary review; no admin or error-demo interaction |
+| `/settings` | Account UI/source review and passed signed-out guard; real-account writes remain untested |
+| `/signup` | Public source, wording, navigation, and read-only HTTP checks where listed |
+| `/study-guides` | Account UI/source review and passed signed-out guard; real-account writes remain untested |
+| `/terms` | Public source, wording, navigation, and read-only HTTP checks where listed |
+| `/update-password` | Public source, wording, navigation, and read-only HTTP checks where listed |
 
 ## Verification record
 
 The automated curriculum acceptance check validates all 41 catalog/roadmap/course mappings, 876 lesson IDs and preview links, 41 distinct local illustration files, 56 non-career study plans, and disabled teaching/video/purchase entitlements. All existing public image URLs inspected during this review returned HTTP 200 (41 distinct URLs).
 
-Local lint, TypeScript, and the telemetry-disabled production build passed. The initial read-only HTTP pass checked 270 public pages/assets, eight signed-out account redirects, and three paused API endpoints without failures. Further deployed-preview checks are recorded with the pull request. Browser-only or account-write checks must not be described as passed without direct evidence.
+Local lint, TypeScript, and the telemetry-disabled production build passed. The initial read-only HTTP pass checked 270 public pages/assets, eight signed-out account redirects, and three paused API endpoints without failures. The Vercel deployment-preview build passed. Direct browser inspection reached Vercel Authentication. Automatic approval review rejected a temporary access-link request because it would broaden protected-preview access. No deployment protection was changed; desktop, tablet, and mobile browser review remains pending. The temporary responsive review helper has been removed from the merge candidate. Browser-only or account-write checks must not be described as passed without direct evidence.
 
 ## Validation limits and future work
 
