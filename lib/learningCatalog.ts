@@ -1,3 +1,5 @@
+import { schoolSkillUnits } from "./schoolSkillUnits";
+
 export type LearningOption = {
   title: string;
   description: string;
@@ -57,7 +59,9 @@ function schoolSubject(
     options: schoolLevels.map((level) =>
       option(
         level,
-        `Learn ${title} at the ${level} level with clear explanations, guided practice, review, and mastery checks.`,
+        schoolSkillUnits[slugify(title)]?.[level]
+          ? `Explore ${schoolSkillUnits[slugify(title)][level][0]}. Planned application: ${schoolSkillUnits[slugify(title)][level][1]}.`
+          : `Explore the planned ${title.toLowerCase()} topics for ${level.toLowerCase()}.`,
         skills
       )
     ),
@@ -268,7 +272,7 @@ export const learningSectionsByWorld: Record<string, LearningSection[]> = {
 };
 
 export function getLearningSections(world: string) {
-  return learningSectionsByWorld[world] ?? [];
+  return Object.prototype.hasOwnProperty.call(learningSectionsByWorld, world) ? learningSectionsByWorld[world] : [];
 }
 
 export function getLearningSection(world: string, sectionSlug: string) {

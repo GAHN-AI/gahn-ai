@@ -1,19 +1,17 @@
 "use client";
 
+import Image from "next/image";
+
+import { EvidenceIcon } from "@/components/brand/WorldIcons";
+
+
 import Link from "next/link";
 import posthog from "posthog-js";
 import { Source_Sans_3 } from "next/font/google";
 import { useEffect, useState } from "react";
 import { supabase } from "@/lib/supabaseClient";
 import PasswordInput from "@/components/auth/PasswordInput";
-import {
-  ArrowLeft,
-  Brain,
-  CheckCircle2,
-  Layers,
-  ShieldCheck,
-  Trophy,
-} from "lucide-react";
+import { ArrowLeft, Brain, Layers, ShieldCheck, Trophy } from "lucide-react";
 
 const sourceSans = Source_Sans_3({ subsets: ["latin"] });
 
@@ -21,17 +19,17 @@ const features = [
   {
     Icon: Brain,
     title: "Personalized Learning",
-    text: "AI instructors adapt explanations, practice, and pacing to your needs.",
+    text: "Preview the instructor and Magic Canvas layout planned for future lessons.",
   },
   {
     Icon: Layers,
     title: "Structured Learning Paths",
-    text: "Follow guided learning journeys designed around real understanding.",
+    text: "Explore specific lessons, practical exercises, and course outlines.",
   },
   {
     Icon: Trophy,
     title: "Track Your Growth",
-    text: "Save progress, build skills, and unlock future achievements.",
+    text: "Keep your account ready for future lessons and launch updates.",
   },
 ];
 
@@ -222,7 +220,7 @@ export default function SignupPage() {
   }
 
   return (
-    <main
+    <main id="main-content"
       className={`${sourceSans.className} relative min-h-screen overflow-hidden bg-white px-5 py-8 text-[#0B1739] sm:px-8 sm:py-10`}
     >
       <div
@@ -237,7 +235,7 @@ export default function SignupPage() {
       <div className="relative mx-auto w-full max-w-6xl">
         <header className="flex items-center justify-between gap-4">
           <Link href="/" className="flex items-center gap-3">
-            <img
+            <Image unoptimized width={64} height={64}
               src="/logo/favicon.png"
               alt="GAHN AI"
               className="h-11 w-11 rounded-full object-cover"
@@ -306,7 +304,7 @@ export default function SignupPage() {
               disabled={googleLoading}
               className="mt-8 flex w-full items-center justify-center gap-3 rounded-xl border border-[#D7E3F2] bg-white px-5 py-3.5 text-sm font-semibold shadow-sm hover:bg-[#F8FBFF] disabled:opacity-60"
             >
-              <img src="/google-logo/google.svg" alt="Google" className="h-5 w-5" />
+              <Image unoptimized width={1200} height={800} src="/google-logo/google.svg" alt="Google" className="h-5 w-5" />
               {googleLoading ? "Connecting..." : "Sign up with Google"}
             </button>
 
@@ -436,7 +434,7 @@ export default function SignupPage() {
             </form>
 
             <div className="mt-6 flex items-center justify-center gap-2 text-sm text-black">
-              <CheckCircle2 className="h-4 w-4 text-[#1677FF]" />
+              <EvidenceIcon className="h-4 w-4 text-[#1677FF]" />
               <span>No credit card required for the MVP.</span>
             </div>
 

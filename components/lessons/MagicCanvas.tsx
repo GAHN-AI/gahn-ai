@@ -1,19 +1,10 @@
 "use client";
 
+import { CanvasIcon, EvidenceIcon } from "@/components/brand/WorldIcons";
+
+
 import { useState } from "react";
-import {
-  ArrowRight,
-  CheckCircle2,
-  FileText,
-  NotebookPen,
-  PencilLine,
-  ClipboardCheck,
-  Lightbulb,
-  Network,
-  Send,
-  Sparkles,
-  Target,
-} from "lucide-react";
+import { ArrowRight, FileText, NotebookPen, PencilLine, ClipboardCheck, Lightbulb, Network, Send, Target } from "lucide-react";
 import type { CanvasBlock, InstructorTurn } from "@/lib/ai/lessonEngine";
 
 type Props = {
@@ -176,7 +167,7 @@ function Block({
       <div className="grid gap-2">
         {(block.checks || []).map((check) => (
           <div key={check} className="flex items-start gap-2 rounded-xl bg-[#F8FBFF] px-4 py-3">
-            <CheckCircle2 className="mt-1 h-4 w-4 shrink-0 text-[#1677FF]" />
+            <EvidenceIcon className="mt-1 h-4 w-4 shrink-0 text-[#1677FF]" />
             <span className="text-sm leading-6 text-[#40536D]">{check}</span>
           </div>
         ))}
@@ -191,7 +182,7 @@ function Block({
         <ul className="mt-3 grid gap-2">
           {block.bullets.map((bullet) => (
             <li key={bullet} className="flex items-start gap-2 text-sm leading-6 text-[#40536D]">
-              <CheckCircle2 className="mt-1 h-4 w-4 shrink-0 text-[#1677FF]" />
+              <EvidenceIcon className="mt-1 h-4 w-4 shrink-0 text-[#1677FF]" />
               {bullet}
             </li>
           ))}
@@ -271,7 +262,7 @@ export default function MagicCanvas({
           <div className="grid min-h-[440px] place-items-center rounded-2xl border border-dashed border-[#CFE0F5] bg-white px-6 text-center">
             <div className="max-w-sm">
               <div className="mx-auto grid h-14 w-14 place-items-center rounded-2xl bg-[#EAF3FF] text-[#1677FF]">
-                <Sparkles className="h-6 w-6" />
+                <CanvasIcon className="h-6 w-6" />
               </div>
               <h3 className="mt-4 text-lg font-extrabold text-[#0B1739]">
                 {loading ? "Preparing your learning workspace..." : "No learning workspace started"}

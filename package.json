@@ -6,7 +6,9 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "verify:curriculum": "node scripts/verify-curriculum.mjs",
+    "verify:routes": "node scripts/verify-routes.mjs"
   },
   "dependencies": {
     "@heygen/liveavatar-web-sdk": "^0.0.19",

@@ -1,5 +1,7 @@
 "use client";
 
+import Image from "next/image";
+
 import Link from "next/link";
 import { useState } from "react";
 import { ArrowLeft, ArrowRight, Check, Clock3 } from "lucide-react";
@@ -238,11 +240,11 @@ export default function PricingPage() {
   }
 
   return (
-    <main className="min-h-screen bg-white font-sans text-black">
+    <main id="main-content" className="min-h-screen bg-white font-sans text-black">
       <header className="border-b border-[#D9E2EF] bg-white">
         <nav className="mx-auto flex min-h-[74px] max-w-7xl items-center justify-between gap-4 px-5 sm:px-8">
           <Link href="/" className="flex items-center gap-3">
-            <img
+            <Image unoptimized width={64} height={64}
               src="/logo/favicon.png"
               alt="GAHN AI"
               className="h-10 w-10 rounded-full object-cover"
@@ -308,7 +310,7 @@ export default function PricingPage() {
             </p>
           </div>
 
-          <div className="mt-10 overflow-x-auto rounded-[18px] border border-[#D9E2EF] bg-white">
+          <div role="region" aria-label="Plan comparison; scroll horizontally on small screens" tabIndex={0} className="mt-10 overflow-x-auto rounded-[18px] border border-[#D9E2EF] bg-white">
             <table className="w-full min-w-[900px] border-collapse text-left">
               <thead>
                 <tr className="border-b border-[#D9E2EF] bg-[#F7FAFF]">

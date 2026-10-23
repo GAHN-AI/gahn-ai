@@ -1,143 +1,230 @@
-"use client";
-
+import type { Metadata } from "next";
+import Image from "next/image";
 import Link from "next/link";
-import { useParams } from "next/navigation";
+import { notFound } from "next/navigation";
+import { ArrowLeft, ArrowDown, ArrowUpRight } from "lucide-react";
+import { careerSections, getCareerSection } from "@/lib/careerCatalog";
 import {
-  ArrowLeft,
-  ArrowRight,
-  BriefcaseBusiness,
-} from "lucide-react";
+  careerWorkspaceHref,
+  getCareerCurriculum,
+} from "@/lib/careerCurricula";
+import { CareerWorldIcon } from "@/components/brand/WorldIcons";
+import CurriculumPreview from "@/components/curriculum/CurriculumPreview";
+import WorkspacePreviewCard from "@/components/curriculum/WorkspacePreviewCard";
 
-import { getCareerSection } from "@/lib/careerCatalog";
-import { getPracticalSkillRoadmap } from "@/lib/practicalSkillRoadmaps";
+type Props = { params: Promise<{ section: string }> };
 
-export default function CareerSectionPage() {
-  const params = useParams<{ section: string }>();
-  const careerSection = getCareerSection(params.section);
-  const skillRoadmap = getPracticalSkillRoadmap("career-skills", params.section, params.section);
+export function generateStaticParams() {
+  return careerSections.map(({ slug }) => ({ section: slug }));
+}
 
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+  const career = getCareerSection((await params).section);
+  return {
+    title: career
+      ? `${career.title} curriculum | GAHN AI`
+      : "Career not found | GAHN AI",
+    description: career?.description,
+  };
+}
 
-  if (!careerSection) {
-    return (
-      <main className="min-h-screen bg-[#F7F8FA] px-5 py-10 font-sans text-[#1D1E24] sm:px-8">
-        <div className="mx-auto max-w-5xl">
-          <Link
-            href="/learn/career-skills"
-            className="inline-flex items-center gap-2 text-sm font-medium"
-          >
-            <ArrowLeft className="h-4 w-4" />
-            Career Skills
-          </Link>
-          <div className="mt-8 rounded-[14px] border border-[#E1E3E8] bg-white p-10 text-center">
-            <h1 className="text-3xl font-semibold">Career path not found</h1>
-          </div>
-        </div>
-      </main>
-    );
-  }
-
-  const lessonHref = `/lesson/custom?world=career-skills&section=${encodeURIComponent(
-    careerSection.slug
-  )}&topic=${encodeURIComponent(careerSection.title)}&topicSlug=${encodeURIComponent(
-    careerSection.slug
-  )}`;
+export default async function CareerSectionPage({ params }: Props) {
+  const career = getCareerSection((await params).section);
+  const curriculum = career && getCareerCurriculum(career.slug);
+  if (!career || !curriculum) notFound();
+  const workspaceHref = careerWorkspaceHref(career.slug);
+  const capstone = curriculum.sections.at(-1)!;
 
   return (
-    <main className="min-h-screen bg-[#F7F8FA] font-sans text-[#1D1E24]">
-      <header className="border-b border-[#E7E7EA] bg-white">
-        <div className="mx-auto flex min-h-[68px] max-w-[1180px] flex-wrap items-center justify-between gap-4 px-5 sm:px-8">
+    <main
+      id="main-content"
+      className="min-h-screen bg-[#F6F8FB] text-[#142B47]"
+    >
+      <header className="border-b border-[#E2E8F0] bg-white">
+        <div className="mx-auto flex min-h-[72px] max-w-[1200px] items-center justify-between gap-4 px-5 sm:px-8">
           <Link
-            href={`/learn/career-skills`}
-            className="inline-flex items-center gap-2 text-sm font-medium"
+            href="/learn/career-skills"
+            className="inline-flex min-h-11 items-center gap-2 text-sm font-medium text-[#53657D]"
           >
-            <ArrowLeft className="h-4 w-4" />
+            <ArrowLeft aria-hidden="true" className="h-4 w-4" />
             Career Skills
           </Link>
-
-          <div className="flex items-center gap-3">
-
-            <Link href="/" className="flex items-center gap-2 text-sm font-semibold text-[#0B1739]">
-              <img src="/logo/favicon.png" alt="" className="h-7 w-7 rounded-full object-cover" />
-              GAHN AI
-            </Link>
-          </div>
+          <Link
+            href="/"
+            className="inline-flex items-center gap-2 text-sm font-semibold"
+          >
+            <Image
+              src="/logo/favicon.png"
+              width={28}
+              height={28}
+              alt=""
+              className="rounded-full"
+            />
+            GAHN AI
+          </Link>
         </div>
       </header>
-
-      <div className="mx-auto max-w-[1180px] px-5 py-9 sm:px-8 lg:py-12">
-        <section className="grid gap-7 overflow-hidden rounded-[16px] border border-[#E1E3E8] bg-white p-6 sm:p-8 lg:grid-cols-[minmax(0,1fr)_390px] lg:items-center">
-          <div>
-            <div className="flex items-center gap-3">
-              <span className="grid h-11 w-11 place-items-center rounded-xl bg-[#EAF2FF] text-[#0B5CFF]">
-                <BriefcaseBusiness className="h-5 w-5" />
-              </span>
-              <p className="text-xs font-semibold uppercase tracking-[0.14em] text-[#0B5CFF]">
-                {careerSection.category}
+      <div className="mx-auto max-w-[1200px] px-5 py-8 sm:px-8 lg:py-12">
+        <nav
+          aria-label="Breadcrumb"
+          className="mb-6 flex flex-wrap items-center gap-x-2 gap-y-1 text-xs leading-5 text-[#64748B]"
+        >
+          <Link href="/learn/career-skills" className="hover:underline">
+            Career Skills
+          </Link>
+          <span aria-hidden="true">/</span>
+          <span>{career.category}</span>
+          <span aria-hidden="true">/</span>
+          <span className="text-[#142B47]">{career.title}</span>
+        </nav>
+        <section className="overflow-hidden rounded-[22px] border border-[#DCE3EC] bg-white">
+          <div className="grid lg:grid-cols-[minmax(0,1.25fr)_minmax(0,1fr)]">
+            <div className="p-6 sm:p-9 lg:p-10">
+              <div className="flex flex-wrap items-center gap-3">
+                <CareerWorldIcon className="h-9 w-9" />
+                <p className="gahn-eyebrow">{career.category}</p>
+              </div>
+              <h1 className="mt-6 text-3xl font-semibold leading-[1.12] tracking-[-0.035em] sm:text-[42px]">
+                {career.title}
+              </h1>
+              <p className="mt-5 max-w-xl text-base leading-7 text-[#4B5E74]">
+                {career.description}
               </p>
+              <p className="mt-3 max-w-xl text-sm leading-6 text-[#64748B]">
+                {curriculum.entry}
+              </p>
+              <div className="mt-6 flex flex-wrap gap-2 text-xs">
+                <span className="rounded-md bg-[#EDF2F8] px-3 py-2 text-[#365B89]">
+                  {career.level}
+                </span>
+                <span className="rounded-md bg-[#F3F0E9] px-3 py-2 text-[#7D6340]">
+                  {career.payCategory}
+                </span>
+              </div>
+              <div className="mt-7 flex flex-wrap gap-3">
+                <a
+                  href="#curriculum"
+                  className="inline-flex min-h-11 items-center justify-center gap-2 rounded-lg bg-[#16375E] px-5 py-3 text-sm font-semibold text-white hover:bg-[#234B79]"
+                >
+                  Explore curriculum
+                  <ArrowDown aria-hidden="true" className="h-4 w-4" />
+                </a>
+                <Link
+                  href={workspaceHref}
+                  className="inline-flex min-h-11 items-center justify-center gap-2 rounded-lg border border-[#D6E0EC] px-5 py-3 text-sm font-medium hover:bg-[#F5F8FC]"
+                >
+                  Preview workspace
+                  <ArrowUpRight aria-hidden="true" className="h-4 w-4" />
+                </Link>
+              </div>
             </div>
-
-            <h1 className="mt-5 text-[34px] font-semibold leading-[1.12] tracking-[-0.035em] sm:text-[40px]">
-              {careerSection.title}
-            </h1>
-            <p className="mt-4 max-w-[690px] text-[15px] leading-7 text-[#34363D]">
-              {careerSection.description}
-            </p>
-            <div className="mt-5 flex flex-wrap gap-2">
-              <span className="rounded-full bg-[#EAF2FF] px-3 py-1.5 text-xs font-semibold text-[#0B5CFF]">{careerSection.level}</span>
-              <span className="rounded-full bg-[#F0F4F8] px-3 py-1.5 text-xs font-semibold text-[#40536D]">{careerSection.payCategory}</span>
+            <div className="flex flex-col bg-[#EEF3F8]">
+              <Image
+                src={career.imageUrl}
+                alt=""
+                width={960}
+                height={600}
+                sizes="(min-width: 1024px) 480px, 100vw"
+                priority
+                className="h-auto w-full flex-1 object-contain"
+              />
+              <div className="flex flex-wrap gap-x-5 gap-y-2 border-t border-[#DEE6EF] px-6 py-5 text-xs font-medium text-[#53657D]">
+                <span>{curriculum.sections.length} sections</span>
+                <span>{curriculum.lessonCount} planned lessons</span>
+                <span>Curriculum preview</span>
+              </div>
             </div>
-            <p className="mt-4 max-w-[690px] text-[13px] leading-6 text-[#53657D]">
-              {careerSection.onlineScope}
-            </p>
-
-            <Link
-              href={lessonHref}
-              className="mt-6 inline-flex h-11 items-center justify-center gap-2 rounded-lg bg-[#0B5CFF] px-5 text-sm font-semibold text-white transition hover:bg-[#094FD9]"
-            >
-              Preview workspace
-              <ArrowRight className="h-4 w-4" />
-            </Link>
           </div>
-
-          <img
-            src={careerSection.imageUrl}
-            alt=""
-            className="h-[250px] w-full rounded-[12px] object-cover"
-          />
         </section>
-
-        <section aria-labelledby="career-skills-heading" className="mt-8 rounded-[16px] border border-[#E1E3E8] bg-white p-6 sm:p-8">
-          <p className="text-xs font-semibold uppercase tracking-[0.14em] text-[#0B5CFF]">Applied learning roadmap</p>
-          <h2 id="career-skills-heading" className="mt-2 text-[27px] font-semibold tracking-[-0.03em]">
-            Skills you&apos;ll learn
-          </h2>
-          <p className="mt-3 max-w-[780px] text-[14px] leading-6 text-[#3C3E45]">
-            Each stage outlines practical digital skills, teamwork, and project outcomes planned for GAHN's future instructor-led lessons.
-          </p>
-          <p className="mt-2 max-w-[780px] text-xs leading-5 text-[#64748B]">
-            Earnings categories are broad planning guidance, not salary quotes. Remote jobs and employment are not guaranteed.
-            Check current local wages, education requirements and job openings before choosing a career.
-            {" "}<a href="https://www.bls.gov/ooh/" target="_blank" rel="noreferrer" className="font-semibold text-[#0B5CFF] underline">Compare official U.S. career data</a>.
-          </p>
-          {skillRoadmap && (
-            <ol className="mt-6 grid gap-4">
-              {skillRoadmap.steps.map((step, index) => (
-                <li key={step.phase} className="flex gap-4 rounded-[14px] border border-[#E1E3E8] bg-[#FAFAFB] p-5">
-                  <span className="grid h-10 w-10 shrink-0 place-items-center rounded-xl bg-[#EAF2FF] text-sm font-bold text-[#0B5CFF]">{index + 1}</span>
-                  <div>
-                    <h3 className="text-sm font-bold text-[#0B1739]">{step.phase.slice(5)}</h3>
-                    <p className="mt-1.5 text-sm leading-6 text-[#3C3E45]">{step.detail}</p>
-                  </div>
-                </li>
-              ))}
-            </ol>
-          )}
-          {skillRoadmap?.safetyNote && (
-            <p className="mt-5 rounded-xl border border-[#DBE5F2] bg-[#F8FBFF] px-4 py-3 text-sm leading-6 text-[#4F647D]">
-              {skillRoadmap.safetyNote}
-            </p>
-          )}
-        </section>
+        <div className="mt-9 grid items-start gap-8 lg:grid-cols-[minmax(0,1fr)_290px]">
+          <div className="min-w-0 space-y-9">
+            <section
+              aria-labelledby="outcomes-heading"
+              className="rounded-2xl border border-[#DCE3EC] bg-white p-6 sm:p-8"
+            >
+              <p className="gahn-eyebrow">
+                Practical abilities, clearly defined
+              </p>
+              <h2
+                id="outcomes-heading"
+                className="mt-2 text-2xl font-semibold tracking-tight sm:text-3xl"
+              >
+                What you&apos;ll learn
+              </h2>
+              <p className="mt-3 text-sm leading-6 text-[#64748B]">
+                These are the planned outcomes for this pathway. Teaching and
+                assessment will become available after the learning experience
+                launches.
+              </p>
+              <ul className="mt-7 grid gap-x-7 gap-y-5 sm:grid-cols-2">
+                {curriculum.outcomes.map((outcome, index) => (
+                  <li
+                    key={outcome}
+                    className="flex gap-3 text-sm leading-6 text-[#3E536B]"
+                  >
+                    <span className="mt-0.5 w-5 shrink-0 text-xs font-medium tabular-nums text-[#8B9AB0]">
+                      {String(index + 1).padStart(2, "0")}
+                    </span>
+                    <span>{outcome}</span>
+                  </li>
+                ))}
+              </ul>
+            </section>
+            <CurriculumPreview curriculum={curriculum} />
+            <section
+              aria-labelledby="project-heading"
+              className="rounded-2xl border border-[#DFE7DD] bg-[#F1F6F0] p-6 sm:p-8"
+            >
+              <p className="gahn-eyebrow text-[#4B6D51]">
+                Planned final project
+              </p>
+              <h2
+                id="project-heading"
+                className="mt-2 text-2xl font-semibold tracking-tight"
+              >
+                {capstone.title.replace(/^Capstone: /, "")}
+              </h2>
+              <p className="mt-4 text-sm leading-7 text-[#3C5544]">
+                {capstone.practice}
+              </p>
+              <p className="mt-4 border-t border-[#D6E2D4] pt-4 text-sm leading-6 text-[#526C59]">
+                The future assessment will check the work against the section
+                outcomes. Browsing this preview does not earn a credential,
+                completion certificate, or employment qualification.
+              </p>
+            </section>
+            <section
+              aria-labelledby="requirements-heading"
+              className="rounded-2xl border border-[#DCE3EC] bg-white p-6 sm:p-8"
+            >
+              <h2 id="requirements-heading" className="text-xl font-semibold">
+                Starting point and career expectations
+              </h2>
+              <ul className="mt-5 list-disc space-y-3 pl-5 text-sm leading-7 text-[#53657D]">
+                {curriculum.requirements.map((requirement) => (
+                  <li key={requirement}>{requirement}</li>
+                ))}
+              </ul>
+              <p className="mt-5 text-sm leading-7 text-[#53657D]">
+                {career.onlineScope}
+              </p>
+              <p className="mt-4 text-xs leading-6 text-[#64748B]">
+                Earning potential is broad guidance, not a salary quote. Pay,
+                remote openings, and entry requirements vary.{" "}
+                <a
+                  href="https://www.bls.gov/ooh/"
+                  target="_blank"
+                  rel="noreferrer"
+                  className="font-medium text-[#325A94] underline underline-offset-4"
+                >
+                  Compare official U.S. occupation information
+                </a>
+                .
+              </p>
+            </section>
+          </div>
+          <WorkspacePreviewCard href={workspaceHref} />
+        </div>
       </div>
     </main>
   );

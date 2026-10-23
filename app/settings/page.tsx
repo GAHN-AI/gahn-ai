@@ -125,11 +125,11 @@ export default function SettingsPage() {
   }
 
   if (loading) {
-    return <main className="min-h-screen bg-[#F7F8FA] p-8 text-[#0B1739]"><p role="status">Loading settings...</p></main>;
+    return <main id="main-content" className="min-h-screen bg-[#F7F8FA] p-8 text-[#0B1739]"><p role="status">Loading settings...</p></main>;
   }
 
   return (
-    <main className="min-h-screen bg-[#F7F8FA] px-5 py-8 font-sans text-[#0B1739] sm:px-8">
+    <main id="main-content" className="min-h-screen bg-[#F7F8FA] px-5 py-8 font-sans text-[#0B1739] sm:px-8">
       <div className="mx-auto max-w-3xl">
         <Link href="/dashboard" className="inline-flex items-center gap-2 text-sm font-semibold text-[#0B5CFF]">
           <ArrowLeft className="h-4 w-4" /> Back to Dashboard

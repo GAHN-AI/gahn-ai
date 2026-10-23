@@ -1,15 +1,12 @@
 "use client";
 
+import { EvidenceIcon } from "@/components/brand/WorldIcons";
+
+
 import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
-import {
-  ArrowLeft,
-  BookOpenCheck,
-  CheckCircle2,
-  RotateCcw,
-  Target,
-} from "lucide-react";
+import { ArrowLeft, BookOpenCheck, RotateCcw, Target } from "lucide-react";
 
 import { supabase } from "@/lib/supabaseClient";
 
@@ -105,7 +102,7 @@ export default function ProgressPage() {
   );
 
   return (
-    <main className="min-h-screen bg-[#F8FBFF] px-5 py-8 font-sans text-[#0B1739] sm:px-8">
+    <main id="main-content" className="min-h-screen bg-[#F8FBFF] px-5 py-8 font-sans text-[#0B1739] sm:px-8">
       <div className="mx-auto max-w-6xl">
         <Link
           href="/dashboard"
@@ -129,7 +126,7 @@ export default function ProgressPage() {
           <div className="mt-6 grid gap-3 sm:grid-cols-3">
             {[
               { Icon: BookOpenCheck, label: "Active lessons", value: stats.active },
-              { Icon: CheckCircle2, label: "Mastered lessons", value: stats.mastered },
+              { Icon: EvidenceIcon, label: "Mastered lessons", value: stats.mastered },
               { Icon: RotateCcw, label: "Needs review", value: stats.review },
             ].map(({ Icon, label, value }) => (
               <div key={label} className="rounded-2xl border border-[#D7E3F2] bg-[#F8FBFF] p-4">

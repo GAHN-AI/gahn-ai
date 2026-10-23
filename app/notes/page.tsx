@@ -1,12 +1,11 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import {
   ArrowLeft,
   BookOpen,
-  Check,
   PencilLine,
   Save,
   Search,
@@ -36,7 +35,7 @@ export default function NotesPage() {
   const [message, setMessage] = useState("");
   const [search, setSearch] = useState("");
 
-  async function loadNotes() {
+  const loadNotes = useCallback(async () => {
     const {
       data: { user },
     } = await supabase.auth.getUser();
@@ -60,11 +59,11 @@ export default function NotesPage() {
     setNotes((data || []) as Note[]);
     setLoadError("");
     setLoading(false);
-  }
+  }, [router]);
 
   useEffect(() => {
-    void loadNotes();
-  }, []);
+    void Promise.resolve().then(loadNotes);
+  }, [loadNotes]);
 
   function startEditing(note: Note) {
     setEditingId(note.id);
@@ -126,7 +125,7 @@ export default function NotesPage() {
   }, [notes, search]);
 
   return (
-    <main className="min-h-screen bg-[#F8FBFF] px-5 py-8 font-sans text-[#0B1739] sm:px-8">
+    <main id="main-content" className="min-h-screen bg-[#F8FBFF] px-5 py-8 font-sans text-[#0B1739] sm:px-8">
       <div className="mx-auto max-w-5xl">
         <Link
           href="/dashboard"

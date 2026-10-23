@@ -26,7 +26,7 @@ const inter = Inter({
 export const metadata: Metadata = {
   title: "GAHN AI",
   description:
-    "Private AI learning for careers, school, skills, books, and almost any topic, with clear step by step AI-guided learning.",
+    "Explore GAHN AI's five Learning Worlds and planned curricula for digital careers, school subjects, study skills, and books. Join early access while the learning platform is in development.",
 };
 
 export default function RootLayout({
@@ -40,6 +40,7 @@ export default function RootLayout({
       className={`${geistSans.variable} ${geistMono.variable} ${inter.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col font-sans text-[16px] leading-[1.5]">
+        <a className="skip-link" href="#main-content">Skip to content</a>
         <SitePresence />
         {children}
       </body>

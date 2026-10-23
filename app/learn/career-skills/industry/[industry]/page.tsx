@@ -1,144 +1,136 @@
-"use client";
-
+import type { Metadata } from "next";
+import Image from "next/image";
 import Link from "next/link";
-import { useParams } from "next/navigation";
-import { ArrowLeft, ArrowRight, BriefcaseBusiness } from "lucide-react";
-
+import { notFound } from "next/navigation";
+import { ArrowLeft, ArrowUpRight } from "lucide-react";
 import {
+  careerIndustries,
   getCareerIndustry,
   getCareersByIndustry,
 } from "@/lib/careerCatalog";
+import { getCareerCurriculum } from "@/lib/careerCurricula";
+import { CareerWorldIcon } from "@/components/brand/WorldIcons";
 
-export default function CareerIndustryPage() {
-  const params = useParams<{ industry: string }>();
-  const industry = getCareerIndustry(params.industry);
+type Props = { params: Promise<{ industry: string }> };
+export function generateStaticParams() {
+  return careerIndustries.map(({ slug }) => ({ industry: slug }));
+}
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+  const industry = getCareerIndustry((await params).industry);
+  return {
+    title: `${industry?.displayTitle || "Career field"} | GAHN AI`,
+    description: industry?.description,
+  };
+}
 
-
-  if (!industry) {
-    return (
-      <main className="min-h-screen bg-[#F7F8FA] px-5 py-10 font-sans text-[#1D1E24] sm:px-8">
-        <div className="mx-auto max-w-5xl">
+export default async function CareerIndustryPage({ params }: Props) {
+  const industry = getCareerIndustry((await params).industry);
+  if (!industry) notFound();
+  const careers = getCareersByIndustry(industry.title);
+  return (
+    <main
+      id="main-content"
+      className="min-h-screen bg-[#F6F8FB] text-[#142B47]"
+    >
+      <header className="border-b border-[#E2E8F0] bg-white">
+        <div className="mx-auto flex min-h-[72px] max-w-[1200px] items-center justify-between gap-4 px-5 sm:px-8">
           <Link
             href="/learn/career-skills"
-            className="inline-flex items-center gap-2 text-sm font-medium"
+            className="inline-flex min-h-11 items-center gap-2 text-sm font-medium text-[#53657D]"
           >
-            <ArrowLeft className="h-4 w-4" />
+            <ArrowLeft aria-hidden="true" className="h-4 w-4" />
             Career Skills
           </Link>
-          <div className="mt-8 rounded-[14px] border border-[#E1E3E8] bg-white p-10 text-center">
-            <h1 className="text-3xl font-semibold">Career section not found</h1>
-          </div>
-        </div>
-      </main>
-    );
-  }
-
-  const careers = getCareersByIndustry(industry.title);
-
-  return (
-    <main className="min-h-screen bg-[#F7F8FA] font-sans text-[#1D1E24]">
-      <header className="border-b border-[#E7E7EA] bg-white">
-        <div className="mx-auto flex min-h-[68px] max-w-[1180px] flex-wrap items-center justify-between gap-4 px-5 sm:px-8">
           <Link
-            href={`/learn/career-skills`}
-            className="inline-flex items-center gap-2 text-sm font-medium"
+            href="/"
+            className="inline-flex items-center gap-2 text-sm font-semibold"
           >
-            <ArrowLeft className="h-4 w-4" />
-            Career Skills
+            <Image
+              src="/logo/favicon.png"
+              width={28}
+              height={28}
+              alt=""
+              className="rounded-full"
+            />
+            GAHN AI
           </Link>
-
-          <div className="flex items-center gap-3">
-
-            <Link href="/" className="flex items-center gap-2 text-sm font-semibold text-[#0B1739]">
-              <img src="/logo/favicon.png" alt="" className="h-7 w-7 rounded-full object-cover" />
-              GAHN AI
-            </Link>
-          </div>
         </div>
       </header>
-
-      <div className="mx-auto max-w-[1180px] px-5 py-9 sm:px-8 lg:py-12">
-        <section className="grid gap-7 overflow-hidden rounded-[16px] border border-[#E1E3E8] bg-white p-6 sm:p-8 lg:grid-cols-[minmax(0,1fr)_380px] lg:items-center">
-          <div>
-            <div className="flex items-center gap-3">
-              <span className="grid h-11 w-11 place-items-center rounded-xl bg-[#EAF2FF] text-[#0B5CFF]">
-                <BriefcaseBusiness className="h-5 w-5" />
-              </span>
-              <p className="text-xs font-semibold uppercase tracking-[0.14em] text-[#0B5CFF]">
-                Career Skills
-              </p>
-            </div>
-
-            <h1 className="mt-5 text-[34px] font-semibold leading-[1.12] tracking-[-0.035em] sm:text-[40px]">
-              {industry.displayTitle}
-            </h1>
-            <p className="mt-4 max-w-[690px] text-[15px] leading-7 text-[#34363D]">
-              {industry.description}
-            </p>
-            <p className="mt-4 text-sm font-medium text-[#0B5CFF]">
-              {careers.length} career paths
-            </p>
-          </div>
-
-          <img
-            src={industry.imageUrl}
-            alt=""
-            className="w-full rounded-[12px] object-cover"
-            style={{ height: 210, maxHeight: 210 }}
-          />
+      <div className="mx-auto max-w-[1200px] px-5 py-10 sm:px-8 lg:py-14">
+        <section className="max-w-3xl">
+          <CareerWorldIcon className="h-11 w-11" />
+          <p className="gahn-eyebrow mt-5">
+            Career Skills / Curriculum previews
+          </p>
+          <h1 className="mt-3 text-4xl font-semibold tracking-[-0.035em] sm:text-5xl">
+            {industry.displayTitle}
+          </h1>
+          <p className="mt-5 text-base leading-8 text-[#53657D]">
+            {industry.description}
+          </p>
+          <p className="mt-4 text-sm text-[#64748B]">
+            {careers.length} pathways · Specific lessons and projects ·
+            Self-paced plans
+          </p>
         </section>
-
-        <section className="mt-8">
-          <p className="text-xs font-semibold uppercase tracking-[0.14em] text-[#0B5CFF]">
-            Career paths
-          </p>
-          <h2 className="mt-2 text-[28px] font-semibold tracking-[-0.03em]">
-            Choose a job to explore
-          </h2>
-          <p className="mt-3 max-w-[720px] text-[14px] leading-6 text-[#3C3E45]">
-            Open a role to explore digital tools, real-world practice, entry expectations and a guided lesson. Some jobs require degrees, certification, experience or employer onboarding; online lessons alone do not qualify you for employment.
-          </p>
-
-          <p className="mt-2 text-xs leading-5 text-[#64748B]">Pay descriptions are broad, not guaranteed salaries. Remote openings, employer requirements, and work arrangements vary.</p>
-          <div className="mt-6 grid items-start gap-5 md:grid-cols-2 xl:grid-cols-3">
-            {careers.map((career) => (
+        <div className="mt-9 rounded-xl border border-[#DCE3EC] bg-white px-5 py-4 text-sm leading-6 text-[#53657D]">
+          Browse each role&apos;s planned lessons, practical tasks, and entry
+          expectations. Interactive teaching is still in development. Job
+          eligibility, pay, and remote openings depend on the employer and
+          location.
+        </div>
+        <section
+          aria-label={`${industry.displayTitle} career pathways`}
+          className="mt-8 grid items-stretch gap-6 md:grid-cols-2 xl:grid-cols-3"
+        >
+          {careers.map((career) => {
+            const curriculum = getCareerCurriculum(career.slug)!;
+            return (
               <Link
                 key={career.slug}
                 href={`/learn/career-skills/${career.slug}`}
-                className="group self-start overflow-hidden rounded-[14px] border border-[#E1E3E8] bg-white transition hover:-translate-y-0.5 hover:border-[#BDD3F7] hover:shadow-[0_12px_28px_rgba(29,30,36,0.07)]"
+                className="group flex min-w-0 flex-col overflow-hidden rounded-2xl border border-[#DCE3EC] bg-white transition duration-200 hover:-translate-y-1 hover:border-[#AFBED2] hover:shadow-lg"
               >
-                <img
-                  src={career.imageUrl}
-                  alt=""
-                  className="w-full object-cover transition-transform duration-300 group-hover:scale-[1.025]"
-                  style={{ height: 180, maxHeight: 180 }}
-                />
-
-                <div className="p-5">
-                  <p className="text-[11px] font-semibold uppercase tracking-[0.12em] text-[#0B5CFF]">
-                    {career.pathLabel}
+                <div className="aspect-[8/5] overflow-hidden bg-[#EDF2F8]">
+                  <Image
+                    src={career.imageUrl}
+                    width={960}
+                    height={600}
+                    alt=""
+                    sizes="(min-width: 1280px) 360px, (min-width: 768px) 50vw, 100vw"
+                    className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-[1.025]"
+                  />
+                </div>
+                <div className="flex flex-1 flex-col p-6">
+                  <p className="text-[11px] font-semibold uppercase tracking-widest text-[#718096]">
+                    Curriculum preview
                   </p>
-                  <h3 className="mt-2 text-[18px] font-semibold tracking-[-0.02em]">
+                  <h2 className="mt-2 text-xl font-semibold leading-7 tracking-tight">
                     {career.title}
-                  </h3>
-                  <p className="mt-2 min-h-[72px] text-[13px] leading-6 text-[#3C3E45]">
+                  </h2>
+                  <p className="mt-3 flex-1 text-sm leading-6 text-[#53657D]">
                     {career.description}
                   </p>
-                  <div className="mt-4 flex flex-wrap gap-2">
-                    <span className="rounded-full bg-[#EAF2FF] px-2.5 py-1 text-[11px] font-semibold text-[#0B5CFF]">{career.payCategory}</span>
-                    <span className="rounded-full bg-[#F1F4F8] px-2.5 py-1 text-[11px] font-semibold text-[#53657D]">{career.level}</span>
-                  </div>
-
-                  <div className="mt-5 flex items-center justify-between border-t border-[#EEEEF1] pt-4">
-                    <span className="text-sm font-semibold text-[#0B5CFF]">
-                      Explore career
+                  <p className="mt-5 text-xs text-[#718096]">
+                    {curriculum.sections.length} sections ·{" "}
+                    {curriculum.lessonCount} planned lessons
+                  </p>
+                  <div className="mt-4 flex flex-wrap gap-2 text-[11px]">
+                    <span className="rounded-md bg-[#EDF2F8] px-2.5 py-1.5 text-[#426188]">
+                      {career.level}
                     </span>
-                    <ArrowRight className="h-4 w-4 text-[#0B5CFF] transition-transform group-hover:translate-x-1" />
+                    <span className="rounded-md bg-[#F5F0E6] px-2.5 py-1.5 text-[#79613F]">
+                      {career.payCategory}
+                    </span>
+                  </div>
+                  <div className="mt-6 flex items-center justify-between border-t border-[#E7ECF2] pt-4 text-sm font-semibold text-[#325A94]">
+                    <span>Explore curriculum</span>
+                    <ArrowUpRight aria-hidden="true" className="h-4 w-4" />
                   </div>
                 </div>
               </Link>
-            ))}
-          </div>
+            );
+          })}
         </section>
       </div>
     </main>

@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { INTERACTIVE_LESSONS_AVAILABLE, LESSON_PREVIEW_MESSAGE } from "@/lib/lessonLaunch";
 
 import { getCurrentSubscription } from "@/lib/currentSubscription";
 import {
@@ -9,6 +10,9 @@ import {
 import { getAuthenticatedUser } from "@/lib/serverAuth";
 
 export async function POST() {
+  if (!INTERACTIVE_LESSONS_AVAILABLE) {
+    return NextResponse.json({ error: LESSON_PREVIEW_MESSAGE, code: "LESSONS_NOT_LAUNCHED" }, { status: 503 });
+  }
   let reservedUsageEventId: string | null = null;
   let reservedUserId: string | null = null;
 
@@ -118,7 +122,7 @@ export async function POST() {
     );
 
     const raw = await response.text();
-    let data: any = {};
+    let data: { data?: { session_token?: string; session_id?: string; 0?: { message?: string } }; message?: string; error?: string } = {};
 
     try {
       data = JSON.parse(raw);

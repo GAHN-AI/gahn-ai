@@ -1,18 +1,12 @@
-"use client";
+import Image from "next/image";
+
+import { BookWorldIcon, BrainWorldIcon, CareerWorldIcon, KnowledgeWorldIcon, SchoolWorldIcon } from "@/components/brand/WorldIcons";
+
 
 import Link from "next/link";
-import { useParams } from "next/navigation";
-import type { LucideIcon } from "lucide-react";
-import {
-  ArrowLeft,
-  ArrowRight,
-  BookOpen,
-  Brain,
-  BriefcaseBusiness,
-  Globe2,
-  GraduationCap,
-  LockKeyhole,
-} from "lucide-react";
+import { notFound } from "next/navigation";
+import type { GahnIcon } from "@/components/brand/WorldIcons";
+import { ArrowLeft, ArrowRight, LockKeyhole } from "lucide-react";
 
 import { careerIndustries } from "@/lib/careerCatalog";
 import { getLearningSections } from "@/lib/learningCatalog";
@@ -22,7 +16,7 @@ type LearningWorld = {
   title: string;
   eyebrow: string;
   description: string;
-  Icon: LucideIcon;
+  Icon: GahnIcon;
 };
 
 const learningWorlds: Record<string, LearningWorld> = {
@@ -31,35 +25,35 @@ const learningWorlds: Record<string, LearningWorld> = {
     eyebrow: "Career learning world",
     description:
       "Choose a digital career field, from accessible online support roles to advanced software, AI and finance careers. Practice the skills online, while checking employers' separate hiring requirements.",
-    Icon: BriefcaseBusiness,
+    Icon: CareerWorldIcon,
   },
   "school-help": {
     title: "School Help",
     eyebrow: "School learning world",
     description:
-      "Choose a subject and grade level, upload schoolwork when needed, and learn with guided explanations and practice.",
-    Icon: GraduationCap,
+      "Explore subject and grade-level plans, worked-example topics, and future homework support. Uploads and interactive lessons are paused.",
+    Icon: SchoolWorldIcon,
   },
   "brain-development": {
     title: "Brain Development",
     eyebrow: "Brain learning world",
     description:
-      "Build memory, focus, reasoning, discipline, problem solving, study habits, and learning strategies.",
-    Icon: Brain,
+      "Explore practical plans for recall, concentration, reasoning, study routines, and time management.",
+    Icon: BrainWorldIcon,
   },
   "general-knowledge": {
     title: "General Knowledge",
     eyebrow: "Knowledge learning world",
     description:
       "Learn history, technology, science, economics, geography, culture, communication, and practical life knowledge.",
-    Icon: Globe2,
+    Icon: KnowledgeWorldIcon,
   },
   "book-intelligence": {
     title: "Book Intelligence",
     eyebrow: "Book learning world",
     description:
-      "Understand books through summaries, chapter breakdowns, key lessons, vocabulary, quizzes, notes, and critical analysis.",
-    Icon: BookOpen,
+      "Explore plans for summarizing, discussing, annotating, and evaluating books using evidence from the text.",
+    Icon: BookWorldIcon,
   },
 };
 
@@ -79,7 +73,7 @@ function LearningSectionCard({
   const body = (
     <>
       <div className="relative h-[180px] overflow-hidden bg-[#EEF2F6]">
-        <img
+        <Image unoptimized width={1200} height={800}
           src={imageUrl}
           alt=""
           className={`h-full w-full object-cover transition duration-300 ${
@@ -89,7 +83,7 @@ function LearningSectionCard({
         <div className="absolute inset-0 bg-[linear-gradient(180deg,transparent_48%,rgba(8,18,40,0.58)_100%)]" />
         <div className="absolute bottom-4 left-4">
           <span className="inline-flex rounded-full bg-white/95 px-3 py-1 text-[11px] font-semibold text-[#1D1E24] shadow-sm">
-            {locked ? "Unavailable" : "Learning path"}
+            {locked ? "Unavailable" : "Curriculum preview"}
           </span>
         </div>
       </div>
@@ -133,47 +127,34 @@ function LearningSectionCard({
   );
 }
 
-export default function LearningWorldPage() {
-  const params = useParams<{ world: string }>();
+export default async function LearningWorldPage({ params: routeParams }: { params: Promise<{ world: string }> }) {
+  const params = await routeParams;
   const world = params.world;
   const learningWorld = learningWorlds[world];
 
 
-  if (!learningWorld) {
-    return (
-      <main className="min-h-screen bg-[#F7F8FA] px-5 py-10 font-sans text-black">
-        <div className="mx-auto max-w-5xl">
-          <Link href="/dashboard" className="text-sm font-medium text-[#0B5CFF]">
-            Back to dashboard
-          </Link>
-          <div className="mt-8 rounded-[14px] border border-[#E1E3E8] bg-white p-10 text-center">
-            <h1 className="text-3xl font-semibold">Learning world not found</h1>
-          </div>
-        </div>
-      </main>
-    );
-  }
+  if (!isLearningWorldAvailable(world) || !learningWorld) notFound();
 
   const available = isLearningWorldAvailable(world);
   const { title, eyebrow, description, Icon } = learningWorld;
   const worldSections = world === "career-skills" ? [] : getLearningSections(world);
 
   return (
-    <main className="min-h-screen bg-[#F7F8FA] font-sans text-[#1D1E24]">
+    <main id="main-content" className="min-h-screen bg-[#F7F8FA] font-sans text-[#1D1E24]">
       <header className="border-b border-[#E7E7EA] bg-white">
         <div className="mx-auto flex min-h-[68px] max-w-[1320px] flex-wrap items-center justify-between gap-4 px-5 sm:px-8 lg:px-10">
           <Link
-            href="/dashboard"
+            href="/#learning-worlds"
             className="inline-flex items-center gap-2 text-sm font-medium text-[#1D1E24]"
           >
             <ArrowLeft className="h-4 w-4" />
-            Dashboard
+            All Learning Worlds
           </Link>
 
           <div className="flex items-center gap-3">
 
             <Link href="/" className="flex items-center gap-2 text-sm font-semibold text-[#0B1739]">
-              <img src="/logo/favicon.png" alt="" className="h-7 w-7 rounded-full object-cover" />
+              <Image unoptimized width={64} height={64} src="/logo/favicon.png" alt="" className="h-7 w-7 rounded-full object-cover" />
               GAHN AI
             </Link>
           </div>

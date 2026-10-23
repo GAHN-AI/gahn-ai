@@ -117,7 +117,7 @@ export default function FeedbackPage() {
   }
 
   return (
-    <main className="min-h-screen bg-[#F8FBFF] px-5 py-8 font-sans text-[#0B1739] sm:px-8">
+    <main id="main-content" className="min-h-screen bg-[#F8FBFF] px-5 py-8 font-sans text-[#0B1739] sm:px-8">
       <div className="mx-auto max-w-3xl">
         <Link
           href="/dashboard"
@@ -164,6 +164,7 @@ export default function FeedbackPage() {
                   key={value}
                   type="button"
                   onClick={() => setCategory(value)}
+                  aria-pressed={category === value}
                   className={`flex items-center gap-3 rounded-xl border px-4 py-3 text-left text-sm font-semibold ${
                     category === value
                       ? "border-[#1677FF] bg-[#EAF3FF] text-[#0B1739]"
@@ -183,6 +184,8 @@ export default function FeedbackPage() {
                   key={value}
                   type="button"
                   onClick={() => setRating(value)}
+                  aria-label={`${value} out of 5`}
+                  aria-pressed={rating === value}
                   className={`grid h-10 w-10 place-items-center rounded-lg border text-sm font-bold ${
                     rating === value
                       ? "border-[#1677FF] bg-[#1677FF] text-white"

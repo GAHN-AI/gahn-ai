@@ -1,15 +1,12 @@
 "use client";
 
+import { CanvasIcon, EvidenceIcon } from "@/components/brand/WorldIcons";
+
+
 import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
-import {
-  ArrowLeft,
-  BookMarked,
-  CheckCircle2,
-  Search,
-  Sparkles,
-} from "lucide-react";
+import { ArrowLeft, BookMarked, Search } from "lucide-react";
 
 import { supabase } from "@/lib/supabaseClient";
 
@@ -103,7 +100,7 @@ export default function StudyGuidesPage() {
   }, [uniqueGuides, search]);
 
   return (
-    <main className="min-h-screen bg-[#F8FBFF] px-5 py-8 font-sans text-[#0B1739] sm:px-8">
+    <main id="main-content" className="min-h-screen bg-[#F8FBFF] px-5 py-8 font-sans text-[#0B1739] sm:px-8">
       <div className="mx-auto max-w-5xl">
         <Link
           href="/dashboard"
@@ -146,7 +143,7 @@ export default function StudyGuidesPage() {
             ) : guides.length === 0 ? (
               <div className="grid min-h-72 place-items-center rounded-2xl border border-dashed border-[#CFE0F5] bg-[#F8FBFF] px-6 text-center">
                 <div className="max-w-md">
-                  <Sparkles className="mx-auto h-8 w-8 text-[#1677FF]" />
+                  <CanvasIcon className="mx-auto h-8 w-8 text-[#1677FF]" />
                   <h2 className="mt-3 text-lg font-extrabold">
                     No study guides yet
                   </h2>
@@ -204,7 +201,7 @@ export default function StudyGuidesPage() {
                                   key={item}
                                   className="flex items-start gap-2 text-sm leading-6 text-black"
                                 >
-                                  <CheckCircle2 className="mt-1 h-4 w-4 shrink-0 text-[#1677FF]" />
+                                  <EvidenceIcon className="mt-1 h-4 w-4 shrink-0 text-[#1677FF]" />
                                   {item}
                                 </li>
                               ))}

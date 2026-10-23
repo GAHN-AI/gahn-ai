@@ -1,31 +1,17 @@
 "use client";
 
+import Image from "next/image";
+
+import { BookWorldIcon, BrainWorldIcon, CanvasIcon, CareerWorldIcon, KnowledgeWorldIcon, SchoolWorldIcon } from "@/components/brand/WorldIcons";
+
+
 import Link from "next/link";
 import posthog from "posthog-js";
 import { useState } from "react";
 import type { ReactNode } from "react";
 import { motion } from "framer-motion";
 import EarlyAccessVoices from "@/components/EarlyAccessVoices";
-import {
-  ArrowRight,
-  BookOpenCheck,
-  Brain,
-  BriefcaseBusiness,
-  Check,
-  ChevronDown,
-  CircleDot,
-  FileText,
-  Globe2,
-  GraduationCap,
-  Menu,
-  MessageSquareText,
-  NotebookTabs,
-  Play,
-  Sparkles,
-  Target,
-  Upload,
-  X,
-} from "lucide-react";
+import { ArrowRight, Check, ChevronDown, FileText, Menu, NotebookTabs, Target, Upload, X } from "lucide-react";
 
 const shell = "mx-auto w-full max-w-[1280px] px-5 sm:px-8 lg:px-12";
 
@@ -41,54 +27,54 @@ const worlds = [
     title: "Career Skills",
     description:
       "Digital career paths from online support and design to high-skill software, AI, finance, and business roles.",
-    icon: BriefcaseBusiness,
+    icon: CareerWorldIcon,
   },
   {
     slug: "school-help",
     title: "School Help",
     description:
       "Math, science, English, reading, study skills, and guided homework help.",
-    icon: GraduationCap,
+    icon: SchoolWorldIcon,
   },
   {
     slug: "brain-development",
     title: "Brain Development",
     description:
       "Memory, focus, reasoning, discipline, habits, and learning performance.",
-    icon: Brain,
+    icon: BrainWorldIcon,
   },
   {
     slug: "general-knowledge",
     title: "General Knowledge",
     description:
       "History, technology, science, economics, geography, culture, and life skills.",
-    icon: Globe2,
+    icon: KnowledgeWorldIcon,
   },
   {
     slug: "book-intelligence",
     title: "Book Intelligence",
     description:
       "Book summaries, key lessons, chapter breakdowns, vocabulary, quizzes, and analysis.",
-    icon: BookOpenCheck,
+    icon: BookWorldIcon,
   },
 ];
 
 const faqs = [
   {
     q: "What ages is GAHN AI built for?",
-    a: "GAHN AI is built for learners ages 12 and up. It can support teens and adults who are studying for school, building career skills, or learning something new on their own.",
+    a: "Early-access accounts are for people ages 13 and up, as described in our Terms. Learners below the age of majority need a parent or guardian's permission. The planned learning platform is intended for students and adult learners.",
   },
   {
     q: "What are the learning worlds?",
-    a: "GAHN AI has five learning worlds: Career Skills, School Help, Brain Development, General Knowledge, and Book Intelligence. Each world has its own learning paths while using the same private AI teaching system.",
+    a: "You can browse Career Skills, School Help, Brain Development, General Knowledge, and Book Intelligence now. Each has planned learning paths. They will share the instructor and Magic Canvas workspace once interactive lessons are ready.",
   },
   {
     q: "What is the AI instructor supposed to do?",
-    a: "The instructor teaches, asks questions, checks your response, identifies misunderstandings, explains the idea differently, gives practice, and checks understanding again before moving forward.",
+    a: "The planned instructor will explain ideas, ask questions, review your reasoning, and offer more practice when needed. The current website shows a workspace preview; live teaching is not connected yet.",
   },
   {
     q: "Can I upload homework?",
-    a: "School Help includes guided homework support for screenshots, worksheets, PDFs, and documents. The goal is to help you understand the work, not simply return an answer.",
+    a: "Homework uploads and analysis are paused during early access. The planned School Help experience will guide learners through their own attempts and explanations. You can browse the subject and grade-level plans now.",
   },
   {
     q: "Is my learning data private?",
@@ -111,7 +97,7 @@ function cx(...classes: Array<string | false | null | undefined>) {
 function Logo() {
   return (
     <span className="flex items-center gap-3">
-      <img
+      <Image unoptimized width={64} height={64}
         src="/logo/favicon.png"
         alt=""
         className="h-8 w-8 rounded-full object-cover"
@@ -242,122 +228,6 @@ function Eyebrow({ children }: { children: ReactNode }) {
   );
 }
 
-function CanvasSkeleton() {
-  return (
-    <div className="h-full bg-white p-5 sm:p-6">
-      <div className="flex items-center justify-between border-b border-[#EEEEF0] pb-4">
-        <div className="flex items-center gap-5 text-[12px] font-medium text-black">
-          <span className="border-b-2 border-[#1F6BFF] pb-3 text-black">
-            Canvas
-          </span>
-          <span>Notes</span>
-          <span>Practice</span>
-        </div>
-        <span className="rounded-full bg-[#EEF4FF] px-3 py-1 text-[10px] font-semibold text-[#1F6BFF]">
-          Live workspace
-        </span>
-      </div>
-
-      <div className="mt-5 grid h-[310px] grid-rows-[84px_1fr_68px] gap-4">
-        <div className="rounded-lg border border-[#EEEEF0] bg-[#F3F8FF] p-4">
-          <div className="h-3 w-24 rounded-full bg-[#D9D9DE]" />
-          <div className="mt-3 h-3 w-[72%] rounded-full bg-[#E5E7EB]" />
-          <div className="mt-2 h-3 w-[54%] rounded-full bg-[#E5E7EB]" />
-        </div>
-
-        <div className="grid gap-4 sm:grid-cols-[1.1fr_0.9fr]">
-          <div className="rounded-lg border border-[#EEEEF0] p-4">
-            <div className="h-3 w-20 rounded-full bg-[#D9D9DE]" />
-            <div className="mt-4 space-y-3">
-              <div className="h-11 rounded-md bg-[#F3F8FF]" />
-              <div className="h-11 rounded-md bg-[#F3F8FF]" />
-              <div className="h-11 rounded-md bg-[#F3F8FF]" />
-            </div>
-          </div>
-          <div className="sequence-ui-grid rounded-lg border border-[#EEEEF0] bg-[#FBFCFD] p-4">
-            <div className="grid h-full place-items-center">
-              <div className="grid h-24 w-24 place-items-center rounded-full border border-[#D7E3F2] bg-white shadow-sm">
-                <div className="h-10 w-10 rounded-lg bg-[#EEF4FF]" />
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div className="grid grid-cols-3 gap-3">
-          <div className="rounded-lg border border-[#EEEEF0] bg-[#F3F8FF] p-3">
-            <div className="h-2.5 w-12 rounded-full bg-[#D9D9DE]" />
-            <div className="mt-2 h-5 rounded bg-white" />
-          </div>
-          <div className="rounded-lg border border-[#EEEEF0] bg-[#F3F8FF] p-3">
-            <div className="h-2.5 w-12 rounded-full bg-[#D9D9DE]" />
-            <div className="mt-2 h-5 rounded bg-white" />
-          </div>
-          <div className="rounded-lg border border-[#EEEEF0] bg-[#F3F8FF] p-3">
-            <div className="h-2.5 w-12 rounded-full bg-[#D9D9DE]" />
-            <div className="mt-2 h-5 rounded bg-white" />
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-}
-
-function InstructorPlaceholder() {
-  return (
-    <div className="relative h-full overflow-hidden border-b border-[#EEEEF0] bg-[#0B1739] p-5 text-white md:border-b-0 md:border-r">
-      <div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_10%,rgba(31,107,255,0.34),transparent_34%),radial-gradient(circle_at_78%_88%,rgba(119,232,233,0.12),transparent_30%)]" />
-      <div className="relative flex h-full flex-col">
-        <div className="flex items-center justify-between">
-          <span className="rounded-full border border-white/15 bg-white/10 px-3 py-1 text-[11px] font-medium">
-            AI Instructor
-          </span>
-          <span className="flex items-center gap-2 text-[11px] text-[#C8D5EA]">
-            <span className="h-2 w-2 rounded-full bg-[#38D68A]" />
-            Ready
-          </span>
-        </div>
-
-        <div className="flex flex-1 flex-col items-center justify-center py-6 text-center">
-          <div className="relative grid h-28 w-28 place-items-center rounded-full border border-white/15 bg-white/10">
-            <div className="absolute inset-3 rounded-full border border-[#6EA4FF]/35" />
-            <div className="grid h-14 w-14 place-items-center rounded-full bg-white text-sm font-semibold text-[#0B1739]">
-              AI
-            </div>
-          </div>
-          <p className="mt-5 text-[15px] font-medium">Instructor placeholder</p>
-          <p className="mt-2 max-w-[190px] text-[12px] leading-5 text-[#B7C5DA]">
-            Real time teaching will appear here.
-          </p>
-        </div>
-
-        <div className="flex items-center gap-2">
-          <button
-            type="button"
-            className="grid h-9 w-9 place-items-center rounded-full border border-white/15 bg-white/10"
-            aria-label="Voice placeholder"
-          >
-            <MessageSquareText className="h-4 w-4" />
-          </button>
-          <button
-            type="button"
-            className="grid h-9 w-9 place-items-center rounded-full border border-white/15 bg-white/10"
-            aria-label="Lesson tools placeholder"
-          >
-            <Sparkles className="h-4 w-4" />
-          </button>
-          <button
-            type="button"
-            className="grid h-9 w-9 place-items-center rounded-full border border-white/15 bg-white/10"
-            aria-label="Play placeholder"
-          >
-            <Play className="h-4 w-4" />
-          </button>
-        </div>
-      </div>
-    </div>
-  );
-}
-
 function HeroProductPreview() {
   return (
     <motion.div
@@ -369,7 +239,7 @@ function HeroProductPreview() {
         ease: [0.22, 1, 0.36, 1],
       }}
 className="relative mx-auto mt-16 w-full max-w-[760px] overflow-hidden rounded-[24px] border border-[#DCE6F5] bg-white shadow-[0_28px_80px_rgba(15,35,75,0.12)]"    >
-      <img
+      <Image unoptimized width={1200} height={800}
         src="/learning-workspace-demo.png"
         alt="GAHN AI private instructor and Magic Canvas learning workspace"
         className="block h-auto w-full"
@@ -526,7 +396,7 @@ function HistoryLessonUI() {
       transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
       className="mx-auto w-full max-w-[760px] overflow-hidden rounded-[24px] border border-[#DCE6F5] bg-white shadow-[0_24px_70px_rgba(15,35,75,0.10)]"
     >
-      <img
+      <Image unoptimized width={1200} height={800}
         src="/magic-canvas.png"
         alt="GAHN AI School Help lesson with an AI instructor and Magic Canvas"
         className="block h-auto w-full"
@@ -618,7 +488,7 @@ function LearningToolsPanel() {
       transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
       className="mx-auto w-full max-w-[760px] overflow-hidden rounded-[24px] border border-[#DCE6F5] bg-white shadow-[0_24px_70px_rgba(15,35,75,0.10)]"
     >
-      <img
+      <Image unoptimized width={1200} height={800}
         src="/dashboardui.png"
         alt="GAHN AI learner dashboard with learning worlds, notes, study guides, progress, feedback, and assigned homework"
         className="block h-auto w-full"
@@ -924,12 +794,12 @@ function CapabilityGrid() {
     {
       title: "Adaptive re teaching",
       text: "Change the explanation when a learner is still confused.",
-      icon: Sparkles,
+      icon: CanvasIcon,
     },
     {
       title: "Active recall",
       text: "Bring back material from earlier lessons for retrieval practice.",
-      icon: Brain,
+      icon: BrainWorldIcon,
     },
     {
       title: "Saved notes",
