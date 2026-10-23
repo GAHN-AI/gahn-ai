@@ -40,7 +40,7 @@ const plans: Plan[] = [
     featured: true,
     features: [
       "Everything in Free Plan",
-      "30 live AI instructor minutes each day",
+      "Live AI instructor minutes to be finalized before launch",
       "Real time voice conversations with your AI instructor",
       "Adaptive re teaching when you are still confused",
       "Mastery checks with retries before moving on",
@@ -58,7 +58,7 @@ const plans: Plan[] = [
     available: false,
     features: [
       "Everything in Learner Plus",
-      "90 live AI instructor minutes each day",
+      "Extended live instructor usage (final allowance pending)",
       "Advanced Magic Canvas tools",
       "Code workspace for technical lessons",
       "Browser assisted learning workspace",
@@ -76,7 +76,7 @@ const plans: Plan[] = [
     available: false,
     features: [
       "Everything in Mastery",
-      "180 live AI instructor minutes each day",
+      "Career-focused live instructor usage (final allowance pending)",
       "Structured career programs",
       "Portfolio and project based learning",
       "Career simulations for real work scenarios",
@@ -90,7 +90,7 @@ const plans: Plan[] = [
 const comparisonRows = [
   ["All five learning worlds", "Included", "Included", "Included", "Included"],
   ["AI guided text lessons", "Included", "Included", "Included", "Included"],
-  ["Live AI instructor time", "None", "30 min", "90 min", "180 min"],
+  ["Live AI instructor time", "Not included", "Not finalized", "Not finalized", "Not finalized"],
   ["Homework file uploads", "Not included", "Included", "Included", "Included"],
   ["Study guides and review questions", "Not included", "Included", "Included", "Included"],
   ["Advanced Magic Canvas", "Not included", "Not included", "Included", "Included"],
@@ -271,7 +271,7 @@ export default function PricingPage() {
             Choose the learning plan that fits you
           </h1>
           <p className="mx-auto mt-5 max-w-3xl text-base font-medium leading-7 text-black">
-            Every plan starts with the same five learning worlds. Higher plans add more live instructor time, stronger learning tools, and career focused features.
+            The Free Plan includes guided text lessons across five Learning Worlds. Proposed paid plans will add video instruction and advanced tools after launch.
           </p>
         </div>
       </section>
@@ -303,7 +303,7 @@ export default function PricingPage() {
               See exactly what changes between plans
             </h2>
             <p className="mx-auto mt-4 max-w-2xl text-base leading-7 text-black">
-              Paid plans are previews of what GAHN AI is building. Subscriptions are not available yet.
+              Paid plans are previews of what GAHN AI is building. Subscriptions are not available yet. Live instructor-minute allowances and usage limits will be finalized after provider pricing and testing.
             </p>
           </div>
 
