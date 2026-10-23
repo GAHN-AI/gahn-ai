@@ -34,8 +34,8 @@ This review builds on main after PR #25. It preserves the existing application, 
 | `/learn/[world]/[section]/[topic]` | Study-plan, navigation, HTTP, and paused-workspace checks |
 | `/learn/[world]/[section]` | Study-plan, navigation, HTTP, and paused-workspace checks |
 | `/learn/[world]` | Study-plan, navigation, HTTP, and paused-workspace checks |
-| `/learn/career-skills/[section]` | Curriculum, artwork, and HTTP route checks passed; browser visual review pending |
-| `/learn/career-skills/industry/[industry]` | Curriculum, artwork, and HTTP route checks passed; browser visual review pending |
+| `/learn/career-skills/[section]` | Curriculum, artwork, and HTTP route checks passed; representative desktop and responsive browser review passed |
+| `/learn/career-skills/industry/[industry]` | Curriculum, artwork, and HTTP route checks passed; representative desktop and responsive browser review passed |
 | `/learn/school-help/homework-upload` | Study-plan, navigation, HTTP, and paused-workspace checks |
 | `/lesson/[lessonId]` | Study-plan, navigation, HTTP, and paused-workspace checks |
 | `/login` | Public source, wording, navigation, and read-only HTTP checks where listed |
@@ -56,7 +56,7 @@ This review builds on main after PR #25. It preserves the existing application, 
 
 The automated curriculum acceptance check validates all 41 catalog/roadmap/course mappings, 876 lesson IDs and preview links, 41 distinct local illustration files, 56 non-career study plans, and disabled teaching/video/purchase entitlements. All existing public image URLs inspected during this review returned HTTP 200 (41 distinct URLs).
 
-Local lint, TypeScript, and the telemetry-disabled production build passed. The initial read-only HTTP pass checked 270 public pages/assets, eight signed-out account redirects, and three paused API endpoints without failures. The Vercel deployment-preview build passed. Direct browser inspection reached Vercel Authentication. Automatic approval review rejected a temporary access-link request because it would broaden protected-preview access. No deployment protection was changed; desktop, tablet, and mobile browser review remains pending. The temporary responsive review helper has been removed from the merge candidate. Browser-only or account-write checks must not be described as passed without direct evidence.
+Local lint, TypeScript, and the telemetry-disabled production build passed. The initial read-only HTTP pass checked 270 public pages/assets, eight signed-out account redirects, and three paused API endpoints without failures. The Vercel deployment-preview build passed. On October 23, the owner supplied an authorized preview link. Browser review covered the homepage, career directory, Software & IT cards, Software Developer / Engineer curriculum, selected-lesson workspace and return link, School Help grade navigation, and pricing at desktop width. A temporary same-origin iframe harness reviewed phone (390px frame, 375px content with scrollbar) and tablet (768px frame) layouts for the homepage, career cards and curriculum, all four non-career world directories, pricing, login, and signup. The phone pages inspected had no document-level horizontal overflow; curriculum expand/collapse and the mobile navigation menu worked. These are responsive Chromium checks, not physical-device or Safari tests. Visual review found cramped pricing descriptions and remaining decorative blue checks; descriptions now occupy the card width and feature lists use plain bullets. The follow-up Vercel production build passed. No deployment protection settings were changed. The temporary responsive review helper has been removed from the merge candidate. Browser-only or account-write checks must not be described as passed without direct evidence.
 
 ## Validation limits and future work
 
