@@ -721,16 +721,16 @@ export default function LearningStudio({
           </div>
           <div role="group" aria-label="Instructor controls (preview only)" className="mt-3 grid grid-cols-3 gap-2">
             <button type="button" onClick={toggleMicrophone} aria-pressed={!micMuted} disabled={!INTERACTIVE_LESSONS_AVAILABLE} title={!INTERACTIVE_LESSONS_AVAILABLE ? "Available when interactive lessons launch" : undefined}
-              className={`flex min-h-14 flex-col items-center justify-center gap-1 rounded-xl border px-2 py-2 text-xs font-bold ${micMuted ? "border-[#D7E3F2] text-[#53657D]" : "border-[#1677FF] bg-[#EAF3FF] text-[#1677FF]"}`}>
+              className={`flex min-h-14 flex-col items-center justify-center gap-1 rounded-xl border px-2 py-2 text-xs font-bold disabled:cursor-not-allowed disabled:opacity-50 ${micMuted ? "border-[#D7E3F2] text-[#53657D]" : "border-[#1677FF] bg-[#EAF3FF] text-[#1677FF]"}`}>
               {micMuted ? <MicOff className="h-4 w-4" /> : <Mic className="h-4 w-4" />}
               {micMuted ? "Unmute" : "Mute"}
             </button>
             <button type="button" onClick={focusText} aria-pressed={textSelected} disabled={!INTERACTIVE_LESSONS_AVAILABLE} title={!INTERACTIVE_LESSONS_AVAILABLE ? "Available when interactive lessons launch" : undefined}
-              className="flex min-h-14 flex-col items-center justify-center gap-1 rounded-xl border border-[#1677FF] bg-[#EAF3FF] px-2 py-2 text-xs font-bold text-[#1677FF]">
+              className="flex min-h-14 flex-col items-center justify-center gap-1 rounded-xl border border-[#1677FF] bg-[#EAF3FF] px-2 py-2 text-xs font-bold text-[#1677FF] disabled:cursor-not-allowed disabled:opacity-50">
               <MessageSquareText className="h-4 w-4" />Text
             </button>
             <button type="button" onClick={toggleSound} aria-pressed={soundOn} disabled={!INTERACTIVE_LESSONS_AVAILABLE} title={!INTERACTIVE_LESSONS_AVAILABLE ? "Available when interactive lessons launch" : undefined}
-              className={`flex min-h-14 flex-col items-center justify-center gap-1 rounded-xl border px-2 py-2 text-xs font-bold ${soundOn ? "border-[#D7E3F2] text-[#53657D]" : "border-[#1677FF] bg-[#EAF3FF] text-[#1677FF]"}`}>
+              className={`flex min-h-14 flex-col items-center justify-center gap-1 rounded-xl border px-2 py-2 text-xs font-bold disabled:cursor-not-allowed disabled:opacity-50 ${soundOn ? "border-[#D7E3F2] text-[#53657D]" : "border-[#1677FF] bg-[#EAF3FF] text-[#1677FF]"}`}>
               {soundOn ? <Volume2 className="h-4 w-4" /> : <VolumeX className="h-4 w-4" />}
               {soundOn ? "Sound on" : "Sound off"}
             </button>
