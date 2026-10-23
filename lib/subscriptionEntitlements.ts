@@ -15,8 +15,8 @@ export type SubscriptionEntitlements = {
   // Availability
   purchaseEnabled: boolean;
 
-  // Core signed-in text lessons are independent of paid video access.
-  // Every plan can start a text lesson; add-ons remain independently gated.
+  // Prelaunch: no public text teaching or live video for any plan.
+  // Enabling this entitlement alone must never bypass lessonLaunch.ts.
   textLessons: boolean;
 
   // Learning access
@@ -97,7 +97,7 @@ export const SUBSCRIPTION_ENTITLEMENTS: Record<
 
     purchaseEnabled: true,
 
-    textLessons: true,
+    textLessons: false,
 
     allLearningWorlds: true,
     multilingualLearning: true,
@@ -162,7 +162,7 @@ export const SUBSCRIPTION_ENTITLEMENTS: Record<
 
     purchaseEnabled: false,
 
-    textLessons: true,
+    textLessons: false,
 
     allLearningWorlds: true,
     multilingualLearning: true,
@@ -225,7 +225,7 @@ export const SUBSCRIPTION_ENTITLEMENTS: Record<
 
     purchaseEnabled: false,
 
-    textLessons: true,
+    textLessons: false,
 
     allLearningWorlds: true,
     multilingualLearning: true,
@@ -288,7 +288,7 @@ export const SUBSCRIPTION_ENTITLEMENTS: Record<
 
     purchaseEnabled: false,
 
-    textLessons: true,
+    textLessons: false,
 
     allLearningWorlds: true,
     multilingualLearning: true,
@@ -351,7 +351,7 @@ export const SUBSCRIPTION_ENTITLEMENTS: Record<
 
     purchaseEnabled: false,
 
-    textLessons: true,
+    textLessons: false,
 
     allLearningWorlds: true,
     multilingualLearning: true,
@@ -416,7 +416,7 @@ export const SUBSCRIPTION_ENTITLEMENTS: Record<
 
     purchaseEnabled: false,
 
-    textLessons: true,
+    textLessons: false,
 
     allLearningWorlds: true,
     multilingualLearning: true,
@@ -481,7 +481,7 @@ export const SUBSCRIPTION_ENTITLEMENTS: Record<
 
     purchaseEnabled: false,
 
-    textLessons: true,
+    textLessons: false,
 
     allLearningWorlds: true,
     multilingualLearning: true,
