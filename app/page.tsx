@@ -397,7 +397,7 @@ function Hero() {
           </h1>
 
           <p className="mx-auto mt-5 max-w-[560px] text-[15.75px] font-normal leading-7 tracking-[-0.4px] text-black">
-            Choose from five learning worlds and learn with a private AI instructor designed to teach, check understanding, and adapt when you get stuck.
+            Explore five Learning Worlds and preview an AI instructor experience being developed to teach, check understanding, and adapt when you get stuck.
           </p>
 
           <div className="mx-auto mt-6 max-w-[600px] rounded-2xl border border-[#BFD7FF] bg-[#F1F7FF] px-5 py-4 text-center">
@@ -759,10 +759,10 @@ function SystemSection() {
             What happens in a GAHN lesson
           </span>
           <h2 className="mx-auto mt-5 max-w-[700px] text-[34px] font-medium leading-[48px] tracking-[-0.9px] text-black sm:text-[36px]">
-            GAHN teaches, checks your answer, fixes misunderstandings, and keeps the lesson moving.
+            GAHN is being developed to teach, check answers, and help learners work through misunderstandings.
           </h2>
           <p className="mx-auto mt-5 max-w-[650px] text-[15.75px] leading-7 text-black">
-            The MVP is built around one private teaching loop. You learn a concept, respond, get checked, receive a different explanation when needed, practice again, and carry your learning history into the next session.
+            The planned teaching experience uses a private learning loop: the instructor explains a concept, checks your answer, revisits confusion, and saves useful learning evidence. Interactive lessons are not available during early access.
           </p>
         </div>
 
@@ -823,7 +823,7 @@ function WorldsSection() {
             </h2>
           </div>
           <p className="max-w-[540px] text-[15.75px] leading-7 text-black lg:justify-self-end">
-            Every learning world is available. Choose the area you want to learn, then open a path and work through it with the same private AI teaching system.
+            All five Learning Worlds are open for browsing. Explore paths and practical skill roadmaps now; interactive teaching sessions will launch later.
           </p>
         </div>
 
@@ -882,10 +882,10 @@ function WorldsSection() {
 
 function StepsSection() {
   const steps = [
-    ["Create your account", "Start free and set up your learner profile."],
-    ["Choose a learning world", "Pick any of the five learning worlds."],
-    ["Start a lesson", "Learn with explanations, questions, and practice."],
-    ["Save what matters", "Keep notes, study guides, and progress."],
+    ["Join early access", "Create a free account for launch updates."],
+    ["Explore a learning world", "Browse planned topics and career paths."],
+    ["Preview the workspace", "See the future instructor and Magic Canvas layout."],
+    ["Get launch updates", "Return when interactive AI lessons are ready."],
   ];
 
   return (
@@ -895,7 +895,7 @@ function StepsSection() {
           Get started
         </span>
         <h2 className="mt-5 max-w-[520px] text-[34px] font-medium leading-[48px] tracking-[-0.9px] text-black sm:text-[36px]">
-          Start learning in a few simple steps.
+          Explore GAHN in a few simple steps.
         </h2>
 
         <div className="mt-14 grid gap-8 md:grid-cols-4">
@@ -1076,7 +1076,7 @@ function ClosingCta() {
             href="/signup" onClick={() => posthog.capture("signup_clicked", { location: "homepage" })}
             className="inline-flex h-10 items-center justify-center rounded-full bg-[#1677FF] px-6 text-[14px] font-medium text-white transition-colors hover:bg-[#0E63E8]"
           >
-            Start free
+            Join early access
           </Link>
           <Link
             href="/pricing"
