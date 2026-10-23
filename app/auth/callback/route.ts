@@ -150,7 +150,7 @@ export async function GET(request: Request) {
         <div style="font-family:Arial,sans-serif;max-width:600px;margin:auto;padding:32px;color:#0B1739">
           <h1>Welcome to GAHN AI</h1>
           <p>Hi ${safeName},</p>
-          <p>Your account is ready. You can now start learning and track your progress.</p>
+          <p>Your free early-access account is ready. Explore GAHN's Learning Worlds and planned features now. Interactive AI lessons are still in development, and we will email you when the learning experience launches.</p>
           <p><a href="${SITE_URL}/dashboard" style="display:inline-block;background:#1677FF;color:#fff;text-decoration:none;padding:12px 18px;border-radius:10px">Open Your Dashboard</a></p>
         </div>
       `,

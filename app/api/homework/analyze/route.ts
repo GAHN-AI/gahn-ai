@@ -4,6 +4,7 @@ import { cookies } from "next/headers";
 
 import { supabaseAdmin } from "@/lib/supabaseAdmin";
 import { requireEntitlement } from "@/lib/requireEntitlement";
+import { INTERACTIVE_LESSONS_AVAILABLE, LESSON_PREVIEW_MESSAGE } from "@/lib/lessonLaunch";
 import { extractOpenAIText } from "@/lib/ai/lessonEngine";
 import {
   checkAiUsageLimit,
@@ -44,6 +45,12 @@ async function getUser() {
 }
 
 export async function POST(req: Request) {
+  if (!INTERACTIVE_LESSONS_AVAILABLE) {
+    return NextResponse.json(
+      { error: LESSON_PREVIEW_MESSAGE, code: "LESSONS_NOT_LAUNCHED" },
+      { status: 503, headers: { "Cache-Control": "no-store" } }
+    );
+  }
   try {
     const user = await getUser();
 

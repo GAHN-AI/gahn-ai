@@ -1,7 +1,7 @@
 # Tavus integration handoff — GAHN AI lesson workspace
 
 ## Status
-The actual /lesson/[lessonId] route now uses LearningStudio across all five worlds. The lesson UI is prepared for a future Tavus integration; **no Tavus credentials, API requests, paid usage, or video stream are connected yet**. Do not describe the black video slot as a live instructor.
+The actual /lesson/[lessonId] route now uses LearningStudio across all five worlds. **The site is currently in public preview mode: lessons and uploads cannot start.** See [Public early-access preview mode](./public-early-access-preview-mode.md). The lesson UI is prepared for a future Tavus integration; **no Tavus credentials, API requests, paid usage, or video stream are connected yet**. Do not describe the black video slot as a live instructor.
 
 ## Shared location
 - `components/lessons/LearningStudio.tsx` is the existing cross-Learning-World lesson experience. It contains a black, responsive video mount with `data-tavus-video-slot="instructor"`, along with microphone, text, and sound controls.
@@ -20,8 +20,8 @@ The actual /lesson/[lessonId] route now uses LearningStudio across all five worl
 
 ## Required acceptance tests
 - Empty workspace shows the correct message; video is black and says Tavus is not connected.
-- Start Lesson uses the existing text engine and updates Magic Canvas without Tavus credentials.
-- Media buttons work for existing browser features without triggering provider billing.
+- During public early access, the lesson screen stays in preview mode and the teaching API returns HTTP 503 without creating any lesson, OpenAI request, or provider session.
+- Media buttons are disabled during public preview, with no provider or browser teaching session billed.
 - All five Learning Worlds reuse the shared workspace.
 - Once Tavus is licensed: provider video, audio, text fallback, real-time canvas actions, secure session creation/termination, and exact usage limits work end to end.
 

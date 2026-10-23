@@ -6,6 +6,7 @@ import { ArrowLeft, FileText, GraduationCap, Upload } from "lucide-react";
 
 import { lessonIdFromParts } from "@/lib/ai/lessonEngine";
 import { getPracticalSkillRoadmap } from "@/lib/practicalSkillRoadmaps";
+import { INTERACTIVE_LESSONS_AVAILABLE } from "@/lib/lessonLaunch";
 import { supabase } from "@/lib/supabaseClient";
 
 const levels = [
@@ -192,9 +193,8 @@ export default function HomeworkUploadPage() {
                 Homework Upload
               </h1>
               <p className="mt-4 max-w-3xl text-base font-medium leading-8 text-[#34363D]">
-                Upload the exact homework your teacher gave you. Tell GAHN the
-                subject, grade, topic, and what is confusing so the AI can read
-                the material and guide you through it.
+                The upcoming homework workspace will help learners understand their
+                assignments step by step. File upload and AI analysis are not available during early access.
               </p>
             </div>
           </div>
@@ -220,6 +220,21 @@ export default function HomeworkUploadPage() {
         </section>
       )}
 
+      {!INTERACTIVE_LESSONS_AVAILABLE ? (
+        <section className="mx-auto max-w-[1180px] px-5 py-8 sm:px-8">
+          <div className="rounded-2xl border border-[#D7E3F2] bg-[#F1F7FF] p-6 sm:p-8">
+            <p className="text-xs font-bold uppercase tracking-[0.14em] text-[#0B5CFF]">Early access preview</p>
+            <h2 className="mt-2 text-2xl font-bold text-[#0B1739]">Homework help is coming later</h2>
+            <p className="mt-3 max-w-2xl text-sm leading-7 text-[#40536D]">
+              GAHN is not accepting homework uploads yet. This feature will become available after the
+              AI instructor is ready. You can explore School Help topics and planned learning skills now.
+            </p>
+            <Link href="/learn/school-help" className="mt-5 inline-flex rounded-xl bg-[#0B5CFF] px-5 py-3 text-sm font-bold text-white">
+              Explore School Help
+            </Link>
+          </div>
+        </section>
+      ) : (
       <div className="mx-auto grid max-w-[1180px] gap-6 px-5 py-8 sm:px-8 lg:grid-cols-[minmax(0,0.9fr)_minmax(0,1.1fr)]">
         <section className="rounded-[16px] border border-[#E1E3E8] bg-white p-6 shadow-[0_16px_40px_rgba(11,23,57,0.05)] sm:p-7">
           <p className="text-xs font-semibold uppercase tracking-[0.16em] text-[#0B5CFF]">
@@ -385,6 +400,7 @@ export default function HomeworkUploadPage() {
           )}
         </section>
       </div>
+      )}
     </main>
   );
 }

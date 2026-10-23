@@ -265,7 +265,7 @@ export default function SignupPage() {
         <section className="grid min-h-[calc(100vh-140px)] items-center py-10 sm:py-14 lg:grid-cols-[0.92fr_1.08fr] lg:gap-10">
           <div className="hidden pr-6 lg:block">
             <p className="text-xs font-bold uppercase tracking-[0.24em] text-[#1677FF]">
-              Start Learning
+              Join Early Access
             </p>
             <h1 className="mt-5 max-w-xl text-5xl font-extrabold leading-[1.04] tracking-[-0.04em]">
               Build your own path with{" "}

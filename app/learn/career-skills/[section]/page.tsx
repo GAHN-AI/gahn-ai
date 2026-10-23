@@ -94,7 +94,7 @@ export default function CareerSectionPage() {
               href={lessonHref}
               className="mt-6 inline-flex h-11 items-center justify-center gap-2 rounded-lg bg-[#0B5CFF] px-5 text-sm font-semibold text-white transition hover:bg-[#094FD9]"
             >
-              Start private lesson
+              Preview workspace
               <ArrowRight className="h-4 w-4" />
             </Link>
           </div>
@@ -112,7 +112,7 @@ export default function CareerSectionPage() {
             Skills you&apos;ll learn
           </h2>
           <p className="mt-3 max-w-[780px] text-[14px] leading-6 text-[#3C3E45]">
-            Each stage includes specific knowledge, digital practice, collaboration and a project or simulation you can demonstrate.
+            Each stage outlines practical digital skills, teamwork, and project outcomes planned for GAHN's future instructor-led lessons.
           </p>
           <p className="mt-2 max-w-[780px] text-xs leading-5 text-[#64748B]">
             Earnings categories are broad planning guidance, not salary quotes. Remote jobs and employment are not guaranteed.

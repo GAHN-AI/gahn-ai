@@ -26,6 +26,7 @@ import {
 } from "lucide-react";
 
 import { supabase } from "@/lib/supabaseClient";
+import { INTERACTIVE_LESSONS_AVAILABLE } from "@/lib/lessonLaunch";
 
 const sidebarItems: { label: string; Icon: LucideIcon; href: string }[] = [
   { label: "Recents", Icon: Clock3, href: "/dashboard" },
@@ -457,9 +458,9 @@ export default function DashboardPage() {
             {showWelcome && (
               <div role="status" className="mb-6 flex items-start justify-between gap-4 rounded-xl border border-[#BBD3FF] bg-[#F1F7FF] px-5 py-4">
                 <div>
-                  <p className="text-base font-semibold text-[#0B1739]">Your Free Plan account is ready</p>
+                  <p className="text-base font-semibold text-[#0B1739]">Your free early-access account is ready</p>
                   <p className="mt-1 text-sm leading-6 text-[#3B4F75]">
-                    This is your new learning account. Explore the five learning worlds whenever you're ready.
+                    Your account is ready to browse all five Learning Worlds. Instructor-led lessons are still in development.
                   </p>
                 </div>
                 <button
@@ -469,6 +470,15 @@ export default function DashboardPage() {
                 >
                   Dismiss
                 </button>
+              </div>
+            )}
+            {!INTERACTIVE_LESSONS_AVAILABLE && (
+              <div role="status" className="mb-6 rounded-xl border border-[#BDD3FF] bg-[#F1F7FF] px-5 py-4">
+                <p className="text-sm font-bold text-[#0B1739]">GAHN AI early access</p>
+                <p className="mt-1 text-sm leading-6 text-[#40536D]">
+                  You can explore career paths, learning topics and the future lesson workspace.
+                  Interactive AI lessons are not available yet. Your account remains active for launch updates.
+                </p>
               </div>
             )}
             <div>
@@ -628,7 +638,7 @@ export default function DashboardPage() {
                         No lesson started yet
                       </h3>
                       <p className="mt-2 text-sm leading-6 text-[#6C6D75]">
-                        Open a learning world and start your first lesson.
+                        Explore a learning world and preview the upcoming lesson workspace.
                       </p>
                     </button>
                   )}

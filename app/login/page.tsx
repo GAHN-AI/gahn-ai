@@ -223,8 +223,8 @@ export default function LoginPage() {
             </h1>
 
             <p className="mt-6 max-w-xl text-lg leading-8 text-black">
-              Return to your dashboard, continue saved lessons, review progress,
-              and pick up exactly where you left off.
+              Return to your dashboard, browse the upcoming Learning Worlds and
+              review any previously saved learning notes or progress.
             </p>
 
             <div className="mt-10 space-y-6">

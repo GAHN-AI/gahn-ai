@@ -20,14 +20,14 @@ const plans: Plan[] = [
     name: "Free Plan",
     price: "$0",
     description:
-      "Start learning across all five learning worlds with the core GAHN lesson experience.",
+      "Create a free early-access account, browse the Learning Worlds, and see what GAHN is developing.",
     available: true,
     features: [
-      "Access to all five learning worlds",
-      "AI guided text lessons",
-      "Magic Canvas for examples and lesson content",
-      "Progress saved across lessons",
-      "Save your own lesson notes",
+      "Free early-access account",
+      "Explore all five Learning Worlds",
+      "Browse detailed skills and topic roadmaps",
+      "Preview the instructor and Magic Canvas workspace",
+      "Receive launch updates by email",
     ],
   },
   {
@@ -88,8 +88,8 @@ const plans: Plan[] = [
 ];
 
 const comparisonRows = [
-  ["All five learning worlds", "Included", "Included", "Included", "Included"],
-  ["AI guided text lessons", "Included", "Included", "Included", "Included"],
+  ["Learning World and curriculum previews", "Included", "Included", "Included", "Included"],
+  ["Interactive lessons", "Not launched", "Planned", "Planned", "Planned"],
   ["Live AI instructor time", "Not included", "Not finalized", "Not finalized", "Not finalized"],
   ["Homework file uploads", "Not included", "Included", "Included", "Included"],
   ["Study guides and review questions", "Not included", "Included", "Included", "Included"],
@@ -135,7 +135,7 @@ function PlanCard({
               : "bg-[#F2F4F7] text-[#667085]")
           }
         >
-          {plan.available ? "AVAILABLE" : "COMING LATER"}
+          {plan.available ? "EARLY ACCESS" : "COMING LATER"}
         </span>
       </div>
 
@@ -152,7 +152,7 @@ function PlanCard({
             href="/signup"
             className="flex h-12 w-full items-center justify-center gap-2 rounded-xl bg-[#1677FF] px-5 text-sm font-black text-white transition hover:bg-[#0F67E8]"
           >
-            Start free
+            Join early access
             <ArrowRight className="h-4 w-4" />
           </Link>
         ) : isPlus && plan.available ? (
@@ -271,7 +271,7 @@ export default function PricingPage() {
             Choose the learning plan that fits you
           </h1>
           <p className="mx-auto mt-5 max-w-3xl text-base font-medium leading-7 text-black">
-            The Free Plan includes guided text lessons across five Learning Worlds. Proposed paid plans will add video instruction and advanced tools after launch.
+            Early access is free. You can browse the Learning Worlds and preview the future workspace; interactive lessons and paid plans are not launched yet.
           </p>
         </div>
       </section>
@@ -350,7 +350,7 @@ export default function PricingPage() {
               One learning system
             </p>
             <h2 className="mt-3 text-3xl font-black tracking-[-0.035em]">
-              Explore GAHN AI while we build the full learning experience.
+              Explore GAHN AI before interactive lessons launch.
             </h2>
             <p className="mt-4 text-base leading-7 text-white">
               Paid AI instructor plans are coming later. The full learning experience is still in development.
@@ -361,7 +361,7 @@ export default function PricingPage() {
             href="/signup"
             className="inline-flex h-12 shrink-0 items-center justify-center gap-2 rounded-xl bg-white px-6 text-sm font-black text-[#0B5CFF] transition hover:bg-[#F3F7FF]"
           >
-            Start free
+            Join early access
             <ArrowRight className="h-4 w-4" />
           </Link>
         </div>

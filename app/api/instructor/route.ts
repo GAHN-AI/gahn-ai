@@ -6,6 +6,7 @@ import { supabaseAdmin } from "@/lib/supabaseAdmin";
 import { requireEntitlement } from "@/lib/requireEntitlement";
 import { buildInstructorPrompt } from "@/lib/ai/instructorPrompt";
 import { getCareerSection } from "@/lib/careerCatalog";
+import { INTERACTIVE_LESSONS_AVAILABLE, LESSON_PREVIEW_MESSAGE } from "@/lib/lessonLaunch";
 import {
   checkAiUsageLimit,
   recordAiUsage,
@@ -585,6 +586,15 @@ async function saveEvidence(args: {
 }
 
 export async function POST(req: Request) {
+  // Explicit server-side prelaunch gate: no fallback AI text responses,
+  // session writes, or OpenAI requests while interactive lessons are paused.
+  if (!INTERACTIVE_LESSONS_AVAILABLE) {
+    return NextResponse.json(
+      { error: LESSON_PREVIEW_MESSAGE, code: "LESSONS_NOT_LAUNCHED" },
+      { status: 503, headers: { "Cache-Control": "no-store" } }
+    );
+  }
+
   try {
     const user = await authenticatedUser();
 
@@ -616,9 +626,9 @@ export async function POST(req: Request) {
       }
     }
 
-    // Core text teaching, including Magic Canvas and lesson persistence, is
-    // available on the Free Plan. This endpoint never creates a Tavus or
-    // LiveAvatar video session. Video and add-on features are checked elsewhere.
+    // Reserved for a future approved teaching release. Both the global
+    // launch policy above and the per-plan entitlement must permit lessons
+    // before this code can run. No Tavus/LiveAvatar session starts here.
     const access = await requireEntitlement(user.id, "textLessons");
 
     if (!access.allowed) {

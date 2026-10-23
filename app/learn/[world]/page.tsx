@@ -202,6 +202,13 @@ export default function LearningWorldPage() {
 
         </section>
 
+        {available && (
+          <div className="mt-7 rounded-xl border border-[#D7E3F2] bg-[#F1F7FF] p-5 text-sm leading-6 text-[#40536D]">
+            <p className="font-semibold text-[#0B1739]">Learning World preview</p>
+            <p className="mt-1">You can explore subjects and skill roadmaps today. Interactive AI lessons and the video instructor will be available after launch.</p>
+          </div>
+        )}
+
         {!available && (
           <div className="mt-7 rounded-xl border border-[#E1E3E8] bg-white p-5 text-sm text-[#4F515A]">
             This learning world is not available yet.
