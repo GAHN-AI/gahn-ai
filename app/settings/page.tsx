@@ -16,6 +16,7 @@ import {
   UserRound,
 } from "lucide-react";
 import { supabase } from "@/lib/supabaseClient";
+import { INTERACTIVE_LESSONS_AVAILABLE } from "@/lib/lessonLaunch";
 
 const SOUND_KEY = "gahn-lesson-sound-enabled";
 const AUTOREAD_KEY = "gahn-lesson-auto-read";
@@ -140,7 +141,7 @@ export default function SettingsPage() {
           </span>
           <div>
             <h1 className="text-3xl font-extrabold tracking-tight">Settings</h1>
-            <p className="mt-1 text-sm text-[#53657D]">Account, lesson audio and security controls.</p>
+            <p className="mt-1 text-sm text-[#53657D]">Account and security controls. Interactive lesson settings will appear when lessons launch.</p>
           </div>
         </div>
 
@@ -171,6 +172,7 @@ export default function SettingsPage() {
           </div>
         </section>
 
+        {INTERACTIVE_LESSONS_AVAILABLE && (
         <section aria-labelledby="settings-learning" className="mt-6 overflow-hidden rounded-2xl border border-[#D7E3F2] bg-white">
           <div className="flex items-center gap-3 border-b border-[#E5ECF5] px-5 py-4">
             <Headphones className="h-5 w-5 text-[#1677FF]" />
@@ -200,6 +202,7 @@ export default function SettingsPage() {
           </div>
           <p className="px-5 pb-4 text-xs text-[#64748B]">Audio preferences are saved in this browser, not across devices. Microphone access always starts muted.</p>
         </section>
+        )}
 
         {paidPlan && (
           <section aria-labelledby="settings-billing" className="mt-6 rounded-2xl border border-[#D7E3F2] bg-white p-5">
