@@ -44,8 +44,6 @@ export default function LiveAnalyticsDashboard() {
 
   const load = useCallback(async () => {
     try {
-      setLoading(true);
-
       const response = await fetch("/api/admin/analytics", {
         cache: "no-store",
       });
@@ -76,10 +74,10 @@ export default function LiveAnalyticsDashboard() {
   }, []);
 
   useEffect(() => {
-    void load();
+    void Promise.resolve().then(load);
 
     const interval = window.setInterval(() => {
-      void load();
+      void Promise.resolve().then(load);
     }, 30_000);
 
     return () => window.clearInterval(interval);
@@ -105,7 +103,7 @@ export default function LiveAnalyticsDashboard() {
 
             <button
               type="button"
-              onClick={() => void load()}
+              onClick={() => { setLoading(true); void load(); }}
               disabled={loading}
               className="inline-flex h-10 items-center justify-center gap-2 rounded-xl border border-white/15 bg-white/10 px-4 text-xs font-black text-white transition hover:bg-white/15 disabled:opacity-60"
             >

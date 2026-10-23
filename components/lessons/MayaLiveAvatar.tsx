@@ -58,6 +58,7 @@ export default function MayaLiveAvatar({
   const [usage, setUsage] = useState<UsageStatus | null>(null);
   const [usageLoading, setUsageLoading] = useState(true);
   const [isStarting, setIsStarting] = useState(false);
+  const [hasSession, setHasSession] = useState(false);
   const [isEnding, setIsEnding] = useState(false);
   const [sessionLimitSeconds, setSessionLimitSeconds] = useState(0);
 
@@ -70,8 +71,6 @@ export default function MayaLiveAvatar({
 
   async function loadUsage() {
     try {
-      setUsageLoading(true);
-
       const response = await fetch("/api/liveavatar/usage", {
         cache: "no-store",
       });
@@ -160,6 +159,7 @@ export default function MayaLiveAvatar({
       if (sessionRef.current) {
         await sessionRef.current.stop();
         sessionRef.current = null;
+      setHasSession(false);
       }
 
       await finalizeUsage();
@@ -275,6 +275,7 @@ export default function MayaLiveAvatar({
       });
 
       sessionRef.current = session;
+      setHasSession(true);
 
       session.on(SessionEvent.SESSION_STREAM_READY, () => {
         if (videoRef.current) {
@@ -297,6 +298,7 @@ export default function MayaLiveAvatar({
 
         if (state === SessionState.DISCONNECTED) {
           sessionRef.current = null;
+      setHasSession(false);
           setStatus("Session ended");
           void finalizeUsage();
         }
@@ -304,6 +306,7 @@ export default function MayaLiveAvatar({
 
       session.on(SessionEvent.SESSION_DISCONNECTED, () => {
         sessionRef.current = null;
+      setHasSession(false);
         setStatus("Session ended");
         void finalizeUsage();
       });
@@ -323,6 +326,7 @@ export default function MayaLiveAvatar({
       }
 
       sessionRef.current = null;
+      setHasSession(false);
       clearSessionTimer();
       setSessionLimitSeconds(0);
       setStatus("Connection failed");
@@ -337,7 +341,7 @@ export default function MayaLiveAvatar({
   }
 
   useEffect(() => {
-    void loadUsage();
+    void Promise.resolve().then(loadUsage);
   }, []);
 
   useEffect(() => {
@@ -367,6 +371,7 @@ export default function MayaLiveAvatar({
       if (sessionRef.current) {
         sessionRef.current.stop().catch(() => {});
         sessionRef.current = null;
+      setHasSession(false);
       }
 
       closeUsageOnPageExit();
@@ -377,7 +382,7 @@ export default function MayaLiveAvatar({
     Boolean(usage?.allowed) &&
     !usageLoading &&
     !isStarting &&
-    !sessionRef.current;
+    !hasSession;
 
   return (
     <div className="flex min-h-[540px] flex-col">
@@ -463,7 +468,7 @@ export default function MayaLiveAvatar({
           <button
             type="button"
             onClick={endSession}
-            disabled={!sessionRef.current || isEnding}
+            disabled={!hasSession || isEnding}
             className="rounded-xl border border-white/25 px-4 py-3 text-sm font-black text-white disabled:cursor-not-allowed disabled:opacity-40"
           >
             {isEnding ? "Ending..." : "End"}

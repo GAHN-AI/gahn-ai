@@ -545,7 +545,7 @@ export function getSubscriptionEntitlements(
     return SUBSCRIPTION_ENTITLEMENTS.explore;
   }
 
-  if (planId in SUBSCRIPTION_ENTITLEMENTS) {
+  if (Object.prototype.hasOwnProperty.call(SUBSCRIPTION_ENTITLEMENTS, planId)) {
     return SUBSCRIPTION_ENTITLEMENTS[
       planId as SubscriptionPlanId
     ];

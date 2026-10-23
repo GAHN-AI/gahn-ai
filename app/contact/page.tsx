@@ -1,15 +1,13 @@
 "use client";
 
+import Image from "next/image";
+
+import { EvidenceIcon } from "@/components/brand/WorldIcons";
+
+
 import Link from "next/link";
 import { useState } from "react";
-import {
-  ArrowLeft,
-  Building2,
-  CheckCircle2,
-  MessageSquare,
-  Send,
-  ShieldCheck,
-} from "lucide-react";
+import { ArrowLeft, Building2, MessageSquare, Send, ShieldCheck } from "lucide-react";
 
 export default function ContactPage() {
   const [name, setName] = useState("");
@@ -70,7 +68,7 @@ export default function ContactPage() {
   }
 
   return (
-    <main className="relative min-h-screen overflow-hidden bg-white px-5 py-8 font-sans text-[#0B1739] sm:px-8 sm:py-10">
+    <main id="main-content" className="relative min-h-screen overflow-hidden bg-white px-5 py-8 font-sans text-[#0B1739] sm:px-8 sm:py-10">
       <div
         aria-hidden="true"
         className="pointer-events-none absolute inset-0 bg-[linear-gradient(135deg,#FFFFFF_0%,#FFFFFF_54%,#F5F8FC_54%,#EAF3FF_100%)]"
@@ -87,7 +85,7 @@ export default function ContactPage() {
       <div className="relative mx-auto max-w-6xl">
         <header className="flex items-center justify-between gap-4">
           <Link href="/" className="flex min-w-0 items-center gap-3">
-            <img
+            <Image unoptimized width={64} height={64}
               src="/logo/favicon.png"
               alt="GAHN AI"
               className="h-11 w-11 flex-none rounded-full object-cover"
@@ -167,7 +165,7 @@ export default function ContactPage() {
 
             <div className="mt-10 rounded-2xl border border-[#D7E3F2] bg-white/85 p-5 shadow-[0_12px_35px_rgba(11,23,57,0.05)]">
               <p className="flex items-center gap-2 text-sm font-semibold text-[#0B1739]">
-                <CheckCircle2 className="h-4 w-4 text-[#1677FF]" />
+                <EvidenceIcon className="h-4 w-4 text-[#1677FF]" />
                 Messages are handled through the GAHN AI support form.
               </p>
             </div>

@@ -52,7 +52,7 @@ export function getPracticalSkillRoadmap(
   if (worldSlug === "career-skills") {
     const key = careerSkillSteps[topic] ? topic : section;
     const details = careerSkillSteps[key];
-    return details ? buildRoadmap(details, regulatedCareers[key]) : null;
+    return Array.isArray(details) && details.length === 4 ? buildRoadmap(details as readonly [string, string, string, string], regulatedCareers[key]) : null;
   }
 
   if (worldSlug === "school-help") {
@@ -77,7 +77,7 @@ export function getPracticalSkillRoadmap(
   }
 
   const details = otherWorldSkillSteps[worldSlug]?.[section];
-  return details ? buildRoadmap(details) : null;
+  return Array.isArray(details) && details.length === 4 ? buildRoadmap(details as readonly [string, string, string, string]) : null;
 }
 
 export function practicalLessonPoints(roadmap: SkillRoadmap | null): string[] {

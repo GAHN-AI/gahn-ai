@@ -1,5 +1,7 @@
 "use client";
 
+import Image from "next/image";
+
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
@@ -57,7 +59,7 @@ export default function AssignedHomeworkPage() {
   }, [router]);
 
   return (
-    <main className="min-h-screen bg-[#F7F8FA] font-sans text-[#1D1E24]">
+    <main id="main-content" className="min-h-screen bg-[#F7F8FA] font-sans text-[#1D1E24]">
       <header className="border-b border-[#E7E7EA] bg-white">
         <div className="mx-auto flex min-h-[68px] max-w-[1180px] items-center justify-between gap-4 px-5 sm:px-8">
           <Link
@@ -69,7 +71,7 @@ export default function AssignedHomeworkPage() {
           </Link>
 
           <div className="flex items-center gap-2">
-            <img
+            <Image unoptimized width={64} height={64}
               src="/logo/favicon.png"
               alt=""
               className="h-7 w-7 rounded-full object-cover"

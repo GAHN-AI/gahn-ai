@@ -1,23 +1,12 @@
 "use client";
 
-import { FormEvent, useEffect, useMemo, useRef, useState } from "react";
+import { useStoredBoolean } from "@/lib/useBrowserPreferences";
+import { CanvasIcon } from "@/components/brand/WorldIcons";
+
+
+import { FormEvent, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
-import {
-  ArrowRight,
-  BookOpenCheck,
-  Bot,
-  Check,
-  FileText,
-  Mic,
-  MicOff,
-  MessageSquareText,
-  VolumeX,
-  Paperclip,
-  Send,
-  Sparkles,
-  Upload,
-  Volume2,
-} from "lucide-react";
+import { ArrowRight, BookOpenCheck, Check, FileText, Mic, MicOff, MessageSquareText, VolumeX, Paperclip, Send, Upload, Volume2 } from "lucide-react";
 
 import MagicCanvas from "@/components/lessons/MagicCanvas";
 import { INTERACTIVE_LESSONS_AVAILABLE } from "@/lib/lessonLaunch";
@@ -159,8 +148,8 @@ export default function LearningStudio({
   const [error, setError] = useState("");
   const [listening, setListening] = useState(false);
   const [micMuted, setMicMuted] = useState(true);
-  const [soundOn, setSoundOn] = useState(true);
-  const [autoRead, setAutoRead] = useState(false);
+  const [soundOn, setSoundOn] = useStoredBoolean("gahn-lesson-sound-enabled", true);
+  const [autoRead] = useStoredBoolean("gahn-lesson-auto-read", false);
   const [textSelected, setTextSelected] = useState(true);
   const inputRef = useRef<HTMLTextAreaElement | null>(null);
   const recognitionRef = useRef<BrowserSpeechRecognition | null>(null);
@@ -194,11 +183,6 @@ export default function LearningStudio({
   // These controls are real browser audio preferences, not Tavus provider settings.
   // Keep the microphone muted until the learner explicitly unmutes it.
   useEffect(() => {
-    setSoundOn(window.localStorage.getItem("gahn-lesson-sound-enabled") !== "off");
-    setAutoRead(window.localStorage.getItem("gahn-lesson-auto-read") === "on");
-  }, []);
-
-  useEffect(() => {
     if (!autoRead || !soundOn || !started || !turn?.message || typeof window === "undefined") return;
     if (!window.speechSynthesis || typeof SpeechSynthesisUtterance === "undefined") return;
     window.speechSynthesis.cancel();
@@ -210,6 +194,7 @@ export default function LearningStudio({
 
   useEffect(() => {
     async function loadFeatures() {
+      if (!INTERACTIVE_LESSONS_AVAILABLE) return;
       const response = await fetch("/api/subscription/current");
       if (!response.ok) return;
 
@@ -241,17 +226,19 @@ export default function LearningStudio({
 
   useEffect(() => {
     let cancelled = false;
-    noteIdRef.current = null;
-    notesDraftRef.current = "";
-    lastSavedNotesRef.current = "";
-    setNotes("");
 
     async function loadNotes() {
+      if (!INTERACTIVE_LESSONS_AVAILABLE) return;
       const {
         data: { user },
       } = await supabase.auth.getUser();
 
-      if (!user || cancelled) return;
+      if (cancelled) return;
+      noteIdRef.current = null;
+      notesDraftRef.current = "";
+      lastSavedNotesRef.current = "";
+      setNotes("");
+      if (!user) return;
 
       const { data } = await supabase
         .from("learner_notes")
@@ -276,16 +263,7 @@ export default function LearningStudio({
     return () => {
       cancelled = true;
     };
-  }, [lessonId]);
-
-  // Save learner notes in the background after typing stops. Saved notes
-  // show up in My Notes as soon as the learner opens that page.
-  useEffect(() => {
-    notesDraftRef.current = notes;
-    if (!notes.trim() || notes === lastSavedNotesRef.current) return;
-    const timer = window.setTimeout(() => void saveNotes(), 1200);
-    return () => window.clearTimeout(timer);
-  }, [notes, lessonId]);
+  }, [lessonId, lessonTitle]);
 
   async function requestInstructor(
     learnerMessage?: string,
@@ -613,7 +591,7 @@ export default function LearningStudio({
     }
   }
 
-  async function saveNotes() {
+  const saveNotes = useCallback(async function persistNotes() {
     if (savingNotesRef.current) return false;
     const bodyToSave = notesDraftRef.current;
     if (!bodyToSave.trim() || bodyToSave === lastSavedNotesRef.current) return true;
@@ -675,10 +653,20 @@ export default function LearningStudio({
     window.setTimeout(() => setNotesSaved(false), 1800);
     // Capture any typing that occurred during the previous save.
     if (notesDraftRef.current !== bodyToSave) {
-      window.setTimeout(() => void saveNotes(), 400);
+      window.setTimeout(() => void persistNotes(), 400);
     }
     return true;
-  }
+  }, [lessonId, lessonTitle, worldSlug]);
+
+  // Save learner notes in the background after typing stops. Saved notes
+  // show up in My Notes as soon as the learner opens that page.
+  useEffect(() => {
+    notesDraftRef.current = notes;
+    if (!notes.trim() || notes === lastSavedNotesRef.current) return;
+    const timer = window.setTimeout(() => void saveNotes(), 1200);
+    return () => window.clearTimeout(timer);
+  }, [notes, lessonId, saveNotes]);
+
 
   return (
     <div className="grid gap-6 xl:grid-cols-[minmax(0,0.8fr)_minmax(0,1.2fr)]">
@@ -686,7 +674,7 @@ export default function LearningStudio({
         <div className="border-b border-[#D7E3F2] bg-[linear-gradient(135deg,#FFFFFF_0%,#F8FBFF_70%,#EAF3FF_100%)] p-5">
           <div className="flex items-start gap-3">
             <div className="grid h-11 w-11 shrink-0 place-items-center rounded-xl bg-[#EAF3FF] text-[#1677FF]">
-              <Bot className="h-5 w-5" strokeWidth={1.75} />
+              <CanvasIcon className="h-5 w-5" strokeWidth={1.75} />
             </div>
             <div className="min-w-0">
               <p className="text-xs font-bold uppercase tracking-[0.16em] text-[#1677FF]">
@@ -702,7 +690,7 @@ export default function LearningStudio({
 
           <div className="mt-4 flex flex-wrap gap-2">
             <span className="rounded-full border border-[#D7E3F2] bg-white px-3 py-1.5 text-xs font-semibold text-[#53657D]">
-              {aiConnected ? "Adaptive AI connected" : "Core lesson engine"}
+              {!INTERACTIVE_LESSONS_AVAILABLE ? "Workspace preview" : aiConnected ? "Adaptive AI connected" : "Core lesson engine"}
             </span>
           </div>
         </div>
@@ -759,7 +747,7 @@ export default function LearningStudio({
                 paths and preview Magic Canvas, but lessons cannot start yet.
                 Existing accounts and saved learning records are preserved.
               </p>
-              <Link href="/dashboard" className="mt-6 inline-flex items-center gap-2 rounded-xl bg-[#1677FF] px-6 py-3.5 text-sm font-bold text-white hover:bg-[#0F65E8]">
+              <Link href="/#learning-worlds" className="mt-6 inline-flex items-center gap-2 rounded-xl bg-[#1677FF] px-6 py-3.5 text-sm font-bold text-white hover:bg-[#0F65E8]">
                 <ArrowRight className="h-4 w-4" /> Explore Learning Worlds
               </Link>
             </div>
@@ -781,7 +769,7 @@ export default function LearningStudio({
                 onClick={() => void startLesson()}
                 className="mt-6 inline-flex items-center gap-2 rounded-xl bg-[#1677FF] px-6 py-3.5 text-sm font-bold text-white hover:bg-[#0F65E8]"
               >
-                <Sparkles className="h-4 w-4" />
+                <CanvasIcon className="h-4 w-4" />
                 Start Lesson
               </button>
               {error && <p role="alert" className="mt-3 text-sm text-red-700">{error}</p>}

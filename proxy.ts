@@ -56,6 +56,8 @@ export async function proxy(request: NextRequest) {
   const isProtectedPage = [
     "/dashboard",
     "/profile",
+    "/settings",
+    "/feedback",
     "/notes",
     "/study-guides",
     "/progress",
@@ -81,6 +83,8 @@ export const config = {
     "/signup",
     "/dashboard/:path*",
     "/profile/:path*",
+    "/settings/:path*",
+    "/feedback/:path*",
     "/notes/:path*",
     "/study-guides/:path*",
     "/progress/:path*",

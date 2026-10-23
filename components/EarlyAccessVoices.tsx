@@ -1,8 +1,11 @@
 "use client";
 
+import { EvidenceIcon } from "@/components/brand/WorldIcons";
+
+
 import Link from "next/link";
 import { FormEvent, useEffect, useState } from "react";
-import { CheckCircle2, MessageSquareText, Send } from "lucide-react";
+import { MessageSquareText, Send } from "lucide-react";
 import { supabase } from "@/lib/supabaseClient";
 
 export default function EarlyAccessVoices() {
@@ -129,7 +132,7 @@ export default function EarlyAccessVoices() {
             </div>
           ) : submitted ? (
             <div role="status" className="py-6">
-              <CheckCircle2 className="h-10 w-10 text-gahn-blue" />
+              <EvidenceIcon className="h-10 w-10 text-gahn-blue" />
               <h3 className="mt-4 text-xl font-semibold text-gahn-navy">Thank you for sharing your thoughts</h3>
               <p className="mt-3 text-sm leading-6 text-black">
                 {notice || "Your account has already submitted a private comment. We appreciate your feedback."}

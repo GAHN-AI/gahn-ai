@@ -2,7 +2,7 @@ import Link from "next/link";
 
 export default function InProgressPage() {
   return (
-    <main className="min-h-screen bg-[#010817] text-white grid place-items-center px-6">
+    <main id="main-content" className="min-h-screen bg-[#010817] text-white grid place-items-center px-6">
       <div className="max-w-xl text-center">
         <p className="text-blue-300 font-bold uppercase tracking-widest">
           Coming Soon

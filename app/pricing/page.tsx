@@ -1,8 +1,10 @@
 "use client";
 
+import Image from "next/image";
+
 import Link from "next/link";
 import { useState } from "react";
-import { ArrowLeft, ArrowRight, Check, Clock3 } from "lucide-react";
+import { ArrowLeft, ArrowRight, Clock3 } from "lucide-react";
 
 type Plan = {
   id: "explore" | "learner_plus" | "mastery" | "career_pro";
@@ -121,12 +123,9 @@ function PlanCard({
           : "border-[#D9E2EF]")
       }
     >
-      <div className="flex items-start justify-between gap-4">
+      <div className="flex flex-wrap items-start justify-between gap-2">
         <div>
           <p className="text-sm font-black text-[#0B1739]">{plan.name}</p>
-          <p className="mt-2 min-h-[72px] text-sm leading-6 text-black">
-            {plan.description}
-          </p>
         </div>
         <span
           className={
@@ -139,6 +138,10 @@ function PlanCard({
           {plan.available ? "EARLY ACCESS" : "COMING LATER"}
         </span>
       </div>
+
+      <p className="mt-3 min-h-[96px] text-sm leading-6 text-black">
+        {plan.description}
+      </p>
 
       <div className="mt-6 flex items-end gap-2">
         <span className="text-5xl font-black tracking-[-0.055em] text-[#0B1739]">
@@ -184,12 +187,9 @@ function PlanCard({
         {isFree ? "Included in this plan" : "What this plan adds"}
       </p>
 
-      <ul className="mt-4 grid gap-3.5">
+      <ul className="mt-4 grid list-disc gap-3.5 pl-5 marker:text-slate-400">
         {plan.features.map((feature) => (
-          <li key={feature} className="flex items-start gap-3">
-            <span className="mt-0.5 grid h-5 w-5 shrink-0 place-items-center rounded-full bg-[#EAF3FF]">
-              <Check className="h-3 w-3 text-[#1677FF]" strokeWidth={3} />
-            </span>
+          <li key={feature} className="pl-1">
             <span className="text-sm font-medium leading-6 text-black">
               {feature}
             </span>
@@ -238,11 +238,11 @@ export default function PricingPage() {
   }
 
   return (
-    <main className="min-h-screen bg-white font-sans text-black">
+    <main id="main-content" className="min-h-screen bg-white font-sans text-black">
       <header className="border-b border-[#D9E2EF] bg-white">
         <nav className="mx-auto flex min-h-[74px] max-w-7xl items-center justify-between gap-4 px-5 sm:px-8">
           <Link href="/" className="flex items-center gap-3">
-            <img
+            <Image unoptimized width={64} height={64}
               src="/logo/favicon.png"
               alt="GAHN AI"
               className="h-10 w-10 rounded-full object-cover"
@@ -308,7 +308,7 @@ export default function PricingPage() {
             </p>
           </div>
 
-          <div className="mt-10 overflow-x-auto rounded-[18px] border border-[#D9E2EF] bg-white">
+          <div role="region" aria-label="Plan comparison; scroll horizontally on small screens" tabIndex={0} className="mt-10 overflow-x-auto rounded-[18px] border border-[#D9E2EF] bg-white">
             <table className="w-full min-w-[900px] border-collapse text-left">
               <thead>
                 <tr className="border-b border-[#D9E2EF] bg-[#F7FAFF]">

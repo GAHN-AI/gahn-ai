@@ -1,7 +1,4 @@
-export default function InstructorPage() {
-  return (
-    <main>
-      <h1>GAHN AI Instructor</h1>
-    </main>
-  );
-}
+import { redirect } from "next/navigation";
+
+/** Retired instructor links return to the public Learning World directory. */
+export default function InstructorPage() { redirect("/#learning-worlds"); }

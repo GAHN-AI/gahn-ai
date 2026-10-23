@@ -159,7 +159,7 @@ export default function HomeworkUploadPage() {
   }
 
   return (
-    <main className="min-h-screen bg-[#F7F8FA] font-sans text-black">
+    <main id="main-content" className="min-h-screen bg-[#F7F8FA] font-sans text-black">
       <header className="border-b border-[#E7E7EA] bg-white">
         <div className="mx-auto flex max-w-[1180px] flex-wrap items-center justify-between gap-4 px-5 py-4 sm:px-8">
           <Link

@@ -1,18 +1,17 @@
 "use client";
 
+import Image from "next/image";
+
+import { CanvasIcon, EvidenceIcon, PathIcon, SchoolWorldIcon } from "@/components/brand/WorldIcons";
+
+
 import Link from "next/link";
 import { Source_Sans_3 } from "next/font/google";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { supabase } from "@/lib/supabaseClient";
 import PasswordInput from "@/components/auth/PasswordInput";
-import {
-  ArrowLeft,
-  Bot,
-  CheckCircle2,
-  GraduationCap,
-  LockKeyhole,
-  Rocket,
-} from "lucide-react";
+import { useBrowserSearch } from "@/lib/useBrowserPreferences";
+import { ArrowLeft, LockKeyhole } from "lucide-react";
 
 const sourceSans = Source_Sans_3({
   subsets: ["latin"],
@@ -20,19 +19,19 @@ const sourceSans = Source_Sans_3({
 
 const features = [
   {
-    Icon: Bot,
-    title: "Adaptive AI Instructors",
-    text: "Learn with structured guidance that responds to your progress.",
+    Icon: CanvasIcon,
+    title: "Planned instructor experience",
+    text: "Explore how the future instructor and learning workspace will fit together.",
   },
   {
-    Icon: GraduationCap,
-    title: "Built for Real Learning",
-    text: "Practice, correction, recall, and guided retries, not random answers.",
+    Icon: SchoolWorldIcon,
+    title: "Specific learning paths",
+    text: "Browse subjects, practical tasks, and planned learning outcomes.",
   },
   {
-    Icon: Rocket,
-    title: "Real World Progress",
-    text: "Build skills, save your work, and continue where you left off.",
+    Icon: PathIcon,
+    title: "Your early-access account",
+    text: "Return to your account and keep existing notes and records in one place.",
   },
 ];
 
@@ -46,19 +45,20 @@ export default function LoginPage() {
   const [error, setError] = useState("");
   const [message, setMessage] = useState("");
 
-  useEffect(() => {
-    const reason = new URLSearchParams(window.location.search).get("error");
-    if (reason === "authentication_failed") {
-      setError("That sign-in link expired or could not be verified. Please try again.");
-    } else if (reason === "profile_setup_failed") {
-      setError("We couldn't finish setting up your profile. Please try signing in again.");
-    } else if (reason === "session_expired") {
-      setMessage("Your session ended. Please sign in again to continue.");
-    }
-  }, []);
+  const browserSearch = useBrowserSearch();
+  const [queryNoticeDismissed, setQueryNoticeDismissed] = useState(false);
+  const reason = new URLSearchParams(browserSearch).get("error");
+  const queryError = reason === "authentication_failed"
+    ? "That sign-in link expired or could not be verified. Please try again."
+    : reason === "profile_setup_failed"
+      ? "We couldn't finish setting up your profile. Please try signing in again."
+      : "";
+  const visibleError = error || (!queryNoticeDismissed ? queryError : "");
+  const visibleMessage = message || (!queryNoticeDismissed && reason === "session_expired" ? "Your session ended. Please sign in again to continue." : "");
 
   async function handleLogin(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
+    setQueryNoticeDismissed(true);
 
     setError("");
     setMessage("");
@@ -106,6 +106,7 @@ export default function LoginPage() {
   }
 
   async function handleGoogleLogin() {
+    setQueryNoticeDismissed(true);
     setError("");
     setMessage("");
     setGoogleLoading(true);
@@ -127,6 +128,7 @@ export default function LoginPage() {
   }
 
   async function handleForgotPassword() {
+    setQueryNoticeDismissed(true);
     setError("");
     setMessage("");
 
@@ -164,7 +166,7 @@ export default function LoginPage() {
   }
 
   return (
-    <main
+    <main id="main-content"
       className={`${sourceSans.className} relative min-h-screen overflow-hidden bg-white px-5 py-8 text-[#0B1739] sm:px-8 sm:py-10`}
     >
       <div
@@ -183,7 +185,7 @@ export default function LoginPage() {
       <div className="relative mx-auto w-full max-w-6xl">
         <header className="flex items-center justify-between gap-4">
           <Link href="/" className="flex min-w-0 items-center gap-3">
-            <img
+            <Image unoptimized width={64} height={64}
               src="/logo/favicon.png"
               alt="GAHN AI"
               className="h-11 w-11 flex-none rounded-full object-cover"
@@ -268,7 +270,7 @@ export default function LoginPage() {
               disabled={googleLoading}
               className="mt-8 flex w-full items-center justify-center gap-3 rounded-xl border border-[#D7E3F2] bg-white px-5 py-3.5 text-sm font-semibold text-[#0B1739] shadow-sm hover:border-[#1677FF]/40 hover:bg-[#F8FBFF] disabled:cursor-not-allowed disabled:opacity-60"
             >
-              <img
+              <Image unoptimized width={1200} height={800}
                 src="/google-logo/google.svg"
                 alt="Google"
                 className="h-5 w-5 object-contain"
@@ -332,15 +334,15 @@ export default function LoginPage() {
                 </button>
               </div>
 
-              {error && (
+              {visibleError && (
                 <p className="mt-5 rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm font-medium text-red-600">
-                  {error}
+                  {visibleError}
                 </p>
               )}
 
-              {message && (
+              {visibleMessage && (
                 <p className="mt-5 rounded-xl border border-blue-200 bg-[#F1F7FF] px-4 py-3 text-sm font-medium text-[#0F65E8]">
-                  {message}
+                  {visibleMessage}
                 </p>
               )}
 
@@ -354,7 +356,7 @@ export default function LoginPage() {
             </form>
 
             <div className="mt-6 flex items-center justify-center gap-2 text-sm text-black">
-              <CheckCircle2 className="h-4 w-4 text-[#1677FF]" />
+              <EvidenceIcon className="h-4 w-4 text-[#1677FF]" />
               <span>Your learning progress stays tied to your account.</span>
             </div>
 

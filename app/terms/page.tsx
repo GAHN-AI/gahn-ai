@@ -1,5 +1,7 @@
 "use client";
 
+import Image from "next/image";
+
 import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
 
@@ -25,13 +27,13 @@ function Section({
 
 export default function TermsPage() {
   return (
-    <main className="min-h-screen bg-white font-sans text-[#0A1628]">
+    <main id="main-content" className="min-h-screen bg-white font-sans text-[#0A1628]">
       <header className="border-b border-[#E3E6EC]">
         <div
           className={`${shellClass} flex items-center justify-between py-5`}
         >
           <Link href="/" className="flex items-center gap-3">
-            <img
+            <Image unoptimized width={64} height={64}
               src="/logo/favicon.png"
               alt="GAHN AI"
               className="h-10 w-10 rounded-full object-cover"

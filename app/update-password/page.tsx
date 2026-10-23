@@ -1,5 +1,7 @@
 "use client";
 
+import Image from "next/image";
+
 import Link from "next/link";
 import { useEffect, useState, type FormEvent } from "react";
 import PasswordInput from "@/components/auth/PasswordInput";
@@ -72,11 +74,11 @@ export default function UpdatePasswordPage() {
   }
 
   return (
-    <main className="min-h-screen bg-[#F6F9FF] px-5 py-12 text-[#0B1739] sm:py-16">
+    <main id="main-content" className="min-h-screen bg-[#F6F9FF] px-5 py-12 text-[#0B1739] sm:py-16">
       <div className="mx-auto max-w-xl">
         <header className="mb-8 text-center">
           <Link href="/" aria-label="GAHN AI home" className="inline-flex flex-col items-center">
-            <img src="/logo/favicon.png" alt="" className="mb-3 h-16 w-16 object-contain" />
+            <Image unoptimized width={64} height={64} src="/logo/favicon.png" alt="" className="mb-3 h-16 w-16 object-contain" />
             <span className="text-3xl font-black">GAHN AI</span>
           </Link>
           <p className="mt-2 text-xs font-bold uppercase tracking-[0.12em]">Global AI Human Helper Network</p>

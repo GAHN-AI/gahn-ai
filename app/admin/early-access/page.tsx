@@ -1,16 +1,11 @@
 "use client";
 
+import { CanvasIcon } from "@/components/brand/WorldIcons";
+
+
 import Link from "next/link";
 import { useEffect, useState } from "react";
-import {
-  ArrowLeft,
-  BarChart3,
-  BookOpenCheck,
-  BrainCircuit,
-  MessageSquareText,
-  Sparkles,
-  Users,
-} from "lucide-react";
+import { ArrowLeft, BarChart3, BookOpenCheck, BrainCircuit, MessageSquareText, Users } from "lucide-react";
 
 type Analytics = {
   period: string;
@@ -70,7 +65,7 @@ export default function EarlyAccessAdminPage() {
   }, []);
 
   return (
-    <main className="min-h-screen bg-[#F8FBFF] px-5 py-8 font-sans text-[#0B1739] sm:px-8">
+    <main id="main-content" className="min-h-screen bg-[#F8FBFF] px-5 py-8 font-sans text-[#0B1739] sm:px-8">
       <div className="mx-auto max-w-7xl">
         <Link
           href="/dashboard"
@@ -128,7 +123,7 @@ export default function EarlyAccessAdminPage() {
                   value: data.totals.evidenceEvents,
                 },
                 {
-                  Icon: Sparkles,
+                  Icon: CanvasIcon,
                   label: "Mastered lessons",
                   value: data.totals.masteredLessons,
                 },

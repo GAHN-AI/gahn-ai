@@ -1,50 +1,37 @@
-"use client";
+import Image from "next/image";
+import { BookWorldIcon, BrainWorldIcon, CareerWorldIcon, KnowledgeWorldIcon, SchoolWorldIcon } from "@/components/brand/WorldIcons";
 
-import { useMemo } from "react";
+
 import Link from "next/link";
-import { useParams } from "next/navigation";
-import {
-  ArrowLeft,
-  ArrowRight,
-  BookOpen,
-  Brain,
-  BriefcaseBusiness,
-  Globe2,
-  GraduationCap,
-  ShieldCheck,
-} from "lucide-react";
+import { notFound, redirect } from "next/navigation";
+import { ArrowLeft, ArrowRight, ShieldCheck } from "lucide-react";
 
 import { getCareerSection } from "@/lib/careerCatalog";
 import {
   getLearningOption,
-  type LearningOption,
 } from "@/lib/learningCatalog";
 import { isLearningWorldAvailable } from "@/lib/learningWorldAvailability";
 import { getPracticalSkillRoadmap } from "@/lib/practicalSkillRoadmaps";
+import { getTopicStudyPlan } from "@/lib/topicStudyPlans";
 
 const worldMeta = {
-  "career-skills": { title: "Career Skills", Icon: BriefcaseBusiness },
-  "school-help": { title: "School Help", Icon: GraduationCap },
-  "brain-development": { title: "Brain Development", Icon: Brain },
-  "general-knowledge": { title: "General Knowledge", Icon: Globe2 },
-  "book-intelligence": { title: "Book Intelligence", Icon: BookOpen },
+  "career-skills": { title: "Career Skills", Icon: CareerWorldIcon },
+  "school-help": { title: "School Help", Icon: SchoolWorldIcon },
+  "brain-development": { title: "Brain Development", Icon: BrainWorldIcon },
+  "general-knowledge": { title: "General Knowledge", Icon: KnowledgeWorldIcon },
+  "book-intelligence": { title: "Book Intelligence", Icon: BookWorldIcon },
 } as const;
 
-export default function TopicOverviewPage() {
-  const params = useParams<{ world: string; section: string; topic: string }>();
+export default async function TopicOverviewPage({ params: routeParams }: { params: Promise<{ world: string; section: string; topic: string }> }) {
+  const params = await routeParams;
 
 
-  const resolved = useMemo(() => {
+  const resolved = (() => {
     if (params.world === "career-skills") {
       const section = getCareerSection(params.section);
       if (!section) return null;
+      redirect(`/learn/career-skills/${section.slug}`);
 
-      return {
-        sectionTitle: section.category,
-        title: section.title,
-        description: section.description,
-        option: undefined as LearningOption | undefined,
-      };
     }
 
     const found = getLearningOption(params.world, params.section, params.topic);
@@ -56,32 +43,14 @@ export default function TopicOverviewPage() {
       description: found.option.description,
       option: found.option,
     };
-  }, [params.section, params.topic, params.world]);
+  })();
 
   const available = isLearningWorldAvailable(params.world);
   const skillRoadmap = getPracticalSkillRoadmap(params.world, params.section, params.topic);
+  const studyPlan = getTopicStudyPlan(params.world, params.section, params.topic);
   const meta = worldMeta[params.world as keyof typeof worldMeta];
 
-  if (!available || !resolved || !meta) {
-    return (
-      <main className="min-h-screen bg-[#F7F8FA] px-5 py-10 font-sans text-[#1D1E24] sm:px-8">
-        <div className="mx-auto max-w-5xl">
-          <Link
-            href={`/learn/${params.world}`}
-            className="inline-flex items-center gap-2 text-sm font-medium text-[#1D1E24]"
-          >
-            <ArrowLeft className="h-4 w-4" />
-            Back to learning world
-          </Link>
-          <div className="mt-8 rounded-[14px] border border-[#E1E3E8] bg-white p-10 text-center">
-            <h1 className="text-3xl font-semibold">
-              {!available ? "Learning world unavailable" : "Lesson not found"}
-            </h1>
-          </div>
-        </div>
-      </main>
-    );
-  }
+  if (!available || !resolved || !meta) notFound();
 
   const Icon = meta.Icon;
   const isSchool = params.world === "school-help";
@@ -91,7 +60,7 @@ export default function TopicOverviewPage() {
     ? `/learn/career-skills/${params.section}`
     : isSchool
       ? `/learn/school-help/${params.section}`
-      : `/learn/${params.world}/${params.section}`;
+      : `/learn/${params.world}`;
 
   const startHref = `/lesson/custom?world=${encodeURIComponent(
     params.world
@@ -100,7 +69,7 @@ export default function TopicOverviewPage() {
   )}&topicSlug=${encodeURIComponent(params.topic)}`;
 
   return (
-    <main className="min-h-screen bg-[#F7F8FA] font-sans text-[#1D1E24]">
+    <main id="main-content" className="min-h-screen bg-[#F7F8FA] font-sans text-[#1D1E24]">
       <header className="border-b border-[#E7E7EA] bg-white">
         <div className="mx-auto flex min-h-[68px] max-w-[1180px] flex-wrap items-center justify-between gap-4 px-5 sm:px-8">
           <Link
@@ -114,7 +83,7 @@ export default function TopicOverviewPage() {
           <div className="flex items-center gap-3">
 
             <Link href="/" className="flex items-center gap-2 text-sm font-semibold text-[#0B1739]">
-              <img src="/logo/favicon.png" alt="" className="h-7 w-7 rounded-full object-cover" />
+              <Image unoptimized width={64} height={64} src="/logo/favicon.png" alt="" className="h-7 w-7 rounded-full object-cover" />
               GAHN AI
             </Link>
           </div>
@@ -169,6 +138,13 @@ export default function TopicOverviewPage() {
                 )}
               </section>
             )}
+
+            {studyPlan && <section aria-labelledby="study-outline-heading" className="mt-8 border-t border-[#EEEEF1] pt-7">
+              <p className="gahn-eyebrow">Curriculum preview</p>
+              <h2 id="study-outline-heading" className="mt-2 text-2xl font-semibold tracking-tight">Planned study outline</h2>
+              <p className="mt-3 text-sm leading-6 text-[#64748B]">{studyPlan.note}</p>
+              <div className="mt-5 overflow-hidden rounded-xl border border-[#DCE3EC]">{studyPlan.sections.map((section, index) => <details key={section.title} open={index === 0} className="group border-b border-[#E7ECF2] last:border-b-0"><summary className="flex min-h-14 cursor-pointer items-center justify-between gap-4 bg-[#F7F9FC] px-4 py-4 text-sm font-semibold"><span>{index + 1}. {section.title}</span><span className="text-[#64748B]" aria-hidden="true">+</span></summary><ol className="list-decimal space-y-3 py-5 pl-10 pr-5 text-sm leading-6 text-[#53657D]">{section.lessons.map((lesson) => <li key={lesson}>{lesson}</li>)}</ol></details>)}</div>
+            </section>}
 
             <div className="mt-8 border-t border-[#EEEEF1] pt-7">
               <p className="text-xs font-semibold uppercase tracking-[0.14em] text-[#0B5CFF]">

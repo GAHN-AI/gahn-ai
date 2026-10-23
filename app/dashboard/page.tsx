@@ -1,37 +1,24 @@
 "use client";
 
+import Image from "next/image";
+
+import { BookWorldIcon, BrainWorldIcon, CanvasIcon, CareerWorldIcon, KnowledgeWorldIcon, PathIcon, SchoolWorldIcon } from "@/components/brand/WorldIcons";
+
+
 import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
-import type { LucideIcon } from "lucide-react";
-import {
-  BookOpen,
-  Brain,
-  BriefcaseBusiness,
-  ChevronDown,
-  Clock3,
-  FileText,
-  Globe2,
-  GraduationCap,
-  ClipboardCheck,
-  LogOut,
-  MessageSquareText,
-  NotebookPen,
-  Rocket,
-  Search,
-  Settings2,
-  Sparkles,
-  TrendingUp,
-  Upload,
-} from "lucide-react";
+import type { GahnIcon } from "@/components/brand/WorldIcons";
+import { ChevronDown, Clock3, FileText, ClipboardCheck, LogOut, MessageSquareText, NotebookPen, Search, Settings2, TrendingUp, Upload } from "lucide-react";
 
 import { supabase } from "@/lib/supabaseClient";
 import { INTERACTIVE_LESSONS_AVAILABLE } from "@/lib/lessonLaunch";
+import { useBrowserSearch } from "@/lib/useBrowserPreferences";
 
-const sidebarItems: { label: string; Icon: LucideIcon; href: string }[] = [
+const sidebarItems: { label: string; Icon: GahnIcon; href: string }[] = [
   { label: "Recents", Icon: Clock3, href: "/dashboard" },
   { label: "My Notes", Icon: NotebookPen, href: "/notes" },
-  { label: "Study Guides", Icon: BookOpen, href: "/study-guides" },
+  { label: "Study Guides", Icon: BookWorldIcon, href: "/study-guides" },
   { label: "Progress", Icon: TrendingUp, href: "/progress" },
   { label: "Feedback", Icon: MessageSquareText, href: "/feedback" },
   { label: "Assigned Homework", Icon: ClipboardCheck, href: "/assigned-homework" },
@@ -40,7 +27,7 @@ const sidebarItems: { label: string; Icon: LucideIcon; href: string }[] = [
 
 const worlds: {
   slug: string;
-  Icon: LucideIcon;
+  Icon: GahnIcon;
   title: string;
   subtitle: string;
   eyebrow: string;
@@ -48,7 +35,7 @@ const worlds: {
 }[] = [
   {
     slug: "career-skills",
-    Icon: BriefcaseBusiness,
+    Icon: CareerWorldIcon,
     title: "Career Skills",
     subtitle: "Online-practice career skills in software, data, marketing, finance, creative work and remote support.",
     eyebrow: "CAREER WORLD",
@@ -56,7 +43,7 @@ const worlds: {
   },
   {
     slug: "school-help",
-    Icon: GraduationCap,
+    Icon: SchoolWorldIcon,
     title: "School Help",
     subtitle: "Math, science, English, reading, study skills, and homework help.",
     eyebrow: "SCHOOL WORLD",
@@ -64,7 +51,7 @@ const worlds: {
   },
   {
     slug: "brain-development",
-    Icon: Brain,
+    Icon: BrainWorldIcon,
     title: "Brain Development",
     subtitle: "Memory, focus, reasoning, habits, and learning performance.",
     eyebrow: "BRAIN WORLD",
@@ -72,7 +59,7 @@ const worlds: {
   },
   {
     slug: "general-knowledge",
-    Icon: Globe2,
+    Icon: KnowledgeWorldIcon,
     title: "General Knowledge",
     subtitle: "History, technology, culture, life skills, and useful knowledge.",
     eyebrow: "KNOWLEDGE WORLD",
@@ -80,7 +67,7 @@ const worlds: {
   },
   {
     slug: "book-intelligence",
-    Icon: BookOpen,
+    Icon: BookWorldIcon,
     title: "Book Intelligence",
     subtitle: "Learn from books through guided explanations and practice.",
     eyebrow: "BOOK WORLD",
@@ -138,12 +125,12 @@ function WorldPreview({
   title,
 }: {
   imageUrl: string;
-  Icon: LucideIcon;
+  Icon: GahnIcon;
   title: string;
 }) {
   return (
     <div className="relative h-[200px] overflow-hidden rounded-[14px] border border-[#E7E7EA] bg-[linear-gradient(135deg,#0B1739,#1677FF)]">
-      <img
+      <Image unoptimized width={1200} height={800}
         src={imageUrl}
         alt=""
         className="w-full object-cover object-center transition-transform duration-300 group-hover:scale-[1.025]"
@@ -180,17 +167,16 @@ export default function DashboardPage() {
   const [notesCount, setNotesCount] = useState(0);
   const [studyGuidesCount, setStudyGuidesCount] = useState(0);
   const [searchQuery, setSearchQuery] = useState("");
+  const [dashboardError, setDashboardError] = useState("");
   const [view, setView] = useState<"worlds" | "activity">("worlds");
-  const [showWelcome, setShowWelcome] = useState(false);
+  const [welcomeDismissed, setWelcomeDismissed] = useState(false);
+  const browserSearch = useBrowserSearch();
+  const showWelcome = !welcomeDismissed && new URLSearchParams(browserSearch).get("welcome") === "1";
 
   const initials = useMemo(() => getInitials(fullName), [fullName]);
 
-  useEffect(() => {
-    setShowWelcome(new URLSearchParams(window.location.search).get("welcome") === "1");
-  }, []);
-
   function dismissWelcome() {
-    setShowWelcome(false);
+    setWelcomeDismissed(true);
     window.history.replaceState(window.history.state, "", "/dashboard");
   }
 
@@ -235,11 +221,14 @@ export default function DashboardPage() {
       setNotesCount(notesResult.count || 0);
       setStudyGuidesCount(guidesResult.count || 0);
 
-      const { data: profile } = await supabase
+      const { data: profile, error: profileError } = await supabase
         .from("profiles")
         .select("full_name, avatar_url, email")
         .eq("id", user.id)
         .maybeSingle();
+
+      if (profileError) { setDashboardError("Your account details could not be loaded. Please refresh and try again."); return; }
+      if (progressResult.error || notesResult.error || guidesResult.error) setDashboardError("Some saved materials could not be loaded. Please refresh and try again.");
 
       const fallbackName =
         user.user_metadata?.full_name ||
@@ -263,7 +252,7 @@ export default function DashboardPage() {
       setAvatarUrl(profile.avatar_url || "");
     }
 
-    void loadDashboard();
+    void loadDashboard().catch(() => setDashboardError("The dashboard could not refresh. Check your connection and try again."));
   }, [router]);
 
   const meaningfulProgressRows = progressRows.filter((row) => {
@@ -314,13 +303,13 @@ export default function DashboardPage() {
   }
 
   return (
-    <main className="min-h-screen bg-white font-sans text-[#1D1E24]">
+    <main id="main-content" className="min-h-screen bg-white font-sans text-[#1D1E24]">
       <div className="min-h-screen lg:grid lg:grid-cols-[300px_minmax(0,1fr)]">
         <aside className="hidden min-h-screen border-r border-[#E7E7EA] bg-white lg:flex lg:flex-col lg:sticky lg:top-0 lg:h-screen">
           <div className="flex items-center justify-between px-5 pt-5">
             <Link href="/profile" className="flex min-w-0 items-center gap-3">
               {avatarUrl ? (
-                <img
+                <Image unoptimized width={1200} height={800}
                   src={avatarUrl}
                   alt={fullName}
                   className="h-9 w-9 rounded-lg object-cover"
@@ -347,7 +336,7 @@ export default function DashboardPage() {
             href="/pricing"
             className="mx-4 mt-5 flex items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium text-[#6F45E8] transition hover:bg-[#F6F2FF]"
           >
-            <Rocket className="h-4 w-4" />
+            <PathIcon className="h-4 w-4" />
             {planId === "explore" ? "Upgrade your learning plan" : "View your learning plan"}
           </Link>
 
@@ -397,7 +386,7 @@ export default function DashboardPage() {
           <div className="mt-auto p-4">
             <div className="rounded-xl border border-[#E7E7EA] bg-[#FAFAFB] p-4">
               <div className="flex items-center gap-2 text-[#0B5CFF]">
-                <Sparkles className="h-4 w-4" />
+                <CanvasIcon className="h-4 w-4" />
                 <p className="text-xs font-semibold uppercase tracking-[0.12em]">
                   GAHN AI
                 </p>
@@ -424,7 +413,7 @@ export default function DashboardPage() {
         <section className="min-w-0 bg-white">
           <header className="flex items-center justify-between border-b border-[#EEEEF1] px-5 py-4 lg:hidden">
             <Link href="/" className="flex items-center gap-2">
-              <img
+              <Image unoptimized width={64} height={64}
                 src="/logo/favicon.png"
                 alt="GAHN AI"
                 className="h-8 w-8 rounded-full object-cover"
@@ -455,6 +444,7 @@ export default function DashboardPage() {
           </header>
 
           <div className="mx-auto w-full max-w-[1320px] px-5 py-8 sm:px-8 lg:px-10 lg:py-10">
+            {dashboardError && <p role="alert" className="mb-5 rounded-xl border border-[#E4CEAC] bg-[#FBF5EA] px-4 py-3 text-sm text-[#795E35]">{dashboardError}</p>}
             {showWelcome && (
               <div role="status" className="mb-6 flex items-start justify-between gap-4 rounded-xl border border-[#BBD3FF] bg-[#F1F7FF] px-5 py-4">
                 <div>
@@ -492,7 +482,7 @@ export default function DashboardPage() {
                   className="group flex min-h-[76px] items-center gap-4 rounded-xl border border-[#E2E3E7] bg-white px-5 py-4 transition hover:border-[#C6D9FF] hover:shadow-[0_8px_24px_rgba(29,30,36,0.05)]"
                 >
                   <span className="grid h-9 w-9 place-items-center rounded-lg border border-[#D7E5FF] text-[#0B5CFF]">
-                    <Sparkles className="h-4 w-4" />
+                    <CanvasIcon className="h-4 w-4" />
                   </span>
                   <span>
                     <span className="block text-sm font-semibold text-[#1D1E24]">
@@ -695,7 +685,7 @@ export default function DashboardPage() {
                     href="/study-guides"
                     className="rounded-xl border border-[#E2E3E7] bg-white p-5 transition hover:border-[#C6D9FF]"
                   >
-                    <BookOpen className="h-5 w-5 text-[#0B5CFF]" />
+                    <BookWorldIcon className="h-5 w-5 text-[#0B5CFF]" />
                     <h3 className="mt-4 text-base font-semibold text-[#1D1E24]">
                       Study guides
                     </h3>

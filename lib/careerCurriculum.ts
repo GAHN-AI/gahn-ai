@@ -3726,7 +3726,7 @@ function titleCaseLesson(value: string) {
 }
 
 function lessonsFromModule(module: CareerCurriculumModule, careerTitle: string) {
-  let description = cleanLessonPhrase(module.description, careerTitle);
+  const description = cleanLessonPhrase(module.description, careerTitle);
 
   const rawParts = description
     .replace(/,\s+and\s+/gi, ", ")

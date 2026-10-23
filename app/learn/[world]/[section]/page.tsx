@@ -1,15 +1,10 @@
-"use client";
+import Image from "next/image";
+import { BookWorldIcon, BrainWorldIcon, KnowledgeWorldIcon, SchoolWorldIcon } from "@/components/brand/WorldIcons";
+
 
 import Link from "next/link";
-import { useParams } from "next/navigation";
-import {
-  ArrowLeft,
-  ArrowRight,
-  BookOpen,
-  Brain,
-  Globe2,
-  GraduationCap,
-} from "lucide-react";
+import { notFound, redirect } from "next/navigation";
+import { ArrowLeft, ArrowRight } from "lucide-react";
 
 import {
   getLearningSection,
@@ -18,47 +13,28 @@ import {
 import { isLearningWorldAvailable } from "@/lib/learningWorldAvailability";
 
 const worldMeta = {
-  "school-help": { title: "School Help", Icon: GraduationCap },
-  "brain-development": { title: "Brain Development", Icon: Brain },
-  "general-knowledge": { title: "General Knowledge", Icon: Globe2 },
-  "book-intelligence": { title: "Book Intelligence", Icon: BookOpen },
+  "school-help": { title: "School Help", Icon: SchoolWorldIcon },
+  "brain-development": { title: "Brain Development", Icon: BrainWorldIcon },
+  "general-knowledge": { title: "General Knowledge", Icon: KnowledgeWorldIcon },
+  "book-intelligence": { title: "Book Intelligence", Icon: BookWorldIcon },
 } as const;
 
-export default function LearningSectionPage() {
-  const params = useParams<{ world: string; section: string }>();
+export default async function LearningSectionPage({ params: routeParams }: { params: Promise<{ world: string; section: string }> }) {
+  const params = await routeParams;
 
   const section = getLearningSection(params.world, params.section);
   const available = isLearningWorldAvailable(params.world);
   const meta = worldMeta[params.world as keyof typeof worldMeta];
 
 
-  if (!available || !section || !meta) {
-    return (
-      <main className="min-h-screen bg-[#F7F8FA] px-5 py-10 font-sans text-[#1D1E24] sm:px-8">
-        <div className="mx-auto max-w-5xl">
-          <Link
-            href={`/learn/${params.world}`}
-            className="inline-flex items-center gap-2 text-sm font-medium text-[#1D1E24]"
-          >
-            <ArrowLeft className="h-4 w-4" />
-            Back to learning world
-          </Link>
-
-          <div className="mt-8 rounded-[14px] border border-[#E1E3E8] bg-white p-10 text-center">
-            <h1 className="text-3xl font-semibold">
-              {!available ? "Learning world unavailable" : "Learning path not found"}
-            </h1>
-          </div>
-        </div>
-      </main>
-    );
-  }
+  if (!available || !section || !meta) notFound();
 
   const Icon = meta.Icon;
   const isSchool = params.world === "school-help";
+  if (!isSchool && section.options.length === 1) redirect(`/learn/${params.world}/${section.slug}/${slugifyLearningTitle(section.options[0].title)}`);
 
   return (
-    <main className="min-h-screen bg-[#F7F8FA] font-sans text-[#1D1E24]">
+    <main id="main-content" className="min-h-screen bg-[#F7F8FA] font-sans text-[#1D1E24]">
       <header className="border-b border-[#E7E7EA] bg-white">
         <div className="mx-auto flex min-h-[68px] max-w-[1180px] flex-wrap items-center justify-between gap-4 px-5 sm:px-8">
           <Link
@@ -72,7 +48,7 @@ export default function LearningSectionPage() {
           <div className="flex items-center gap-3">
 
             <Link href="/" className="flex items-center gap-2 text-sm font-semibold text-[#0B1739]">
-              <img src="/logo/favicon.png" alt="" className="h-7 w-7 rounded-full object-cover" />
+              <Image unoptimized width={64} height={64} src="/logo/favicon.png" alt="" className="h-7 w-7 rounded-full object-cover" />
               GAHN AI
             </Link>
           </div>
@@ -98,7 +74,7 @@ export default function LearningSectionPage() {
             </p>
           </div>
 
-          <img
+          <Image unoptimized width={1200} height={800}
             src={section.imageUrl}
             alt=""
             className="h-[220px] w-full rounded-[12px] object-cover"

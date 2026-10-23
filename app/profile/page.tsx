@@ -1,5 +1,7 @@
 "use client";
 
+import Image from "next/image";
+
 import Link from "next/link";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
@@ -78,11 +80,13 @@ export default function ProfilePage() {
       setUserId(user.id);
       setEmail(user.email || "");
 
-      const { data: profile } = await supabase
+      const { data: profile, error: profileError } = await supabase
         .from("profiles")
         .select("full_name, avatar_url, email")
         .eq("id", user.id)
         .maybeSingle();
+
+      if (profileError) { setError("Your profile could not be loaded. Please refresh and try again."); setLoading(false); return; }
 
       const fallbackName =
         user.user_metadata?.full_name ||
@@ -258,6 +262,10 @@ export default function ProfilePage() {
     const file = e.target.files?.[0];
 
     if (!file || !userId) return;
+    if (!["image/jpeg", "image/png", "image/webp"].includes(file.type) || file.size > 5 * 1024 * 1024) {
+      setError("Choose a JPEG, PNG, or WebP image smaller than 5 MB.");
+      return;
+    }
 
     setSaving(true);
     setError("");
@@ -299,32 +307,32 @@ export default function ProfilePage() {
 
   if (loading) {
     return (
-      <main className="min-h-screen bg-white p-10 text-[#061633]">
-        <p className="font-black">Loading profile...</p>
+      <main id="main-content" className="min-h-screen bg-white p-10 text-[#061633]">
+        <p className="font-semibold">Loading profile...</p>
       </main>
     );
   }
 
   return (
     <>
-    <main className="min-h-screen bg-white px-8 py-10 text-[#061633] lg:[zoom:0.85] xl:[zoom:0.75] 2xl:[zoom:0.85]">
+    <main id="main-content" className="min-h-screen bg-[#F6F8FB] px-5 py-8 text-[#142B47] sm:px-8 sm:py-10">
       <div className="mx-auto max-w-3xl">
-        <Link href="/dashboard" onClick={(event) => handleProfileLink(event, "/dashboard")} className="text-lg font-black text-blue-600">
+        <Link href="/dashboard" onClick={(event) => handleProfileLink(event, "/dashboard")} className="text-lg font-semibold text-blue-600">
           ← Back to Dashboard
         </Link>
 
         <div className="mt-8 flex flex-wrap items-center justify-between gap-3">
-          <h1 className="text-5xl font-black">Edit Profile</h1>
+          <h1 className="text-3xl font-semibold tracking-tight sm:text-4xl">Edit Profile</h1>
           <Link href="/settings" onClick={(event) => handleProfileLink(event, "/settings")} className="rounded-xl border border-[#D7E3F2] bg-[#F8FBFF] px-4 py-2.5 text-sm font-semibold text-[#071F4D]">Settings</Link>
         </div>
-        <p className="mt-4 text-xl text-black">
+        <p className="mt-3 text-base text-[#53657D]">
           Update your name and profile image.
         </p>
 
-        <section className="mt-12 rounded-3xl border border-slate-200 bg-white p-8 shadow-sm">
+        <section className="mt-8 rounded-2xl border border-[#DCE3EC] bg-white p-5 shadow-sm sm:p-8">
           <div className="flex flex-col gap-8 sm:flex-row sm:items-center">
             {avatarUrl ? (
-              <img
+              <Image unoptimized width={1200} height={800}
                 src={avatarUrl}
                 alt="Profile"
                 onError={() => setAvatarUrl("")}
@@ -332,7 +340,7 @@ export default function ProfilePage() {
               />
             ) : (
               <div
-                className={`grid h-32 w-32 place-items-center rounded-full ${avatarColor} text-4xl font-black text-white`}
+                className={`grid h-32 w-32 place-items-center rounded-full ${avatarColor} text-4xl font-semibold text-white`}
               >
                 {initials}
               </div>
@@ -342,7 +350,7 @@ export default function ProfilePage() {
               <button
                 type="button"
                 onClick={() => fileInputRef.current?.click()}
-                className="rounded-2xl bg-[#071f4d] px-8 py-4 text-lg font-black text-white"
+                className="rounded-2xl bg-[#071f4d] px-8 py-4 text-lg font-semibold text-white"
               >
                 Change Image
               </button>
@@ -350,7 +358,7 @@ export default function ProfilePage() {
               <input
                 ref={fileInputRef}
                 type="file"
-                accept="image/*"
+                accept="image/jpeg,image/png,image/webp"
                 onChange={handleImageUpload}
                 className="hidden"
               />
@@ -362,11 +370,13 @@ export default function ProfilePage() {
           </div>
 
           <div className="mt-10">
-            <label className="text-sm font-black uppercase tracking-[0.14em] text-black">
+            <label htmlFor="profile-full-name" className="text-sm font-semibold uppercase tracking-[0.14em] text-black">
               Full Name
             </label>
 
             <input
+              id="profile-full-name"
+              maxLength={100}
               value={fullName}
               onChange={(e) => setFullName(e.target.value)}
               className="mt-3 w-full rounded-2xl border border-slate-200 px-5 py-4 text-lg outline-none focus:border-blue-500"
@@ -374,7 +384,7 @@ export default function ProfilePage() {
           </div>
 
           <div className="mt-7">
-            <label className="text-sm font-black uppercase tracking-[0.14em] text-black">Email address</label>
+            <p className="text-sm font-semibold uppercase tracking-[0.14em] text-black">Email address</p>
             <p className="mt-3 rounded-2xl border border-slate-200 bg-slate-50 px-5 py-4 text-base text-slate-600">{email || "Not available"}</p>
           </div>
 
@@ -394,7 +404,7 @@ export default function ProfilePage() {
             type="button"
             onClick={() => void handleSaveName()}
             disabled={saving}
-            className="mt-8 rounded-2xl bg-blue-600 px-8 py-4 text-lg font-black text-white disabled:opacity-60"
+            className="mt-8 rounded-2xl bg-blue-600 px-8 py-4 text-lg font-semibold text-white disabled:opacity-60"
           >
             {saving ? "Saving..." : "Save Profile"}
           </button>
@@ -438,7 +448,7 @@ export default function ProfilePage() {
           aria-describedby="unsaved-profile-description"
           className="w-full max-w-md rounded-2xl bg-white p-6 text-[#061633] shadow-2xl"
         >
-          <h2 id="unsaved-profile-title" className="text-xl font-black">
+          <h2 id="unsaved-profile-title" className="text-xl font-semibold">
             Save changes before leaving?
           </h2>
           <p id="unsaved-profile-description" className="mt-3 text-sm leading-6 text-slate-600">

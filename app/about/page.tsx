@@ -1,5 +1,7 @@
 "use client";
 
+import Image from "next/image";
+
 import Link from "next/link";
 import { ArrowLeft, ArrowRight } from "lucide-react";
 
@@ -7,13 +9,13 @@ const shellClass = "mx-auto w-full max-w-[900px] px-5 sm:px-8";
 
 export default function AboutPage() {
   return (
-    <main className="min-h-screen bg-white font-sans text-[#0A1628]">
+    <main id="main-content" className="min-h-screen bg-white font-sans text-[#0A1628]">
       <header className="border-b border-[#E3E6EC]">
         <div
           className={`${shellClass} flex items-center justify-between py-5`}
         >
           <Link href="/" className="flex items-center gap-3">
-            <img
+            <Image unoptimized width={64} height={64}
               src="/logo/favicon.png"
               alt="GAHN AI"
               className="h-10 w-10 rounded-full object-cover"
@@ -41,45 +43,43 @@ export default function AboutPage() {
           </p>
 
           <h1 className="mt-4 text-4xl font-extrabold leading-tight tracking-[-0.035em] sm:text-5xl">
-            Learning that adapts to you, not the other way around.
+            A clearer path from a question to understanding.
           </h1>
 
           <p className="mt-5 max-w-2xl text-lg leading-8 text-black">
-            GAHN AI, Global AI Human Helper Network, is a structured learning
-            platform built around one idea: an AI instructor should teach the
-            way a good tutor does. It explains a concept, checks that you
-            actually understood it, corrects you when you didn&apos;t, and
-            adjusts based on how you&apos;re doing.
+            GAHN AI, Global AI Human Helper Network, is an education project
+            in development. We are designing a learning environment where an
+            AI instructor explains an idea, gives you a task, reviews your
+            reasoning, and helps you work through mistakes.
           </p>
         </div>
       </section>
 
       <section className={`${shellClass} space-y-10 py-16 sm:py-20`}>
         <div>
-          <h2 className="text-2xl font-bold">Why we built this</h2>
+          <h2 className="text-2xl font-bold">What we are building</h2>
 
           <p className="mt-4 text-base leading-7 text-black">
-            Most AI tools answer whatever you ask, in whatever order you ask
-            it. That&apos;s useful, but it isn&apos;t teaching, it&apos;s
-            lookup. GAHN AI was built to do something different: run an actual
-            lesson. Teach a concept, give you a task, check your answer, correct
-            mistakes, and ask you to try again until it sticks. The goal
-            isn&apos;t a fast answer. It&apos;s real understanding that lasts.
+            GAHN will bring conversation and practical work into one workspace.
+            The instructor will guide the discussion while Magic Canvas holds
+            examples, questions, notes, and exercises. The planned teaching
+            process includes independent attempts, specific feedback, and review
+            of earlier mistakes. That experience still needs implementation and testing.
           </p>
         </div>
 
         <div>
           <h2 className="text-2xl font-bold">
-            What &quot;adapts to you&quot; actually means
+            How the planned lessons will work
           </h2>
 
           <p className="mt-4 text-base leading-7 text-black">
-            An AI instructor on GAHN AI notices your current level, adjusts
-            explanations when you&apos;re confused, remembers what you&apos;ve
-            struggled with, and paces future lessons around that. It isn&apos;t
-            a replacement for great human teachers, it&apos;s a way to give
-            more people access to personalized, patient instruction whenever
-            they need it.
+            Learner responses should determine what happens next: another
+            example, a simpler explanation, more practice, or a harder task.
+            Progress should reflect work a learner has demonstrated. The planned
+            system will support learning alongside teachers and other qualified
+            professionals. Required schooling, supervised training, licensing,
+            and professional judgment remain separate responsibilities.
           </p>
         </div>
 
@@ -87,12 +87,10 @@ export default function AboutPage() {
           <h2 className="text-2xl font-bold">Who it&apos;s for</h2>
 
           <p className="mt-4 text-base leading-7 text-black">
-            Students working through school subjects, self learners building
-            career and life skills, and anyone who wants to actually understand
-            something instead of just getting an answer. GAHN AI is designed around five learning worlds. The current MVP only
-            opens Career Skills and School Help so the private tutor experience
-            can be tested before Brain Development, General Knowledge, and Book
-            Intelligence are released.
+            Students, independent learners, and people exploring digital career
+            skills can browse five Learning Worlds: Career Skills, School Help,
+            Brain Development, General Knowledge, and Book Intelligence. All
+            five are open for exploration. Interactive instruction is not available yet.
           </p>
         </div>
 
@@ -100,10 +98,10 @@ export default function AboutPage() {
           <h2 className="text-2xl font-bold">Where we are</h2>
 
           <p className="mt-4 text-base leading-7 text-black">
-            GAHN AI is early. We&apos;re building in public, taking feedback
-            seriously, and shipping improvements constantly. If something on
-            the platform doesn&apos;t work the way you&apos;d expect, we want
-            to hear about it.
+            You can create an early-access account, explore planned curricula,
+            preview the instructor and Magic Canvas layout, and share feedback.
+            The live instructor and paid subscriptions are not active. Your
+            feedback will help us decide what to improve before a learner pilot.
           </p>
         </div>
 

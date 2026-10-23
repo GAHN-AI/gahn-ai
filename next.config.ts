@@ -13,6 +13,11 @@ export default withSentryConfig(nextConfig, {
 
   project: "gahn-ai",
 
+  // Build verification should not export build-system telemetry.
+  telemetry: false,
+  // Local acceptance checks compile without sending source maps to a service.
+  sourcemaps: { disable: process.env.GAHN_LOCAL_CHECKS === "true" },
+
   // Only print logs for uploading source maps in CI
   silent: !process.env.CI,
 

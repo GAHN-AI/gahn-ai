@@ -1,36 +1,43 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# GAHN AI
 
-## Getting Started
+GAHN AI is an education MVP in **early-access preview mode**. Visitors can register, sign in, browse five Learning Worlds, inspect planned curricula, and preview the instructor/Magic Canvas layout. Interactive teaching, paid subscriptions, homework analysis, and provider-session creation are paused.
 
-First, run the development server:
+## Application
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+- Next.js App Router, React, and TypeScript.
+- Supabase account authentication and learner records.
+- Vercel hosting; Stripe, Resend, PostHog, and Sentry integrations already exist.
+- 41 active digital-career previews, with role-specific course plans and original SVG illustrations.
+
+## Development
+
+Install the committed dependencies with `npm ci`. Configure environment values locally using `.env.example` as a guide; never commit credentials. `npm run dev` starts the application.
+
+Checks:
+
+```sh
+npm run lint
+npx tsc --noEmit
+npm run verify:curriculum
+GAHN_LOCAL_CHECKS=true NEXT_TELEMETRY_DISABLED=1 npm run build
+npm run verify:routes
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+The local-check build disables source-map uploads, and build-system telemetry is disabled in `next.config.ts`. The normal production build remains `npm run build`.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Curriculum and artwork
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+- `lib/careerCatalog.ts`: the active career directory and image assignments.
+- `lib/curricula/`: authored plans grouped by career field.
+- `lib/careerCurricula.ts`: normalized section/lesson IDs and preview route helpers.
+- `lib/topicStudyPlans.ts`: the other Learning Worlds' study outlines.
+- `scripts/generate-career-artwork.py`: original SVG scene source; no remote image or paid generation API is used.
+- `scripts/verify-curriculum.mjs`: coverage, lesson links, original assets, and prelaunch invariants.
 
-## Learn More
+Legacy `lib/careerCurriculum.ts` and provider components remain for future engineering work. Check callers before reusing or removing them.
 
-To learn more about Next.js, take a look at the following resources:
+## Release boundaries
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+`lib/lessonLaunch.ts` is the shared launch policy. Do not enable it as part of ordinary design or content work. Keep paid plan purchase flags and live/text entitlements off until a separately approved product launch. Do not create paid provider sessions while testing previews. Preserve existing accounts, notes, progress, files, and subscriptions.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+See [the audit record](docs/professional-platform-audit.md), [early-access policy](docs/public-early-access-preview-mode.md), [Tavus handoff](docs/tavus-integration-handoff.md), and [future teaching-model policy](docs/future-teacher-brain-model-policy.md).
