@@ -616,12 +616,15 @@ export async function POST(req: Request) {
       }
     }
 
-    const access = await requireEntitlement(user.id, "liveInstructor");
+    // Core text teaching, including Magic Canvas and lesson persistence, is
+    // available on the Free Plan. This endpoint never creates a Tavus or
+    // LiveAvatar video session. Video and add-on features are checked elsewhere.
+    const access = await requireEntitlement(user.id, "textLessons");
 
     if (!access.allowed) {
       return NextResponse.json(
         {
-          error: "Instructor access is not included in your current plan.",
+          error: "Text lessons are not available for this account.",
           planId: access.planId,
         },
         { status: 403 }
