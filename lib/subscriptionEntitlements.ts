@@ -15,13 +15,19 @@ export type SubscriptionEntitlements = {
   // Availability
   purchaseEnabled: boolean;
 
+  // Core signed-in text lessons are independent of paid video access.
+  // Every plan can start a text lesson; add-ons remain independently gated.
+  textLessons: boolean;
+
   // Learning access
   allLearningWorlds: boolean;
   multilingualLearning: boolean;
   adaptiveLearning: boolean;
   masteryAssessments: boolean;
 
-  // AI instructor
+  // Real-time paid video is deliberately unavailable until the provider,
+  // billing, unit economics and launch policy have been reviewed.
+  // This is NOT the switch for free AI-guided text lessons.
   liveInstructor: boolean;
   liveInstructorMinutesPerMonth: number | null;
 
@@ -91,6 +97,8 @@ export const SUBSCRIPTION_ENTITLEMENTS: Record<
 
     purchaseEnabled: true,
 
+    textLessons: true,
+
     allLearningWorlds: true,
     multilingualLearning: true,
     adaptiveLearning: true,
@@ -145,20 +153,24 @@ export const SUBSCRIPTION_ENTITLEMENTS: Record<
     customContracts: false,
   },
 
+  // Draft paid features remain visible in the product roadmap, but must not
+  // grant billable video access or allow checkout before launch.
   learner_plus: {
     planId: "learner_plus",
     name: "Learner Plus",
     monthlyPrice: 29,
 
-    purchaseEnabled: true,
+    purchaseEnabled: false,
+
+    textLessons: true,
 
     allLearningWorlds: true,
     multilingualLearning: true,
     adaptiveLearning: true,
     masteryAssessments: true,
 
-    liveInstructor: true,
-    liveInstructorMinutesPerMonth: 30,
+    liveInstructor: false,
+    liveInstructorMinutesPerMonth: 0,
 
     learningCanvas: true,
     advancedLearningCanvas: false,
@@ -213,13 +225,15 @@ export const SUBSCRIPTION_ENTITLEMENTS: Record<
 
     purchaseEnabled: false,
 
+    textLessons: true,
+
     allLearningWorlds: true,
     multilingualLearning: true,
     adaptiveLearning: true,
     masteryAssessments: true,
 
-    liveInstructor: true,
-    liveInstructorMinutesPerMonth: 90,
+    liveInstructor: false,
+    liveInstructorMinutesPerMonth: 0,
 
     learningCanvas: true,
     advancedLearningCanvas: true,
@@ -274,13 +288,15 @@ export const SUBSCRIPTION_ENTITLEMENTS: Record<
 
     purchaseEnabled: false,
 
+    textLessons: true,
+
     allLearningWorlds: true,
     multilingualLearning: true,
     adaptiveLearning: true,
     masteryAssessments: true,
 
-    liveInstructor: true,
-    liveInstructorMinutesPerMonth: 180,
+    liveInstructor: false,
+    liveInstructorMinutesPerMonth: 0,
 
     learningCanvas: true,
     advancedLearningCanvas: true,
@@ -335,12 +351,14 @@ export const SUBSCRIPTION_ENTITLEMENTS: Record<
 
     purchaseEnabled: false,
 
+    textLessons: true,
+
     allLearningWorlds: true,
     multilingualLearning: true,
     adaptiveLearning: true,
     masteryAssessments: true,
 
-    liveInstructor: true,
+    liveInstructor: false,
 
     // We have not finalized classroom pooled Tavus usage yet.
     liveInstructorMinutesPerMonth: null,
@@ -398,12 +416,14 @@ export const SUBSCRIPTION_ENTITLEMENTS: Record<
 
     purchaseEnabled: false,
 
+    textLessons: true,
+
     allLearningWorlds: true,
     multilingualLearning: true,
     adaptiveLearning: true,
     masteryAssessments: true,
 
-    liveInstructor: true,
+    liveInstructor: false,
 
     // School-wide pooled usage will be decided before launch.
     liveInstructorMinutesPerMonth: null,
@@ -461,12 +481,14 @@ export const SUBSCRIPTION_ENTITLEMENTS: Record<
 
     purchaseEnabled: false,
 
+    textLessons: true,
+
     allLearningWorlds: true,
     multilingualLearning: true,
     adaptiveLearning: true,
     masteryAssessments: true,
 
-    liveInstructor: true,
+    liveInstructor: false,
     liveInstructorMinutesPerMonth: null,
 
     learningCanvas: true,
