@@ -138,13 +138,13 @@ export default function LearningSectionPage() {
         ) : (
           <section className="mt-8 rounded-[16px] border border-[#E1E3E8] bg-white p-6 sm:p-8">
             <p className="text-xs font-semibold uppercase tracking-[0.14em] text-[#0B5CFF]">
-              Private lesson
+              Upcoming guided lessons
             </p>
             <h2 className="mt-2 text-[27px] font-semibold tracking-[-0.03em]">
-              Learn {section.title.toLowerCase()} with the GAHN AI instructor
+              Explore upcoming {section.title.toLowerCase()} lessons
             </h2>
             <p className="mt-3 max-w-[720px] text-[14px] leading-6 text-[#3C3E45]">
-              The lesson will teach the concept, ask you to respond, check what you understand, explain weak points differently, and give you practice before moving on.
+              Browse the topics and planned learning goals below. Interactive instruction is still in development and will become available after launch.
             </p>
 
             <div className="mt-6 grid gap-4 md:grid-cols-2">
