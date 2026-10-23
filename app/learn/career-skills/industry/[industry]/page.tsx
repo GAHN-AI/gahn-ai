@@ -93,6 +93,7 @@ export default async function CareerIndustryPage({ params }: Props) {
               >
                 <div className="aspect-[8/5] overflow-hidden bg-[#EDF2F8]">
                   <Image
+                    unoptimized
                     src={career.imageUrl}
                     width={960}
                     height={600}
