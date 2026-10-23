@@ -149,7 +149,7 @@ export default function TopicOverviewPage() {
                   Skills you&apos;ll learn
                 </h2>
                 <p className="mt-3 text-sm leading-6 text-[#53657D]">
-                  Build these abilities in order, then practise applying them to realistic problems and conversations.
+                  These are the skills GAHN plans to teach through guided exercises and realistic practice once interactive lessons launch.
                 </p>
                 <ol className="mt-5 space-y-3">
                   {skillRoadmap.steps.map((step, index) => (
@@ -172,13 +172,13 @@ export default function TopicOverviewPage() {
 
             <div className="mt-8 border-t border-[#EEEEF1] pt-7">
               <p className="text-xs font-semibold uppercase tracking-[0.14em] text-[#0B5CFF]">
-                How the lesson works
+                Planned lesson experience
               </p>
               <div className="mt-5 grid gap-3 sm:grid-cols-3">
                 {[
-                  "The instructor teaches the concept clearly.",
-                  "You answer questions so GAHN can check understanding.",
-                  "Weak points are taught again before more practice.",
+                  "The instructor will explain concepts with worked examples.",
+                  "Learners will answer questions and receive feedback.",
+                  "Lessons will revisit mistakes and build skills through practice.",
                 ].map((label) => (
                   <div
                     key={label}
@@ -197,10 +197,10 @@ export default function TopicOverviewPage() {
               <ShieldCheck className="h-5 w-5" />
             </div>
             <p className="mt-5 text-xs font-semibold uppercase tracking-[0.14em] text-[#0B5CFF]">
-              Private AI lesson
+              Learning workspace preview
             </p>
             <h2 className="mt-2 text-xl font-semibold">
-              Start this lesson
+              Interactive lessons coming later
             </h2>
 
             <div className="mt-5 space-y-3 text-sm">
@@ -218,7 +218,7 @@ export default function TopicOverviewPage() {
               href={startHref}
               className="mt-6 flex h-11 w-full items-center justify-center gap-2 rounded-lg bg-[#0B5CFF] px-5 text-sm font-semibold text-white transition hover:bg-[#094FD9]"
             >
-              Start private lesson
+              Preview workspace
               <ArrowRight className="h-4 w-4" />
             </Link>
           </aside>
