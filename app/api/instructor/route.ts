@@ -626,9 +626,9 @@ export async function POST(req: Request) {
       }
     }
 
-    // Core text teaching, including Magic Canvas and lesson persistence, is
-    // available on the Free Plan. This endpoint never creates a Tavus or
-    // LiveAvatar video session. Video and add-on features are checked elsewhere.
+    // Reserved for a future approved teaching release. Both the global
+    // launch policy above and the per-plan entitlement must permit lessons
+    // before this code can run. No Tavus/LiveAvatar session starts here.
     const access = await requireEntitlement(user.id, "textLessons");
 
     if (!access.allowed) {
