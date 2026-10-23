@@ -14,9 +14,6 @@ import {
   Rocket,
 } from "lucide-react";
 
-const SITE_URL =
-  process.env.NEXT_PUBLIC_SITE_URL || "https://gahnai.com";
-
 const sourceSans = Source_Sans_3({
   subsets: ["latin"],
 });
@@ -117,7 +114,7 @@ export default function LoginPage() {
       const { error: googleError } = await supabase.auth.signInWithOAuth({
         provider: "google",
         options: {
-          redirectTo: `${SITE_URL}/auth/callback?intent=login`,
+          redirectTo: `${window.location.origin}/auth/callback?intent=login`,
           queryParams: { prompt: "select_account" },
         },
       });
@@ -145,7 +142,7 @@ export default function LoginPage() {
     try {
       const { error: resetError } =
         await supabase.auth.resetPasswordForEmail(cleanEmail, {
-          redirectTo: `${SITE_URL}/auth/callback?next=/update-password`,
+          redirectTo: `${window.location.origin}/auth/callback?next=/update-password`,
         });
 
       if (resetError) {
@@ -163,7 +160,7 @@ export default function LoginPage() {
       setResetLoading(false);
     }
 
-    setMessage("If a password reset is available for this email, you'll receive a link. Check your inbox and spam folder. Signed up with Google? Use Continue with Google instead.");
+    setMessage("If this email can receive a password setup or reset link, check your inbox and spam folder. Google users can keep signing in with Google or create a password for the same email.");
   }
 
   return (
@@ -262,7 +259,7 @@ export default function LoginPage() {
             </h2>
 
             <p className="mt-3 text-sm leading-6 text-black sm:text-base">
-              Access your learning dashboard and continue your progress.
+              Access your early-access dashboard, Learning Worlds and account settings.
             </p>
 
             <button
@@ -282,7 +279,7 @@ export default function LoginPage() {
             </button>
 
             <p className="mt-3 text-center text-xs leading-5 text-slate-600">
-              Use your existing Google account to sign in. If you're new, Google will create a Free Plan account for you.
+              Use your existing Google account to sign in. You can also set a password for the same email using Forgot Password below.
             </p>
 
             <div className="my-6 flex items-center gap-4 text-xs font-bold uppercase tracking-[0.12em] text-black">
@@ -331,7 +328,7 @@ export default function LoginPage() {
                   disabled={resetLoading}
                   className="font-semibold text-[#1677FF] hover:text-[#0F65E8] disabled:cursor-not-allowed disabled:opacity-60"
                 >
-                  {resetLoading ? "Sending..." : "Forgot Password?"}
+                  {resetLoading ? "Sending..." : "Forgot password / create one"}
                 </button>
               </div>
 
