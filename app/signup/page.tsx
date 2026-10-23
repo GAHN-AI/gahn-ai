@@ -15,9 +15,6 @@ import {
   Trophy,
 } from "lucide-react";
 
-const SITE_URL =
-  process.env.NEXT_PUBLIC_SITE_URL || "https://gahnai.com";
-
 const sourceSans = Source_Sans_3({ subsets: ["latin"] });
 
 const features = [
@@ -122,7 +119,7 @@ export default function SignupPage() {
         password,
         options: {
           data: { full_name: cleanName },
-          emailRedirectTo: `${SITE_URL}/auth/callback`,
+          emailRedirectTo: `${window.location.origin}/auth/callback`,
         },
       });
       signupData = result.data;
@@ -175,7 +172,7 @@ export default function SignupPage() {
         type: "signup",
         email: cleanEmail,
         options: {
-          emailRedirectTo: `${SITE_URL}/auth/callback`,
+          emailRedirectTo: `${window.location.origin}/auth/callback`,
         },
       });
 
@@ -208,7 +205,7 @@ export default function SignupPage() {
       const { error: googleError } = await supabase.auth.signInWithOAuth({
         provider: "google",
         options: {
-          redirectTo: `${SITE_URL}/auth/callback?intent=signup`,
+          redirectTo: `${window.location.origin}/auth/callback?intent=signup`,
           queryParams: { prompt: "select_account" },
         },
       });

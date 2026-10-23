@@ -62,7 +62,7 @@ export default function UpdatePasswordPage() {
       setConfirmPassword("");
       const { error: signOutError } = await supabase.auth.signOut({ scope: "local" });
       if (signOutError) console.error("Logout after password reset failed:", signOutError);
-      setMessage("Password updated. You can now log in with your new password.");
+      setMessage("Password saved. You can sign in using your email address and new password. If you joined through Google, that sign-in method remains available.");
       if (!signOutError) window.setTimeout(() => window.location.replace("/login"), 1500);
     } catch {
       setError("Unable to connect to the authentication service. Please try again.");
@@ -83,13 +83,13 @@ export default function UpdatePasswordPage() {
         </header>
 
         <section className="rounded-3xl border border-[#D7E3F2] bg-white p-6 shadow-xl sm:p-10">
-          <h1 className="text-3xl font-black tracking-tight">Create a new password</h1>
+          <h1 className="text-3xl font-black tracking-tight">Create or reset your password</h1>
           {status === "checking" ? (
             <p role="status" className="mt-5 text-sm text-[#53647D]">Checking your reset link...</p>
           ) : status === "invalid" ? (
             <div className="mt-6 space-y-5">
               <p role="alert" className="rounded-xl border border-red-200 bg-red-50 p-4 text-sm text-red-700">
-                Your reset link has expired or could not be verified. Request a new link from the login page.
+                Your password setup or reset link may have expired, may not be authorized for this site, or could not be verified. Request another link from the login page.
               </p>
               <Link href="/login" className="inline-flex rounded-xl bg-[#1677FF] px-5 py-3 text-sm font-semibold text-white">
                 Return to login
@@ -98,7 +98,7 @@ export default function UpdatePasswordPage() {
           ) : (
             <>
               <p className="mt-3 text-sm leading-6 text-[#53647D]">
-                Enter and confirm your new password. Use at least 8 characters.
+                Choose and confirm a new password of at least 8 characters. Your email address will be your login ID. You can still sign in with Google if you previously used it.
               </p>
               <form onSubmit={handleUpdatePassword} className="mt-7 space-y-5">
                 <div>

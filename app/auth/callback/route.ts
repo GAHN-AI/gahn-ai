@@ -15,8 +15,26 @@ function safeNext(next: string | null) {
   return next === "/update-password" ? "/update-password" : "/dashboard";
 }
 
-function redirect(path: string) {
-  return NextResponse.redirect(new URL(path, SITE_URL));
+/**
+ * Keep the authenticated redirect on the same trusted host where PKCE
+ * began. Switching from www.gahnai.com to gahnai.com (or vice versa) can
+ * hide the newly written auth cookie and strand password recovery.
+ *
+ * Do not trust arbitrary request hosts: prevent an open redirect.
+ */
+function redirect(path: string, requestUrl: URL) {
+  const productionHosts = new Set(["gahnai.com", "www.gahnai.com"]);
+  const previewHost = (process.env.VERCEL_URL || process.env.NEXT_PUBLIC_VERCEL_URL || "")
+    .replace(/^https?:\/\//, "")
+    .split("/")[0]
+    .split(":")[0]
+    .toLowerCase();
+  const host = requestUrl.hostname.toLowerCase();
+  const isLocal = process.env.NODE_ENV !== "production" &&
+    (host === "localhost" || host === "127.0.0.1");
+  const isTrusted = productionHosts.has(host) || isLocal || Boolean(previewHost && host === previewHost);
+  const origin = isTrusted ? requestUrl.origin : new URL(SITE_URL).origin;
+  return NextResponse.redirect(new URL(path, origin), { status: 303 });
 }
 
 function escapeHtml(value: string) {
@@ -34,6 +52,7 @@ export async function GET(request: Request) {
   const tokenHash = url.searchParams.get("token_hash");
   const type = url.searchParams.get("type") as EmailOtpType | null;
   const next = safeNext(url.searchParams.get("next"));
+  const isRecovery = next === "/update-password" || type === "recovery";
 
   const cookieStore = await cookies();
 
@@ -66,12 +85,12 @@ export async function GET(request: Request) {
     });
     authError = result.error;
   } else {
-    return redirect("/login?error=authentication_failed");
+    return redirect("/login?error=authentication_failed", url);
   }
 
   if (authError) {
     console.error("Authentication verification failed:", authError);
-    return redirect("/login?error=authentication_failed");
+    return redirect("/login?error=authentication_failed", url);
   }
 
   const {
@@ -81,11 +100,11 @@ export async function GET(request: Request) {
 
   if (userError || !user) {
     console.error("Authenticated user could not be loaded:", userError);
-    return redirect("/login?error=authentication_failed");
+    return redirect("/login?error=authentication_failed", url);
   }
 
-  if (next === "/update-password") {
-    return redirect("/update-password");
+  if (isRecovery) {
+    return redirect("/update-password", url);
   }
 
   const email = user.email?.trim().toLowerCase();
@@ -108,7 +127,7 @@ export async function GET(request: Request) {
 
   if (profileLookupError) {
     console.error("Profile lookup failed:", profileLookupError);
-    return redirect("/login?error=profile_setup_failed");
+    return redirect("/login?error=profile_setup_failed", url);
   }
 
   let profile = existingProfile;
@@ -133,7 +152,7 @@ export async function GET(request: Request) {
 
     if (profileCreateError) {
       console.error("Profile creation failed:", profileCreateError);
-      return redirect("/login?error=profile_setup_failed");
+      return redirect("/login?error=profile_setup_failed", url);
     }
 
     profile = createdProfile;
@@ -177,6 +196,7 @@ export async function GET(request: Request) {
   // When Google or email signup creates the first profile, make it clear
   // that this is a new Free Plan account, not the restored old account.
   return redirect(
-    isNewProfile && next === "/dashboard" ? "/dashboard?welcome=1" : next
+    isNewProfile && next === "/dashboard" ? "/dashboard?welcome=1" : next,
+    url
   );
 }

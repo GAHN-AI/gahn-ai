@@ -90,7 +90,8 @@ const plans: Plan[] = [
 const comparisonRows = [
   ["Learning World and curriculum previews", "Included", "Included", "Included", "Included"],
   ["Interactive lessons", "Not launched", "Planned", "Planned", "Planned"],
-  ["Live AI instructor time", "Not included", "Not finalized", "Not finalized", "Not finalized"],
+  ["Included AI tutor minutes per billing month", "Not included", "To be announced", "To be announced", "To be announced"],
+  ["Maximum duration per live tutor session", "Not included", "To be announced", "To be announced", "To be announced"],
   ["Homework file uploads", "Not included", "Included", "Included", "Included"],
   ["Study guides and review questions", "Not included", "Included", "Included", "Included"],
   ["Advanced Magic Canvas", "Not included", "Not included", "Included", "Included"],
@@ -271,7 +272,7 @@ export default function PricingPage() {
             Choose the learning plan that fits you
           </h1>
           <p className="mx-auto mt-5 max-w-3xl text-base font-medium leading-7 text-black">
-            Early access is free. You can browse the Learning Worlds and preview the future workspace; interactive lessons and paid plans are not launched yet.
+            Early access is free. Interactive lessons and paid plans are not launched yet. Before subscriptions open, each paid tier will clearly show its included tutor minutes per billing month and the maximum length of one live session.
           </p>
         </div>
       </section>
@@ -303,7 +304,7 @@ export default function PricingPage() {
               See exactly what changes between plans
             </h2>
             <p className="mx-auto mt-4 max-w-2xl text-base leading-7 text-black">
-              Paid plans are previews of what GAHN AI is building. Subscriptions are not available yet. Live instructor-minute allowances and usage limits will be finalized after provider pricing and testing.
+              Paid plans are previews, not purchasable subscriptions. Monthly tutor-minute allowances, individual session limits and any overage policy will be published before checkout is enabled.
             </p>
           </div>
 

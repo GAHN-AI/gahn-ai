@@ -87,7 +87,7 @@ export default function SettingsPage() {
         redirectTo: `${window.location.origin}/auth/callback?next=/update-password`,
       });
       if (resetError) throw resetError;
-      setMessage("If your account can receive password-reset emails, a link has been sent. Check your inbox.");
+      setMessage("If a password setup or reset link can be sent to your email, check your inbox and spam folder. The link should open a page to enter a new password.");
     } catch {
       setError("Could not request a password reset right now. Please try again later.");
     } finally {
@@ -161,12 +161,12 @@ export default function SettingsPage() {
           <div className="flex items-start gap-4 p-5">
             <KeyRound className="mt-0.5 h-5 w-5 shrink-0 text-[#1677FF]" />
             <div className="min-w-0 flex-1">
-              <h3 className="font-semibold">Password and sign-in</h3>
+              <h3 className="font-semibold">Email and password sign-in</h3>
               <p className="mt-1 break-words text-sm text-[#53657D]">{email ? `Signed in as ${email}` : "Email address unavailable"}</p>
-              <p className="mt-1 text-xs leading-5 text-[#64748B]">Receive a secure password-reset link. This also works if you use Google sign-in and want to set a password.</p>
+              <p className="mt-1 text-xs leading-5 text-[#64748B]">Get a secure email link to create or reset your password. If you joined with Google, you can use the same email for both Google sign-in and email/password sign-in.</p>
               <button type="button" onClick={() => void sendPasswordReset()} disabled={!email || passwordLoading}
                 className="mt-3 rounded-lg border border-[#CCD9E9] px-4 py-2.5 text-sm font-semibold text-[#0B1739] hover:bg-[#F6F9FD] disabled:opacity-50">
-                {passwordLoading ? "Sending..." : "Email password-reset link"}
+                {passwordLoading ? "Sending..." : "Email password setup / reset link"}
               </button>
             </div>
           </div>
