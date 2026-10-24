@@ -8,7 +8,10 @@
   - had activity in the past **120 seconds**,
   - has continued for **5 seconds or longer** after its first page view.
 - Client-side `SitePresence` sends heartbeats every 10 seconds when the tab is visible; it sends a best-effort leave beacon when the tab is hidden or closed.
-- The dashboard refreshes every **30 seconds**.
+- The **Active now** card checks a lightweight admin-only `/api/admin/analytics/active` endpoint every **1 second** while the dashboard tab is visible. Only one check is in flight at a time; hidden tabs stop polling.
+- All other dashboard numbers and signup emails continue refreshing every **30 seconds**.
+- These are **checks**, not a guaranteed one-second visitor event stream: client heartbeats still arrive every **10 seconds**, and actual counts only change when sessions qualify, leave, or expire.
+- This is a faster read-only refresh but uses additional Vercel function invocations and database reads (up to 3,600 requests per hour for an open admin tab). Review billing if used extensively.
 - Both `activeNow` and `activeSignedInNow` count unique **browser IDs**, not provably unique people, verified members or paying customers. A person can appear more than once across devices/browsers; some bots can still appear. A visitor who exits or goes idle stops appearing after at most ~2 minutes.
 - No new tables, schema migrations or deletions are required.
 
