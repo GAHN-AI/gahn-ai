@@ -11,7 +11,7 @@ const posthogHost = process.env.NEXT_PUBLIC_POSTHOG_HOST;
 if (projectToken) {
   posthog.init(projectToken, {
     api_host: posthogHost,
-    defaults: "2026-08-30",
+    defaults: "2026-05-30",
   });
 }
 export const onRouterTransitionStart = Sentry.captureRouterTransitionStart;
