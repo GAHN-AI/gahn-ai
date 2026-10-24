@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useRef } from "react";
 import { usePathname } from "next/navigation";
 import { supabase } from "@/lib/supabaseClient";
+import posthog from "posthog-js";
 
 const VISITOR_ID_KEY = "gahn_presence_visitor_id";
 const SESSION_ID_KEY = "gahn_analytics_session_id";
@@ -93,6 +94,7 @@ export default function SitePresence() {
   const sessionIdRef = useRef("");
   const currentPathRef = useRef(pathname || "/");
   const authenticatedRef = useRef(false);
+  const posthogUserRef = useRef<string | null>(null);
   const initializedRef = useRef(false);
   const lastTrackedPathRef = useRef("");
   const attributionRef = useRef<Attribution>({
@@ -101,6 +103,24 @@ export default function SitePresence() {
     medium: "",
     campaign: "",
   });
+
+  const syncPosthogIdentity = useCallback((userId: string | null) => {
+    // PostHog's identity is the stable Supabase user ID, never the email.
+    // Do not initialize a second SDK instance: instrumentation-client.ts
+    // owns that. This only links signed-in events to the same user.
+    if (
+      !process.env.NEXT_PUBLIC_POSTHOG_PROJECT_TOKEN &&
+      !process.env.NEXT_PUBLIC_POSTHOG_KEY
+    ) return;
+
+    if (userId && posthogUserRef.current !== userId) {
+      posthog.identify(userId);
+      posthogUserRef.current = userId;
+    } else if (!userId && posthogUserRef.current) {
+      posthog.reset();
+      posthogUserRef.current = null;
+    }
+  }, []);
 
   const buildPayload = useCallback(
     (action: "page_view" | "heartbeat" | "leave", pathOverride?: string) => ({
@@ -184,6 +204,7 @@ export default function SitePresence() {
 
       if (!active) return;
       authenticatedRef.current = Boolean(session?.user);
+      syncPosthogIdentity(session?.user?.id ?? null);
       initializedRef.current = true;
       lastTrackedPathRef.current = currentPathRef.current;
       await send("page_view", currentPathRef.current);
@@ -195,6 +216,7 @@ export default function SitePresence() {
       data: { subscription: authSubscription },
     } = supabase.auth.onAuthStateChange((_event, session) => {
       authenticatedRef.current = Boolean(session?.user);
+      syncPosthogIdentity(session?.user?.id ?? null);
       if (initializedRef.current) void send("heartbeat");
     });
 
@@ -224,7 +246,7 @@ export default function SitePresence() {
       authSubscription.unsubscribe();
       sendLeaveBeacon();
     };
-  }, [isAdminRoute, send, sendLeaveBeacon]);
+  }, [isAdminRoute, send, sendLeaveBeacon, syncPosthogIdentity]);
 
   return null;
 }
