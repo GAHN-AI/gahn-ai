@@ -1,7 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useState } from "react";
-import { Mail, RefreshCw, UserRoundPlus, Users } from "lucide-react";
+import { Activity, Mail, RefreshCw, UserRoundPlus, Users } from "lucide-react";
 
 type SignupEmail = {
   email: string;
@@ -14,6 +14,9 @@ type AnalyticsData = {
   signupEmails: SignupEmail[];
   anonymousVisitors: number;
   trackedVisitors: number;
+  activeNow: number;
+  activeSignedInNow: number;
+  activeWindowSeconds: number;
 };
 
 const emptyData: AnalyticsData = {
@@ -22,6 +25,9 @@ const emptyData: AnalyticsData = {
   signupEmails: [],
   anonymousVisitors: 0,
   trackedVisitors: 0,
+  activeNow: 0,
+  activeSignedInNow: 0,
+  activeWindowSeconds: 120,
 };
 
 function formatNumber(value: number) {
@@ -62,6 +68,9 @@ export default function LiveAnalyticsDashboard() {
           : [],
         anonymousVisitors: Number(payload.anonymousVisitors ?? 0),
         trackedVisitors: Number(payload.trackedVisitors ?? 0),
+        activeNow: Number(payload.activeNow ?? 0),
+        activeSignedInNow: Number(payload.activeSignedInNow ?? 0),
+        activeWindowSeconds: Number(payload.activeWindowSeconds ?? 120),
       });
 
       setError("");
@@ -96,8 +105,7 @@ export default function LiveAnalyticsDashboard() {
                 Users & Signups
               </h1>
               <p className="mt-2 max-w-2xl text-sm font-medium leading-6 text-white/70">
-                A simple count of unique signup emails and visitors who used the
-                website without ever signing in.
+                Registered signups, anonymous browser IDs and an estimate of browsers currently active on the website.
               </p>
             </div>
 
@@ -119,7 +127,7 @@ export default function LiveAnalyticsDashboard() {
           </div>
         )}
 
-        <section className="mt-6 grid gap-4 sm:grid-cols-2">
+        <section className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
           <article className="rounded-[1.4rem] bg-[#07162F] p-6 text-white shadow-[0_14px_34px_rgba(7,22,47,0.12)]">
             <div className="flex items-start justify-between gap-4">
               <div>
@@ -154,6 +162,27 @@ export default function LiveAnalyticsDashboard() {
               </div>
               <div className="grid h-11 w-11 place-items-center rounded-xl bg-[#EAF3FF] text-[#1677FF]">
                 <Users className="h-5 w-5" />
+              </div>
+            </div>
+          </article>
+          <article className="rounded-[1.4rem] border border-[#C7DCEF] bg-[#F6FAFF] p-6 shadow-[0_10px_26px_rgba(11,23,57,0.04)]">
+            <div className="flex items-start justify-between gap-4">
+              <div>
+                <p className="text-[11px] font-black uppercase tracking-[0.14em] text-[#486C98]">
+                  Active now
+                </p>
+                <p className="mt-3 text-4xl font-black tracking-[-0.04em] text-[#0B1739]">
+                  {formatNumber(data.activeNow)}
+                </p>
+                <p className="mt-2 text-sm font-medium leading-6 text-[#52647C]">
+                  Browser IDs active within the past {Math.round(data.activeWindowSeconds / 60)} minutes
+                </p>
+                <p className="mt-2 text-xs font-medium text-[#65758A]">
+                  {formatNumber(data.activeSignedInNow)} signed-in browsers · updates about every 30 seconds
+                </p>
+              </div>
+              <div className="grid h-11 w-11 place-items-center rounded-xl bg-[#E4F1FF] text-[#1167C6]">
+                <Activity className="h-5 w-5" aria-hidden="true" />
               </div>
             </div>
           </article>
@@ -200,6 +229,9 @@ export default function LiveAnalyticsDashboard() {
           an email address. The anonymous count uses a browser ID stored on the
           device. The same person can still count again if they use another browser
           or device, private browsing, or clear browser storage.
+          The Active now metric is a separate estimate from recent open browser sessions,
+          requiring activity beyond the initial page load. It is not proof of
+          distinct people and may still include automated traffic.
           {data.trackedVisitors > 0 && (
             <span className="ml-1">
               GAHN currently has {formatNumber(data.trackedVisitors)} tracked browser
