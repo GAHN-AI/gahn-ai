@@ -1,7 +1,11 @@
 import * as Sentry from "@sentry/nextjs";
 import posthog from "posthog-js";
 
-const projectToken = process.env.NEXT_PUBLIC_POSTHOG_PROJECT_TOKEN;
+// Keep compatibility with the older NEXT_PUBLIC_POSTHOG_KEY name while
+// standardizing new environments on NEXT_PUBLIC_POSTHOG_PROJECT_TOKEN.
+const projectToken =
+  process.env.NEXT_PUBLIC_POSTHOG_PROJECT_TOKEN ||
+  process.env.NEXT_PUBLIC_POSTHOG_KEY;
 const posthogHost = process.env.NEXT_PUBLIC_POSTHOG_HOST;
 
 if (projectToken) {
