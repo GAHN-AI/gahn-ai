@@ -47,6 +47,14 @@ export default function LiveAnalyticsDashboard() {
   const [data, setData] = useState<AnalyticsData>(emptyData);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+  const [livePresence, setLivePresence] = useState({
+    activeNow: 0,
+    activeSignedInNow: 0,
+    activeWindowSeconds: 120,
+  });
+  const [presenceLoaded, setPresenceLoaded] = useState(false);
+  const [presenceError, setPresenceError] = useState("");
+
 
   const load = useCallback(async () => {
     try {
@@ -91,6 +99,77 @@ export default function LiveAnalyticsDashboard() {
 
     return () => window.clearInterval(interval);
   }, [load]);
+
+  // Only Active Now polls once per second. Historical totals and signup emails
+  // continue using the existing 30-second refresh to avoid expensive scans.
+  useEffect(() => {
+    let disposed = false;
+    let inFlight = false;
+    let currentRequest: AbortController | null = null;
+
+    const loadActive = async () => {
+      if (disposed || inFlight || document.visibilityState !== "visible") return;
+
+      inFlight = true;
+      const controller = new AbortController();
+      currentRequest = controller;
+
+      try {
+        const response = await fetch("/api/admin/analytics/active", {
+          cache: "no-store",
+          signal: controller.signal,
+        });
+        if (!response.ok) {
+          throw new Error(`Active visitor request failed: ${response.status}`);
+        }
+
+        const payload = (await response.json()) as Partial<Pick<
+          AnalyticsData,
+          "activeNow" | "activeSignedInNow" | "activeWindowSeconds"
+        >>;
+
+        if (!disposed) {
+          setLivePresence({
+            activeNow: Number(payload.activeNow ?? 0),
+            activeSignedInNow: Number(payload.activeSignedInNow ?? 0),
+            activeWindowSeconds: Number(payload.activeWindowSeconds ?? 120),
+          });
+          setPresenceLoaded(true);
+          setPresenceError("");
+        }
+      } catch (fetchError) {
+        if (!disposed && !controller.signal.aborted) {
+          console.error("Active Now refresh failed:", fetchError);
+          setPresenceError("Active Now is temporarily unavailable.");
+        }
+      } finally {
+        if (currentRequest === controller) currentRequest = null;
+        inFlight = false;
+      }
+    };
+
+    const interval = window.setInterval(() => {
+      void loadActive();
+    }, 1_000);
+
+    const handleVisibility = () => {
+      if (document.visibilityState === "visible") {
+        void loadActive();
+      } else {
+        currentRequest?.abort();
+      }
+    };
+
+    document.addEventListener("visibilitychange", handleVisibility);
+    void loadActive();
+
+    return () => {
+      disposed = true;
+      window.clearInterval(interval);
+      document.removeEventListener("visibilitychange", handleVisibility);
+      currentRequest?.abort();
+    };
+  }, []);
 
   return (
     <main className="min-h-screen bg-[#F4F7FB] px-4 py-6 font-sans text-black sm:px-6 lg:px-8">
@@ -172,14 +251,19 @@ export default function LiveAnalyticsDashboard() {
                   Active now
                 </p>
                 <p className="mt-3 text-4xl font-black tracking-[-0.04em] text-[#0B1739]">
-                  {formatNumber(data.activeNow)}
+                  {presenceLoaded ? formatNumber(livePresence.activeNow) : "—"}
                 </p>
                 <p className="mt-2 text-sm font-medium leading-6 text-[#52647C]">
-                  Browser IDs active within the past {Math.round(data.activeWindowSeconds / 60)} minutes
+                  Browser IDs active within the past {Math.round(livePresence.activeWindowSeconds / 60)} minutes
                 </p>
                 <p className="mt-2 text-xs font-medium text-[#65758A]">
-                  {formatNumber(data.activeSignedInNow)} signed-in browsers · updates about every 30 seconds
+                  {presenceLoaded ? formatNumber(livePresence.activeSignedInNow) : "—"} signed-in browsers · checks every second while visible
                 </p>
+                {presenceError && (
+                  <p className="mt-2 text-xs font-semibold text-red-700" role="status">
+                    {presenceError}
+                  </p>
+                )}
               </div>
               <div className="grid h-11 w-11 place-items-center rounded-xl bg-[#E4F1FF] text-[#1167C6]">
                 <Activity className="h-5 w-5" aria-hidden="true" />
