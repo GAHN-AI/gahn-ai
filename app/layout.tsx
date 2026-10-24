@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono, Inter } from "next/font/google";
+import { Analytics } from "@vercel/analytics/next";
 import SitePresence from "@/components/SitePresence";
 import "./globals.css";
 
@@ -43,6 +44,7 @@ export default function RootLayout({
         <a className="skip-link" href="#main-content">Skip to content</a>
         <SitePresence />
         {children}
+        <Analytics />
       </body>
     </html>
   );
