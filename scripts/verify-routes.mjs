@@ -27,6 +27,7 @@ try {
       const response = await fetch(base + route, { signal: AbortSignal.timeout(20000) });
       const body = await response.text();
       if (response.status !== 200 || body.includes("Application error:") || body.includes("BrainWorldIcon Development")) failures.push({ route, status: response.status });
+      if (route.startsWith("/lesson/") && route.includes("&lesson=") && !body.includes("That lesson is locked")) failures.push({route,status:"missing lesson lock"});
     }
   }));
   assert.deepEqual(failures, [], "Public routes or assets failed");

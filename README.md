@@ -7,7 +7,7 @@ GAHN AI is an education MVP in **early-access preview mode**. Visitors can regis
 - Next.js App Router, React, and TypeScript.
 - Supabase account authentication and learner records.
 - Vercel hosting; Stripe, Resend, PostHog, and Sentry integrations already exist.
-- 41 active digital-career previews, with role-specific course plans and original SVG illustrations.
+- 97 structured course plans across five Learning Worlds, including 41 careers with distinct professional photographs.
 
 ## Development
 
@@ -19,22 +19,24 @@ Checks:
 npm run lint
 npx tsc --noEmit
 npm run verify:curriculum
+npm run verify:tutor
 GAHN_LOCAL_CHECKS=true NEXT_TELEMETRY_DISABLED=1 npm run build
 npm run verify:routes
 ```
 
 The local-check build disables source-map uploads, and build-system telemetry is disabled in `next.config.ts`. The normal production build remains `npm run build`.
 
-## Curriculum and artwork
+## Curricula and tutor workspace
 
-- `lib/careerCatalog.ts`: the active career directory and image assignments.
-- `lib/curricula/`: authored plans grouped by career field.
-- `lib/careerCurricula.ts`: normalized section/lesson IDs and preview route helpers.
-- `lib/topicStudyPlans.ts`: the other Learning Worlds' study outlines.
-- `scripts/generate-career-artwork.py`: original SVG scene source; no remote image or paid generation API is used.
-- `scripts/verify-curriculum.mjs`: coverage, lesson links, original assets, and prelaunch invariants.
+- `lib/careerCatalog.ts`: career directory and photographic image assignments.
+- `lib/course-content/`: authored sections, specific skills, practice tasks and pathway order.
+- `lib/courses.ts`: unified version-2 registry for 41 careers and 56 topic/grade plans.
+- `components/courses/`: shared course outline, tutor slot and read-only Magic Canvas.
+- `lib/tutor/progression.ts`: tested domain transitions for teaching, checks, review and tutor advancement. This is not yet an authenticated or persistent session service.
+- `lib/tutor/canvasExamples.ts`: explicitly labeled static examples; these award no progress.
+- `scripts/verify-curriculum.mjs` and `scripts/verify-tutor-progression.mjs`: coverage, prerequisites, event ordering and prelaunch checks.
 
-Legacy `lib/careerCurriculum.ts` and provider components remain for future engineering work. Check callers before reusing or removing them.
+See [curriculum authoring](docs/curriculum-authoring.md), [photography sources](docs/career-photography.md) and [the tutor session contract](docs/tutor-session-contract.md). Earlier provider components and original SVG assets remain unused by the new course pages; check callers before reusing or removing legacy code.
 
 ## Release boundaries
 

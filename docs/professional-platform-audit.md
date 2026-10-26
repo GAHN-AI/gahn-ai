@@ -1,5 +1,6 @@
 # Professional platform audit and curriculum cleanup
 
+> Historical PR #26 audit. The course outlines and SVG assignments below were superseded by the version-2 course revision in PR #27. See `curriculum-authoring.md`, `career-photography.md` and `tutor-session-contract.md` for the current implementation.
 ## Scope and release policy
 
 This review builds on main after PR #25. It preserves the existing application, account records, database security, and early-access policy. Course plans describe future lessons, not operational teaching or accredited training. No database migrations, provider purchases, or real learner-record changes are part of this work.

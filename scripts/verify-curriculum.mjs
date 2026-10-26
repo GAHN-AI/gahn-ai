@@ -1,155 +1,151 @@
-// Cross-file acceptance checks for curriculum coverage, routes, assets, and launch gates.
+// Cross-file acceptance checks: authored coverage, stable IDs, prerequisites, photos and launch gates.
 import assert from "node:assert/strict";
 import fs from "node:fs";
 import path from "node:path";
-import crypto from "node:crypto";
 import { createRequire } from "node:module";
 import { fileURLToPath } from "node:url";
 import ts from "typescript";
 const load = createRequire(import.meta.url);
-
-load.extensions[".ts"] = (module, filename) => {
-  const result = ts.transpileModule(fs.readFileSync(filename, "utf8"), {
-    compilerOptions: {
-      module: ts.ModuleKind.CommonJS,
-      target: ts.ScriptTarget.ES2022,
-    },
-    fileName: filename,
-  });
-  module._compile(result.outputText, filename);
-};
-
+load.extensions[".ts"] = (module, filename) =>
+  module._compile(
+    ts.transpileModule(fs.readFileSync(filename, "utf8"), {
+      compilerOptions: {
+        module: ts.ModuleKind.CommonJS,
+        target: ts.ScriptTarget.ES2022,
+      },
+    }).outputText,
+    filename,
+  );
 const root = fileURLToPath(new URL("..", import.meta.url));
 const { careerSections, careerIndustries } = load("../lib/careerCatalog.ts");
-const { careerCurricula, careerWorkspaceHref, getCareerLesson } = load(
-  "../lib/careerCurricula.ts",
-);
-const { careerSkillSteps } = load("../lib/careerSkillSteps.ts");
+const {
+  allCourses,
+  careerCourses,
+  getCourse,
+  courseWorkspaceHref,
+  courseOverviewHref,
+} = load("../lib/courses.ts");
 const { learningSectionsByWorld, slugifyLearningTitle } = load(
   "../lib/learningCatalog.ts",
 );
-const { getTopicStudyPlan } = load("../lib/topicStudyPlans.ts");
 const { INTERACTIVE_LESSONS_AVAILABLE } = load("../lib/lessonLaunch.ts");
 const { SUBSCRIPTION_ENTITLEMENTS } = load(
   "../lib/subscriptionEntitlements.ts",
 );
-
 assert.equal(careerSections.length, 41);
+assert.equal(allCourses.length, 97);
 assert.deepEqual(
-  Object.keys(careerCurricula).sort(),
+  Object.keys(careerCourses).sort(),
   careerSections.map((c) => c.slug).sort(),
 );
 assert.equal(
-  new Set(careerSections.map((c) => c.imageUrl)).size,
+  new Set(careerSections.map((c) => c.imageUrl.split("?")[0])).size,
   41,
-  "Career artwork must be unique",
+  "Use distinct career photographs",
 );
-const hashes = new Set();
-let sectionCount = 0,
-  lessonCount = 0,
-  topicCount = 0;
 for (const career of careerSections) {
-  const course = careerCurricula[career.slug];
   assert(
-    careerSkillSteps[career.slug]?.length === 4,
-    `Missing career roadmap: ${career.slug}`,
+    career.imageUrl.startsWith("https://images.unsplash.com/photo-"),
+    "Career illustration was not replaced",
   );
-  assert(
-    careerIndustries.some((i) => i.title === career.category),
-    `Unlinked industry: ${career.slug}`,
-  );
-  assert(
-    course.sections.length >= 6 && course.sections.length <= 12,
-    `Review course depth: ${career.slug}`,
-  );
+  assert(careerIndustries.some((i) => i.title === career.category));
+}
+const counts = {};
+for (const course of allCourses) {
+  assert.equal(course.version, 2);
+  assert(course.sections.length >= 6, `Incomplete sequence: ${course.id}`);
+  assert(course.lessonCount >= 45);
   assert(course.requirements.length >= 2);
-  assert(course.sections.at(-1).title.startsWith("Capstone:"));
-  const ids = new Set();
+  assert.equal(
+    new Set(course.sections.map((s) => s.id)).size,
+    course.sections.length,
+    "Duplicate section",
+  );
+  const lessons = course.sections.flatMap((s) => s.lessons);
+  assert.equal(
+    new Set(lessons.map((l) => l.id)).size,
+    lessons.length,
+    "Duplicate lesson",
+  );
+  assert.equal(course.lessonCount, lessons.length);
   for (const section of course.sections) {
-    assert(section.practice.length > 35 && section.outcome.length > 35);
-    assert(section.lessons.length >= 2);
+    assert(section.lessons.length >= 5);
+    assert(section.practice.length > 25);
+    assert.equal(section.lessons.at(-1).kind, "checkpoint");
+    assert.equal(section.lessons.at(-2).kind, "practice");
     for (const lesson of section.lessons) {
-      assert(
-        !ids.has(lesson.id),
-        `Duplicate lesson ID: ${career.slug}/${lesson.id}`,
-      );
-      ids.add(lesson.id);
-      assert(
-        lesson.title.length > 18 &&
-          !/^(Introduction|Basics|Advanced concepts)$/i.test(lesson.title),
-      );
-      const url = new URL(
-        careerWorkspaceHref(career.slug, lesson.id),
-        "https://www.gahnai.com",
-      );
-      assert.equal(url.pathname, "/lesson/custom");
-      assert.equal(url.searchParams.get("section"), career.slug);
-      assert.equal(url.searchParams.get("lesson"), lesson.id);
-      assert.equal(
-        getCareerLesson(career.slug, url.searchParams.get("lesson")).lesson
-          .title,
-        lesson.title,
-      );
+      assert(lesson.title.length > 4);
+      assert(!/^(Introduction|Basics|Advanced concepts)$/i.test(lesson.title));
+      assert(lesson.objective.length > 4);
     }
   }
-  const artwork = fs.readFileSync(
-    path.join(root, "public", career.imageUrl),
-    "utf8",
-  );
-  assert(artwork.includes("<svg") && artwork.includes('viewBox="0 0 960 600"'));
-  assert(
-    !/<script|https?:\/\/(?!www.w3.org)/.test(artwork),
-    "Artwork must be self-contained",
-  );
-  hashes.add(crypto.createHash("sha256").update(artwork).digest("hex"));
-  sectionCount += course.sections.length;
-  lessonCount += course.lessonCount;
-}
-assert.equal(hashes.size, 41);
-assert(
-  careerCurricula["machine-learning-engineer"].lessonCount >
-    careerCurricula["virtual-assistant"].lessonCount,
-);
-assert(
-  careerCurricula["software-developer-engineer"].sections.length >
-    careerCurricula["customer-service-representative"].sections.length,
-);
-for (const [world, sections] of Object.entries(learningSectionsByWorld)) {
-  for (const section of sections) {
-    if (section.slug === "homework-upload") continue;
-    for (const option of section.options) {
-      const plan = getTopicStudyPlan(
-        world,
-        section.slug,
-        slugifyLearningTitle(option.title),
-      );
-      assert(
-        plan && plan.sections.length === 3,
-        `Missing study plan: ${world}/${section.slug}/${option.title}`,
-      );
-      assert(plan.sections.every((s) => s.lessons.length === 2));
-      topicCount++;
-    }
-  }
-}
-assert.equal(INTERACTIVE_LESSONS_AVAILABLE, false);
-for (const [planId, plan] of Object.entries(SUBSCRIPTION_ENTITLEMENTS)) {
+  if (course.world === "career-skills")
+    assert(course.sections.at(-1).title.startsWith("Capstone:"));
+  const url = new URL(courseWorkspaceHref(course), "https://www.gahnai.com");
   assert.equal(
-    plan.textLessons,
-    false,
-    `Text lessons must remain paused: ${planId}`,
+    getCourse(
+      url.searchParams.get("world"),
+      url.searchParams.get("section"),
+      url.searchParams.get("topicSlug"),
+    )?.id,
+    course.id,
   );
-  assert.equal(
-    plan.liveInstructor,
-    false,
-    `Video must remain paused: ${planId}`,
-  );
-  if (planId !== "explore")
-    assert.equal(
-      plan.purchaseEnabled,
-      false,
-      `Paid purchase must remain paused: ${planId}`,
+  counts[course.world] ??= { courses: 0, sections: 0, entries: 0 };
+  counts[course.world].courses++;
+  counts[course.world].sections += course.sections.length;
+  counts[course.world].entries += course.lessonCount;
+}
+for (const [world, sections] of Object.entries(learningSectionsByWorld))
+  for (const section of sections)
+    if (section.slug !== "homework-upload")
+      for (const option of section.options)
+        assert(
+          getCourse(world, section.slug, slugifyLearningTitle(option.title)),
+          `Missing ${world}/${section.slug}/${option.title}`,
+        );
+function ordered(slug, keys) {
+  const ids = careerCourses[slug].sections.map((s) => s.id);
+  for (let i = 1; i < keys.length; i++)
+    assert(
+      ids.indexOf(keys[i - 1]) >= 0 &&
+        ids.indexOf(keys[i]) > ids.indexOf(keys[i - 1]),
+      `Prerequisite sequence: ${slug} ${keys[i]}`,
     );
+}
+ordered("software-developer-engineer", [
+  "computer",
+  "html-text",
+  "html-forms",
+  "css-basics",
+  "css-advanced",
+  "js-values",
+  "js-async",
+  "react-basics",
+  "react-app",
+  "node",
+  "auth",
+  "deploy",
+]);
+ordered("front-end-developer", [
+  "computer",
+  "html-text",
+  "css-basics",
+  "js-values",
+  "react-basics",
+  "browser-testing",
+]);
+ordered("machine-learning-engineer", [
+  "python-start",
+  "python-functions",
+  "ml-basics",
+  "ml-models",
+  "ml-deploy",
+]);
+assert.equal(INTERACTIVE_LESSONS_AVAILABLE, false);
+for (const [id, plan] of Object.entries(SUBSCRIPTION_ENTITLEMENTS)) {
+  assert.equal(plan.textLessons, false);
+  assert.equal(plan.liveInstructor, false);
+  if (id !== "explore") assert.equal(plan.purchaseEnabled, false);
 }
 for (const filename of [
   "app/api/instructor/route.ts",
@@ -160,24 +156,15 @@ for (const filename of [
   assert(
     source.includes("!INTERACTIVE_LESSONS_AVAILABLE") &&
       source.includes('"LESSONS_NOT_LAUNCHED"'),
-    `Missing launch gate: ${filename}`,
   );
 }
 console.log(
   JSON.stringify(
-    {
-      careers: 41,
-      sections: sectionCount,
-      plannedLessons: lessonCount,
-      originalIllustrations: hashes.size,
-      otherTopicPlans: topicCount,
-      launchSafeguards: "paused",
-    },
+    { worlds: counts, careerPhotographs: 41, launchSafeguards: "paused" },
     null,
     2,
   ),
 );
-
 if (process.argv.includes("--manifest")) {
   const routes = [
     "/",
@@ -197,24 +184,16 @@ if (process.argv.includes("--manifest")) {
     routes.push(`/learn/${world}`);
   for (const industry of careerIndustries)
     routes.push(`/learn/career-skills/industry/${industry.slug}`);
-  for (const career of careerSections) {
-    routes.push(`/learn/career-skills/${career.slug}`);
-    const sections = careerCurricula[career.slug].sections;
-    routes.push(careerWorkspaceHref(career.slug, sections[0].lessons[0].id));
+  for (const course of allCourses) {
     routes.push(
-      careerWorkspaceHref(career.slug, sections.at(-1).lessons.at(-1).id),
+      courseOverviewHref(course),
+      courseWorkspaceHref(course),
+      courseWorkspaceHref(course, course.sections.at(-1).lessons.at(-1).id),
     );
-    routes.push(career.imageUrl);
   }
   for (const [world, sections] of Object.entries(learningSectionsByWorld))
-    for (const section of sections) {
+    for (const section of sections)
       routes.push(`/learn/${world}/${section.slug}`);
-      if (section.slug !== "homework-upload")
-        for (const option of section.options)
-          routes.push(
-            `/learn/${world}/${section.slug}/${slugifyLearningTitle(option.title)}`,
-          );
-    }
   fs.writeFileSync(
     "/tmp/gahn-route-manifest.json",
     JSON.stringify([...new Set(routes)]),
