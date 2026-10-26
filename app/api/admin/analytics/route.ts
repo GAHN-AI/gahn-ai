@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { getAuthenticatedUser } from "@/lib/serverAuth";
 import { supabaseAdmin } from "@/lib/supabaseAdmin";
+import { getActiveNow } from "@/lib/activePresence";
 
 const RANGE_MS: Record<string, number> = {
   "24h": 24 * 60 * 60 * 1000,
@@ -118,12 +119,13 @@ export async function GET(request: Request) {
   const since = new Date(Date.now() - RANGE_MS[range]).toISOString();
 
   try {
-    const [{ data, error }, signupSummary, visitorSummary] = await Promise.all([
+    const [{ data, error }, signupSummary, visitorSummary, activeSummary] = await Promise.all([
       supabaseAdmin.rpc("get_site_analytics_summary", {
         p_since: since,
       }),
       getUniqueSignups(),
       getVisitorCounts(),
+      getActiveNow(),
     ]);
 
     if (error) throw error;
@@ -133,6 +135,7 @@ export async function GET(request: Request) {
         ...data,
         ...signupSummary,
         ...visitorSummary,
+        ...activeSummary,
         range,
         since,
       },

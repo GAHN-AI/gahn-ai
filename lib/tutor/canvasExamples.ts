@@ -1,3 +1,4 @@
+import { additionalExamples } from "./additionalExamples";
 import type { Course } from "../course-content/schema";
 import type { CanvasBlock } from "./progression";
 // Static, clearly labeled design examples. These never emit tutor events or award progress.
@@ -337,7 +338,8 @@ const examples: Record<string, CanvasBlock[]> = {
 export function canvasExampleFor(course: Course): CanvasBlock[] {
   const section = course.sections[0];
   return (
-    examples[section.id] ?? [
+    examples[section.id] ??
+    additionalExamples[section.id] ?? [
       {
         type: "text",
         title: section.lessons[0].title,
