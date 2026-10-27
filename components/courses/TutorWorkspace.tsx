@@ -119,9 +119,7 @@ export default function TutorWorkspace({
               Tutor controlled
             </span>
           </div>
-          <div className="flex min-h-[300px] flex-1 items-center justify-center bg-white px-6 py-12 text-center sm:min-h-[410px]" data-learning-workspace="magic-canvas">
-            <p className="text-sm font-medium text-[#60748C]">No learning workspace started</p>
-          </div>
+          <div aria-label="Blank Magic Canvas, awaiting an AI lesson" className="min-h-[300px] flex-1 bg-white sm:min-h-[410px]" data-learning-workspace="magic-canvas" />
         </section>
       </div>
       <section
