@@ -82,7 +82,7 @@ export async function proxy(request: NextRequest) {
       .maybeSingle();
     if (registrationError) return redirect("/auth/error?reason=account_setup");
     if (!registration) {
-      if (isEmailSignup(user!)) return redirect("/auth/complete");
+      if (isEmailSignup(user!))\n        return path === "/signup" ? response : redirect("/signup?verify=email");
       return path === "/signup" ? response : redirect("/signup?complete=1");
     }
     return path === "/login" || path === "/signup"
