@@ -676,12 +676,9 @@ function HomeworkUploadUI() {
         <p className="mx-auto mt-2 max-w-[280px] text-[12px] leading-5 text-black">
           Worksheet, screenshot, reading passage, PDF, or document
         </p>
-        <button
-          type="button"
-          className="mt-5 inline-flex h-9 items-center justify-center rounded-full bg-[#0B1739] px-5 text-[12px] font-medium text-white"
-        >
-          Choose file
-        </button>
+        <span className="mt-5 inline-flex h-9 items-center justify-center rounded-full bg-[#EAF3FF] px-5 text-[12px] font-medium text-[#456282]">
+          Workspace preview only
+        </span>
       </div>
 
       <div className="mt-4 grid grid-cols-3 gap-3">
