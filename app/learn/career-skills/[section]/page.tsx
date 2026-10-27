@@ -135,7 +135,7 @@ export default async function CareerSectionPage({ params }: Props) {
               className="rounded-2xl border border-[#DCE3EC] bg-white p-6 sm:p-8"
             >
               <p className="gahn-eyebrow">
-                Practical abilities, clearly defined
+                Skills covered
               </p>
               <h2
                 id="outcomes-heading"
@@ -143,10 +143,8 @@ export default async function CareerSectionPage({ params }: Props) {
               >
                 What you&apos;ll learn
               </h2>
-              <p className="mt-3 text-sm leading-6 text-[#64748B]">
-                Explore the practical skills you will build with a private AI instructor. Each outcome is supported by guided lessons, practice, and understanding checks once live teaching launches.
-              </p>
-              <ul className="mt-7 grid gap-x-7 gap-y-5 sm:grid-cols-2">
+
+              <ul className="mt-6 grid gap-x-7 gap-y-4 sm:grid-cols-2">
                 {highlights.map((outcome, index) => (
                   <li
                     key={outcome}

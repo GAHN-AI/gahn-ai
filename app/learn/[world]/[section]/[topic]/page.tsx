@@ -113,14 +113,12 @@ export default async function TopicOverviewPage({
           aria-labelledby="outcomes-heading"
           className="mt-9 max-w-[1120px] rounded-2xl border border-[#DCE3EC] bg-white p-6 sm:p-8"
         >
-          <p className="gahn-eyebrow">Practical abilities, clearly defined</p>
+          <p className="gahn-eyebrow">Skills covered</p>
           <h2 id="outcomes-heading" className="mt-2 text-2xl font-semibold tracking-tight sm:text-3xl">
             What you&apos;ll learn
           </h2>
-          <p className="mt-3 text-sm leading-6 text-[#64748B]">
-            Learn the core ideas, apply them to realistic tasks, and explain your reasoning. Private AI teaching and understanding checks will be available when live lessons launch.
-          </p>
-          <ol className="mt-7 grid gap-x-7 gap-y-5 sm:grid-cols-2">
+
+          <ol className="mt-6 grid gap-x-7 gap-y-4 sm:grid-cols-2">
             {courseOverviewHighlights(course).map((outcome, index) => (
               <li key={outcome} className="flex gap-3 text-sm leading-6 text-[#3E536B]">
                 <span className="mt-0.5 w-5 shrink-0 text-xs font-medium tabular-nums text-[#8B9AB0]">
