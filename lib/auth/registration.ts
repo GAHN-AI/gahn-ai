@@ -1,5 +1,6 @@
 import type { SupabaseClient, User } from "@supabase/supabase-js";
 import { supabaseAdmin } from "@/lib/supabaseAdmin";
+import { isEmailSignup } from "./policy";
 
 export async function registrationStatus(client: SupabaseClient, id: string) {
   const { data, error } = await client
