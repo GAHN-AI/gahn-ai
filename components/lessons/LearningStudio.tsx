@@ -698,13 +698,13 @@ export default function LearningStudio({
         {/* Future Tavus video renderer mounts inside this inactive window.
             Do not create a live provider session until the API and billing are configured. */}
         <div className="border-b border-[#D7E3F2] bg-white p-4 sm:p-5">
-          <div data-tavus-video-slot="instructor" aria-label="Inactive AI instructor video window"
+          <div data-instructor-video-slot="instructor" aria-label="Inactive AI instructor video window"
             className="relative mx-auto aspect-square w-full max-w-[430px] overflow-hidden rounded-2xl border border-[#1A2B43] bg-black">
             <span className="absolute bottom-3 left-3 rounded-lg border border-white/20 bg-[#111827]/90 px-3 py-1.5 text-xs font-semibold text-white">
               {instructorName ? `${instructorName} · AI instructor` : "AI instructor"}
             </span>
             <span className="absolute right-3 top-3 rounded-full bg-[#1F2937] px-3 py-1 text-[11px] font-semibold text-white/80">
-              Tavus not connected
+              Instructor video not connected
             </span>
           </div>
           <div role="group" aria-label="Instructor controls (preview only)" className="mt-3 grid grid-cols-3 gap-2">
@@ -725,7 +725,7 @@ export default function LearningStudio({
           </div>
           <p className="mt-2 text-center text-xs text-[#64748B]">
             {INTERACTIVE_LESSONS_AVAILABLE
-              ? "Tavus video is not connected. Controls apply to browser-based lesson audio only."
+              ? "Instructor video is not connected. Controls apply to browser-based lesson audio only."
               : "Preview only — instructor video, audio and lesson controls are unavailable until launch."}
           </p>
         </div>
