@@ -15,6 +15,7 @@ import {
   ShieldCheck,
   UserRound,
 } from "lucide-react";
+import { signOutAccount } from "@/lib/auth/browser";
 import { supabase } from "@/lib/supabaseClient";
 import { INTERACTIVE_LESSONS_AVAILABLE } from "@/lib/lessonLaunch";
 
@@ -84,7 +85,7 @@ export default function SettingsPage() {
     setPasswordLoading(true);
     try {
       const { error: resetError } = await supabase.auth.resetPasswordForEmail(email, {
-        redirectTo: `${window.location.origin}/auth/callback?next=/update-password`,
+        redirectTo: `${window.location.origin}/auth/callback`,
       });
       if (resetError) throw resetError;
       setMessage("If a password setup or reset link can be sent to your email, check your inbox and spam folder. The link should open a page to enter a new password.");
@@ -114,14 +115,8 @@ export default function SettingsPage() {
     if (signOutLoading) return;
     setSignOutLoading(true);
     setError("");
-    const { error: signOutError } = await supabase.auth.signOut({ scope: everywhere ? "global" : "local" });
-    if (signOutError) {
-      setError(signOutError.message);
-      setSignOutLoading(false);
-      return;
-    }
-    router.replace("/login");
-    router.refresh();
+    try { await signOutAccount(everywhere); }
+    catch { setError("Unable to sign out. Please retry."); setSignOutLoading(false); }
   }
 
   if (loading) {

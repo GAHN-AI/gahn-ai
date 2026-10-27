@@ -9,6 +9,7 @@ import Link from "next/link";
 import { Source_Sans_3 } from "next/font/google";
 import { useState } from "react";
 import { supabase } from "@/lib/supabaseClient";
+import { startGoogle } from "@/lib/auth/browser";
 import PasswordInput from "@/components/auth/PasswordInput";
 import { useBrowserSearch } from "@/lib/useBrowserPreferences";
 import { ArrowLeft, LockKeyhole } from "lucide-react";
@@ -58,6 +59,7 @@ export default function LoginPage() {
 
   async function handleLogin(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
+    if (loading || googleLoading || resetLoading) return;
     setQueryNoticeDismissed(true);
 
     setError("");
@@ -102,24 +104,18 @@ export default function LoginPage() {
       return;
     }
 
-    window.location.href = "/dashboard";
+    window.location.replace("/auth/complete");
   }
 
   async function handleGoogleLogin() {
+    if (loading || googleLoading || resetLoading) return;
     setQueryNoticeDismissed(true);
     setError("");
     setMessage("");
     setGoogleLoading(true);
 
     try {
-      const { error: googleError } = await supabase.auth.signInWithOAuth({
-        provider: "google",
-        options: {
-          redirectTo: `${window.location.origin}/auth/callback?intent=login`,
-          queryParams: { prompt: "select_account" },
-        },
-      });
-      if (googleError) setError("Google sign-in could not start. Please try again.");
+      await startGoogle("login");
     } catch {
       setError("Unable to connect to Google sign-in. Please try again.");
     } finally {
@@ -128,6 +124,7 @@ export default function LoginPage() {
   }
 
   async function handleForgotPassword() {
+    if (loading || googleLoading || resetLoading) return;
     setQueryNoticeDismissed(true);
     setError("");
     setMessage("");
@@ -144,7 +141,7 @@ export default function LoginPage() {
     try {
       const { error: resetError } =
         await supabase.auth.resetPasswordForEmail(cleanEmail, {
-          redirectTo: `${window.location.origin}/auth/callback?next=/update-password`,
+          redirectTo: `${window.location.origin}/auth/callback`,
         });
 
       if (resetError) {
@@ -267,7 +264,7 @@ export default function LoginPage() {
             <button
               type="button"
               onClick={handleGoogleLogin}
-              disabled={googleLoading}
+              disabled={googleLoading || loading || resetLoading}
               className="mt-8 flex w-full items-center justify-center gap-3 rounded-xl border border-[#D7E3F2] bg-white px-5 py-3.5 text-sm font-semibold text-[#0B1739] shadow-sm hover:border-[#1677FF]/40 hover:bg-[#F8FBFF] disabled:cursor-not-allowed disabled:opacity-60"
             >
               <Image unoptimized width={1200} height={800}
@@ -281,7 +278,7 @@ export default function LoginPage() {
             </button>
 
             <p className="mt-3 text-center text-xs leading-5 text-slate-600">
-              Use your existing Google account to sign in. You can also set a password for the same email using Forgot Password below.
+              Use the Google account registered with GAHN AI. New here? Create an account first. You can also set a password for the same email using Forgot Password below.
             </p>
 
             <div className="my-6 flex items-center gap-4 text-xs font-bold uppercase tracking-[0.12em] text-black">
@@ -327,7 +324,7 @@ export default function LoginPage() {
                 <button
                   type="button"
                   onClick={handleForgotPassword}
-                  disabled={resetLoading}
+                  disabled={resetLoading || loading || googleLoading}
                   className="font-semibold text-[#1677FF] hover:text-[#0F65E8] disabled:cursor-not-allowed disabled:opacity-60"
                 >
                   {resetLoading ? "Sending..." : "Forgot password / create one"}

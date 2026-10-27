@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono, Inter } from "next/font/google";
 import { Analytics } from "@vercel/analytics/next";
+import SessionSync from "@/components/auth/SessionSync";
 import SitePresence from "@/components/SitePresence";
 import "./globals.css";
 
@@ -42,6 +43,7 @@ export default function RootLayout({
     >
       <body className="min-h-full flex flex-col font-sans text-[16px] leading-[1.5]">
         <a className="skip-link" href="#main-content">Skip to content</a>
+        <SessionSync />
         <SitePresence />
         {children}
         <Analytics />
