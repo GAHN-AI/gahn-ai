@@ -11,6 +11,7 @@ import { useRouter } from "next/navigation";
 import type { GahnIcon } from "@/components/brand/WorldIcons";
 import { ChevronDown, Clock3, FileText, ClipboardCheck, LogOut, MessageSquareText, NotebookPen, Search, Settings2, TrendingUp, Upload } from "lucide-react";
 
+import { signOutAccount } from "@/lib/auth/browser";
 import { supabase } from "@/lib/supabaseClient";
 import { INTERACTIVE_LESSONS_AVAILABLE } from "@/lib/lessonLaunch";
 import { useBrowserSearch } from "@/lib/useBrowserPreferences";
@@ -297,9 +298,8 @@ export default function DashboardPage() {
   });
 
   async function handleLogout() {
-    await supabase.auth.signOut();
-    router.push("/login");
-    router.refresh();
+    try { await signOutAccount(); }
+    catch { setDashboardError("Unable to sign out. Please retry."); }
   }
 
   return (

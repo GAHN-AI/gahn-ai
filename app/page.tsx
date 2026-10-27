@@ -10,6 +10,7 @@ import posthog from "posthog-js";
 import { useState } from "react";
 import type { ReactNode } from "react";
 import { motion } from "framer-motion";
+import { useSignedIn } from "@/lib/auth/useSignedIn";
 import EarlyAccessVoices from "@/components/EarlyAccessVoices";
 import { ArrowRight, Check, ChevronDown, FileText, Menu, NotebookTabs, Target, Upload, X } from "lucide-react";
 
@@ -127,6 +128,7 @@ function AnnouncementBar() {
 }
 
 function SiteHeader() {
+  const signedIn = useSignedIn();
   const [open, setOpen] = useState(false);
 
   return (
@@ -151,16 +153,16 @@ function SiteHeader() {
 
           <div className="hidden items-center gap-2 lg:flex">
             <Link
-              href="/login"
+              href={signedIn ? "/dashboard" : "/login"}
               className="inline-flex h-9 items-center justify-center px-2 text-[14px] font-medium text-black"
             >
-              Log In
+              {signedIn ? "Dashboard" : "Log In"}
             </Link>
             <Link
-              href="/signup" onClick={() => posthog.capture("signup_clicked", { location: "homepage" })}
+              href={signedIn ? "/settings" : "/signup"} onClick={() => { if (!signedIn) posthog.capture("signup_clicked", { location: "homepage" }); }}
               className="inline-flex h-9 items-center justify-center rounded-full bg-[#0B1739] px-5 text-[14px] font-medium text-white transition-colors hover:bg-[#132754]"
             >
-              Sign Up
+              {signedIn ? "Settings" : "Sign Up"}
             </Link>
           </div>
 
@@ -200,16 +202,16 @@ function SiteHeader() {
 
               <div className="mt-4 grid grid-cols-2 gap-3 border-t border-[#EEEEF0] pt-4">
                 <Link
-                  href="/login"
+                  href={signedIn ? "/dashboard" : "/login"}
                   className="inline-flex h-11 items-center justify-center rounded-full border border-[#D9D9DE] text-sm font-medium text-black"
                 >
-                  Log In
+                  {signedIn ? "Dashboard" : "Log In"}
                 </Link>
                 <Link
-                  href="/signup" onClick={() => posthog.capture("signup_clicked", { location: "homepage" })}
+                  href={signedIn ? "/settings" : "/signup"} onClick={() => { if (!signedIn) posthog.capture("signup_clicked", { location: "homepage" }); }}
                   className="inline-flex h-11 items-center justify-center rounded-full bg-[#0B1739] text-sm font-medium text-white"
                 >
-                  Sign Up
+                  {signedIn ? "Settings" : "Sign Up"}
                 </Link>
               </div>
             </div>

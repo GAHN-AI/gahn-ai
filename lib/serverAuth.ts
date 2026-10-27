@@ -8,6 +8,7 @@ export async function getAuthenticatedUser() {
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
     process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
     {
+      cookieOptions: { sameSite: "lax", secure: process.env.VERCEL === "1" || process.env.NEXT_PUBLIC_SITE_URL?.startsWith("https://") === true },
       cookies: {
         getAll() {
           return cookieStore.getAll();
@@ -22,7 +23,7 @@ export async function getAuthenticatedUser() {
           }
         },
       },
-    }
+    },
   );
 
   const {
@@ -30,8 +31,17 @@ export async function getAuthenticatedUser() {
     error,
   } = await supabase.auth.getUser();
 
+  if (error || !user || user.is_anonymous || !user.email_confirmed_at)
+    return { user: null, error: error || new Error("Unauthenticated") };
+  const { data: registration, error: registrationError } = await supabase
+    .from("account_registrations")
+    .select("id")
+    .eq("id", user.id)
+    .maybeSingle();
   return {
-    user,
-    error,
+    user: registration && !registrationError ? user : null,
+    error:
+      registrationError ||
+      (!registration ? new Error("Signup required") : null),
   };
 }
