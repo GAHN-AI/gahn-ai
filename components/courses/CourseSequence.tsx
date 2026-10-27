@@ -66,7 +66,7 @@ export default function CourseSequence({
             checks
           </p>
         </div>
-        <div className="flex gap-4 text-xs font-semibold text-[#325A94]">
+        <div className="flex gap-4 text-xs font-semibold text-[#1677FF]">
           <button
             type="button"
             onClick={() => expand(true)}
@@ -132,7 +132,7 @@ export default function CourseSequence({
                   ) : current ? (
                     <CircleDot
                       aria-label="Current section"
-                      className="h-4 w-4 text-[#325A94]"
+                      className="h-4 w-4 text-[#1677FF]"
                     />
                   ) : (
                     <LockKeyhole
