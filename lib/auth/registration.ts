@@ -18,7 +18,10 @@ export async function completeRegistration(
   if (!user.email_confirmed_at || user.is_anonymous)
     throw new Error("verification_required");
   const registered = await registrationStatus(supabaseAdmin, user.id);
-  // Never treat an automatically confirmed email/password account as proof\n  // that its owner clicked a verification link. Only an Auth callback can\n  // complete the first email registration. Existing registrations are unaffected.\n  if (!registered && !explicitSignup) return false;
+  // Never treat an automatically confirmed email/password account as proof
+  // that its owner clicked a verification link. Only an Auth callback can
+  // complete the first email registration. Existing registrations are unaffected.
+  if (!registered && !explicitSignup) return false;
   // The existing database trigger normally creates this. Ignore duplicate IDs
   // to avoid replacing names, avatars, or other saved profile data.
   const { error: profileError } = await supabaseAdmin.from("profiles").upsert(
