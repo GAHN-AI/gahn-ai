@@ -58,7 +58,11 @@ export async function GET(request: NextRequest) {
     if (error || !user || !user.email_confirmed_at || user.is_anonymous)
       return redirect("/auth/error");
     if (recovery) return redirect("/update-password");
-    // This endpoint only gets here after exchanging a valid one-time Auth\n    // callback code/token. For email signups it is the confirmation proof.\n    const registered = await completeRegistration(\n      user, intent === "signup" || isEmailSignup(user),\n    );
+    // This endpoint only gets here after exchanging a valid one-time Auth
+    // callback code/token. For email signups it is the confirmation proof.
+    const registered = await completeRegistration(
+      user, intent === "signup" || isEmailSignup(user),
+    );
     if (!registered) return redirect("/signup?complete=1");
     after(() =>
       sendWelcome(user).catch(() =>
