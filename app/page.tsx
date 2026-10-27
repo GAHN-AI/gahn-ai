@@ -66,7 +66,7 @@ const faqs = [
   },
   {
     q: "What are the learning worlds?",
-    a: "You can browse Career Skills, School Help, Brain Development, General Knowledge, and Book Intelligence now. Each has planned learning paths. They will share the instructor and Magic Canvas workspace once interactive lessons are ready.",
+    a: "The homepage previews all five Learning Worlds. Create an account, then open your dashboard to explore Career Skills, School Help, Brain Development, General Knowledge, and Book Intelligence. Instructor-led sessions are still in development.",
   },
   {
     q: "What is the AI instructor supposed to do?",
@@ -74,7 +74,7 @@ const faqs = [
   },
   {
     q: "Can I upload homework?",
-    a: "Homework uploads and analysis are paused during early access. The planned School Help experience will guide learners through their own attempts and explanations. You can browse the subject and grade-level plans now.",
+    a: "Homework uploads and analysis are paused during early access. The planned School Help experience will guide learners through their own attempts and explanations. Create an account to browse the subject and grade-level plans from your dashboard.",
   },
   {
     q: "Is my learning data private?",
