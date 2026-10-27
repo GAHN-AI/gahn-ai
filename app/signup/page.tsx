@@ -74,40 +74,61 @@ export default function SignupPage() {
     } catch { setError("Unable to finish signup. Please retry."); setLoading(false); }
   }
 
+  // Email confirmation can finish in another tab. The callback sets shared
+  // same-origin cookies; the dashboard broadcasts the completed session so
+  // this original signup tab follows without another manual login.
   useEffect(() => {
     if (!awaitingVerification) return;
-
     let cancelled = false;
-
+    let checking = false;
     async function checkSession() {
-      const {
-        data: { user },
-        error: sessionError,
-      } = await supabase.auth.getUser();
-
-      if (!cancelled && !sessionError && user?.email_confirmed_at) {
-        window.location.replace("/auth/complete");
+      if (cancelled || checking) return;
+      checking = true;
+      try {
+        const response = await fetch("/api/auth/registration", {
+          cache: "no-store",
+          credentials: "same-origin",
+        });
+        if (!response.ok) return;
+        const status = await response.json();
+        if (cancelled || !status.authenticated) return;
+        window.location.replace(status.registered ? "/dashboard" : "/auth/complete");
+      } catch {
+        // Allow a retry on focus/visibility or when another tab broadcasts.
+      } finally {
+        checking = false;
       }
     }
-
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
       (event, session) => {
-        if (event === "SIGNED_IN" && session?.user.email_confirmed_at) {
-          window.location.replace("/auth/complete");
-        }
-      }
+        if (event === "SIGNED_IN" && session?.user.email_confirmed_at)
+          void checkSession();
+      },
     );
-
-    // Verification often completes in another tab. Check when this one
-    // regains focus instead of polling the auth service every 1.5 seconds.
-    const handleFocus = () => void checkSession().catch(() => {});
-    window.addEventListener("focus", handleFocus);
-    void checkSession().catch(() => {});
-
+    const channel = typeof BroadcastChannel !== "undefined"
+      ? new BroadcastChannel("gahn-auth-state")
+      : null;
+    if (channel) channel.onmessage = (event) => {
+      if (event.data?.type === "dashboard-ready") void checkSession();
+    };
+    const onStorage = (event: StorageEvent) => {
+      if (event.key === "gahn-auth-ready") void checkSession();
+    };
+    const onFocus = () => void checkSession();
+    const onVisibility = () => {
+      if (!document.hidden) void checkSession();
+    };
+    window.addEventListener("storage", onStorage);
+    window.addEventListener("focus", onFocus);
+    document.addEventListener("visibilitychange", onVisibility);
+    void checkSession();
     return () => {
       cancelled = true;
       subscription.unsubscribe();
-      window.removeEventListener("focus", handleFocus);
+      channel?.close();
+      window.removeEventListener("storage", onStorage);
+      window.removeEventListener("focus", onFocus);
+      document.removeEventListener("visibilitychange", onVisibility);
     };
   }, [awaitingVerification]);
 
@@ -319,7 +340,7 @@ export default function SignupPage() {
 
             {checkingAccount ? <p role="status" className="mt-6">Checking account...</p> : pendingGoogle ? (
               <div className="mt-6">
-                <p>Your Google identity is verified. Complete signup to create your GAHN AI account and open your dashboard.</p>
+                <p>This Google account has not completed GAHN AI signup. New users must sign up before logging in. Google already verified your email; choose Complete signup to create your account and open the dashboard.</p>
                 {error && <p role="alert" className="mt-4 text-red-600">{error}</p>}
                 <button type="button" disabled={loading} onClick={finishGoogleSignup} className="mt-5 w-full rounded-xl bg-[#1677FF] px-5 py-3.5 font-semibold text-white disabled:opacity-60">{loading ? "Creating account..." : "Complete signup with Google"}</button>
                 <button type="button" onClick={() => void signOutAccount().catch(() => setError("Unable to sign out. Please retry."))} className="mt-4 text-sm font-semibold text-[#1677FF]">Use another account</button>
