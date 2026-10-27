@@ -524,45 +524,63 @@ function ToolsSection() {
 }
 
 function DarkPrinciplesSection() {
-  const principles = [
-    ["Ask before telling", "The learner should think and respond during the lesson."],
-    ["Re teach when needed", "A wrong answer should change the explanation, not just the score."],
-    ["Practice before progress", "The learner should use the skill before moving forward."],
+  const adaptiveBehaviors = [
+    {
+      title: "A clearer explanation when you need one",
+      text: "When an answer shows a gap, the planned tutor can break the idea into smaller steps and reduce hints as you improve.",
+    },
+    {
+      title: "Questions that reveal your reasoning",
+      text: "Explain a concept in your own words, answer a thoughtful follow-up, and discover which part still needs attention.",
+    },
+    {
+      title: "Review timed around what you remember",
+      text: "Practice results can help choose which earlier facts or skills to bring back, rather than restarting every lesson.",
+    },
+    {
+      title: "Practice that changes the challenge",
+      text: "Work through related problem types in different orders so you learn when to use each skill, not just repeat a pattern.",
+    },
+    {
+      title: "Words and visuals working together",
+      text: "When a topic calls for it, explanations can be paired with diagrams, worked examples, or a step-by-step Magic Canvas view.",
+    },
+    {
+      title: "A quick check before a new topic",
+      text: "A brief question can reveal what you already know, letting the tutor focus the next explanation on what's missing.",
+    },
   ];
 
   return (
-    <section className="bg-[#0B4FD6] py-24 text-white sm:py-32">
+    <section id="adaptive-learning" className="scroll-mt-24 bg-[#0B4FD6] py-24 text-white sm:py-32">
       <div className={shell}>
-        <div className="grid gap-12 lg:grid-cols-[0.8fr_1.2fr] lg:gap-20">
-          <div>
-            <span className="inline-flex rounded-full border border-white/15 px-3 py-1 text-[12px] font-medium text-white/75">
-              Learning principles
-            </span>
-            <h2 className="mt-5 max-w-[430px] text-[36px] font-medium leading-[48px] tracking-[-0.9px]">
-              A stronger learning experience than passive content.
-            </h2>
-            <p className="mt-5 max-w-[430px] text-[15.75px] leading-7 text-white">
-              GAHN is being built around interaction, correction, and repeated understanding checks instead of long streams of content.
-            </p>
-          </div>
-
-          <div className="grid gap-4">
-            {principles.map(([title, text]) => (
-              <div
-                key={title}
-                className="rounded-lg border border-white/10 bg-[#0A3FAE] p-5"
-              >
-                <div className="flex items-start gap-4">
-                  <span className="mt-2 h-2.5 w-2.5 shrink-0 rounded-full bg-white" />
-                  <div>
-                    <h3 className="text-[16px] font-medium">{title}</h3>
-                    <p className="mt-2 text-[14px] leading-6 text-white">{text}</p>
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
+        <div className="max-w-[770px]">
+          <span className="inline-flex rounded-full border border-white/25 px-3 py-1 text-[12px] font-medium text-white">
+            Adaptive teaching · Planned for live lessons
+          </span>
+          <h2 className="mt-5 text-[36px] font-medium leading-[1.2] tracking-[-0.9px] sm:text-[42px]">
+            Teaching that adjusts as you learn.
+          </h2>
+          <p className="mt-5 text-[15.75px] leading-7 text-white/95">
+            No need to choose a fixed learning style. GAHN is designed to use your answers,
+            practice, and demonstrated understanding to choose how to explain, question,
+            and review each idea. The teaching approach changes naturally during the
+            lesson without asking you to manage different study methods.
+          </p>
         </div>
+        <div className="mt-11 grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+          {adaptiveBehaviors.map(({ title, text }) => (
+            <div key={title} className="rounded-xl border border-white/20 bg-[#0A3FAE] p-6">
+              <span aria-hidden="true" className="mb-5 block h-1 w-11 rounded-full bg-[#9EC9FF]" />
+              <h3 className="text-[16px] font-semibold leading-6">{title}</h3>
+              <p className="mt-3 text-[14px] leading-6 text-white/90">{text}</p>
+            </div>
+          ))}
+        </div>
+        <p className="mt-7 max-w-[790px] text-[13px] leading-6 text-white/85">
+          These are planned teaching capabilities, not an active assessment of your brain.
+          Live instructor sessions and adaptive lesson selection are not yet available in early access.
+        </p>
       </div>
     </section>
   );
@@ -794,16 +812,6 @@ function StepsSection() {
 function CapabilityGrid() {
   const items = [
     {
-      title: "Adaptive re teaching",
-      text: "Change the explanation when a learner is still confused.",
-      icon: CanvasIcon,
-    },
-    {
-      title: "Active recall",
-      text: "Bring back material from earlier lessons for retrieval practice.",
-      icon: BrainWorldIcon,
-    },
-    {
       title: "Saved notes",
       text: "Keep useful lesson notes attached to the learner account.",
       icon: NotebookTabs,
@@ -832,13 +840,13 @@ function CapabilityGrid() {
           Designed for modern learning
         </span>
         <h2 className="mt-5 max-w-[620px] text-[34px] font-medium leading-[48px] tracking-[-0.9px] text-black sm:text-[36px]">
-          High quality learning tools that stay focused on the lesson.
+          Everything you need to keep your work organized.
         </h2>
         <p className="mt-5 max-w-[560px] text-[15.75px] leading-7 text-black">
-          Each tool supports the lesson itself so learners can understand, remember, practice, and continue without jumping between disconnected apps.
+          Save useful work, return to practice, and keep study materials in the same place as your learning worlds.
         </p>
 
-        <div className="mt-12 grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+        <div className="mt-12 grid gap-4 md:grid-cols-2">
           {items.map((item) => {
             const Icon = item.icon;
             return (
