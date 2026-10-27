@@ -1,7 +1,7 @@
 import { after, NextRequest } from "next/server";
 import type { EmailOtpType } from "@supabase/supabase-js";
 import { authRoute } from "@/lib/auth/routeClient";
-import { AUTH_INTENT_COOKIE, authRequestOrigin } from "@/lib/auth/policy";
+import { AUTH_INTENT_COOKIE, authRequestOrigin, isEmailSignup } from "@/lib/auth/policy";
 import { completeRegistration } from "@/lib/auth/registration";
 import { sendWelcome } from "@/lib/auth/welcome";
 
@@ -58,7 +58,7 @@ export async function GET(request: NextRequest) {
     if (error || !user || !user.email_confirmed_at || user.is_anonymous)
       return redirect("/auth/error");
     if (recovery) return redirect("/update-password");
-    const registered = await completeRegistration(user, intent === "signup");
+    // This endpoint only gets here after exchanging a valid one-time Auth\n    // callback code/token. For email signups it is the confirmation proof.\n    const registered = await completeRegistration(\n      user, intent === "signup" || isEmailSignup(user),\n    );
     if (!registered) return redirect("/signup?complete=1");
     after(() =>
       sendWelcome(user).catch(() =>
