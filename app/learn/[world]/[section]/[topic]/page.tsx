@@ -1,12 +1,11 @@
 import Image from "next/image";
 import Link from "next/link";
 import { notFound, redirect } from "next/navigation";
-import { ArrowDown, ArrowLeft, ArrowUpRight } from "lucide-react";
+import { ArrowLeft, ArrowUpRight } from "lucide-react";
 import { getCareerSection } from "@/lib/careerCatalog";
 import { getLearningOption } from "@/lib/learningCatalog";
 import { getCourse, courseWorkspaceHref } from "@/lib/courses";
-import CourseSequence from "@/components/courses/CourseSequence";
-import WorkspacePreviewCard from "@/components/curriculum/WorkspacePreviewCard";
+import { courseOverviewHighlights } from "@/lib/courseOverviewHighlights";
 
 const worldNames: Record<string, string> = {
   "school-help": "School Help",
@@ -81,21 +80,17 @@ export default async function TopicOverviewPage({
                 practice and understanding checks. Your tutor will guide each
                 step at your pace.
               </p>
-              <div className="mt-7 flex flex-wrap gap-3">
-                <a
-                  href="#curriculum"
-                  className="inline-flex min-h-11 items-center gap-2 rounded-lg bg-[#16375E] px-5 py-3 text-sm font-semibold text-white hover:bg-[#234B79]"
-                >
-                  Explore curriculum
-                  <ArrowDown aria-hidden="true" className="h-4 w-4" />
-                </a>
+              <div className="mt-7">
                 <Link
                   href={href}
-                  className="inline-flex min-h-11 items-center gap-2 rounded-lg border border-[#D6E0EC] px-5 py-3 text-sm font-medium hover:bg-[#F5F8FC]"
+                  className="inline-flex min-h-11 items-center gap-2 rounded-lg bg-[#1677FF] px-6 py-3 text-sm font-semibold text-white hover:bg-[#075FCF] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#1677FF]"
                 >
-                  Preview workspace
+                  Start private session
                   <ArrowUpRight aria-hidden="true" className="h-4 w-4" />
                 </Link>
+                <p className="mt-3 text-xs text-[#64748B]">
+                  Session preview only — live AI teaching is not available yet.
+                </p>
               </div>
             </div>
             <div className="flex flex-col bg-[#EEF3F8]">
@@ -110,62 +105,32 @@ export default async function TopicOverviewPage({
                   className="object-cover"
                 />
               </div>
-              <div className="flex flex-wrap gap-x-5 gap-y-2 border-t border-[#DEE6EF] bg-white px-6 py-5 text-xs font-medium text-[#53657D]">
-                <span>{course.sections.length} sections</span>
-                <span>{course.lessonCount} planned lessons & checks</span>
-              </div>
+
             </div>
           </div>
         </section>
-        <div className="mt-9 grid items-start gap-8 lg:grid-cols-[minmax(0,1fr)_290px]">
-          <div className="min-w-0 space-y-9">
-            <section className="rounded-2xl border border-[#DCE3EC] bg-white p-6 sm:p-8">
-              <p className="gahn-eyebrow">Put the ideas into practice</p>
-              <h2 className="mt-2 text-2xl font-semibold tracking-tight">
-                What you&apos;ll work on
-              </h2>
-              <ul className="mt-6 grid gap-x-7 gap-y-4 sm:grid-cols-2">
-                {course.sections
-                  .filter(
-                    (_, i) => i % Math.ceil(course.sections.length / 6) === 0,
-                  )
-                  .map((s) => (
-                    <li
-                      key={s.id}
-                      className="flex gap-3 text-sm leading-7 text-[#4B5E74]"
-                    >
-                      <span aria-hidden="true" className="text-[#47715B]">
-                        ✓
-                      </span>
-                      <span>{s.practice}</span>
-                    </li>
-                  ))}
-              </ul>
-            </section>
-            <CourseSequence
-              sections={course.sections}
-              lessonCount={course.lessonCount}
-            />
-            <section className="rounded-2xl border border-[#DCE3EC] bg-white p-6 sm:p-8">
-              <h2 className="text-xl font-semibold">Before you begin</h2>
-              <ul className="mt-5 list-disc space-y-3 pl-5 text-sm leading-7 text-[#53657D]">
-                {course.requirements.map((item) => (
-                  <li key={item}>{item}</li>
-                ))}
-              </ul>
-              {course.note ? (
-                <p className="mt-5 border-t border-[#E5EAF1] pt-5 text-xs leading-6 text-[#64748B]">
-                  {course.note}
-                </p>
-              ) : null}
-              <p className="mt-5 text-xs leading-6 text-[#64748B]">
-                This is a curriculum preview. Live teaching, assessments and
-                saved course progress are not available yet.
-              </p>
-            </section>
-          </div>
-          <WorkspacePreviewCard href={href} />
-        </div>
+        <section
+          aria-labelledby="outcomes-heading"
+          className="mt-9 max-w-[1120px] rounded-2xl border border-[#DCE3EC] bg-white p-6 sm:p-8"
+        >
+          <p className="gahn-eyebrow">Practical abilities, clearly defined</p>
+          <h2 id="outcomes-heading" className="mt-2 text-2xl font-semibold tracking-tight sm:text-3xl">
+            What you&apos;ll learn
+          </h2>
+          <p className="mt-3 text-sm leading-6 text-[#64748B]">
+            Learn the core ideas, apply them to realistic tasks, and explain your reasoning. Private AI teaching and understanding checks will be available when live lessons launch.
+          </p>
+          <ol className="mt-7 grid gap-x-7 gap-y-5 sm:grid-cols-2">
+            {courseOverviewHighlights(course).map((outcome, index) => (
+              <li key={outcome} className="flex gap-3 text-sm leading-6 text-[#3E536B]">
+                <span className="mt-0.5 w-5 shrink-0 text-xs font-medium tabular-nums text-[#8B9AB0]">
+                  {String(index + 1).padStart(2, "0")}
+                </span>
+                <span>{outcome}</span>
+              </li>
+            ))}
+          </ol>
+        </section>
       </div>
     </main>
   );
