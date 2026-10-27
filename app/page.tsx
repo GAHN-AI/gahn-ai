@@ -527,57 +527,80 @@ function ToolsSection() {
 }
 
 function DarkPrinciplesSection() {
-  const adaptiveBehaviors = [
+  // Study strategies are disclosed here; the future tutor will use everyday
+  // learning instructions rather than distracting students with method labels.
+  const studyMethods = [
     {
-      title: "Clear explanations",
-      text: "Break complex ideas into smaller steps.",
+      name: "Active recall + spaced repetition",
+      description: "Recall key ideas, then revisit them later.",
     },
     {
-      title: "Guided questions",
-      text: "Explain your reasoning and spot mistakes.",
+      name: "Pomodoro focus blocks",
+      description: "Work on one task, then take a short break.",
     },
     {
-      title: "Focused review",
-      text: "Revisit skills that need more practice.",
+      name: "Deliberate practice",
+      description: "Improve a weak skill with feedback and retries.",
     },
     {
-      title: "Varied practice",
-      text: "Apply what you learn to new problems.",
+      name: "Feynman + Socratic questions",
+      description: "Explain ideas simply and answer why or how.",
     },
     {
-      title: "Visual examples",
-      text: "See diagrams and worked examples on Magic Canvas.",
+      name: "Interleaving + worked examples",
+      description: "Study one example, then solve varied problems.",
     },
     {
-      title: "Quick knowledge checks",
-      text: "Show what you know before moving ahead.",
+      name: "Cornell notes + preview and review",
+      description: "Organize key points and revisit what matters.",
+    },
+    {
+      name: "Error notebooks + Kaizen + Hansei",
+      description: "Correct mistakes and make small improvements.",
+    },
+    {
+      name: "Dual coding + visual examples",
+      description: "Connect spoken lessons with diagrams and sketches.",
     },
   ];
 
   return (
-    <section id="adaptive-learning" className="scroll-mt-24 bg-[#0B4FD6] py-16 text-white sm:py-20">
+    <section id="adaptive-learning" aria-labelledby="adaptive-learning-title" className="scroll-mt-24 bg-[#0B4FD6] py-16 text-white sm:py-20">
       <div className={shell}>
-        <div className="max-w-[770px]">
+        <div className="max-w-[790px]">
           <span className="inline-flex rounded-full border border-white/25 px-3 py-1 text-[12px] font-medium text-white">
-            Planned for live lessons
+            Planned for live AI lessons
           </span>
-          <h2 className="mt-4 text-[34px] font-medium leading-[1.2] tracking-[-0.9px] sm:text-[40px]">
+          <h2 id="adaptive-learning-title" className="mt-4 text-[34px] font-medium leading-[1.2] tracking-[-0.9px] sm:text-[40px]">
             Teaching that adjusts as you learn.
           </h2>
-          <p className="mt-3 max-w-[640px] text-base leading-7 text-white/95">
-            GAHN is designed to adapt explanations and practice based on your answers.
+          <p className="mt-3 max-w-[740px] text-base leading-7 text-white/95">
+            Your future AI tutor will choose study methods based on your answers, mistakes, and progress. You focus on learning, not figuring out which method to use.
           </p>
         </div>
-        <div className="mt-8 grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-          {adaptiveBehaviors.map(({ title, text }) => (
-            <div key={title} className="rounded-xl border border-white/20 bg-[#0A3FAE] p-5">
-              <h3 className="text-[16px] font-semibold leading-6">{title}</h3>
-              <p className="mt-2 text-[14px] leading-6 text-white/90">{text}</p>
+        <div className="mt-8 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+          {studyMethods.map(({ name, description }) => (
+            <div key={name} className="rounded-xl border border-white/20 bg-[#0A3FAE] p-5">
+              <h3 className="text-[15px] font-semibold leading-6">{name}</h3>
+              <p className="mt-2 text-[13px] leading-5 text-white/90">{description}</p>
             </div>
           ))}
         </div>
-        <p className="mt-5 text-[13px] leading-6 text-white/85">
-          Live AI lessons and adaptive teaching are coming later.
+        <div className="mt-6 grid gap-3 sm:grid-cols-2">
+          <div className="rounded-lg border border-white/20 bg-white/10 px-5 py-4">
+            <p className="text-xs font-semibold uppercase tracking-wide text-white/75">On your computer</p>
+            <p className="mt-2 text-sm leading-6">“Open VS Code. Fix this one error, then run the test.”</p>
+          </div>
+          <div className="rounded-lg border border-white/20 bg-white/10 px-5 py-4">
+            <p className="text-xs font-semibold uppercase tracking-wide text-white/75">On paper</p>
+            <p className="mt-2 text-sm leading-6">“Write three things you remember. Check what you missed.”</p>
+          </div>
+        </div>
+        <p className="mt-5 max-w-[940px] text-[13px] leading-6 text-white/90">
+          Inspired by Cornell notes (U.S.), Japanese Kaizen and Hansei reflection, Chinese-style error-review routines, and learning research used worldwide. The tutor will apply methods without interrupting to name each one; you can always ask why.
+        </p>
+        <p className="mt-2 text-[12px] leading-5 text-white/75">
+          Planned feature — live adaptive teaching and automatic study-method selection are not available yet.
         </p>
       </div>
     </section>
