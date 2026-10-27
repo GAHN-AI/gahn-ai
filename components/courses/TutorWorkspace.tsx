@@ -8,9 +8,7 @@ import {
   VideoOff,
 } from "lucide-react";
 import type { Course } from "@/lib/course-content/schema";
-import { canvasExampleFor } from "@/lib/tutor/canvasExamples";
 import CourseSequence from "./CourseSequence";
-import TeachingCanvas from "./TeachingCanvas";
 
 export default function TutorWorkspace({
   course,
@@ -76,16 +74,15 @@ export default function TutorWorkspace({
             </h2>
             <span className="text-[11px] text-[#71849A]">Not connected</span>
           </div>
-          <div className="flex min-h-[300px] flex-1 flex-col items-center justify-center bg-[#142B43] px-8 py-12 text-center sm:min-h-[410px]">
+          <div data-tavus-video-slot="instructor" className="flex min-h-[300px] flex-1 flex-col items-center justify-center bg-[#142B43] px-8 py-12 text-center sm:min-h-[410px]">
             <div className="grid h-20 w-20 place-items-center rounded-full border border-white/15 bg-white/5">
               <VideoOff aria-hidden="true" className="h-7 w-7 text-[#A9BDD4]" />
             </div>
             <p className="mt-6 text-xl font-medium text-white">
-              A conversation, one lesson at a time.
+              Tavus AI instructor coming later
             </p>
             <p className="mt-3 max-w-xs text-sm leading-7 text-[#B7C8DA]">
-              Your tutor will appear here during the live session, explain the
-              material, and respond to your questions.
+              The real-time AI tutor will appear in this window once live lessons launch.
             </p>
             <span className="mt-6 rounded-full border border-white/15 px-3 py-1.5 text-[11px] text-[#B7C8DA]">
               Live session coming later
@@ -101,7 +98,7 @@ export default function TutorWorkspace({
               type="button"
               className="min-h-10 cursor-not-allowed rounded-lg bg-[#E8EDF4] px-4 py-2 text-xs font-semibold text-[#788AA0]"
             >
-              Start session · Coming later
+              Start lesson · Coming later
             </button>
           </div>
         </section>
@@ -122,16 +119,7 @@ export default function TutorWorkspace({
               Tutor controlled
             </span>
           </div>
-          <div className="flex-1 p-5 sm:p-7">
-            <p className="mb-5 text-[10px] font-semibold uppercase tracking-[0.16em] text-[#71849A]">
-              Canvas example · Not a live lesson
-            </p>
-            <TeachingCanvas blocks={canvasExampleFor(course)} />
-          </div>
-          <p className="border-t border-[#E9EEF5] bg-[#FAFBFD] px-5 py-3 text-xs leading-6 text-[#71849A]">
-            Explanations, worked examples and numbers will update here as your
-            tutor teaches.
-          </p>
+          <div aria-label="Blank Magic Canvas, awaiting an AI lesson" className="min-h-[300px] flex-1 bg-white sm:min-h-[410px]" data-learning-workspace="magic-canvas" />
         </section>
       </div>
       <section
