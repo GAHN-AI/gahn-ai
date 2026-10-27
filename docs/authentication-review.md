@@ -27,6 +27,12 @@ Registration is an application onboarding gate, not a replacement for ownership 
 
 ## Required rollout, before merging/deploying
 
+The reported landing-page redirects were observed on production while this PR was still unmerged. Production login/signup behavior does **not** include these changes until the PR is released.
+
+For mandatory email/password verification, enable **Authentication → Providers → Email → Confirm email** in the hosted Supabase project. Supabase then sends the signup confirmation message to a new email/password registrant (subject to configured SMTP provider, rate limits, spam filtering and deliverability). The application displays "Check your inbox" and does not open the dashboard until confirmation succeeds. Do not send a duplicate verification message blindly: a second Auth resend can hit rate limits. A Google OAuth sign-in uses the verified Google identity instead of sending a second Supabase email-confirmation message.
+
+For the original signup tab: after a verified callback reaches `/dashboard` in the second tab, the global session component broadcasts `dashboard-ready` to other same-origin browser tabs. The signup tab checks its shared server session and redirects to the dashboard (or account completion) automatically. The tab also rechecks on focus/visibility, with a storage-event fallback. Cross-device notifications are not included.
+
 1. The production migration is already applied as version `20261027013347`; do not reapply it. For other environments, apply **only** `supabase/migrations/20261027013347_auth_registration_completion.sql` to the target project using the normal migration workflow. It is intentionally not applied to production by this PR. Verify registration count equals the existing Auth-user count immediately afterward. Deploy promptly; users created through old code between migration and deployment may need to complete signup once. Do not rerun the backfill later, as that would enroll provisional users.
 2. Supabase → Authentication → URL Configuration: use your canonical production Site URL, and allow the exact `https://www.gahnai.com/auth/callback` and `https://gahnai.com/auth/callback` URLs. Keep legacy callback URLs while outstanding email links are in use. Allow each preview's exact callback only when testing it; avoid a wildcard for all vercel.app tenants.
 3. Email templates should use `{{ .ConfirmationURL }}` for PKCE confirmation/recovery, or a separately verified token-hash callback template with the correct `type`. They must not link directly to the homepage. PKCE email links should open in the requesting browser; test cross-device requirements separately.
@@ -45,7 +51,7 @@ Read-only hosted review found five verified Auth users, all with profiles, and n
 
 ### Live acceptance still required
 
-Use disposable staging accounts, not existing production users. Check email signup with and without confirmation, duplicate email signup, verified link reuse/expiry, returning password login, wrong password, new Google signup, returning Google login, first-time Google Login followed by explicit signup completion, Google cancellation, same-verified-email linking (same user ID), recovery and Google password setup, refresh/reopen, two-tab logout, global logout and protected URL access. Confirm dashboard navigation without a second click and verify existing notes remain tied to the same user ID.
+Use disposable staging accounts, not existing production users. Check email signup with and without confirmation, duplicate email signup, verified link reuse/expiry, returning password login, wrong password, new Google signup, returning Google login, first-time Google Login followed by explicit signup completion, Google cancellation, same-verified-email linking (same user ID), recovery and Google password setup, refresh/reopen, two-tab email confirmation (both original and confirmation tab should reach the dashboard), two-tab logout, global logout and protected URL access. Confirm dashboard navigation without a second click and verify existing notes remain tied to the same user ID.
 
 These provider/account flows are not claimed as live-tested. No real verification/reset messages were sent, no credentials were requested, and no hosted account or database records were modified.
 
