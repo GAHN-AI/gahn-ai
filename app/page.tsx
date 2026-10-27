@@ -529,60 +529,55 @@ function ToolsSection() {
 function DarkPrinciplesSection() {
   const adaptiveBehaviors = [
     {
-      title: "A clearer explanation when you need one",
-      text: "When an answer shows a gap, the planned tutor can break the idea into smaller steps and reduce hints as you improve.",
+      title: "Clear explanations",
+      text: "Break complex ideas into smaller steps.",
     },
     {
-      title: "Questions that reveal your reasoning",
-      text: "Explain a concept in your own words, answer a thoughtful follow-up, and discover which part still needs attention.",
+      title: "Guided questions",
+      text: "Explain your reasoning and spot mistakes.",
     },
     {
-      title: "Review timed around what you remember",
-      text: "Practice results can help choose which earlier facts or skills to bring back, rather than restarting every lesson.",
+      title: "Focused review",
+      text: "Revisit skills that need more practice.",
     },
     {
-      title: "Practice that changes the challenge",
-      text: "Work through related problem types in different orders so you learn when to use each skill, not just repeat a pattern.",
+      title: "Varied practice",
+      text: "Apply what you learn to new problems.",
     },
     {
-      title: "Words and visuals working together",
-      text: "When a topic calls for it, explanations can be paired with diagrams, worked examples, or a step-by-step Magic Canvas view.",
+      title: "Visual examples",
+      text: "See diagrams and worked examples on Magic Canvas.",
     },
     {
-      title: "A quick check before a new topic",
-      text: "A brief question can reveal what you already know, letting the tutor focus the next explanation on what's missing.",
+      title: "Quick knowledge checks",
+      text: "Show what you know before moving ahead.",
     },
   ];
 
   return (
-    <section id="adaptive-learning" className="scroll-mt-24 bg-[#0B4FD6] py-24 text-white sm:py-32">
+    <section id="adaptive-learning" className="scroll-mt-24 bg-[#0B4FD6] py-16 text-white sm:py-20">
       <div className={shell}>
         <div className="max-w-[770px]">
           <span className="inline-flex rounded-full border border-white/25 px-3 py-1 text-[12px] font-medium text-white">
-            Adaptive teaching · Planned for live lessons
+            Planned for live lessons
           </span>
-          <h2 className="mt-5 text-[36px] font-medium leading-[1.2] tracking-[-0.9px] sm:text-[42px]">
+          <h2 className="mt-4 text-[34px] font-medium leading-[1.2] tracking-[-0.9px] sm:text-[40px]">
             Teaching that adjusts as you learn.
           </h2>
-          <p className="mt-5 text-[15.75px] leading-7 text-white/95">
-            No need to choose a fixed learning style. GAHN is designed to use your answers,
-            practice, and demonstrated understanding to choose how to explain, question,
-            and review each idea. The teaching approach changes naturally during the
-            lesson without asking you to manage different study methods.
+          <p className="mt-3 max-w-[640px] text-base leading-7 text-white/95">
+            GAHN is designed to adapt explanations and practice based on your answers.
           </p>
         </div>
-        <div className="mt-11 grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+        <div className="mt-8 grid gap-4 md:grid-cols-2 lg:grid-cols-3">
           {adaptiveBehaviors.map(({ title, text }) => (
-            <div key={title} className="rounded-xl border border-white/20 bg-[#0A3FAE] p-6">
-              <span aria-hidden="true" className="mb-5 block h-1 w-11 rounded-full bg-[#9EC9FF]" />
+            <div key={title} className="rounded-xl border border-white/20 bg-[#0A3FAE] p-5">
               <h3 className="text-[16px] font-semibold leading-6">{title}</h3>
-              <p className="mt-3 text-[14px] leading-6 text-white/90">{text}</p>
+              <p className="mt-2 text-[14px] leading-6 text-white/90">{text}</p>
             </div>
           ))}
         </div>
-        <p className="mt-7 max-w-[790px] text-[13px] leading-6 text-white/85">
-          These are planned teaching capabilities, not an active assessment of your brain.
-          Live instructor sessions and adaptive lesson selection are not yet available in early access.
+        <p className="mt-5 text-[13px] leading-6 text-white/85">
+          Live AI lessons and adaptive teaching are coming later.
         </p>
       </div>
     </section>
