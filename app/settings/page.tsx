@@ -181,7 +181,7 @@ export default function SettingsPage() {
           <div className="flex items-center justify-between gap-4 border-b border-[#E5ECF5] p-5">
             <div>
               <h3 className="text-sm font-semibold">Enable spoken lesson audio</h3>
-              <p className="mt-1 text-xs leading-5 text-[#53657D]">Allow browser-generated read-aloud in text lessons. Does not enable Tavus audio.</p>
+              <p className="mt-1 text-xs leading-5 text-[#53657D]">Allow browser-generated read-aloud in text lessons. Does not enable a live instructor call.</p>
             </div>
             <button type="button" role="switch" aria-label="Enable spoken lesson audio" aria-checked={soundEnabled}
               onClick={() => changeSound(!soundEnabled)}

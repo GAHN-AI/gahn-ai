@@ -84,7 +84,7 @@ export default async function LessonPage({
       <div className="mx-auto max-w-[1320px]">
         <header className="mb-8 flex items-center justify-between gap-4">
           <Link
-            href={`${courseOverviewHref(course)}#curriculum`}
+            href={courseOverviewHref(course)}
             className="inline-flex min-h-11 items-center gap-2 text-sm font-medium text-[#536B86]"
           >
             <ArrowLeft aria-hidden="true" className="h-4 w-4" />

@@ -2,15 +2,15 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { ArrowLeft, ArrowDown, ArrowUpRight } from "lucide-react";
+import { ArrowLeft, ArrowUpRight } from "lucide-react";
 import { careerSections, getCareerSection } from "@/lib/careerCatalog";
+import { careerCourses } from "@/lib/courses";
+import { courseOverviewHighlights } from "@/lib/courseOverviewHighlights";
 import {
   careerWorkspaceHref,
   getCareerCurriculum,
 } from "@/lib/careerCurricula";
 import { CareerWorldIcon } from "@/components/brand/WorldIcons";
-import CurriculumPreview from "@/components/curriculum/CurriculumPreview";
-import WorkspacePreviewCard from "@/components/curriculum/WorkspacePreviewCard";
 
 type Props = { params: Promise<{ section: string }> };
 
@@ -33,7 +33,7 @@ export default async function CareerSectionPage({ params }: Props) {
   const curriculum = career && getCareerCurriculum(career.slug);
   if (!career || !curriculum) notFound();
   const workspaceHref = careerWorkspaceHref(career.slug);
-  const capstone = curriculum.sections.at(-1)!;
+  const highlights = courseOverviewHighlights(careerCourses[career.slug]);
 
   return (
     <main
@@ -101,21 +101,17 @@ export default async function CareerSectionPage({ params }: Props) {
                   {career.payCategory}
                 </span>
               </div>
-              <div className="mt-7 flex flex-wrap gap-3">
-                <a
-                  href="#curriculum"
-                  className="inline-flex min-h-11 items-center justify-center gap-2 rounded-lg bg-[#16375E] px-5 py-3 text-sm font-semibold text-white hover:bg-[#234B79]"
-                >
-                  Explore curriculum
-                  <ArrowDown aria-hidden="true" className="h-4 w-4" />
-                </a>
+              <div className="mt-7">
                 <Link
                   href={workspaceHref}
-                  className="inline-flex min-h-11 items-center justify-center gap-2 rounded-lg border border-[#D6E0EC] px-5 py-3 text-sm font-medium hover:bg-[#F5F8FC]"
+                  className="inline-flex min-h-11 items-center justify-center gap-2 rounded-lg bg-[#1677FF] px-6 py-3 text-sm font-semibold text-white hover:bg-[#075FCF] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#1677FF]"
                 >
-                  Preview workspace
+                  Start private session
                   <ArrowUpRight aria-hidden="true" className="h-4 w-4" />
                 </Link>
+                <p className="mt-3 text-xs text-[#64748B]">
+                  Session preview only — live AI teaching is not available yet.
+                </p>
               </div>
             </div>
             <div className="flex flex-col bg-[#EEF3F8]">
@@ -129,16 +125,11 @@ export default async function CareerSectionPage({ params }: Props) {
                 priority
                 className="h-72 w-full flex-1 object-cover lg:min-h-[420px]"
               />
-              <div className="flex flex-wrap gap-x-5 gap-y-2 border-t border-[#DEE6EF] px-6 py-5 text-xs font-medium text-[#53657D]">
-                <span>{curriculum.sections.length} sections</span>
-                <span>{curriculum.lessonCount} planned lessons & checks</span>
-                <span>Curriculum preview</span>
-              </div>
+
             </div>
           </div>
         </section>
-        <div className="mt-9 grid items-start gap-8 lg:grid-cols-[minmax(0,1fr)_290px]">
-          <div className="min-w-0 space-y-9">
+        <div className="mt-9 max-w-[1120px]">
             <section
               aria-labelledby="outcomes-heading"
               className="rounded-2xl border border-[#DCE3EC] bg-white p-6 sm:p-8"
@@ -153,12 +144,10 @@ export default async function CareerSectionPage({ params }: Props) {
                 What you&apos;ll learn
               </h2>
               <p className="mt-3 text-sm leading-6 text-[#64748B]">
-                These are the planned outcomes for this pathway. Teaching and
-                assessment will become available after the learning experience
-                launches.
+                Explore the practical skills you will build with a private AI instructor. Each outcome is supported by guided lessons, practice, and understanding checks once live teaching launches.
               </p>
               <ul className="mt-7 grid gap-x-7 gap-y-5 sm:grid-cols-2">
-                {curriculum.outcomes.map((outcome, index) => (
+                {highlights.map((outcome, index) => (
                   <li
                     key={outcome}
                     className="flex gap-3 text-sm leading-6 text-[#3E536B]"
@@ -171,60 +160,6 @@ export default async function CareerSectionPage({ params }: Props) {
                 ))}
               </ul>
             </section>
-            <CurriculumPreview curriculum={curriculum} />
-            <section
-              aria-labelledby="project-heading"
-              className="rounded-2xl border border-[#DFE7DD] bg-[#F1F6F0] p-6 sm:p-8"
-            >
-              <p className="gahn-eyebrow text-[#4B6D51]">
-                Planned final project
-              </p>
-              <h2
-                id="project-heading"
-                className="mt-2 text-2xl font-semibold tracking-tight"
-              >
-                {capstone.title.replace(/^Capstone: /, "")}
-              </h2>
-              <p className="mt-4 text-sm leading-7 text-[#3C5544]">
-                {capstone.practice}
-              </p>
-              <p className="mt-4 border-t border-[#D6E2D4] pt-4 text-sm leading-6 text-[#526C59]">
-                The future assessment will check the work against the section
-                outcomes. Browsing this preview does not earn a credential,
-                completion certificate, or employment qualification.
-              </p>
-            </section>
-            <section
-              aria-labelledby="requirements-heading"
-              className="rounded-2xl border border-[#DCE3EC] bg-white p-6 sm:p-8"
-            >
-              <h2 id="requirements-heading" className="text-xl font-semibold">
-                Starting point and career expectations
-              </h2>
-              <ul className="mt-5 list-disc space-y-3 pl-5 text-sm leading-7 text-[#53657D]">
-                {curriculum.requirements.map((requirement) => (
-                  <li key={requirement}>{requirement}</li>
-                ))}
-              </ul>
-              <p className="mt-5 text-sm leading-7 text-[#53657D]">
-                {career.onlineScope}
-              </p>
-              <p className="mt-4 text-xs leading-6 text-[#64748B]">
-                Earning potential is broad guidance, not a salary quote. Pay,
-                remote openings, and entry requirements vary.{" "}
-                <a
-                  href="https://www.bls.gov/ooh/"
-                  target="_blank"
-                  rel="noreferrer"
-                  className="font-medium text-[#325A94] underline underline-offset-4"
-                >
-                  Compare official U.S. occupation information
-                </a>
-                .
-              </p>
-            </section>
-          </div>
-          <WorkspacePreviewCard href={workspaceHref} />
         </div>
       </div>
     </main>

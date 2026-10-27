@@ -124,8 +124,8 @@ export default async function CareerIndustryPage({ params }: Props) {
                       {career.payCategory}
                     </span>
                   </div>
-                  <div className="mt-6 flex items-center justify-between border-t border-[#E7ECF2] pt-4 text-sm font-semibold text-[#325A94]">
-                    <span>Explore curriculum</span>
+                  <div className="mt-6 flex items-center justify-between border-t border-[#E7ECF2] pt-4 text-sm font-semibold text-[#1677FF]">
+                    <span>Explore pathway</span>
                     <ArrowUpRight aria-hidden="true" className="h-4 w-4" />
                   </div>
                 </div>

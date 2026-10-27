@@ -59,10 +59,10 @@ export default async function LearningSectionPage({ params: routeParams }: { par
         <section className="grid gap-7 overflow-hidden rounded-[16px] border border-[#E1E3E8] bg-white p-6 sm:p-8 lg:grid-cols-[minmax(0,1fr)_360px] lg:items-center">
           <div>
             <div className="flex items-center gap-3">
-              <span className="grid h-11 w-11 place-items-center rounded-xl bg-[#EAF2FF] text-[#0B5CFF]">
+              <span className="grid h-11 w-11 place-items-center rounded-xl bg-[#EAF2FF] text-[#1677FF]">
                 <Icon className="h-5 w-5" />
               </span>
-              <p className="text-xs font-semibold uppercase tracking-[0.14em] text-[#0B5CFF]">
+              <p className="text-xs font-semibold uppercase tracking-[0.14em] text-[#1677FF]">
                 {meta.title}
               </p>
             </div>
@@ -83,7 +83,7 @@ export default async function LearningSectionPage({ params: routeParams }: { par
 
         {isSchool ? (
           <section className="mt-8">
-            <p className="text-xs font-semibold uppercase tracking-[0.14em] text-[#0B5CFF]">
+            <p className="text-xs font-semibold uppercase tracking-[0.14em] text-[#1677FF]">
               Grade level
             </p>
             <h2 className="mt-2 text-[27px] font-semibold tracking-[-0.03em]">
@@ -103,7 +103,7 @@ export default async function LearningSectionPage({ params: routeParams }: { par
                   <p className="mt-2 text-[13px] leading-5 text-[#4F515A]">
                     {option.description}
                   </p>
-                  <div className="mt-4 flex items-center gap-2 text-sm font-semibold text-[#0B5CFF]">
+                  <div className="mt-4 flex items-center gap-2 text-sm font-semibold text-[#1677FF]">
                     Open level
                     <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
                   </div>
@@ -113,7 +113,7 @@ export default async function LearningSectionPage({ params: routeParams }: { par
           </section>
         ) : (
           <section className="mt-8 rounded-[16px] border border-[#E1E3E8] bg-white p-6 sm:p-8">
-            <p className="text-xs font-semibold uppercase tracking-[0.14em] text-[#0B5CFF]">
+            <p className="text-xs font-semibold uppercase tracking-[0.14em] text-[#1677FF]">
               Upcoming guided lessons
             </p>
             <h2 className="mt-2 text-[27px] font-semibold tracking-[-0.03em]">
@@ -138,7 +138,7 @@ export default async function LearningSectionPage({ params: routeParams }: { par
                       {option.description}
                     </p>
                   </div>
-                  <ArrowRight className="h-5 w-5 shrink-0 text-[#0B5CFF] transition-transform group-hover:translate-x-1" />
+                  <ArrowRight className="h-5 w-5 shrink-0 text-[#1677FF] transition-transform group-hover:translate-x-1" />
                 </Link>
               ))}
             </div>

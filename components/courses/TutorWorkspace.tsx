@@ -74,18 +74,18 @@ export default function TutorWorkspace({
             </h2>
             <span className="text-[11px] text-[#71849A]">Not connected</span>
           </div>
-          <div data-tavus-video-slot="instructor" className="flex min-h-[300px] flex-1 flex-col items-center justify-center bg-[#142B43] px-8 py-12 text-center sm:min-h-[410px]">
+          <div data-instructor-video-slot="instructor" className="flex min-h-[300px] flex-1 flex-col items-center justify-center bg-[#142B43] px-8 py-12 text-center sm:min-h-[410px]">
             <div className="grid h-20 w-20 place-items-center rounded-full border border-white/15 bg-white/5">
               <VideoOff aria-hidden="true" className="h-7 w-7 text-[#A9BDD4]" />
             </div>
             <p className="mt-6 text-xl font-medium text-white">
-              Tavus AI instructor coming later
+              Your private AI instructor
             </p>
             <p className="mt-3 max-w-xs text-sm leading-7 text-[#B7C8DA]">
-              The real-time AI tutor will appear in this window once live lessons launch.
+              Your real-time AI instructor will appear here when private sessions become available.
             </p>
             <span className="mt-6 rounded-full border border-white/15 px-3 py-1.5 text-[11px] text-[#B7C8DA]">
-              Live session coming later
+              Private sessions coming soon
             </span>
           </div>
           <div className="flex flex-wrap items-center justify-between gap-4 px-5 py-4">
@@ -96,9 +96,9 @@ export default function TutorWorkspace({
             <button
               disabled
               type="button"
-              className="min-h-10 cursor-not-allowed rounded-lg bg-[#E8EDF4] px-4 py-2 text-xs font-semibold text-[#788AA0]"
+              className="min-h-10 cursor-not-allowed rounded-lg bg-[#DDEBFF] px-4 py-2 text-xs font-semibold text-[#2A64B8] opacity-75"
             >
-              Start lesson · Coming later
+              Start private session · Coming soon
             </button>
           </div>
         </section>
