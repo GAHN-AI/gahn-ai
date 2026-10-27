@@ -106,5 +106,7 @@ export const config = {
     "/study-guides/:path*",
     "/progress/:path*",
     "/assigned-homework/:path*",
+    "/learn/:path*",
+    "/lesson/:path*",
   ],
 };
