@@ -10,7 +10,6 @@ import posthog from "posthog-js";
 import { useState } from "react";
 import type { ReactNode } from "react";
 import { motion } from "framer-motion";
-import { useSignedIn } from "@/lib/auth/useSignedIn";
 import EarlyAccessVoices from "@/components/EarlyAccessVoices";
 import { ArrowRight, Check, ChevronDown, FileText, Menu, NotebookTabs, Target, Upload, X } from "lucide-react";
 
@@ -128,7 +127,6 @@ function AnnouncementBar() {
 }
 
 function SiteHeader() {
-  const signedIn = useSignedIn();
   const [open, setOpen] = useState(false);
 
   return (
@@ -165,12 +163,7 @@ function SiteHeader() {
             >
               Sign Up
             </Link>
-            {signedIn ? (
-              <div className="ml-2 flex items-center gap-3 border-l border-[#D9E2EF] pl-4 text-sm">
-                <Link href="/dashboard" className="font-medium text-[#1677FF] hover:underline">Dashboard</Link>
-                <Link href="/settings" className="font-medium text-[#394D68] hover:underline">Settings</Link>
-              </div>
-            ) : null}
+
           </div>
 
           <button
@@ -222,12 +215,7 @@ function SiteHeader() {
                 >
                   Sign Up
                 </Link>
-                {signedIn ? (
-                  <>
-                    <Link href="/dashboard" onClick={() => setOpen(false)} className="inline-flex h-11 items-center justify-center rounded-full border border-[#D9D9DE] text-sm font-medium text-[#1677FF]">Dashboard</Link>
-                    <Link href="/settings" onClick={() => setOpen(false)} className="inline-flex h-11 items-center justify-center rounded-full border border-[#D9D9DE] text-sm font-medium text-black">Settings</Link>
-                  </>
-                ) : null}
+
               </div>
             </div>
           </div>
@@ -728,7 +716,7 @@ function WorldsSection() {
             </h2>
           </div>
           <p className="max-w-[540px] text-[15.75px] leading-7 text-black lg:justify-self-end">
-            All five Learning Worlds are open for browsing. Explore paths and practical skill roadmaps now; interactive teaching sessions will launch later.
+            Create a free account and sign in to open Learning Worlds from your dashboard. These five cards are previews only; interactive AI lessons are still in development.
           </p>
         </div>
 
@@ -743,27 +731,36 @@ function WorldsSection() {
                 viewport={{ once: true, amount: 0.25 }}
                 transition={{ duration: 0.5, delay: index * 0.06 }}
               >
-                <Link
-                  href={`/learn/${world.slug}`}
-                  className="group block h-full rounded-lg bg-white p-6 shadow-[0_0_0_1px_rgba(31,107,255,0.14)] transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_18px_40px_rgba(31,107,255,0.14)]"
-                >
+                <div className="h-full rounded-lg bg-white p-6 shadow-[0_0_0_1px_rgba(31,107,255,0.14)]">
                   <div className="flex items-start justify-between gap-4">
                     <div className="grid h-11 w-11 place-items-center rounded-lg bg-[#EAF3FF] text-[#1677FF]">
                       <Icon className="h-5 w-5" />
                     </div>
-                    <ArrowRight className="h-4 w-4 text-[#1677FF] transition-transform duration-300 group-hover:translate-x-1" />
+                    <span className="rounded-full bg-[#F3F8FF] px-3 py-1 text-[11px] font-semibold text-[#456282]">
+                      Account required
+                    </span>
                   </div>
                   <h3 className="mt-5 text-[20px] font-medium text-black">{world.title}</h3>
                   <p className="mt-2 max-w-[420px] text-[14px] leading-6 text-black">
                     {world.description}
                   </p>
-                  <p className="mt-5 text-[12px] font-semibold text-[#1677FF]">
-                    Open learning world
+                  <p className="mt-5 text-[12px] font-medium text-[#526880]">
+                    Available from your dashboard after signup
                   </p>
-                </Link>
+                </div>
               </motion.div>
             );
           })}
+        </div>
+
+        <div className="mt-8 flex justify-center">
+          <Link
+            href="/signup"
+            onClick={() => posthog.capture("signup_clicked", { location: "learning_worlds" })}
+            className="inline-flex min-h-11 items-center justify-center rounded-full bg-[#1677FF] px-6 py-3 text-sm font-semibold text-white transition-colors hover:bg-[#0E63E8]"
+          >
+            Sign up to access Learning Worlds
+          </Link>
         </div>
 
         <div className="mt-14 grid items-center gap-10 lg:grid-cols-[0.9fr_1.1fr]">
