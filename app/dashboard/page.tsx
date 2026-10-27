@@ -333,7 +333,7 @@ export default function DashboardPage() {
           </div>
 
           <Link
-            href="/pricing"
+            href="/pricing?from=dashboard"
             className="mx-4 mt-5 flex items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium text-[#6F45E8] transition hover:bg-[#F6F2FF]"
           >
             <PathIcon className="h-4 w-4" />
