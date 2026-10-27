@@ -246,6 +246,13 @@ destination(
   await complete.GET(request("/auth/complete")),
   "/signup?complete=1",
 );
+reset({ registered: false, user: user("email") });
+destination(
+  await complete.GET(request("/auth/complete")),
+  "/signup?verify=email",
+);
+assert.equal(state.registered, false);
+checks++;
 reset({ dbError: true });
 destination(
   await callback.GET(request("/auth/callback?code=good")),
@@ -284,7 +291,7 @@ destination(await proxy(request("/dashboard")), "/signup?complete=1");
 assert.equal((await proxy(request("/signup"))).headers.get("location"), null);
 checks++;
 reset({ registered: false, user: user("email") });
-destination(await proxy(request("/dashboard")), "/auth/complete");
+destination(await proxy(request("/dashboard")), "/signup?verify=email");
 reset({ dbError: true });
 destination(
   await proxy(request("/dashboard")),
@@ -358,6 +365,22 @@ for (const confirmSignup of [false, true]) {
   assert.equal(state.registered, confirmSignup);
   checks += 2;
 }
+// An automatically confirmed email/password session is NOT signup proof.
+reset({ registered: false, user: user("email") });
+response = await registration.POST(
+  request("/api/auth/registration", {
+    method: "POST",
+    headers: { origin: "https://www.gahnai.com" },
+    body: '{"confirmSignup":true}',
+  }),
+);
+assert.equal(response.status, 403);
+assert.equal(state.registered, false);
+checks += 2;
+reset({ registered: false, user: user("email") });
+response = await registration.GET(request("/api/auth/registration"));
+assert.equal((await response.json()).requiresEmailVerification, true);
+checks++;
 reset({ user: null });
 response = await registration.POST(
   request("/api/auth/registration", {
