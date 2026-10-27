@@ -61,3 +61,17 @@ These provider/account flows are not claimed as live-tested. No real verificatio
 - https://supabase.com/docs/guides/auth/auth-identity-linking
 - https://supabase.com/docs/guides/auth/auth-hooks/before-user-created-hook
 - Installed `@supabase/ssr` and `@supabase/auth-js` source for PKCE recovery and cookie behavior.
+
+
+## October 27 post-release confirmation fix
+
+- The landing-page **Log In** and **Sign Up** links are now permanent across desktop and mobile navigation. A verified signed-in user can additionally see Dashboard and Settings; clicking login/signup while already signed in still safely returns to the dashboard.
+- Previous client code sent manual email signup directly to /auth/complete when Supabase returned a session. With email autoconfirm enabled, that registered accounts **without a confirmation link**.
+- Now manual email signup returning a session is treated as a hosted Supabase configuration problem: the provisional session is locally signed out, and the account cannot complete GAHN registration through /auth/complete or the Google-only completion POST.
+- Manual email registration is only completed after a valid one-time code/token is exchanged at /auth/callback; after that GAHN redirects to /dashboard and separately submits the welcome email through Resend.
+- Existing completed registrations are unchanged. Google signup still requires user confirmation of the GAHN account if it is a new OAuth identity, and returning Google accounts continue directly to dashboard.
+- The current Resend sender domain updates.gahnai.com is verified and sending. Resend shows a recent welcome message as delivered. Its SMTP integration has historically delivered authentication email, but **there is no current evidence that Supabase's hosted Confirm email toggle is enabled**.
+
+**Hosted configuration required before fresh email/password signups work:** In the Supabase project dashboard go to Authentication > Providers > Email, enable **Confirm email**, save; under URL Configuration set the Site URL to https://www.gahnai.com and allow https://www.gahnai.com/auth/callback. Review Authentication > Email Templates > Confirm signup. Keep Supabase's official token/PKCE confirmation link in the message. The message may be delivered by Resend if Resend is configured as SMTP in Supabase; do not send an unrelated Resend verification link, which would not verify the Supabase identity.
+
+**Manual acceptance (required):** Test with a brand-new email, ensure no active session after signup, receive the verification email, click its one-time link, arrive at /dashboard, and see the welcome email. Separately retest first-time Google signup, returning Google login, email/password login, login without an account, password recovery, and verification from a second browser tab. This connector cannot inspect or toggle hosted Auth email settings and did not perform these real provider/browser tests.
