@@ -5,7 +5,7 @@ import {
   completeRegistration,
   registrationStatus,
 } from "@/lib/auth/registration";
-import { sameOriginPost } from "@/lib/auth/policy";
+import { isEmailSignup, sameOriginPost } from "@/lib/auth/policy";
 export async function GET(request: NextRequest) {
   const route = authRoute(request);
   try {
@@ -19,6 +19,7 @@ export async function GET(request: NextRequest) {
       NextResponse.json({
         authenticated: true,
         registered: await registrationStatus(route.supabase, user.id),
+        requiresEmailVerification: isEmailSignup(user),
       }),
     );
   } catch {
@@ -49,6 +50,14 @@ export async function POST(request: NextRequest) {
           { status: 401 },
         ),
       );
+    // This endpoint is only for completing a verified Google OAuth signup.
+    // Email/password accounts complete exclusively through the one-time
+    // verification link processed at /auth/callback.
+    if (isEmailSignup(user))
+      return route.finish(NextResponse.json(
+        { error: "Verify your email using the confirmation link before signing in." },
+        { status: 403 },
+      ));
     const body = await request.json();
     if (body.confirmSignup !== true)
       return route.finish(

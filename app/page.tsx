@@ -153,17 +153,24 @@ function SiteHeader() {
 
           <div className="hidden items-center gap-2 lg:flex">
             <Link
-              href={signedIn ? "/dashboard" : "/login"}
+              href="/login"
               className="inline-flex h-9 items-center justify-center px-2 text-[14px] font-medium text-black"
             >
-              {signedIn ? "Dashboard" : "Log In"}
+              Log In
             </Link>
             <Link
-              href={signedIn ? "/settings" : "/signup"} onClick={() => { if (!signedIn) posthog.capture("signup_clicked", { location: "homepage" }); }}
+              href="/signup"
+              onClick={() => posthog.capture("signup_clicked", { location: "homepage" })}
               className="inline-flex h-9 items-center justify-center rounded-full bg-[#0B1739] px-5 text-[14px] font-medium text-white transition-colors hover:bg-[#132754]"
             >
-              {signedIn ? "Settings" : "Sign Up"}
+              Sign Up
             </Link>
+            {signedIn ? (
+              <div className="ml-2 flex items-center gap-3 border-l border-[#D9E2EF] pl-4 text-sm">
+                <Link href="/dashboard" className="font-medium text-[#1677FF] hover:underline">Dashboard</Link>
+                <Link href="/settings" className="font-medium text-[#394D68] hover:underline">Settings</Link>
+              </div>
+            ) : null}
           </div>
 
           <button
@@ -202,17 +209,25 @@ function SiteHeader() {
 
               <div className="mt-4 grid grid-cols-2 gap-3 border-t border-[#EEEEF0] pt-4">
                 <Link
-                  href={signedIn ? "/dashboard" : "/login"}
+                  href="/login"
+                  onClick={() => setOpen(false)}
                   className="inline-flex h-11 items-center justify-center rounded-full border border-[#D9D9DE] text-sm font-medium text-black"
                 >
-                  {signedIn ? "Dashboard" : "Log In"}
+                  Log In
                 </Link>
                 <Link
-                  href={signedIn ? "/settings" : "/signup"} onClick={() => { if (!signedIn) posthog.capture("signup_clicked", { location: "homepage" }); }}
+                  href="/signup"
+                  onClick={() => { setOpen(false); posthog.capture("signup_clicked", { location: "homepage" }); }}
                   className="inline-flex h-11 items-center justify-center rounded-full bg-[#0B1739] text-sm font-medium text-white"
                 >
-                  {signedIn ? "Settings" : "Sign Up"}
+                  Sign Up
                 </Link>
+                {signedIn ? (
+                  <>
+                    <Link href="/dashboard" onClick={() => setOpen(false)} className="inline-flex h-11 items-center justify-center rounded-full border border-[#D9D9DE] text-sm font-medium text-[#1677FF]">Dashboard</Link>
+                    <Link href="/settings" onClick={() => setOpen(false)} className="inline-flex h-11 items-center justify-center rounded-full border border-[#D9D9DE] text-sm font-medium text-black">Settings</Link>
+                  </>
+                ) : null}
               </div>
             </div>
           </div>
