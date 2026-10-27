@@ -6,7 +6,7 @@
 export default function WorldInstructorSession() {
   return (
     <div className="grid min-h-[380px] place-items-center bg-black text-center text-xs text-white/70">
-      Tavus instructor not connected
+      Private AI instructor not connected
     </div>
   );
 }
