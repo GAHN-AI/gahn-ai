@@ -96,13 +96,13 @@ function LearningSectionCard({
           {description}
         </p>
         <div className="mt-5 flex items-center justify-between border-t border-[#EEEEF1] pt-4">
-          <span className={`text-sm font-semibold ${locked ? "text-[#8A8C94]" : "text-[#0B5CFF]"}`}>
+          <span className={`text-sm font-semibold ${locked ? "text-[#8A8C94]" : "text-[#1677FF]"}`}>
             {locked ? "Not available" : "Open"}
           </span>
           {locked ? (
             <LockKeyhole className="h-4 w-4 text-[#8A8C94]" />
           ) : (
-            <ArrowRight className="h-4 w-4 text-[#0B5CFF] transition-transform group-hover:translate-x-1" />
+            <ArrowRight className="h-4 w-4 text-[#1677FF] transition-transform group-hover:translate-x-1" />
           )}
         </div>
       </div>
@@ -165,10 +165,10 @@ export default async function LearningWorldPage({ params: routeParams }: { param
         <section className="grid gap-6 border-b border-[#E7E7EA] pb-9 lg:grid-cols-[minmax(0,1fr)_auto] lg:items-end">
           <div className="max-w-[760px]">
             <div className="flex items-center gap-3">
-              <span className="grid h-11 w-11 place-items-center rounded-xl bg-[#EAF2FF] text-[#0B5CFF]">
+              <span className="grid h-11 w-11 place-items-center rounded-xl bg-[#EAF2FF] text-[#1677FF]">
                 <Icon className="h-5 w-5" />
               </span>
-              <p className="text-xs font-semibold uppercase tracking-[0.15em] text-[#0B5CFF]">
+              <p className="text-xs font-semibold uppercase tracking-[0.15em] text-[#1677FF]">
                 {eyebrow}
               </p>
             </div>
@@ -198,7 +198,7 @@ export default async function LearningWorldPage({ params: routeParams }: { param
 
         <section className="pt-8">
           <div className="max-w-[760px]">
-            <p className="text-xs font-semibold uppercase tracking-[0.14em] text-[#0B5CFF]">
+            <p className="text-xs font-semibold uppercase tracking-[0.14em] text-[#1677FF]">
               {world === "career-skills"
                 ? "Digital career fields"
                 : world === "school-help"
