@@ -18,7 +18,8 @@ export async function GET(request: NextRequest) {
     return route.finish(
       NextResponse.json({
         authenticated: true,
-        registered: await registrationStatus(route.supabase, user.id),\n        requiresEmailVerification: isEmailSignup(user),
+        registered: await registrationStatus(route.supabase, user.id),
+        requiresEmailVerification: isEmailSignup(user),
       }),
     );
   } catch {
@@ -49,7 +50,15 @@ export async function POST(request: NextRequest) {
           { status: 401 },
         ),
       );
-    // This endpoint is only for completing a verified Google OAuth signup.\n    // Email/password accounts complete exclusively through the one-time\n    // verification link processed at /auth/callback.\n    if (isEmailSignup(user))\n      return route.finish(NextResponse.json(\n        { error: "Verify your email using the confirmation link before signing in." },\n        { status: 403 },\n      ));\n    const body = await request.json();
+    // This endpoint is only for completing a verified Google OAuth signup.
+    // Email/password accounts complete exclusively through the one-time
+    // verification link processed at /auth/callback.
+    if (isEmailSignup(user))
+      return route.finish(NextResponse.json(
+        { error: "Verify your email using the confirmation link before signing in." },
+        { status: 403 },
+      ));
+    const body = await request.json();
     if (body.confirmSignup !== true)
       return route.finish(
         NextResponse.json(
