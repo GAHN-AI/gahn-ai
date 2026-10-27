@@ -1,40 +1,52 @@
 import type { Course } from "@/lib/course-content/schema";
+import { careerSections } from "@/lib/careerCatalog";
 
 /**
- * Short, pathway-specific public learning outcomes. Detailed gated lessons
- * stay exclusively in the private-session workspace.
+ * Short public topic highlights. Full lesson objectives and projects remain in
+ * the private-session curriculum, not on the overview page.
  */
-const softwareDeveloperOutcomes = [
-  "Set up a professional coding workspace in VS Code, organize project files, use the terminal, and track changes with Git and GitHub.",
-  "Create accessible web pages with semantic HTML, links, media, forms, and browser validation; structure content that works with assistive technology.",
-  "Build responsive layouts with modern CSS, the box model, typography, Flexbox, Grid, and mobile-first design, then refine a real website.",
-  "Write JavaScript to manage data, functions, events, and asynchronous requests; build interactive interfaces using TypeScript and React components.",
-  "Create backend services with Node.js, design HTTP APIs, work with SQL databases, and apply authentication, authorization, and input-validation practices.",
-  "Test and debug applications, improve accessibility and reliability, deploy a working full-stack project, and document the decisions behind it.",
-];
+const specificCareerHighlights: Record<string, string[]> = {
+  "software-developer-engineer": [
+    "Build websites with HTML and CSS",
+    "Add interactivity with JavaScript and React",
+    "Use Git, GitHub, and TypeScript",
+    "Create APIs with Node.js",
+    "Work with SQL databases and authentication",
+    "Test and deploy full-stack applications",
+  ],
+  "cyber-security-analyst": [
+    "Understand networks and common security threats",
+    "Investigate security alerts and system logs",
+    "Apply access controls and defensive measures",
+    "Assess risks and recommend safeguards",
+    "Document incidents and response steps",
+    "Practice security investigations safely",
+  ],
+};
 
-/** Six readable outcomes derived from a course's actual authored units. */
+/**
+ * Readable six-item overview based on each path's authored subject matter.
+ * Avoid displaying long generated descriptions or technical course outlines.
+ */
 export function courseOverviewHighlights(course: Course): string[] {
-  if (course.world === "career-skills" && course.slug === "software-developer-engineer")
-    return softwareDeveloperOutcomes;
+  if (course.world === "career-skills") {
+    const dedicated = specificCareerHighlights[course.slug];
+    if (dedicated) return dedicated;
 
-  const sections = course.sections;
+    // Career Skills already has a manually curated, pathway-specific skill list.
+    const career = careerSections.find((item) => item.slug === course.slug);
+    if (career?.skills.length) return career.skills.slice(0, 6);
+  }
+
+  // Other worlds use their authored section names instead of fabricated claims.
+  // Spread the selection across the course without displaying capstone labels.
+  const sections = course.sections.filter(
+    (section) => !/^(capstone|final project|planned final project)\b/i.test(section.title),
+  );
   if (!sections.length) return [];
-  return Array.from({ length: Math.min(6, sections.length) }, (_, index) => {
-    const count = Math.min(6, sections.length);
-    const start = Math.floor((index * sections.length) / count);
-    const end = Math.floor(((index + 1) * sections.length) / count);
-    const group = sections.slice(start, Math.max(start + 1, end));
-    const first = group[0];
-    const last = group.at(-1)!;
-    const lessonSkills = [first, last]
-      .flatMap((section) => section.lessons.filter((lesson) => lesson.kind === "lesson").slice(0, 2))
-      .map((lesson) => lesson.title);
-    const uniqueSkills = [...new Set(lessonSkills)].slice(0, 3);
-    const focus = first === last
-      ? first.title.toLowerCase()
-      : `${first.title.toLowerCase()} through ${last.title.toLowerCase()}`;
-    const practice = last.practice.replace(/[.\s]+$/, "");
-    return `Develop practical skills in ${focus}, including ${uniqueSkills.join(", ")}. Apply them by completing this task: ${practice}.`;
+  const count = Math.min(6, sections.length);
+  return Array.from({ length: count }, (_, index) => {
+    const sample = Math.floor(((index + 0.5) * sections.length) / count);
+    return sections[Math.min(sample, sections.length - 1)].title;
   });
 }
