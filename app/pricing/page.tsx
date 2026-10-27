@@ -4,6 +4,7 @@ import Image from "next/image";
 
 import Link from "next/link";
 import { useState } from "react";
+import { useBrowserSearch } from "@/lib/useBrowserPreferences";
 import { ArrowLeft, ArrowRight, Clock3 } from "lucide-react";
 
 type Plan = {
@@ -203,6 +204,8 @@ function PlanCard({
 export default function PricingPage() {
   const [checkoutError, setCheckoutError] = useState("");
   const [checkoutLoading, setCheckoutLoading] = useState(false);
+  const browserSearch = useBrowserSearch();
+  const returnToDashboard = new URLSearchParams(browserSearch).get("from") === "dashboard";
 
   async function startLearnerPlusCheckout() {
     setCheckoutLoading(true);
@@ -256,7 +259,7 @@ export default function PricingPage() {
           </Link>
 
           <Link
-            href="/"
+            href={returnToDashboard ? "/dashboard" : "/"}
             className="inline-flex items-center gap-2 rounded-lg border border-[#D9E2EF] bg-white px-4 py-2.5 text-sm font-bold text-black transition hover:bg-[#F7F9FC]"
           >
             <ArrowLeft className="h-4 w-4" />

@@ -9,6 +9,8 @@ export const ACCOUNT_PATHS = [
   "/study-guides",
   "/progress",
   "/assigned-homework",
+  "/learn",
+  "/lesson",
 ];
 export function isAccountPath(path: string) {
   return ACCOUNT_PATHS.some(
