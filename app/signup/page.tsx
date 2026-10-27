@@ -36,6 +36,7 @@ const features = [
 
 export default function SignupPage() {
   const [pendingGoogle, setPendingGoogle] = useState(false);
+  const [pendingEmailAccount, setPendingEmailAccount] = useState(false);
   const [checkingAccount, setCheckingAccount] = useState(true);
   const [fullName, setFullName] = useState("");
   const [email, setEmail] = useState("");
@@ -58,7 +59,10 @@ export default function SignupPage() {
         const data = await response.json();
         if (cancelled) return;
         if (data.registered) window.location.replace("/dashboard");
-        else setPendingGoogle(Boolean(data.authenticated));
+        else if (data.authenticated && data.requiresEmailVerification) {
+          setPendingEmailAccount(true);
+          setPendingGoogle(false);
+        } else setPendingGoogle(Boolean(data.authenticated));
       }).catch(() => { if (!cancelled) setError("Unable to check account setup. Refresh this page to retry."); })
       .finally(() => { if (!cancelled) setCheckingAccount(false); });
     return () => { cancelled = true; };
@@ -91,8 +95,8 @@ export default function SignupPage() {
         });
         if (!response.ok) return;
         const status = await response.json();
-        if (cancelled || !status.authenticated) return;
-        window.location.replace(status.registered ? "/dashboard" : "/auth/complete");
+        if (!cancelled && status.authenticated && status.registered)
+          window.location.replace("/dashboard");
       } catch {
         // Allow a retry on focus/visibility or when another tab broadcasts.
       } finally {
@@ -189,10 +193,17 @@ export default function SignupPage() {
       return;
     }
 
-    // Some projects verify email, while others return an active session immediately.
+    // A session immediately after an email/password signup means Supabase
+    // is auto-confirming the email instead of sending the required link.
+    // Never treat that session as proof of email ownership.
     if (signupData?.session) {
-      posthog.capture("signup_completed", { method: "email" });
-      window.location.replace("/auth/complete");
+      try {
+        await supabase.auth.signOut({ scope: "local" });
+      } catch {
+        // The server still gates registration on a valid Auth callback.
+      }
+      posthog.capture("signup_error", { reason: "email_confirmation_not_enabled" });
+      setError("Email verification is temporarily unavailable. Your account has not been activated. Please contact GAHN AI support before trying again.");
       return;
     }
 
@@ -338,7 +349,21 @@ export default function SignupPage() {
               GAHN AI is still in development. Create a free account to join early access and receive launch updates. The full AI instructor experience is not ready yet.
             </p>
 
-            {checkingAccount ? <p role="status" className="mt-6">Checking account...</p> : pendingGoogle ? (
+            {checkingAccount ? <p role="status" className="mt-6">Checking account...</p> : pendingEmailAccount ? (
+              <div className="mt-6 space-y-4" role="status">
+                <p className="rounded-lg bg-[#FFF5E5] p-4 text-sm leading-6 text-[#775018]">
+                  Email verification is required to finish this account.
+                  Open the confirmation link sent to your inbox. If you never received
+                  a link, contact GAHN AI support to finish account setup.
+                </p>
+                <Link href="/contact" className="inline-block text-sm font-semibold text-[#1677FF] underline">
+                  Contact support
+                </Link>
+                <button type="button" onClick={() => void signOutAccount().catch(() => setError("Unable to sign out. Please retry."))}
+                  className="block text-sm font-semibold text-[#1677FF]">Use another account</button>
+                {error && <p role="alert" className="text-sm text-red-700">{error}</p>}
+              </div>
+            ) : pendingGoogle ? (
               <div className="mt-6">
                 <p>This Google account has not completed GAHN AI signup. New users must sign up before logging in. Google already verified your email; choose Complete signup to create your account and open the dashboard.</p>
                 {error && <p role="alert" className="mt-4 text-red-600">{error}</p>}
