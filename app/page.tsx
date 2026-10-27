@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 
-import { BookWorldIcon, BrainWorldIcon, CanvasIcon, CareerWorldIcon, KnowledgeWorldIcon, SchoolWorldIcon } from "@/components/brand/WorldIcons";
+import { BookWorldIcon, BrainWorldIcon, CareerWorldIcon, KnowledgeWorldIcon, SchoolWorldIcon } from "@/components/brand/WorldIcons";
 
 
 import Link from "next/link";
