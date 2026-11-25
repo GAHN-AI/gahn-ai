@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 
 import { resend } from "@/lib/resend";
+import { replyToWebsiteFeedback } from "@/lib/feedbackSupport";
 import { getAuthenticatedUser } from "@/lib/serverAuth";
 import { supabaseAdmin } from "@/lib/supabaseAdmin";
 
@@ -97,11 +98,11 @@ export async function POST(request: Request) {
       throw insertError;
     }
 
-    // Send directly to the verified GAHN Zoho support inbox.
-    const to = "support@gahnai.com";
+    // Notify the Resend support inbox; keep a copy in the existing Zoho inbox.
+    const recipients = ["support@updates.gahnai.com", "support@gahnai.com"];
     const { error: notifyError } = await resend.emails.send({
       from: "GAHN AI Feedback <feedback@updates.gahnai.com>",
-      to: [to],
+      to: recipients,
       replyTo: user.email || undefined,
       subject: "GAHN AI: New private landing page comment",
       html: `
@@ -116,37 +117,30 @@ export async function POST(request: Request) {
       `,
     });
 
+    // A separate customer reply goes to their own email provider.
+    // This is independent of support-notification delivery.
+    const autoReplySent = await replyToWebsiteFeedback({
+      kind: "landing",
+      feedbackId: user.id,
+      email: user.email,
+      message,
+      category: "landing",
+    });
+
     if (notifyError) {
       console.error("Private landing comment notification failed:", notifyError);
       return NextResponse.json({
         submitted: true,
         notificationSent: false,
+        autoReplySent,
         message: "Thank you. Your comment was saved, but our email notification could not be delivered.",
       });
-    }
-
-    // Best-effort acknowledgment: the public response never relies on
-    // successful delivery of this optional email.
-    if (user.email) {
-      const { error: receiptError } = await resend.emails.send({
-        from: "GAHN AI <hello@updates.gahnai.com>",
-        to: [user.email],
-        subject: "Thank you for sharing your thoughts with GAHN AI",
-        html: `
-          <div style="font-family:Arial,sans-serif;max-width:600px;margin:auto;color:#0B1739;padding:24px">
-            <h2>Thank you for your feedback</h2>
-            <p>We received your thoughts about GAHN AI and appreciate you taking the time to share them.</p>
-            <p>Your comment is private and will not appear publicly on the website.</p>
-            <p>GAHN AI</p>
-          </div>
-        `,
-      });
-      if (receiptError) console.error("Comment receipt email failed:", receiptError);
     }
 
     return NextResponse.json({
       submitted: true,
       notificationSent: true,
+      autoReplySent,
       message: "Thank you for sharing your thoughts. Your comment was sent privately to the GAHN team.",
     });
   } catch (error) {

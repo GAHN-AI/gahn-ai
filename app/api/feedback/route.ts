@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 
 import { resend } from "@/lib/resend";
+import { replyToWebsiteFeedback } from "@/lib/feedbackSupport";
 import { getAuthenticatedUser } from "@/lib/serverAuth";
 import { supabaseAdmin } from "@/lib/supabaseAdmin";
 
@@ -153,7 +154,7 @@ export async function POST(req: Request) {
 
     const { error: emailError } = await resend.emails.send({
       from: "GAHN AI Feedback <feedback@updates.gahnai.com>",
-      to: [notificationEmail],
+      to: Array.from(new Set(["support@updates.gahnai.com", notificationEmail])),
       replyTo: user.email || undefined,
       subject: `GAHN feedback: ${category}${rating ? ` · ${rating}/5` : ""}`,
       html: `
@@ -173,12 +174,21 @@ export async function POST(req: Request) {
       `,
     });
 
+    const autoReplySent = await replyToWebsiteFeedback({
+      kind: "dashboard",
+      feedbackId: saved.id,
+      email: user.email,
+      message,
+      category,
+    });
+
     if (emailError) {
       console.error("Feedback notification email failed:", emailError);
 
       return NextResponse.json({
         saved: true,
         notificationSent: false,
+        autoReplySent,
         feedbackId: saved.id,
         message:
           "Your feedback was saved, but the email notification could not be delivered.",
@@ -188,6 +198,7 @@ export async function POST(req: Request) {
     return NextResponse.json({
       saved: true,
       notificationSent: true,
+      autoReplySent,
       feedbackId: saved.id,
       message: "Feedback sent successfully.",
     });
