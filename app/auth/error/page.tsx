@@ -18,12 +18,19 @@ export default function AuthErrorPage() {
           For an email link, try the browser where you requested it, or request
           a fresh link.
         </p>
+        <p className="mt-4">
+          New to GAHN AI? Create an account with your email and verify it
+          first. Google login is available afterward using the same address.
+        </p>
         <div className="mt-6 flex gap-5">
           <Link href="/auth/complete" className="font-semibold text-blue-700">
             Retry account setup
           </Link>
           <Link href="/login" className="font-semibold text-blue-700">
             Return to login
+          </Link>
+          <Link href="/signup" className="font-semibold text-blue-700">
+            Create account
           </Link>
         </div>
       </section>

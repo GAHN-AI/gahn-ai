@@ -17,7 +17,8 @@
 3. Authentication → Email Templates → Confirm signup: verify the template contains a working Supabase `{{ .ConfirmationURL }}` link or a supported token-hash link that points to /auth/callback. Do not send a second passwordless email on every page load.
 4. Authentication → Providers → Google: keep OAuth credentials, client ID/secret, authorized origins, and Supabase OAuth redirect authorized in Google Cloud. Do not publish secret values.
 5. Verify SMTP settings, deliverability, and sender identity to make sure the verification email arrives.
-6. Google first-time auth may still create an unregistered provisional row in `auth.users`. Blocking this at the identity-provider layer would require a separately designed and activated Supabase before-user-created hook; application gating does not prevent provisional Auth row creation.
+6. To prevent even a provisional Google Auth user from being created, enable the prepared **Before User Created** hook in Supabase Dashboard → Authentication → Hooks. Choose **Postgres** and select `public.gahn_reject_new_google_users`, then save/enable it. It was added to the hosted database with migration `20261126005536_gahn_reject_new_google_users`; it only rejects creation of new Google Auth rows and allows normal email registrations. The hook was confirmed with read-only SQL examples: Google rejected (403), email allowed. The connector cannot activate the hosted Auth hook, so this dashboard step is REQUIRED for Google-first blocking. Confirm that no other Before User Created hook is being replaced before enabling.
+7. Check Supabase → Authentication → Attack Protection and enable leaked-password protection where the current plan supports it. The current security advisor flags it as disabled.
 
 ## Test matrix
 
