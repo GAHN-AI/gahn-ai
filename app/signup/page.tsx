@@ -387,12 +387,6 @@ export default function SignupPage() {
               )}
 
               {awaitingVerification && (
-                <Link href="/login" className="mt-4 block font-semibold text-[#1677FF] underline">
-                  I've verified my email — go to Login
-                </Link>
-              )}
-
-              {awaitingVerification && (
                 <button
                   type="button"
                   onClick={handleResendVerification}
