@@ -60,15 +60,35 @@ export async function GET(request: NextRequest) {
     if (recovery) return redirect("/update-password");
     // This endpoint only gets here after exchanging a valid one-time Auth
     // callback code/token. For email signups it is the confirmation proof.
-    const registered = await completeRegistration(
-      user, intent === "signup" || isEmailSignup(user),
-    );
-    if (!registered) return redirect("/signup?complete=1");
+    // Google OAuth verifies a Google identity; it is NOT GAHN signup.
+    // Returning users (including previously completed Google registrations)
+    // retain access. New accounts require verified email signup first.
+    const registered = await completeRegistration(user, isEmailSignup(user));
+    if (!registered) {
+      const { error: signOutError } = await route.supabase.auth.signOut({
+        scope: "local",
+      });
+      if (signOutError) return redirect("/auth/error?reason=account_setup");
+      return redirect("/login?error=signup_required");
+    }
+
     after(() =>
       sendWelcome(user).catch(() =>
         console.error("Welcome delivery unavailable"),
       ),
     );
+
+    // The initial email-confirmation link proves ownership. Finish the
+    // registration, clear that temporary session, then require a fresh login.
+    // Existing email-origin users signing in through Google keep their session.
+    if (isEmailSignup(user) && intent !== "login") {
+      const { error: signOutError } = await route.supabase.auth.signOut({
+        scope: "local",
+      });
+      if (signOutError) return redirect("/auth/error?reason=account_setup");
+      return redirect("/login?verified=1");
+    }
+
     return redirect("/dashboard");
   } catch {
     // Never print codes, cookies, email addresses, or provider error payloads.
