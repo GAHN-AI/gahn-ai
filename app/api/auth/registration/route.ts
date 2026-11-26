@@ -1,8 +1,6 @@
-import { sendWelcome } from "@/lib/auth/welcome";
-import { after, NextRequest, NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { authRoute } from "@/lib/auth/routeClient";
 import {
-  completeRegistration,
   registrationStatus,
 } from "@/lib/auth/registration";
 import { isEmailSignup, sameOriginPost } from "@/lib/auth/policy";
@@ -50,29 +48,14 @@ export async function POST(request: NextRequest) {
           { status: 401 },
         ),
       );
-    // This endpoint is only for completing a verified Google OAuth signup.
-    // Email/password accounts complete exclusively through the one-time
-    // verification link processed at /auth/callback.
-    if (isEmailSignup(user))
-      return route.finish(NextResponse.json(
-        { error: "Verify your email using the confirmation link before signing in." },
+    // New registrations are completed only by a verified email/signup
+    // link at /auth/callback. A Google login must not create a GAHN account.
+    return route.finish(
+      NextResponse.json(
+        { error: "New accounts must be created using email signup and verification." },
         { status: 403 },
-      ));
-    const body = await request.json();
-    if (body.confirmSignup !== true)
-      return route.finish(
-        NextResponse.json(
-          { error: "Confirm signup to continue." },
-          { status: 400 },
-        ),
-      );
-    await completeRegistration(user, true);
-    after(() =>
-      sendWelcome(user).catch(() =>
-        console.error("Welcome delivery unavailable"),
       ),
     );
-    return route.finish(NextResponse.json({ destination: "/dashboard" }));
   } catch {
     return route.finish(
       NextResponse.json(

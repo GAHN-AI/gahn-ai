@@ -73,6 +73,13 @@ try {
     headers: { origin: base, "Content-Type": "application/json" },
     body: '{"intent":"signup"}',
   });
+  assert.equal(response.status, 400);
+  checks++;
+  response = await fetch(base + "/auth/google", {
+    method: "POST",
+    headers: { origin: base, "Content-Type": "application/json" },
+    body: '{"intent":"login"}',
+  });
   assert.equal(response.status, 200);
   const provider = new URL((await response.json()).url);
   assert.equal(
@@ -80,7 +87,7 @@ try {
     base + "/auth/callback",
   );
   assert.equal(provider.searchParams.get("provider"), "google");
-  assert.match(response.headers.get("set-cookie"), /gahn-auth-intent=signup/);
+  assert.match(response.headers.get("set-cookie"), /gahn-auth-intent=login/);
   assert.match(response.headers.get("set-cookie"), /HttpOnly/);
   checks += 5;
   response = await fetch(base + "/api/auth/registration", {

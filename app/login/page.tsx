@@ -53,9 +53,11 @@ export default function LoginPage() {
     ? "That sign-in link expired or could not be verified. Please try again."
     : reason === "profile_setup_failed"
       ? "We couldn't finish setting up your profile. Please try signing in again."
-      : "";
+      : reason === "signup_required"
+        ? "This Google account has no completed GAHN registration. Create an account with email and password, verify it, and then log in with Google using the same email."
+        : "";
   const visibleError = error || (!queryNoticeDismissed ? queryError : "");
-  const visibleMessage = message || (!queryNoticeDismissed && reason === "session_expired" ? "Your session ended. Please sign in again to continue." : "");
+  const visibleMessage = message || (!queryNoticeDismissed && reason === "session_expired" ? "Your session ended. Please sign in again to continue." : !queryNoticeDismissed && new URLSearchParams(browserSearch).get("verified") === "1" ? "Email verified successfully. Log in with your password, or choose Google if it uses the same verified email address." : "");
 
   async function handleLogin(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -95,7 +97,7 @@ export default function LoginPage() {
 
     if (loginError) {
       if (loginError.code === "email_not_confirmed") {
-        setError("Please verify your email address before logging in. Check your inbox, or choose Continue with Google if you signed up with Google.");
+        setError("Please verify your email address before logging in. Check your inbox for the confirmation link.");
       } else if (loginError.code === "too_many_requests" || loginError.status === 429) {
         setError("Too many sign-in attempts. Please wait and try again.");
       } else {
@@ -278,7 +280,7 @@ export default function LoginPage() {
             </button>
 
             <p className="mt-3 text-center text-xs leading-5 text-slate-600">
-              Use the Google account registered with GAHN AI. New here? Create an account first. You can also set a password for the same email using Forgot Password below.
+              Already verified your email and created an account? Select that same Google email to log in. Google will show its official account chooser. New users must complete email signup first.
             </p>
 
             <div className="my-6 flex items-center gap-4 text-xs font-bold uppercase tracking-[0.12em] text-black">

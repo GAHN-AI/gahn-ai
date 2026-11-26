@@ -105,6 +105,13 @@ Module._load = function (name, parent, isMain) {
             data: { session: state.otpError ? null : {} },
             error: state.otpError ? { code: "expired" } : null,
           }),
+          signOut: async () => {
+            state.signedOut = true;
+            options.cookies.setAll([
+              { name: "session", value: "", options: { path: "/", maxAge: 0 } },
+            ]);
+            return { error: null };
+          },
           signInWithOAuth: async (params) => {
             state.oauth = params;
             options.cookies.setAll([
@@ -214,7 +221,7 @@ destination(
 reset({ registered: false });
 destination(
   await callback.GET(request("/auth/callback?code=good&intent=signup")),
-  "/signup?complete=1",
+  "/login?error=signup_required",
 );
 assert.equal(state.writes.length, 0);
 checks++;
@@ -224,16 +231,30 @@ response = await callback.GET(
     headers: { cookie: "gahn-auth-intent=signup" },
   }),
 );
-destination(response, "/dashboard");
+destination(response, "/login?error=signup_required");
 assert.equal(response.cookies.get("gahn-auth-intent").value, "");
-assert(state.registered);
+assert.equal(state.registered, false);
+assert.equal(state.signedOut, true);
+checks += 3;
+// A Google login must not complete a still-unregistered email-origin
+// account merely because the provider has verified that same email.
+reset({ registered: false, user: user("email") });
+destination(
+  await callback.GET(request("/auth/callback?code=good", {
+    headers: { cookie: "gahn-auth-intent=login" },
+  })),
+  "/login?error=signup_required",
+);
+assert.equal(state.registered, false);
+assert.equal(state.signedOut, true);
 checks += 2;
 reset({ registered: false, user: user("email") });
 destination(
   await callback.GET(request("/auth/callback?token_hash=good&type=signup")),
-  "/dashboard",
+  "/login?verified=1",
 );
 assert.equal(state.writes[1].value.method, "email");
+assert.equal(state.signedOut, true);
 checks++;
 reset({
   registered: false,
@@ -244,8 +265,9 @@ reset({
 });
 destination(
   await complete.GET(request("/auth/complete")),
-  "/signup?complete=1",
+  "/login?error=signup_required",
 );
+assert.equal(state.signedOut, true);
 reset({ registered: false, user: user("email") });
 destination(
   await complete.GET(request("/auth/complete")),
@@ -270,7 +292,7 @@ destination(
 reset({ registered: false });
 destination(
   await complete.GET(request("/auth/complete")),
-  "/signup?complete=1",
+  "/login?error=signup_required",
 );
 reset();
 response = await proxy(request("/?code=good"));
@@ -287,8 +309,9 @@ destination(response, "/dashboard");
 assert.equal(response.cookies.get("session").value, "refreshed");
 checks++;
 reset({ registered: false });
-destination(await proxy(request("/dashboard")), "/signup?complete=1");
+destination(await proxy(request("/dashboard")), "/login?error=signup_required");
 assert.equal((await proxy(request("/signup"))).headers.get("location"), null);
+assert.equal((await proxy(request("/login"))).headers.get("location"), null);
 checks++;
 reset({ registered: false, user: user("email") });
 destination(await proxy(request("/dashboard")), "/signup?verify=email");
@@ -323,24 +346,30 @@ for (const origin of [null, "https://evil.example"]) {
   assert.equal(response.status, 403);
   checks++;
 }
-for (const intent of ["signup", "login"]) {
-  reset();
-  response = await google.POST(
-    request("/auth/google", {
-      method: "POST",
-      headers: { origin: "https://www.gahnai.com" },
-      body: JSON.stringify({ intent }),
-    }),
-  );
-  assert.equal(response.status, 200);
-  assert.equal(
-    state.oauth.options.redirectTo,
-    "https://www.gahnai.com/auth/callback",
-  );
-  assert.equal(response.cookies.get("gahn-auth-intent").httpOnly, true);
-  assert.equal(response.cookies.get("pkce").value, "verifier");
-  checks += 4;
-}
+reset();
+response = await google.POST(
+  request("/auth/google", {
+    method: "POST",
+    headers: { origin: "https://www.gahnai.com" },
+    body: JSON.stringify({ intent: "signup" }),
+  }),
+);
+assert.equal(response.status, 400);
+checks++;
+reset();
+response = await google.POST(
+  request("/auth/google", {
+    method: "POST",
+    headers: { origin: "https://www.gahnai.com" },
+    body: JSON.stringify({ intent: "login" }),
+  }),
+);
+assert.equal(response.status, 200);
+assert.equal(state.oauth.options.redirectTo, "https://www.gahnai.com/auth/callback");
+assert.equal(state.oauth.options.queryParams.prompt, "select_account");
+assert.equal(response.cookies.get("gahn-auth-intent").httpOnly, true);
+assert.equal(response.cookies.get("pkce").value, "verifier");
+checks += 5;
 reset({ registered: false });
 response = await registration.POST(
   request("/api/auth/registration", {
@@ -361,8 +390,8 @@ for (const confirmSignup of [false, true]) {
       body: JSON.stringify({ confirmSignup }),
     }),
   );
-  assert.equal(response.status, confirmSignup ? 200 : 400);
-  assert.equal(state.registered, confirmSignup);
+  assert.equal(response.status, 403);
+  assert.equal(state.registered, false);
   checks += 2;
 }
 // An automatically confirmed email/password session is NOT signup proof.

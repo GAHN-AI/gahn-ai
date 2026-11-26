@@ -9,7 +9,7 @@ import Link from "next/link";
 import posthog from "posthog-js";
 import { Source_Sans_3 } from "next/font/google";
 import { useEffect, useState } from "react";
-import { startGoogle, signOutAccount } from "@/lib/auth/browser";
+import { signOutAccount } from "@/lib/auth/browser";
 import { supabase } from "@/lib/supabaseClient";
 import PasswordInput from "@/components/auth/PasswordInput";
 import { ArrowLeft, Brain, Layers, ShieldCheck, Trophy } from "lucide-react";
@@ -43,7 +43,6 @@ export default function SignupPage() {
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [loading, setLoading] = useState(false);
-  const [googleLoading, setGoogleLoading] = useState(false);
   const [resendLoading, setResendLoading] = useState(false);
   const [resendCooldown, setResendCooldown] = useState(0);
   const [awaitingVerification, setAwaitingVerification] = useState(false);
@@ -68,74 +67,6 @@ export default function SignupPage() {
     return () => { cancelled = true; };
   }, []);
 
-  async function finishGoogleSignup() {
-    if (loading) return;
-    setLoading(true); setError("");
-    try {
-      const response = await fetch("/api/auth/registration", {method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({confirmSignup:true})});
-      if (!response.ok) throw new Error("Unable to finish signup. Please retry.");
-      window.location.replace("/dashboard");
-    } catch { setError("Unable to finish signup. Please retry."); setLoading(false); }
-  }
-
-  // Email confirmation can finish in another tab. The callback sets shared
-  // same-origin cookies; the dashboard broadcasts the completed session so
-  // this original signup tab follows without another manual login.
-  useEffect(() => {
-    if (!awaitingVerification) return;
-    let cancelled = false;
-    let checking = false;
-    async function checkSession() {
-      if (cancelled || checking) return;
-      checking = true;
-      try {
-        const response = await fetch("/api/auth/registration", {
-          cache: "no-store",
-          credentials: "same-origin",
-        });
-        if (!response.ok) return;
-        const status = await response.json();
-        if (!cancelled && status.authenticated && status.registered)
-          window.location.replace("/dashboard");
-      } catch {
-        // Allow a retry on focus/visibility or when another tab broadcasts.
-      } finally {
-        checking = false;
-      }
-    }
-    const { data: { subscription } } = supabase.auth.onAuthStateChange(
-      (event, session) => {
-        if (event === "SIGNED_IN" && session?.user.email_confirmed_at)
-          void checkSession();
-      },
-    );
-    const channel = typeof BroadcastChannel !== "undefined"
-      ? new BroadcastChannel("gahn-auth-state")
-      : null;
-    if (channel) channel.onmessage = (event) => {
-      if (event.data?.type === "dashboard-ready") void checkSession();
-    };
-    const onStorage = (event: StorageEvent) => {
-      if (event.key === "gahn-auth-ready") void checkSession();
-    };
-    const onFocus = () => void checkSession();
-    const onVisibility = () => {
-      if (!document.hidden) void checkSession();
-    };
-    window.addEventListener("storage", onStorage);
-    window.addEventListener("focus", onFocus);
-    document.addEventListener("visibilitychange", onVisibility);
-    void checkSession();
-    return () => {
-      cancelled = true;
-      subscription.unsubscribe();
-      channel?.close();
-      window.removeEventListener("storage", onStorage);
-      window.removeEventListener("focus", onFocus);
-      document.removeEventListener("visibilitychange", onVisibility);
-    };
-  }, [awaitingVerification]);
-
   useEffect(() => {
     if (resendCooldown <= 0) return;
     const timer = window.setTimeout(
@@ -147,7 +78,7 @@ export default function SignupPage() {
 
   async function handleSignup(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
-    if (loading || googleLoading || awaitingVerification || pendingGoogle || checkingAccount) return;
+    if (loading || awaitingVerification || pendingGoogle || checkingAccount) return;
     setError("");
     setMessage("");
 
@@ -214,7 +145,7 @@ export default function SignupPage() {
     setAwaitingVerification(true);
     setResendCooldown(60);
     setMessage(
-      "Verify your email before accessing your dashboard. If this address can be registered, a verification link will arrive in your inbox. Already registered? Log in using your original method."
+      "Check your inbox for a verification link. After confirming your email, return to Log in and enter your password or choose Google using that same verified email. Already registered? Sign in instead."
     );
   }
 
@@ -253,20 +184,16 @@ export default function SignupPage() {
     setMessage("If a verification email can be sent to this address, check your inbox and spam folder. Already registered? Go to Log in.");
   }
 
-  async function handleGoogleSignup() {
-    if (loading || googleLoading || checkingAccount) return;
-    posthog.capture("signup_attempted", { method: "google" });
+  async function startManualSignup() {
     setError("");
-    setMessage("");
-    setGoogleLoading(true);
-
+    setLoading(true);
     try {
-      await startGoogle("signup");
+      const { error: signOutError } = await supabase.auth.signOut({ scope: "local" });
+      if (signOutError) throw signOutError;
+      window.location.replace("/signup");
     } catch {
-      posthog.capture("signup_error", { method: "google", reason: "network_error" });
-      setError("Unable to connect to Google signup. Please try again.");
-    } finally {
-      setGoogleLoading(false);
+      setError("Could not clear this Google session. Please retry.");
+      setLoading(false);
     }
   }
 
@@ -337,7 +264,7 @@ export default function SignupPage() {
 
             <div className="mt-10 flex items-center gap-2 text-sm font-semibold text-black">
               <ShieldCheck className="h-4 w-4 text-[#1677FF]" />
-              Secure signup with email verification and Google authentication.
+              Email verification required before login. Google login is optional afterward.
             </div>
           </div>
 
@@ -352,9 +279,8 @@ export default function SignupPage() {
             {checkingAccount ? <p role="status" className="mt-6">Checking account...</p> : pendingEmailAccount ? (
               <div className="mt-6 space-y-4" role="status">
                 <p className="rounded-lg bg-[#FFF5E5] p-4 text-sm leading-6 text-[#775018]">
-                  Email verification is required to finish this account.
-                  Open the confirmation link sent to your inbox. If you never received
-                  a link, contact GAHN AI support to finish account setup.
+                  Email verification is required. Open the confirmation link in your inbox,
+                  then log in again using your email and password.
                 </p>
                 <Link href="/contact" className="inline-block text-sm font-semibold text-[#1677FF] underline">
                   Contact support
@@ -364,31 +290,24 @@ export default function SignupPage() {
                 {error && <p role="alert" className="text-sm text-red-700">{error}</p>}
               </div>
             ) : pendingGoogle ? (
-              <div className="mt-6">
-                <p>This Google account has not completed GAHN AI signup. New users must sign up before logging in. Google already verified your email; choose Complete signup to create your account and open the dashboard.</p>
-                {error && <p role="alert" className="mt-4 text-red-600">{error}</p>}
-                <button type="button" disabled={loading} onClick={finishGoogleSignup} className="mt-5 w-full rounded-xl bg-[#1677FF] px-5 py-3.5 font-semibold text-white disabled:opacity-60">{loading ? "Creating account..." : "Complete signup with Google"}</button>
-                <button type="button" onClick={() => void signOutAccount().catch(() => setError("Unable to sign out. Please retry."))} className="mt-4 text-sm font-semibold text-[#1677FF]">Use another account</button>
+              <div className="mt-6 space-y-4">
+                <p className="rounded-lg border border-amber-200 bg-amber-50 p-4 text-sm leading-6 text-[#775018]">
+                  This Google identity has not completed a GAHN AI registration.
+                  New learners must create an account with their name, email and password,
+                  then verify their email. Google is available afterward for login
+                  with the same email address.
+                </p>
+                <button type="button" disabled={loading} onClick={startManualSignup}
+                  className="w-full rounded-xl bg-[#1677FF] px-5 py-3.5 font-semibold text-white disabled:opacity-60">
+                  {loading ? "Signing out..." : "Start email signup"}
+                </button>
+                {error && <p role="alert" className="text-sm text-red-700">{error}</p>}
               </div>
             ) : <>
-            <button
-              type="button"
-              onClick={handleGoogleSignup}
-              disabled={googleLoading || loading || resendLoading}
-              className="mt-8 flex w-full items-center justify-center gap-3 rounded-xl border border-[#D7E3F2] bg-white px-5 py-3.5 text-sm font-semibold shadow-sm hover:bg-[#F8FBFF] disabled:opacity-60"
-            >
-              <Image unoptimized width={1200} height={800} src="/google-logo/google.svg" alt="Google" className="h-5 w-5" />
-              {googleLoading ? "Connecting..." : "Sign up with Google"}
-            </button>
-
-            <p className="mt-3 text-center text-xs leading-5 text-slate-600">
-              If you have used Google to sign in before, use the same Google account to return to your existing profile.
-            </p>
-
-            <div className="my-6 flex items-center gap-4 text-xs font-bold uppercase tracking-[0.12em] text-black">
-              <div className="h-px flex-1 bg-[#D7E3F2]" />
-              Or
-              <div className="h-px flex-1 bg-[#D7E3F2]" />
+            <div className="mt-7 rounded-xl border border-[#D7E3F2] bg-[#F1F7FF] p-4 text-sm leading-6 text-[#0B1739]">
+              <strong>How signup works:</strong> Enter your details, verify the email
+              we send you, then log in. After verification, you can also use
+              Google login if it is the same Google email address.
             </div>
 
             <form onSubmit={handleSignup}>
@@ -468,6 +387,12 @@ export default function SignupPage() {
               )}
 
               {awaitingVerification && (
+                <Link href="/login" className="mt-4 block font-semibold text-[#1677FF] underline">
+                  I've verified my email — go to Login
+                </Link>
+              )}
+
+              {awaitingVerification && (
                 <button
                   type="button"
                   onClick={handleResendVerification}
@@ -499,7 +424,7 @@ export default function SignupPage() {
 
               <button
                 type="submit"
-                disabled={loading || googleLoading || awaitingVerification}
+                disabled={loading || awaitingVerification}
                 className="mt-6 w-full rounded-xl bg-[#1677FF] px-5 py-3.5 text-sm font-semibold text-white hover:bg-[#0F65E8] disabled:opacity-60"
               >
                 {loading ? "Creating Account..." : awaitingVerification ? "Check your email first" : "Create Account"}

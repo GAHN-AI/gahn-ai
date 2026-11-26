@@ -84,7 +84,10 @@ export async function proxy(request: NextRequest) {
     if (!registration) {
       if (isEmailSignup(user!))
         return path === "/signup" ? response : redirect("/signup?verify=email");
-      return path === "/signup" ? response : redirect("/signup?complete=1");
+      // Do not let a provisional Google identity access protected routes.
+      // Keep both auth pages reachable to avoid signup/login redirect loops.
+      if (path === "/signup" || path === "/login") return response;
+      return redirect("/login?error=signup_required");
     }
     return path === "/login" || path === "/signup"
       ? redirect("/dashboard")
