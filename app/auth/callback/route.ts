@@ -63,7 +63,13 @@ export async function GET(request: NextRequest) {
     // Google OAuth verifies a Google identity; it is NOT GAHN signup.
     // Returning users (including previously completed Google registrations)
     // retain access. New accounts require verified email signup first.
-    const registered = await completeRegistration(user, isEmailSignup(user));
+    // Only a verified email-signup callback may create a new registration.
+    // A Google LOGIN must never complete a pending email account simply
+    // because an Auth identity with the same email exists.
+    const registered = await completeRegistration(
+      user,
+      isEmailSignup(user) && intent !== "login",
+    );
     if (!registered) {
       const { error: signOutError } = await route.supabase.auth.signOut({
         scope: "local",
