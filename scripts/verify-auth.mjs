@@ -236,6 +236,18 @@ assert.equal(response.cookies.get("gahn-auth-intent").value, "");
 assert.equal(state.registered, false);
 assert.equal(state.signedOut, true);
 checks += 3;
+// A Google login must not complete a still-unregistered email-origin
+// account merely because the provider has verified that same email.
+reset({ registered: false, user: user("email") });
+destination(
+  await callback.GET(request("/auth/callback?code=good", {
+    headers: { cookie: "gahn-auth-intent=login" },
+  })),
+  "/login?error=signup_required",
+);
+assert.equal(state.registered, false);
+assert.equal(state.signedOut, true);
+checks += 2;
 reset({ registered: false, user: user("email") });
 destination(
   await callback.GET(request("/auth/callback?token_hash=good&type=signup")),
@@ -243,7 +255,6 @@ destination(
 );
 assert.equal(state.writes[1].value.method, "email");
 assert.equal(state.signedOut, true);
-checks++;
 checks++;
 reset({
   registered: false,
