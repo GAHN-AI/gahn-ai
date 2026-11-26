@@ -18,8 +18,14 @@ export async function GET(request: NextRequest) {
           console.error("Welcome delivery unavailable"),
         ),
       );
+    if (completed) return route.redirect("/dashboard");
+    if (isEmailSignup(user)) return route.redirect("/signup?verify=email");
+    // A Google-only provisional Supabase identity is not a GAHN account.
+    const { error: signOutError } = await route.supabase.auth.signOut({
+      scope: "local",
+    });
     return route.redirect(
-      completed ? "/dashboard" : isEmailSignup(user) ? "/signup?verify=email" : "/signup?complete=1"
+      signOutError ? "/auth/error?reason=account_setup" : "/login?error=signup_required",
     );
   } catch {
     return route.redirect("/auth/error?reason=account_setup");
