@@ -15,10 +15,10 @@ export async function POST(request: NextRequest) {
   const route = authRoute(request);
   try {
     const body = await request.json();
-    if (body.intent !== "signup" && body.intent !== "login")
+    if (body.intent !== "login")
       return route.finish(
         NextResponse.json(
-          { error: "Invalid authentication intent." },
+          { error: "Create and verify an email account first. Google is for logging into existing accounts." },
           { status: 400 },
         ),
       );
